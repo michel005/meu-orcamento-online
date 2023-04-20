@@ -1,2 +1,2 @@
-cd C:\Desenvolvimento\projectTemplate\frontend
+cd C:\Desenvolvimento\restaurante-facil\frontend
 npm start

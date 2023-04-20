@@ -1,55 +1,70 @@
 import { EMPTY_FUNCTION } from 'constants/GeneralConstants'
-import { createContext, useState } from 'react'
+import { createContext, useCallback, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 const ConfigContext = createContext({
 	isMobile: false,
-	reduced: false,
-	setReduced: EMPTY_FUNCTION,
+	form: {},
 	showForm: EMPTY_FUNCTION,
-	defineShowForm: EMPTY_FUNCTION,
+	closeForm: EMPTY_FUNCTION,
 	closeAllForms: EMPTY_FUNCTION,
-	loading: {},
-	load: EMPTY_FUNCTION,
+	loadIndicator: {},
+	startLoad: EMPTY_FUNCTION,
+	stopLoad: EMPTY_FUNCTION,
 })
 
 export const ConfigProvider = ({ children }) => {
-	const [showForm, setShowForm] = useState({})
+	const [form, setForm] = useState({})
 	const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
-	const [reduced, setReduced] = useState(isMobile)
-	const [loading, setLoading] = useState({})
+	const [loadIndicator, setLoadIndicator] = useState({})
 
-	const load = (entity, value = true) => {
-		setLoading((l) => {
-			l[entity] = value
+	const startLoad = useCallback((entity) => {
+		setLoadIndicator((l) => {
+			l[entity] = true
 			return { ...l }
 		})
-	}
+	}, [])
 
-	const defineShowForm = (form, value) => {
-		setShowForm((sf) => {
+	const stopLoad = useCallback((entity) => {
+		setLoadIndicator((l) => {
+			l[entity] = false
+			return { ...l }
+		})
+	}, [])
+
+	const showForm = useCallback((form, value) => {
+		setForm((sf) => {
 			sf[form] = structuredClone(value)
 			return {
 				...sf,
 			}
 		})
-	}
+	}, [])
 
-	const closeAllForms = () => {
-		setShowForm({})
-	}
+	const closeForm = useCallback((form) => {
+		setForm((sf) => {
+			sf[form] = null
+			return {
+				...sf,
+			}
+		})
+	}, [])
+
+	const closeAllForms = useCallback(() => {
+		setForm({})
+	}, [])
 
 	return (
 		<ConfigContext.Provider
 			value={{
 				isMobile,
-				reduced,
-				setReduced,
+				form,
 				showForm,
-				defineShowForm,
+				closeForm,
 				closeAllForms,
-				loading,
-				load,
+				loadIndicator,
+				startLoad,
+				stopLoad,
 			}}
 		>
 			{children}

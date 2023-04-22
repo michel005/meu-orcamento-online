@@ -30,12 +30,31 @@ export const LeftRightSideStyle = styled.div`
 		}
 	}
 
+	.rightSide {
+		margin-inline: auto 0;
+		text-align: right;
+
+		h1 {
+			margin-inline-start: auto;
+		}
+
+		p {
+			margin-inline-start: auto;
+		}
+	}
+
 	@media (max-width: 1200px) {
 		flex-direction: column;
 
 		.leftSide,
 		.rightSide {
+			text-align: center;
 			width: 100%;
+
+			h1,
+			p {
+				max-width: none;
+			}
 		}
 	}
 `

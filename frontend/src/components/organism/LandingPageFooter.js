@@ -1,5 +1,4 @@
-import { AppLogo } from 'components/atom/AppLogo'
-import { Footer } from 'components/atom/Footer'
+import { AppLogo, Footer } from 'components/molecule'
 import { PROJECT_INFO } from 'config/ProjectInfo'
 import { NavLink } from 'react-router-dom'
 

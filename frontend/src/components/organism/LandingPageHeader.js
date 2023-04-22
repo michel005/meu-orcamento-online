@@ -1,5 +1,5 @@
-import { AppLogo } from 'components/atom/AppLogo'
-import { Header } from 'components/atom/Header'
+import { AppLogo } from 'components/molecule'
+import { Header } from 'components/molecule/Header'
 import { PROJECT_INFO } from 'config/ProjectInfo'
 import { NavLink } from 'react-router-dom'
 
@@ -19,7 +19,6 @@ export const LandingPageHeader = ({ fixed }) => {
 			<NavLink to="/">Início</NavLink>
 			<NavLink to="/plans">Planos</NavLink>
 			<NavLink to="/contact">Contato</NavLink>
-			<NavLink to="/about">Sobre</NavLink>
 			<NavLink className="button" to="/sign-in">
 				Entrar / Cadastrar-se
 			</NavLink>

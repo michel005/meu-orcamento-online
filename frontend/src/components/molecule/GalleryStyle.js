@@ -7,11 +7,12 @@ export const GalleryStyle = styled.div`
 	position: relative;
 
 	& > h1 {
-		margin-inline: auto;
+		text-align: center;
 	}
 
 	& > .content {
 		color: #999;
+		text-align: center;
 	}
 
 	& > .pictures {

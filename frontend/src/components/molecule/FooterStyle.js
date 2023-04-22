@@ -30,8 +30,9 @@ export const FooterStyle = styled.footer`
 			display: flex;
 			flex-direction: column;
 			gap: 10px;
-			width: 50%;
+			margin-right: 100px;
 			position: relative;
+			width: 40%;
 
 			img {
 				filter: grayscale(1) invert(1);
@@ -86,6 +87,7 @@ export const FooterStyle = styled.footer`
 			width: 100%;
 
 			& > .appInformation {
+				margin: 0;
 				width: 100%;
 
 				& > div {

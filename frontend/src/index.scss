@@ -16,11 +16,29 @@
 
 :root {
 	--ACTIVE_COLOR: #ff9000;
+	--ACTIVE_COLOR_CC: #ff9000cc;
 	--ACTIVE_COLOR_33: #ff900033;
+}
+
+#root {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	left: 0;
+	overflow-y: auto;
+	position: fixed;
+	top: 0;
+	width: 100%;
+
+	&::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
 }
 
 body {
 	background-color: #fff;
+	position: relative;
 	margin: 0;
 	padding: 0;
 }
@@ -62,9 +80,23 @@ h3,
 h4,
 h5,
 h6,
-p {
+p,
+ul,
+ol,
+li {
 	margin: 0;
 	padding: 0;
+}
+
+li {
+	margin-inline-start: 17px;
+}
+
+hr {
+	background-color: #ddd !important;
+	border: none;
+	height: 1px;
+	width: 100%;
 }
 
 .icon {
@@ -88,16 +120,25 @@ a {
 }
 
 button {
-	background-color: #3331;
+	background-color: var(--ACTIVE_COLOR);
 	border-radius: 7px;
 	border: none;
-	color: #333;
+	color: #fff;
 	cursor: pointer;
 	font-size: 16px;
 	padding: 10px 17px;
 	transition: all 0.25s;
 
 	&:hover {
-		background-color: #3333;
+		background-color: var(--ACTIVE_COLOR_CC);
+	}
+
+	&[data-secondary] {
+		background-color: #3331;
+		color: #333;
+
+		&:hover {
+			background-color: #3333;
+		}
 	}
 }

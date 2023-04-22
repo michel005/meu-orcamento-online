@@ -1,9 +1,11 @@
 import styled from 'styled-components'
 
 export const HeaderStyle = styled.header`
+	background-color: #fff;
 	display: flex;
 	flex-direction: row;
 	height: var(--LANDING-PAGE-HEADER-HEIGHT);
+	min-height: var(--LANDING-PAGE-HEADER-HEIGHT);
 	justify-content: center;
 
 	& > .centered {
@@ -70,13 +72,6 @@ export const HeaderStyle = styled.header`
 	}
 
 	@media (max-width: 1200px) {
-		background-color: #fff;
-		left: 0;
-		position: fixed;
-		top: 0;
-		width: 100%;
-		z-index: 100;
-
 		& > .centered {
 			padding-inline: 14px;
 

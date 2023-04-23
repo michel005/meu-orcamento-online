@@ -9,4 +9,15 @@ export const LandingPageStyle = styled.div`
 	height: 100%;
 	min-height: 100%;
 	position: relative;
+
+	& > .buttonToTop {
+		background-color: #333;
+		border-radius: 50%;
+		bottom: 10px;
+		height: 40px;
+		position: fixed;
+		right: 10px;
+		width: 40px;
+		z-index: 100;
+	}
 `

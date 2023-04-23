@@ -1,9 +1,14 @@
 import { AppLogo } from 'components/molecule'
 import { Header } from 'components/molecule/Header'
 import { PROJECT_INFO } from 'config/ProjectInfo'
-import { NavLink } from 'react-router-dom'
+import { ConfigContext } from 'hook'
+import { useContext } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 export const LandingPageHeader = ({ fixed }) => {
+	const { setShowMenu } = useContext(ConfigContext)
+	const navigate = useNavigate()
+
 	return (
 		<Header
 			nameLogo={
@@ -16,12 +21,27 @@ export const LandingPageHeader = ({ fixed }) => {
 			}
 			data-fixed={fixed}
 		>
-			<NavLink to="/">Início</NavLink>
-			<NavLink to="/plans">Planos</NavLink>
-			<NavLink to="/contact">Contato</NavLink>
-			<NavLink className="button" to="/sign-in">
-				Entrar / Cadastrar-se
+			<NavLink onClick={() => setShowMenu(false)} to="/">
+				Início
 			</NavLink>
+			<NavLink onClick={() => setShowMenu(false)} to="/plans">
+				Planos
+			</NavLink>
+			<NavLink onClick={() => setShowMenu(false)} to="/contact">
+				Contato
+			</NavLink>
+			<NavLink onClick={() => setShowMenu(false)} to="/help">
+				Ajuda
+			</NavLink>
+			<button
+				onClick={() => {
+					navigate('/login')
+					setShowMenu(false)
+				}}
+				data-icon="person"
+			>
+				Entrar / Cadastrar-se
+			</button>
 		</Header>
 	)
 }

@@ -15,7 +15,9 @@ export const CONTACT_PAGE = (event) => [
 					<b>Telefone:</b> (44) 99129-9291
 				</span>
 				<div>
-					<button onClick={event?.button}>Entrar em contato</button>
+					<button data-icon="support_agent" onClick={event?.button}>
+						Entrar em contato
+					</button>
 				</div>
 			</>
 		),

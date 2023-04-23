@@ -11,10 +11,17 @@ const ConfigContext = createContext({
 	loadIndicator: {},
 	startLoad: EMPTY_FUNCTION,
 	stopLoad: EMPTY_FUNCTION,
+	modal: {},
+	showModal: EMPTY_FUNCTION,
+	closeModal: EMPTY_FUNCTION,
+	showMenu: false,
+	setShowMenu: EMPTY_FUNCTION,
 })
 
 export const ConfigProvider = ({ children }) => {
 	const [form, setForm] = useState({})
+	const [modal, setModal] = useState({})
+	const [showMenu, setShowMenu] = useState(false)
 	const isMobile = useMediaQuery({ query: '(max-width: 700px)' })
 	const [loadIndicator, setLoadIndicator] = useState({})
 
@@ -32,9 +39,27 @@ export const ConfigProvider = ({ children }) => {
 		})
 	}, [])
 
+	const showModal = useCallback((form, value) => {
+		setModal((sf) => {
+			sf[form] = value
+			return {
+				...sf,
+			}
+		})
+	}, [])
+
+	const closeModal = useCallback((form) => {
+		setModal((sf) => {
+			sf[form] = undefined
+			return {
+				...sf,
+			}
+		})
+	}, [])
+
 	const showForm = useCallback((form, value) => {
 		setForm((sf) => {
-			sf[form] = structuredClone(value)
+			sf[form] = value
 			return {
 				...sf,
 			}
@@ -65,6 +90,11 @@ export const ConfigProvider = ({ children }) => {
 				loadIndicator,
 				startLoad,
 				stopLoad,
+				modal,
+				showModal,
+				closeModal,
+				showMenu,
+				setShowMenu,
 			}}
 		>
 			{children}

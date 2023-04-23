@@ -11,7 +11,6 @@ import { GalleryStyle } from './GalleryStyle'
 import { LeftRightSide } from './LeftRightSide'
 import { LeftRightSideStyle } from './LeftRightSideStyle'
 import { Photo } from './Photo'
-import { PriceCard } from './PriceCard'
 
 export {
 	AppLogo,
@@ -27,5 +26,4 @@ export {
 	LeftRightSide,
 	LeftRightSideStyle,
 	Photo,
-	PriceCard,
 }

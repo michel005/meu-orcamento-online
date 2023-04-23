@@ -3,13 +3,8 @@ import { HOME_PAGE } from 'localization/HomePage'
 
 export const HomePage = () => {
 	return (
-		<LandingPageTemplate
-			loc={HOME_PAGE}
-			events={{
-				firstBlockEvent: () => {
-					alert('Michel 1')
-				},
-			}}
-		/>
+		<>
+			<LandingPageTemplate loc={HOME_PAGE} />
+		</>
 	)
 }

@@ -11,7 +11,6 @@ export const LeftRightSideStyle = styled.div`
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
-		justify-content: center;
 		margin-inline: auto;
 		width: 50%;
 
@@ -48,12 +47,47 @@ export const LeftRightSideStyle = styled.div`
 
 		.leftSide,
 		.rightSide {
-			text-align: center;
+			text-align: left;
 			width: 100%;
 
 			h1,
 			p {
 				max-width: none;
+			}
+		}
+	}
+
+	&[data-modal='true'] {
+		.leftSide,
+		.rightSide {
+			flex-grow: 1;
+			text-align: left;
+			width: 100%;
+
+			&:empty {
+				display: none;
+			}
+
+			h1 {
+				margin: 0;
+				max-width: 100%;
+				text-align: left;
+			}
+
+			p {
+				margin: 0;
+				max-width: 100%;
+			}
+		}
+
+		@media (max-width: 1200px) {
+			flex-direction: column;
+
+			.leftSide,
+			.rightSide {
+				img {
+					max-height: 200px;
+				}
 			}
 		}
 	}

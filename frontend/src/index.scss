@@ -125,12 +125,23 @@ button {
 	border: none;
 	color: #fff;
 	cursor: pointer;
+	display: flex;
+	flex-direction: row;
 	font-size: 16px;
+	gap: 7px;
+	justify-content: center;
 	padding: 10px 17px;
 	transition: all 0.25s;
 
 	&:hover {
 		background-color: var(--ACTIVE_COLOR_CC);
+	}
+
+	&[data-icon]::before {
+		content: attr(data-icon);
+		display: inline-block;
+		font-family: 'Material Symbols Outlined';
+		margin-block: auto;
 	}
 
 	&[data-secondary] {
@@ -140,5 +151,57 @@ button {
 		&:hover {
 			background-color: #3333;
 		}
+	}
+
+	&[data-link] {
+		background-color: transparent;
+		color: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		padding: 0;
+		transition: opacity 0.5s;
+
+		&:hover {
+			background-color: transparent;
+			color: inherit;
+			opacity: 0.5;
+		}
+	}
+}
+
+dialog {
+	border: none;
+	border-radius: 14px;
+	box-shadow: #ccc 0 0 4px;
+	display: flex;
+	flex-direction: column;
+	max-width: 800px;
+	padding: 0;
+
+	& > .content {
+		max-height: 100%;
+		overflow: auto;
+		padding: 50px 21px 21px;
+		position: relative;
+
+		&::-webkit-scrollbar {
+			width: 4px;
+		}
+
+		& > .closeButton {
+			position: absolute;
+			right: 21px;
+			top: 21px;
+		}
+	}
+
+	&::backdrop {
+		backdrop-filter: blur(4px);
+		background-color: #3333;
+		padding: 21px;
+	}
+
+	@media (max-width: 1200px) {
+		max-width: 80%;
 	}
 }

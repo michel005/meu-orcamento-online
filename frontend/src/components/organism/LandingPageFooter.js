@@ -9,11 +9,11 @@ export const LandingPageFooter = () => {
 				<>
 					<AppLogo logo={PROJECT_INFO.logo} name={PROJECT_INFO.name} />
 					<p>
-						Magna tempor aliquip exercitation cupidatat laborum dolor nisi aliqua laboris consequat
-						qui excepteur. Pariatur qui ut in aute consectetur. Occaecat aliqua quis nulla sit nisi
-						occaecat commodo. Exercitation ex culpa nulla incididunt laboris pariatur commodo
-						excepteur nulla mollit sunt tempor deserunt exercitation.
+						{PROJECT_INFO.name} é uma marca registrada e tem todos os direitos reservados. Somos uma
+						empresa residente no endereço Rua Vitor do Amaral, 1062, apto 505B, Maringá, Paraná,
+						Brasil.
 					</p>
+					<p>Todos os direitos reservados. 2023.</p>
 				</>
 			}
 			columns={[

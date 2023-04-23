@@ -9,17 +9,6 @@ export const FooterStyle = styled.footer`
 	position: relative;
 	width: 100%;
 
-	&:before {
-		background: linear-gradient(90deg, transparent, #fff3, transparent);
-		content: '';
-		height: 100%;
-		left: 0;
-		pointer-events: none;
-		position: absolute;
-		top: 0;
-		width: 100%;
-	}
-
 	& > .centeredFooter {
 		display: flex;
 		flex-direction: row;
@@ -65,7 +54,7 @@ export const FooterStyle = styled.footer`
 				gap: 4px;
 
 				a {
-					color: #fff9;
+					color: #fffc;
 					font-size: 14px;
 
 					&:hover {

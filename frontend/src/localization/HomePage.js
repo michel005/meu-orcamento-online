@@ -7,8 +7,10 @@ export const HOME_PAGE = (events) => [
 			<>
 				<h1>A solução completa para o seu restaurante</h1>
 				<p>
-					Exercitation elit cupidatat velit elit. Et Lorem ut laborum qui ipsum voluptate Lorem
-					laboris in ex ex. Labore elit duis Lorem officia pariatur ullamco.
+					Somos um pacote de soluções para um restaurante que pretende operar com modernidade e
+					praticidade para seus funcionários e clientes. Nossa plataforma se adapta a sua
+					necessidade e é focada principalmente em restaurantes que atendem tanto presencialmente
+					quanto em delivery.
 				</p>
 			</>
 		),
@@ -24,11 +26,15 @@ export const HOME_PAGE = (events) => [
 				icon: 'dns',
 				content:
 					'Um sistema que ira operar 24h por dia, 7 dias por semana, com a agilidade e praticidade que você precisa. Além disso temos servidores com redundância, isso significa que nosso serviço ficara disponível para atender suas necessidades',
+				modalContent:
+					'Um sistema que ira operar 24h por dia, 7 dias por semana, com a agilidade e praticidade que você precisa. Além disso temos servidores com redundância, isso significa que nosso serviço ficara disponível para atender suas necessidades',
 			},
 			{
-				header: 'Fácil de configurar',
+				header: 'Fácil de configurar ',
 				icon: 'settings',
 				content:
+					'Todos os passos para implantação em seu estabelecimento estão descritos juntos com vários artigos de ajuda.',
+				modalContent:
 					'Todos os passos para implantação em seu estabelecimento estão descritos juntos com vários artigos de ajuda.',
 			},
 			{

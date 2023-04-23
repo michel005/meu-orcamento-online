@@ -4,7 +4,7 @@ export const LandingPageTemplateStyle = styled.main`
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	justify-content: center;
+	justify-content: flex-start;
 	gap: 100px;
 	margin-inline: auto;
 	padding-block: 35px;

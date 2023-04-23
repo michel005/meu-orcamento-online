@@ -60,6 +60,20 @@ export const HeaderStyle = styled.header`
 				}
 			}
 		}
+
+		& > .buttonContainer {
+			display: none;
+			flex-direction: row;
+			justify-content: flex-end;
+			flex-grow: 1;
+			margin-right: 8px;
+			z-index: 100;
+
+			.menuButton {
+				font-size: 22px;
+				font-weight: bold;
+			}
+		}
 	}
 
 	&[data-fixed] {
@@ -74,9 +88,39 @@ export const HeaderStyle = styled.header`
 	@media (max-width: 1200px) {
 		& > .centered {
 			padding-inline: 14px;
+		}
+	}
 
+	@media (max-width: 700px) {
+		& > .centered {
 			& > .rightContent {
-				display: none;
+				background-color: #fff;
+				backdrop-filter: blur(10px);
+				border-radius: 14px;
+				box-shadow: #ccc 0 0 4px;
+				flex-direction: column;
+				justify-content: flex-start;
+				opacity: 0;
+				padding: 50px 14px 14px;
+				pointer-events: none;
+				position: absolute;
+				right: 10px;
+				top: 10px;
+				transition: all 0.25s;
+				z-index: 100;
+
+				&[data-show='true'] {
+					opacity: 1;
+					pointer-events: all;
+				}
+
+				& > a {
+					margin: 0;
+				}
+			}
+
+			& > .buttonContainer {
+				display: flex;
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-import { LandingPage } from 'pages/LandingPage'
+import { LandingPage } from 'pages/public/LandingPage'
 
 export const App = () => {
 	return <LandingPage />

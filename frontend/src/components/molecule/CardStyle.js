@@ -12,17 +12,22 @@ export const CardStyle = styled.div`
 	padding: 14px 21px;
 	transition: all 0.5s;
 
-	h2 {
+	.header {
 		color: #333;
 		font-size: 20px;
+		font-weight: bold;
+		justify-content: flex-start;
 		padding-top: 7px;
-		text-align: left;
 		transition: all 0.5s;
 
-		.icon {
-			font-size: 20px;
-			margin-right: 10px;
-			translate: 0 3px;
+		&[data-has-click='false'] {
+			pointer-events: none;
+		}
+
+		&[data-has-click='true'] {
+			&::before {
+				color: ${(props) => props.color || 'var(--ACTIVE_COLOR)'};
+			}
 		}
 	}
 
@@ -42,7 +47,7 @@ export const CardStyle = styled.div`
 		border-color: ${(props) => props.color || 'var(--ACTIVE_COLOR)'};
 		box-shadow: ${(props) => props.color || 'var(--ACTIVE_COLOR)'} 0 0 4px;
 
-		h2 {
+		.header[data-has-click='true'] {
 			color: ${(props) => props.color || 'var(--ACTIVE_COLOR)'};
 		}
 	}

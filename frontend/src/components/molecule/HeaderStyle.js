@@ -7,6 +7,7 @@ export const HeaderStyle = styled.header`
 	height: var(--LANDING-PAGE-HEADER-HEIGHT);
 	min-height: var(--LANDING-PAGE-HEADER-HEIGHT);
 	justify-content: center;
+	z-index: 100;
 
 	& > .centered {
 		display: flex;
@@ -82,7 +83,7 @@ export const HeaderStyle = styled.header`
 		position: absolute;
 		top: 0;
 		width: 100%;
-		z-index: 100;
+		z-index: 101;
 	}
 
 	@media (max-width: 1200px) {

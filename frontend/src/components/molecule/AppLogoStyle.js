@@ -39,8 +39,8 @@ export const AppLogoStyle = styled.div`
 
 	&[data-enable-click='true']:hover {
 		cursor: pointer;
+
 		& > img {
-			rotate: -25deg;
 			scale: 1.1;
 		}
 

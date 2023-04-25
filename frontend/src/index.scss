@@ -102,10 +102,10 @@ hr {
 .icon {
 	font-family: 'Material Symbols Outlined';
 	display: inline-block;
+	margin-block: auto;
 
 	&.sharp {
 		font-family: 'Material Symbols Sharp';
-		display: inline-block;
 	}
 
 	&.fill {
@@ -133,8 +133,27 @@ button {
 	padding: 10px 17px;
 	transition: all 0.25s;
 
+	&:disabled {
+		background-color: var(--ACTIVE_COLOR_33);
+		cursor: not-allowed;
+
+		&:hover {
+			background-color: var(--ACTIVE_COLOR_33);
+		}
+	}
+
 	&:hover {
 		background-color: var(--ACTIVE_COLOR_CC);
+	}
+
+	&[data-icon-image]::before {
+		background-image: var(--data-icon-image);
+		background-position: center;
+		background-size: cover;
+		content: '';
+		height: 18px;
+		margin-block: auto;
+		width: 18px;
 	}
 
 	&[data-icon]::before {
@@ -144,12 +163,33 @@ button {
 		margin-block: auto;
 	}
 
+	&[data-icon-right] {
+		&::before {
+			content: none;
+		}
+		&::after {
+			content: attr(data-icon-right);
+			display: inline-block;
+			font-family: 'Material Symbols Outlined';
+			margin-block: auto;
+		}
+	}
+
 	&[data-secondary] {
 		background-color: #3331;
 		color: #333;
 
 		&:hover {
 			background-color: #3333;
+		}
+
+		&:disabled {
+			background-color: #3333;
+			cursor: not-allowed;
+
+			&:hover {
+				background-color: #3333;
+			}
 		}
 	}
 
@@ -166,6 +206,16 @@ button {
 			color: inherit;
 			opacity: 0.5;
 		}
+	}
+
+	&[data-header] {
+		font-size: 36px;
+		font-weight: bold;
+		justify-content: flex-start;
+	}
+
+	&[data-text-only] {
+		pointer-events: none;
 	}
 }
 

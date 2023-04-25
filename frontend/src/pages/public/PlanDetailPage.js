@@ -33,21 +33,26 @@ export const PlanDetailPage = () => {
 									navigate('/plans')
 								}}
 							>
-								Voltar
+								Planos
 							</button>
 						</div>
 					),
-					master: {
-						type: 'right_block',
-						variation: 'modal',
-						content: (
-							<>
-								<h1>{selectedPlan?.header}</h1>
-								{selectedPlan?.content}
-							</>
-						),
-						photo: selectedPlan?.photo,
-					},
+					master: [
+						{
+							type: 'right_block',
+							variation: 'modal',
+							content: (
+								<>
+									<button data-link data-header data-text-only data-icon={selectedPlan.icon}>
+										{selectedPlan?.header}
+									</button>
+									{selectedPlan?.details}
+								</>
+							),
+							photo: selectedPlan?.photo,
+						},
+						...(selectedPlan?.otherDetails || []),
+					],
 				},
 			]}
 		/>

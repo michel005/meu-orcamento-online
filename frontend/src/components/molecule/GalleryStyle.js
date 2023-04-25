@@ -11,8 +11,13 @@ export const GalleryStyle = styled.div`
 	}
 
 	& > .content {
-		color: #999;
+		color: #555;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
 		text-align: center;
+		max-width: 800px;
+		margin-inline: auto;
 	}
 
 	& > .pictures {

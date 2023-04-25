@@ -17,9 +17,11 @@ export const AppLogo = ({ name, description, logo, enableClick = false }) => {
 		>
 			<img src={logo} alt="Logotipo do Restaurante Fácil" />
 			<div className="appName">
-				<span className="name">
-					{name.split(' ')[0]} <span className="accent">{name.split(' ')[1]}</span>
-				</span>
+				{name && (
+					<span className="name">
+						{name.split(' ')[0]} <span className="accent">{name.split(' ')[1]}</span>
+					</span>
+				)}
 				<span className="description">{description}</span>
 			</div>
 		</AppLogoStyle>

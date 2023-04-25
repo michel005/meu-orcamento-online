@@ -5,13 +5,15 @@ export const LeftRightSideStyle = styled.div`
 	flex-direction: row;
 	gap: 21px;
 	position: relative;
+	min-height: 400px;
+	z-index: 90;
 
 	.leftSide,
 	.rightSide {
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
 		gap: 10px;
-		margin-inline: auto;
 		width: 50%;
 
 		h1 {
@@ -20,12 +22,21 @@ export const LeftRightSideStyle = styled.div`
 		}
 
 		p {
-			color: #777;
+			color: #111;
 			max-width: 80%;
 		}
 
 		img {
 			height: 400px;
+		}
+	}
+
+	&[data-inverted='true'] {
+		filter: invert(1);
+
+		img,
+		button {
+			filter: invert(1);
 		}
 	}
 
@@ -60,9 +71,7 @@ export const LeftRightSideStyle = styled.div`
 	&[data-modal='true'] {
 		.leftSide,
 		.rightSide {
-			flex-grow: 1;
 			text-align: left;
-			width: 100%;
 
 			&:empty {
 				display: none;

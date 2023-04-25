@@ -7,7 +7,7 @@ export const LandingPageFooter = () => {
 		<Footer
 			appInformation={
 				<>
-					<AppLogo logo={PROJECT_INFO.logo} name={PROJECT_INFO.name} />
+					<AppLogo logo={PROJECT_INFO.logo} />
 					<p>
 						{PROJECT_INFO.name} é uma marca registrada e tem todos os direitos reservados. Somos uma
 						empresa residente no endereço Rua Vitor do Amaral, 1062, apto 505B, Maringá, Paraná,

@@ -5,16 +5,21 @@ export const FieldStyle = styled.div`
 	flex-direction: column;
 	font-size: 14px;
 	gap: 4px;
+	position: relative;
 
 	& > label {
 		font-weight: bold;
 	}
 
-	& > input {
+	& > input,
+	& > textarea,
+	& > .value {
 		background-color: #fff;
 		border: 1px solid #aaa;
 		border-radius: 7px;
 		font-size: inherit;
+		max-width: 100%;
+		min-width: 100%;
 		padding: 10px;
 		transition: all 0.5s;
 
@@ -25,5 +30,9 @@ export const FieldStyle = styled.div`
 		&:focus {
 			border-color: var(--ACTIVE_COLOR);
 		}
+	}
+
+	& > .value {
+		background-color: #f4f4f4;
 	}
 `

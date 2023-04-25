@@ -43,6 +43,8 @@ export const CardStyle = styled.div`
 		}
 	}
 
+	--ACTIVE: ${(props) => props.color || 'var(--ACTIVE_COLOR)'};
+
 	&:hover {
 		border-color: ${(props) => props.color || 'var(--ACTIVE_COLOR)'};
 		box-shadow: ${(props) => props.color || 'var(--ACTIVE_COLOR)'} 0 0 4px;

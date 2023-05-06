@@ -21,18 +21,18 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: templateDatabase
+      database: restauranteFacil
 project:
-  shortName: Template (DEV)
-  fullName: Template de Desenvolvimento (DEV)
+  shortName: Restaurante Fácil (DEV)
+  fullName: Restaurante Fácil (DEV)
   supportEmail: mdgrigoli@hotmail.com.br
-  mainURL: https://meuorcamentoonline.com.br/
+  mainURL: https://restaurantefacil.com.br/
   config:
     forceInviteToCreateUser: true
   s3:
     accessKey: AKIA3E3DOYPW56TJYCX4
     secretKey: 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
-    repo: meuorcamentoonline.com.br
+    repo: restaurantefacil.com.br
 web:
   cors:
     allowed-origins: "*"

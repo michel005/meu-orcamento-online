@@ -1,6 +1,5 @@
 package com.michel.template.service;
 
-import com.michel.template.entity.Invite;
 import freemarker.template.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,15 +60,6 @@ public class MailService {
         model.put("userName", userName);
         model.put("date", date);
         sendEmail("Mudança de Senha - " + projectFullName, to, "passwordChange.html", model);
-    }
-
-    public void inviteMail(Invite invite) {
-        Map<String, Object> model = new TreeMap<>();
-        model.put("userName", invite.getUser().getFullName());
-        model.put("userEmail", invite.getUser().getEmail());
-        model.put("code", invite.getCode());
-        model.put("customMessage", invite.getCustomMessage());
-        sendEmail("Convite - " + projectFullName, invite.getEmail(), "invite.html", model);
     }
 
     public void sendEmail(String subject, String to, String template, Map<String, Object> model) {

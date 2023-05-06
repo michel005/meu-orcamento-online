@@ -68,7 +68,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.michel.template.TemplateApplication</mainClass>
+                            <mainClass>com.michel.template.RestauranteFacilApplication</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

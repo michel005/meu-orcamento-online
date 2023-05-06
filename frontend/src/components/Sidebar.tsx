@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { FlexColumn } from './FlexColumn'
@@ -6,15 +6,23 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { AppLogo } from './AppLogo'
 import { FlexRow } from './FlexRow'
 import { UserContext } from '../context/UserContext'
+import axios from 'axios'
+import { RFLogo } from '../assets/RFLogo'
+import { useModal } from '../hook/useModal'
 
 export const SidebarStyle = styled.div`
 	background-color: #111;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	overflow-y: auto;
 	position: relative;
 	transition: all 0.25s;
 	width: 250px;
+
+	&::-webkit-scrollbar {
+		width: 0;
+	}
 
 	.menuButton {
 		font-size: 20px;
@@ -28,11 +36,15 @@ export const SidebarStyle = styled.div`
 		background-color: #333;
 		border-bottom: 4px solid var(--active-color);
 		padding: 21px 7px;
+		transition: all 0.25s;
 		width: 100%;
 
-		img {
+		img,
+		.fallBack {
+			background-color: #ccc;
 			border-radius: 50%;
 			box-shadow: #333 0 0 7px;
+			color: transparent;
 			height: 100px;
 			margin-inline: auto;
 			width: 100px;
@@ -74,6 +86,7 @@ export const SidebarStyle = styled.div`
 			display: flex;
 			gap: 10px;
 			padding-block: 14px;
+			transition: all 0.25s;
 
 			&.active {
 				background-color: #fff1;
@@ -105,9 +118,10 @@ export const SidebarStyle = styled.div`
 			border-bottom: none;
 			padding: 0 10px;
 
-			img {
-				height: auto;
-				width: 100%;
+			img,
+			.fallBack {
+				height: 50px;
+				width: 50px;
 			}
 
 			.userDetails {
@@ -126,6 +140,8 @@ export const SidebarStyle = styled.div`
 		}
 
 		.options {
+			gap: 0;
+
 			a {
 				border-left: none;
 				border-bottom: 4px solid transparent;
@@ -135,7 +151,7 @@ export const SidebarStyle = styled.div`
 				text-align: center;
 
 				&::before {
-					font-size: 16px;
+					font-size: 20px;
 				}
 
 				&:hover {
@@ -165,9 +181,11 @@ export const SidebarStyle = styled.div`
 export const Sidebar = () => {
 	const { user, logout } = useContext(UserContext)
 
-	const [reduced, setReduced] = useState(false)
+	const [reduced, setReduced] = useState<boolean>(false)
+	const [haveImage, setHaveImage] = useState<boolean>(true)
 
 	const navigate = useNavigate()
+	const { question } = useModal()
 
 	return (
 		<SidebarStyle data-reduced={reduced}>
@@ -178,7 +196,17 @@ export const Sidebar = () => {
 				onClick={() => setReduced((x) => !x)}
 			/>
 			<FlexColumn className="userInfo">
-				<img src={user?.picture} />
+				{!haveImage ? (
+					<RFLogo className="fallBack" />
+				) : (
+					<img
+						referrerPolicy="no-referrer"
+						src={user?.picture}
+						onError={(e) => {
+							setHaveImage(false)
+						}}
+					/>
+				)}
 				<div className="userDetails">
 					<b>{user?.name}</b>
 					<p>{user?.email}</p>
@@ -188,8 +216,13 @@ export const Sidebar = () => {
 					<button
 						data-link
 						onClick={() => {
-							navigate('/')
-							if (logout) logout()
+							question({
+								header: 'Deseja realmente sair do seu usuário?',
+								confirm: () => {
+									navigate('/')
+									logout?.()
+								},
+							})
 						}}
 					>
 						Sair

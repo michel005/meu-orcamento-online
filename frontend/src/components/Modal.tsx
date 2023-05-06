@@ -75,8 +75,8 @@ export const Modal = ({ modal }: { modal: ModalType }) => {
 								data-primary
 								data-icon="check"
 								onClick={() => {
-									modal?.onClose?.()
 									if (modal.id) {
+										modal?.confirm?.(modal.id)
 										close(modal.id)
 									}
 								}}

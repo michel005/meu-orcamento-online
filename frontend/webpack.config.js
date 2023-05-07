@@ -4,11 +4,15 @@ const path = require('path')
 module.exports = {
 	entry: './src/index.tsx',
 	mode: 'development',
+	output: {
+		publicPath: '/',
+	},
 	devServer: {
 		static: path.join(__dirname, 'dist'),
 		compress: true,
 		port: 80,
 		open: false,
+		historyApiFallback: true,
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js', '.jsx', '.scss'],

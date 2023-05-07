@@ -163,6 +163,10 @@ export const PublicAppStyle = styled.div`
 		width: 100%;
 		z-index: 90;
 
+		p {
+			color: #aaa;
+		}
+
 		&:nth-child(even) {
 			animation: thirdBlockEven 0.5s linear;
 		}

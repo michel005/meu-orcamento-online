@@ -15,6 +15,7 @@ export const SidebarStyle = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	min-width: 250px;
 	overflow-y: auto;
 	position: relative;
 	transition: all 0.25s;
@@ -102,10 +103,12 @@ export const SidebarStyle = styled.div`
 	}
 
 	.appLogo {
-		padding: 21px 7px;
+		margin-inline: auto;
+		padding: 21px 0;
 	}
 
 	&[data-reduced='true'] {
+		min-width: 70px;
 		width: 70px;
 
 		.menuButton {
@@ -169,6 +172,8 @@ export const SidebarStyle = styled.div`
 		.appLogo {
 			svg {
 				margin-inline: auto;
+				height: 60px;
+				width: 60px;
 			}
 
 			.text {

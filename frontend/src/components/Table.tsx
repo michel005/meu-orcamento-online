@@ -15,7 +15,7 @@ export type TableType = {
 export type TableColumnDefinitionType = {
 	name: string
 	header: string
-	modifier: (value: any) => any
+	modifier?: (value: any) => any
 }
 
 export const Table = ({ definition = [], value = [], onClick = () => null }: TableType) => {
@@ -34,7 +34,7 @@ export const Table = ({ definition = [], value = [], onClick = () => null }: Tab
 	})
 
 	return (
-		<table data-length={value.length}>
+		<table style={{ '--data-length': value.length } as React.CSSProperties}>
 			<thead>
 				<tr>
 					{definition.map((column, columnKey) => {

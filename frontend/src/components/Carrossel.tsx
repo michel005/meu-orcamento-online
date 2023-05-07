@@ -4,8 +4,12 @@ import { FlexColumn } from './FlexColumn'
 import { FlexRow } from './FlexRow'
 import { useState } from 'react'
 
-export const CarrosselStyle = styled.div`
-    --current: attr(data-current)
+export type CarrosselStyleType = {
+	current: number
+}
+
+export const CarrosselStyle: any = styled.div`
+	--current: ${(props: any) => props.current || 0};
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
@@ -81,7 +85,7 @@ export const Carrossel = ({ items = [] }: any) => {
 	const [current, setCurrent] = useState(0)
 
 	return (
-		<CarrosselStyle>
+		<CarrosselStyle current={current}>
 			<FlexRow className="slideContainer" data-current={current}>
 				<FlexRow className="allSlides">
 					{items.map((item: any, itemKey: number) => {

@@ -31,15 +31,15 @@ export const NavbarStyle = styled.nav`
 	a[data-link] {
 		align-self: center;
 		font-weight: normal;
+		opacity: 0.7;
 
 		&:hover {
-			font-weight: bold;
 			opacity: 1;
 		}
 
 		&.active {
 			color: #fff;
-			font-weight: bold;
+			opacity: 1;
 		}
 	}
 
@@ -51,6 +51,10 @@ export const NavbarStyle = styled.nav`
 		gap: 14px;
 		max-width: var(--responsive-size);
 		position: relative;
+
+		.leftSide {
+			align-items: center;
+		}
 
 		.rightSide {
 			flex-grow: 1;

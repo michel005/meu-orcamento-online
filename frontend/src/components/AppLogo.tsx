@@ -9,8 +9,8 @@ export const AppLogoStyle = styled.div`
 	gap: 7px;
 
 	svg {
-		height: 48px;
-		width: 48px;
+		height: 40px;
+		width: 40px;
 	}
 
 	.text {
@@ -19,7 +19,7 @@ export const AppLogoStyle = styled.div`
 		white-space: nowrap;
 
 		h3 {
-			font-size: 24px;
+			font-size: 20px;
 			white-space: nowrap;
 
 			span {
@@ -27,6 +27,11 @@ export const AppLogoStyle = styled.div`
 				font-weight: bold;
 				white-space: nowrap;
 			}
+		}
+
+		small {
+			color: #fffa;
+			font-size: 12px;
 		}
 	}
 
@@ -36,6 +41,10 @@ export const AppLogoStyle = styled.div`
 
 			span {
 				color: var(--active-color);
+				filter: invert(1);
+			}
+
+			small {
 				filter: invert(1);
 			}
 		}

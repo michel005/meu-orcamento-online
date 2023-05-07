@@ -62,7 +62,6 @@ export const LoginPage = () => {
 
 	const login = useGoogleLogin({
 		onSuccess: (response: TokenResponse) => {
-			navigate('/')
 			setUser(response)
 		},
 		onError: (error) => console.log('Login Failed:', error),

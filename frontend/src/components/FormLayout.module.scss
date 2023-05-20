@@ -1,0 +1,48 @@
+.formLayout {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	max-width: 1000px;
+
+	.header {
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+
+		[data-row] {
+			display: flex;
+			flex-direction: row;
+			gap: 14px;
+
+			& > * {
+				flex-grow: 1;
+			}
+		}
+	}
+
+	.footer {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 14px;
+
+		&[data-alignment='left'] {
+			justify-content: flex-start;
+		}
+
+		&[data-alignment='center'] {
+			justify-content: center;
+		}
+
+		&[data-alignment='right'] {
+			justify-content: flex-end;
+		}
+	}
+}

@@ -1,0 +1,21 @@
+.buttonGroup {
+	border: 2px solid var(--active-color);
+	border-radius: 7px;
+	display: flex;
+	flex-direction: row;
+	overflow: hidden;
+
+	button {
+		background-color: transparent;
+		border: none !important;
+		border-radius: 0;
+
+		&[data-selected='true'] {
+			background-color: var(--active-color-33);
+		}
+
+		&[data-selected='true'][data-variation='primary'] {
+			background-color: var(--active-color-cc);
+		}
+	}
+}

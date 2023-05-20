@@ -1,92 +1,25 @@
 import React from 'react'
-import styled from 'styled-components'
-import { FlexColumn } from './FlexColumn'
-import { FlexRow } from './FlexRow'
-import { useModal } from '../hook/useModal'
-import { ModalType } from '../context/ModalContext'
+import style from './Modal.module.scss'
+import styleButton from './Button.module.scss'
+import { Button } from './Button'
 
-const ModalStyle = styled.div`
-	align-items: center;
-	backdrop-filter: blur(4px);
-	background-color: #3333;
-	display: flex;
-	flex-direction: row;
-	font-size: 14px;
-	height: 100%;
-	justify-content: center;
-	left: 0;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	z-index: 100;
+export type ModalType = {
+	onClose?: () => void
+	children: any | null | undefined
+}
 
-	.modal {
-		background-color: #fff;
-		box-shadow: #ccc 0 0 4px;
-		margin-inline: 21px;
-		max-width: 500px;
-		padding: 21px;
-		width: 500px;
-
-		.closeModalButton {
-			color: #333;
-			font-size: 14px;
-		}
-	}
-`
-
-export const Modal = ({ modal }: { modal: ModalType }) => {
-	const { close } = useModal()
-
+export const Modal = ({ children, onClose = () => null }: ModalType) => {
 	return (
-		<ModalStyle>
-			<FlexColumn className="modal">
-				<FlexRow>
-					<h3 data-grow>{modal.header}</h3>{' '}
-					<button
-						className="closeModalButton"
-						data-link
-						data-icon="close"
-						onClick={() => {
-							modal?.onClose?.()
-							if (modal.id) {
-								close(modal.id)
-							}
-						}}
-					/>
-				</FlexRow>
-				<FlexColumn>
-					{modal.message}
-					{modal.type === 'question' && (
-						<FlexRow style={{ justifyContent: 'flex-end' }}>
-							<button
-								data-secondary
-								data-icon="close"
-								onClick={() => {
-									modal?.onClose?.()
-									if (modal.id) {
-										close(modal.id)
-									}
-								}}
-							>
-								Cancelar
-							</button>
-							<button
-								data-primary
-								data-icon="check"
-								onClick={() => {
-									if (modal.id) {
-										modal?.confirm?.(modal.id)
-										close(modal.id)
-									}
-								}}
-							>
-								Confirmar
-							</button>
-						</FlexRow>
-					)}
-				</FlexColumn>
-			</FlexColumn>
-		</ModalStyle>
+		<div className={style.modal}>
+			<div className={style.content}>
+				<Button
+					leftIcon="close"
+					variation="link"
+					className={`${styleButton.button} ${style.closeButton}`}
+					onClick={onClose}
+				/>
+				{children}
+			</div>
+		</div>
 	)
 }

@@ -1,0 +1,42 @@
+.label {
+	color: #fff;
+	display: flex;
+	flex-direction: row;
+	font-size: 14px;
+	gap: 7px;
+	padding: 7px 10px;
+
+	&[data-icon]::before {
+		color: inherit;
+		content: attr(data-icon);
+		font-family: 'Material Symbols Outlined';
+		font-size: inherit;
+		font-weight: inherit;
+	}
+
+	&[data-variation='default'] {
+		background-color: var(--active-color);
+	}
+
+	&[data-variation='white'] {
+		background-color: #fff9;
+		color: #333;
+	}
+
+	&[data-variation='red'] {
+		background-color: #f009;
+		color: #fff;
+	}
+
+	&[data-rounded='no'] {
+		border-radius: 0;
+	}
+
+	&[data-rounded='less'] {
+		border-radius: 7px;
+	}
+
+	&[data-rounded='full'] {
+		border-radius: 50%;
+	}
+}

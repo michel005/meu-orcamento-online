@@ -1,0 +1,43 @@
+.accordion {
+	border: 2px solid var(--active-color);
+	border-radius: 7px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	.panel {
+		display: flex;
+		flex-direction: column;
+
+		& > button {
+			border: none;
+			border-radius: 0;
+
+			&::before {
+				transition: all 0.25s;
+			}
+		}
+
+		.content {
+			background-color: #fff;
+			height: 0;
+			overflow: hidden;
+			padding-inline: 14px;
+			transition: all 0.25s;
+		}
+
+		&[data-show='true'] {
+			& > button {
+				&::before {
+					rotate: 180deg;
+				}
+			}
+
+			.content {
+				height: auto;
+				padding: 14px;
+				overflow: auto;
+			}
+		}
+	}
+}

@@ -1,0 +1,104 @@
+.button {
+	align-items: center;
+	border: 2px solid transparent;
+	border-radius: 7px;
+	color: #666;
+	cursor: pointer;
+	display: flex;
+	flex-direction: row;
+	font-size: 16px;
+	gap: 7px;
+	padding: 10px 14px;
+	position: relative;
+	transition: all 0.25s;
+
+	&:hover {
+		border-color: #ddd;
+	}
+
+	&:active {
+		border-color: #aaa;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	&[data-icon-left]::before {
+		color: inherit;
+		content: attr(data-icon-left);
+		font-family: 'Material Symbols Outlined';
+		font-size: 16px;
+		font-weight: inherit;
+	}
+
+	&[data-icon-right]::after {
+		color: inherit;
+		content: attr(data-icon-right);
+		font-family: 'Material Symbols Outlined';
+		font-size: 16px;
+		font-weight: inherit;
+	}
+
+	&[data-variation='primary'] {
+		background-color: var(--active-color);
+		border-color: var(--active-color);
+		color: #fff;
+
+		&:hover {
+			background-color: var(--active-color-aa);
+		}
+
+		&:active {
+			background-color: var(--active-color-cc);
+		}
+	}
+
+	&[data-variation='secondary'] {
+		background-color: transparent;
+		border-color: var(--active-color);
+		color: var(--active-color);
+
+		&:hover {
+			background-color: var(--background-color);
+		}
+
+		&:active {
+			background-color: var(--active-color-33);
+		}
+	}
+
+	&[data-variation='link'] {
+		background-color: transparent;
+		border: none;
+		color: var(--active-color);
+		padding: 0;
+		transition: opacity 0.5s;
+
+		&:hover {
+			border: none;
+			opacity: 0.8;
+		}
+	}
+
+	&[data-loading='true'] {
+		pointer-events: none;
+
+		&::before {
+			animation: spin 1.5s linear infinite;
+			color: inherit;
+			content: 'refresh';
+			font-family: 'Material Symbols Outlined';
+			font-size: inherit;
+			font-weight: normal;
+			margin-block: auto;
+		}
+	}
+
+	@keyframes spin {
+		100% {
+			rotate: 360deg;
+		}
+	}
+}

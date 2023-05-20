@@ -1,0 +1,45 @@
+.barChart {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+	gap: 7px;
+	min-height: 200px;
+
+	.barContent {
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+		width: 100%;
+
+		.bar {
+			background-color: #eee;
+			border-radius: 7px;
+			flex-grow: 1;
+			height: 100%;
+			position: relative;
+			transition: all 0.25s;
+			width: 100%;
+
+			&::before {
+				background-color: var(--active-color-cc);
+				border-radius: 7px;
+				bottom: 0;
+				content: '';
+				height: var(--value, 10%);
+				left: 0;
+				position: absolute;
+				transition: all 0.25s;
+				width: 100%;
+			}
+		}
+
+		.label {
+			background-color: var(--active-color);
+			border-radius: 7px;
+			color: #fff;
+			padding-block: 7px;
+			text-align: center;
+			width: 100%;
+		}
+	}
+}

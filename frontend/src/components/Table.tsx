@@ -1,85 +1,109 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import style from './Table.module.scss'
 
-export type TableSortType = {
-	column?: string
-	direction?: 'ASC' | 'DESC'
+export type TableDefinition = {
+	align?: 'left' | 'center' | 'right'
+	className?: string | undefined
+	field: string
+	headerIcon?: string | null
+	label: string
+	valueModifier?: (row: any) => any
 }
 
 export type TableType = {
-	definition: TableColumnDefinitionType[]
 	value: any[]
-	onClick: any
+	definition?: TableDefinition[]
+	onClick?: (row: any) => void
 }
 
-export type TableColumnDefinitionType = {
-	name: string
-	header: string
-	modifier?: (value: any) => any
-}
+export const Table = ({ definition = [], value, onClick = () => null }: TableType) => {
+	const [sort, setSort] = useState<any>({})
 
-export const Table = ({ definition = [], value = [], onClick = () => null }: TableType) => {
-	const [sort, setSort] = useState<TableSortType>({})
-	const sortedValue = (value || []).sort((x, y) => {
-		if (!sort?.column) {
-			return 0
+	const sortValues = (x: any, y: any) => {
+		let result = 0
+		if (!sort.field) {
+			result = 0
 		}
-		if (x[sort?.column] > y[sort?.column]) {
-			return sort?.direction === 'ASC' ? 1 : -1
-		} else if (x[sort?.column] < y[sort?.column]) {
-			return sort?.direction === 'ASC' ? -1 : 1
-		} else {
-			return 0
+		if ((x[sort.field] || '') > (y[sort.field] || '')) {
+			result = 1
 		}
-	})
+		if ((x[sort.field] || '') < (y[sort.field] || '')) {
+			result = -1
+		}
+		return sort.direction === 'ASC' ? result : result * -1
+	}
 
 	return (
-		<table style={{ '--data-length': value.length } as React.CSSProperties}>
+		<table
+			className={style.table}
+			style={{ '--data-length': value.length.toString() } as React.CSSProperties}
+		>
 			<thead>
 				<tr>
-					{definition.map((column, columnKey) => {
+					{definition.map((def) => {
 						return (
-							<td
-								data-sort={sort?.column === column.name && !!sort?.column}
-								data-sort-desc={
-									sort?.column === column.name && sort?.direction === 'DESC'
-								}
+							<th
 								onClick={() => {
-									setSort((x) => {
-										x.direction =
-											sort?.column === column.name
-												? x.direction === 'ASC'
-													? 'DESC'
-													: 'ASC'
-												: 'ASC'
-										x.column = column.name
+									setSort((x: any) => {
+										if (x.field === def.field) {
+											if (x.direction === 'ASC') {
+												x.direction = 'DESC'
+											} else {
+												x.direction = 'ASC'
+											}
+										} else {
+											x.direction = 'ASC'
+										}
+										x.field = def.field
 										return { ...x }
 									})
 								}}
-								key={columnKey}
+								key={def.field}
+								className={def?.className}
+								data-alignment={def?.align}
+								data-icon={def.headerIcon}
 							>
-								{column.header}
-							</td>
+								<div
+									data-icon={def.headerIcon}
+									data-sort-desc={
+										sort.field === def.field && sort.direction === 'DESC'
+									}
+									data-sort={sort.field === def.field}
+								>
+									{def.label}
+								</div>
+							</th>
 						)
 					})}
 				</tr>
 			</thead>
 			<tbody>
-				{sortedValue.map((row, rowKey) => {
-					return (
-						<tr key={rowKey} onDoubleClick={() => onClick(row)}>
-							{definition.map((column, columnKey) => {
-								return (
-									<td key={columnKey}>
-										{column.modifier
-											? column.modifier(row[column.name])
-											: row[column.name]}
-									</td>
-								)
-							})}
+				{value &&
+					value.sort(sortValues).map((row, rowKey) => {
+						return (
+							<tr key={rowKey} onDoubleClick={() => onClick(row)}>
+								{definition.map((def) => {
+									return (
+										<td
+											key={`${rowKey}_${def.field}`}
+											data-alignment={def?.align}
+											className={def?.className}
+										>
+											{def?.valueModifier
+												? def?.valueModifier(row)
+												: row[def.field]}
+										</td>
+									)
+								})}
+							</tr>
+						)
+					})}
+				{!value ||
+					(value.length === 0 && (
+						<tr>
+							<td colSpan={definition.length}>Nenhum registro encontrado</td>
 						</tr>
-					)
-				})}
+					))}
 			</tbody>
 		</table>
 	)

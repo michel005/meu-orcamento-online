@@ -1,0 +1,116 @@
+.calendar {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: #ccc 0 0 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 14px;
+
+	.buttons {
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+
+		span {
+			flex-grow: 1;
+			font-size: 18px;
+			font-weight: bold;
+			margin-block: auto;
+			text-align: center;
+		}
+	}
+
+	.links {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin-top: 7px;
+	}
+
+	.content {
+		box-shadow: #ccc 0 0 4px;
+		border-radius: 7px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.weekDays {
+		align-items: center;
+		background-color: var(--active-color);
+		box-shadow: #ccc 0 0 4px;
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		overflow: hidden;
+		position: relative;
+		text-align: center;
+
+		button {
+			border: none;
+			border-radius: 0;
+			height: 48px;
+			justify-content: center;
+			padding: 0;
+			pointer-events: none;
+		}
+	}
+
+	.days {
+		align-items: center;
+		background-color: #fff;
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		overflow: hidden;
+		position: relative;
+		text-align: center;
+
+		.day {
+			background-color: #fff;
+			border: none;
+			border-radius: 0;
+			color: #666;
+			cursor: pointer;
+			height: 48px;
+			justify-content: center;
+			transition: background-color 0.25s;
+
+			&:disabled {
+				cursor: default;
+				opacity: 0.4;
+			}
+
+			&:nth-child(even) {
+				background-color: var(--background-color);
+			}
+
+			&[data-current-month='true'] {
+				&:hover {
+					background-color: #ccc;
+				}
+			}
+
+			&[data-current-day='true'] {
+				background-color: #aaa;
+				color: #fff;
+
+				&:hover {
+					background-color: #aaa;
+				}
+			}
+
+			&[data-selected-day='true'] {
+				background-color: var(--active-color-aa);
+				color: #fff;
+
+				&[data-current-day='true'] {
+					background-color: var(--active-color);
+				}
+
+				&:hover {
+					background-color: var(--active-color-cc);
+				}
+			}
+		}
+	}
+}

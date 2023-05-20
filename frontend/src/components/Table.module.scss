@@ -1,0 +1,128 @@
+.table {
+	background-color: #fff;
+	border-collapse: collapse;
+	border-radius: 7px;
+	box-shadow: #ccc 0 0 4px;
+	font-size: 16px;
+	overflow: hidden;
+
+	td,
+	th {
+		&[data-alignment='left'] {
+			text-align: left;
+
+			div {
+				justify-content: flex-start;
+			}
+		}
+
+		&[data-alignment='center'] {
+			text-align: center;
+
+			div {
+				justify-content: center;
+			}
+		}
+
+		&[data-alignment='right'] {
+			text-align: right;
+
+			div {
+				justify-content: flex-end;
+			}
+		}
+	}
+
+	thead {
+		background-color: var(--active-color);
+		color: #fff;
+
+		tr {
+			th {
+				align-items: center;
+				font-weight: bold;
+				padding: 14px;
+				position: relative;
+				text-align: left;
+				transition: all 0.25s;
+
+				div {
+					color: #fff;
+					display: flex;
+					flex-direction: row;
+
+					&[data-icon]::before {
+						content: attr(data-icon);
+						font-family: 'Material Symbols Outlined';
+						font-size: 16px;
+						font-weight: inherit;
+						margin-right: 7px;
+					}
+
+					&[data-sort='true']::after {
+						align-items: center;
+						content: 'keyboard_arrow_down';
+						display: flex;
+						font-family: 'Material Symbols Outlined';
+						height: 100%;
+						padding-inline: 7px;
+						right: 0;
+						top: 0;
+						transition: all 0.25s;
+					}
+
+					&[data-sort-desc='true']::after {
+						rotate: 180deg;
+					}
+				}
+
+				&::after {
+					background-color: #ccc3;
+					content: '';
+					height: calc((var(--data-length) * 100%) + 100%);
+					opacity: 0;
+					pointer-events: none;
+					position: absolute;
+					top: 0;
+					transition: all 0.25s;
+					left: 0;
+					width: 100%;
+					z-index: 10;
+				}
+
+				&:hover {
+					&::after {
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			background-color: #fff;
+			position: relative;
+			transition: all 0.5s;
+
+			&:hover {
+				background-color: #eee;
+
+				&:nth-child(even) {
+					background-color: #eee;
+				}
+			}
+
+			&:nth-child(even) {
+				background-color: #f7f7f7;
+			}
+
+			td {
+				color: #444;
+				padding: 14px;
+				position: relative;
+				transition: all 0.25s;
+			}
+		}
+	}
+}

@@ -1,0 +1,234 @@
+.sidebar {
+	--width: 250px;
+
+	background-color: #fff;
+	box-shadow: #ccc 0 0 14px;
+	display: flex;
+	flex-direction: column;
+	max-width: var(--width);
+	min-width: var(--width);
+	padding: 24px 17px;
+	position: relative;
+	transition: all 0.25s;
+	width: var(--width);
+
+	.menuButton {
+		align-items: flex-start;
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+		margin-bottom: 24px;
+		overflow: hidden;
+		transition: all 0.5s;
+
+		h2 {
+			flex-direction: column;
+			height: 100%;
+			justify-content: center;
+		}
+
+		button {
+			background-color: var(--active-color-33);
+			border: none;
+			color: var(--active-color);
+
+			&::before {
+				font-size: 18px;
+			}
+
+			&:hover {
+				background-color: var(--active-color-cc);
+				color: #fff;
+			}
+		}
+	}
+
+	.options {
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+		transition: all 0.5s;
+
+		.option {
+			display: flex;
+			flex-direction: column;
+			position: relative;
+
+			button {
+				border: none;
+				color: #333;
+				font-weight: bold;
+				gap: 14px;
+				padding-block: 14px;
+				white-space: nowrap;
+
+				&[data-active='true'] {
+					background-color: var(--active-color-33);
+
+					&::before {
+						color: var(--active-color);
+					}
+				}
+
+				&::before {
+					color: #999;
+				}
+			}
+
+			.tip {
+				background-color: var(--active-color);
+				border-radius: 7px;
+				box-shadow: var(--active-color-33) 0 0 4px;
+				color: #fffc;
+				display: flex;
+				flex-direction: column;
+				gap: 7px;
+				left: calc(100% + 17px);
+				opacity: 0;
+				padding: 40px 21px;
+				pointer-events: none;
+				position: absolute;
+				top: 50%;
+				transform: translateY(0);
+				transition: all 0.25s;
+				transition-delay: 1s;
+				width: 250px;
+				white-space: normal;
+				z-index: 100;
+
+				&::before {
+					border: 15px solid transparent;
+					border-right-color: var(--active-color);
+					content: '';
+					height: 0;
+					left: -14px;
+					position: absolute;
+					transform: translateY(-50%);
+					transition: all 0.25s;
+					top: 50%;
+					width: 0;
+				}
+
+				b {
+					color: #fff;
+				}
+
+				p {
+					font-weight: normal;
+				}
+			}
+
+			&:hover {
+				.tip {
+					opacity: 1;
+					transform: translateY(-50%);
+
+					&::before {
+						left: -24px;
+					}
+				}
+			}
+		}
+	}
+
+	.getStarted {
+		align-items: center;
+		background-color: var(--background-color);
+		border-radius: 14px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin-block: auto 35px;
+		padding: 21px;
+		position: relative;
+
+		img {
+			margin-inline: auto;
+			opacity: 0.5;
+			height: 140px;
+			margin-inline: auto;
+			width: 100%;
+		}
+
+		b {
+			text-align: center;
+		}
+
+		p {
+			color: #aaa;
+			text-align: center;
+		}
+
+		button {
+			font-weight: bold;
+		}
+	}
+
+	.user {
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+		transition: all 0.5s;
+
+		img {
+			border-radius: 50%;
+			width: 36px;
+		}
+
+		.userInfo {
+			display: flex;
+			flex-direction: column;
+			margin-block: auto;
+			overflow: hidden;
+			white-space: nowrap;
+
+			p {
+				color: #aaa;
+			}
+		}
+	}
+
+	&[data-reduced='true'] {
+		--width: 84px;
+
+		.menuButton {
+			height: auto;
+			margin-right: auto;
+
+			h2 {
+				display: none;
+			}
+
+			button {
+				&::before {
+					content: 'menu';
+				}
+			}
+		}
+
+		.options {
+			margin-block: 0 auto;
+
+			button {
+				justify-content: center;
+
+				&::before {
+					margin-inline: auto;
+				}
+			}
+		}
+
+		.getStarted {
+			display: none;
+		}
+
+		.user {
+			margin-inline: auto;
+			padding: 0;
+
+			.userInfo {
+				display: none;
+			}
+		}
+	}
+}

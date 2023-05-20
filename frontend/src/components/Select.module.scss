@@ -1,0 +1,50 @@
+.select {
+	border-radius: 7px;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+
+	& > button {
+		border-radius: 7px;
+	}
+
+	.options {
+		background-color: #fff;
+		border: 2px solid var(--active-color);
+		border-radius: 0 7px 7px !important;
+		box-shadow: #3333 2px 2px 4px;
+		display: flex;
+		flex-direction: column;
+		opacity: 0;
+		overflow: hidden;
+		pointer-events: none;
+		position: absolute;
+		top: calc(100% - 2px);
+		transition: all 0.25s;
+		min-width: 110%;
+		z-index: 100;
+
+		& > button {
+			border: none;
+			border-radius: 0px;
+			white-space: nowrap;
+		}
+	}
+
+	&[data-show-options='true'] {
+		& > button {
+			border-radius: 7px 7px 0 0;
+			white-space: nowrap;
+
+			&::after {
+				rotate: 180deg;
+			}
+		}
+
+		.options {
+			border-radius: 0 0 7px 7px;
+			opacity: 1;
+			pointer-events: auto;
+		}
+	}
+}

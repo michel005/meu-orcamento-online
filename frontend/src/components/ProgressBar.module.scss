@@ -1,0 +1,25 @@
+.progressBar {
+	--border-space: 2px;
+
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: #3333 0 0 4px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	height: 16px;
+	padding: var(--border-space);
+	position: relative;
+	transition: all 0.25s;
+
+	&::before {
+		background-color: var(--active-color);
+		border-radius: 7px;
+		content: '';
+		height: calc(100% - var(--border-space) - var(--border-space));
+		left: 2px;
+		position: absolute;
+		transition: all 0.25s;
+		width: calc(var(--value) - var(--border-space) - var(--border-space));
+	}
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from './Button'
 import style from './Calendar.module.scss'
+import { DateUtils } from '../utils/DateUtils'
 
 const WEEKDAYS = [
 	'Domingo',
@@ -32,6 +33,23 @@ export const Calendar = ({ value, range = false, onChange = () => null }: Calend
 			}
 		}
 		return temp
+	}
+
+	const getSelectedDay = (tmp: any) => {
+		if (range) {
+			if (value?.start && value?.end) {
+				return (
+					tmp >= DateUtils.stringToDate(value.start) &&
+					tmp <= DateUtils.stringToDate(value.end)
+				)
+			}
+			if (value?.start) {
+				return DateUtils.dateToString(tmp) === value.start
+			}
+		} else {
+			return DateUtils.dateToString(tmp) === value
+		}
+		return false
 	}
 
 	const firstDay = discoverFirstDay(currentDate)
@@ -70,24 +88,17 @@ export const Calendar = ({ value, range = false, onChange = () => null }: Calend
 					})}
 				</div>
 				<div className={style.days}>
-					{new Array(42).fill(null).map((day, dayIndex) => {
-						const tmp = new Date(firstDay)
-						tmp.setDate(firstDay.getDate() + dayIndex)
+					{new Array(42).fill(null).map((_, dayIndex) => {
+						const tmp = new Date(
+							firstDay.getFullYear(),
+							firstDay.getMonth(),
+							firstDay.getDate() + dayIndex
+						)
 						return (
 							<Button
-								key={dayIndex}
+								key={DateUtils.dateToString(tmp)}
 								data-current-day={tmp.toString() === today.toString()}
-								data-selected-day={
-									value &&
-									(range
-										? value.start
-											? value.end
-												? tmp.getTime() >= value.start.getTime() &&
-												  tmp.getTime() <= value.end.getTime()
-												: tmp.toString() === value.start.toString()
-											: tmp.toString() === value.toString()
-										: tmp.toString() === value.toString())
-								}
+								data-selected-day={getSelectedDay(tmp)}
 								data-current-month={tmp.getMonth() === currentDate.getMonth()}
 								className={style.day}
 								disabled={tmp.getMonth() !== currentDate.getMonth()}
@@ -98,23 +109,27 @@ export const Calendar = ({ value, range = false, onChange = () => null }: Calend
 												x = {}
 											}
 											if (!x.start && !x.end) {
-												x.start = tmp
+												x.start = DateUtils.dateToString(tmp)
 											} else if (x.start && !x.end) {
-												x.end = tmp
+												x.end = DateUtils.dateToString(tmp)
 											} else if (x.start && x.end) {
-												x = null
+												return null
 											}
 
 											if (x && x.start && x.end) {
-												if (x.start.getTime() > x.end.getTime()) {
-													const start = x.start
-													x.start = x.end
-													x.end = start
+												if (
+													DateUtils.stringToDate(x.start).getTime() >
+													DateUtils.stringToDate(x.end).getTime()
+												) {
+													x = {
+														start: x.end,
+														end: x.start,
+													}
 												}
 											}
 											return x ? { ...x } : null
 										} else {
-											return new Date(tmp)
+											return DateUtils.dateToString(tmp)
 										}
 									})
 								}}

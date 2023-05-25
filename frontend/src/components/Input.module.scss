@@ -142,7 +142,8 @@
 		color: #555;
 		flex-grow: 1;
 		font-size: 16px;
-		height: 42px;
+		height: 44px;
+		min-height: 44px;
 		padding: 10px;
 		transition: border-color 0.5s, color 0.5s;
 		max-width: 100%;
@@ -162,6 +163,10 @@
 
 		&[type='file'] {
 			display: none;
+		}
+
+		&[type='number'] {
+			text-align: right;
 		}
 
 		&[type='color'] {

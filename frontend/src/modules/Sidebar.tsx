@@ -11,7 +11,10 @@ const options = [
 	['settings', 'Ajustes', '/settings'],
 ]
 
-const tips: any = ['Informações básicas para ter uma noção geral de sua situação financeira.']
+const tips: any = [
+	'Informações básicas para ter uma noção geral de sua situação financeira.',
+	'Gerencie suas contas financeiras por tipo de conta, veja o saldo atual e previsto.',
+]
 
 export const Sidebar = () => {
 	const [reduced, setReduced] = useState(false)
@@ -27,25 +30,17 @@ export const Sidebar = () => {
 			<div className={style.options}>
 				{options.map(([icon, option, path], index) => {
 					return (
-						<div className={style.option}>
-							<Button
-								variation="secondary"
-								data-active={location.pathname === path}
-								leftIcon={icon.toString()}
-								onClick={() => {
-									navigate(path)
-								}}
-							>
-								{!reduced && option}
-							</Button>
-
-							{tips[index] && (
-								<div className={style.tip}>
-									<b>{option}</b>
-									<p>{tips[index]}</p>
-								</div>
-							)}
-						</div>
+						<Button
+							key={index}
+							variation="secondary"
+							data-active={location.pathname === path}
+							leftIcon={icon.toString()}
+							onClick={() => {
+								navigate(path)
+							}}
+						>
+							{!reduced && option}
+						</Button>
 					)
 				})}
 			</div>

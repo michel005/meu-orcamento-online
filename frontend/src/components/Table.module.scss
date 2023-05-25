@@ -103,7 +103,11 @@
 		tr {
 			background-color: #fff;
 			position: relative;
-			transition: all 0.5s;
+			transition: background-color 0.5s;
+
+			&[data-selected='true'] {
+				font-weight: bold;
+			}
 
 			&:hover {
 				background-color: #eee;

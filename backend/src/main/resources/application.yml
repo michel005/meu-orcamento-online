@@ -21,18 +21,18 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: restauranteFacil
+      database: gerfinweb
 project:
-  shortName: Restaurante Fácil (DEV)
-  fullName: Restaurante Fácil (DEV)
+  shortName: GerFinWEB (DEV)
+  fullName: GerFinWEB (DEV)
   supportEmail: mdgrigoli@hotmail.com.br
-  mainURL: https://restaurantefacil.com.br/
+  mainURL: https://gerfinweb.com.br/
   config:
     forceInviteToCreateUser: true
   s3:
     accessKey: AKIA3E3DOYPW56TJYCX4
     secretKey: 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
-    repo: restaurantefacil.com.br
+    repo: gerfinweb.com.br
 web:
   cors:
     allowed-origins: "*"

@@ -7,6 +7,7 @@
 	flex-direction: column;
 	max-width: var(--width);
 	min-width: var(--width);
+	overflow: hidden;
 	padding: 24px 17px;
 	position: relative;
 	transition: all 0.25s;
@@ -49,84 +50,24 @@
 		gap: 7px;
 		transition: all 0.5s;
 
-		.option {
-			display: flex;
-			flex-direction: column;
-			position: relative;
+		button {
+			border: none;
+			color: #333;
+			font-weight: bold;
+			gap: 14px;
+			padding-block: 14px;
+			white-space: nowrap;
 
-			button {
-				border: none;
-				color: #333;
-				font-weight: bold;
-				gap: 14px;
-				padding-block: 14px;
-				white-space: nowrap;
-
-				&[data-active='true'] {
-					background-color: var(--active-color-33);
-
-					&::before {
-						color: var(--active-color);
-					}
-				}
+			&[data-active='true'] {
+				background-color: var(--active-color-33);
 
 				&::before {
-					color: #999;
+					color: var(--active-color);
 				}
 			}
 
-			.tip {
-				background-color: var(--active-color);
-				border-radius: 7px;
-				box-shadow: var(--active-color-33) 0 0 4px;
-				color: #fffc;
-				display: flex;
-				flex-direction: column;
-				gap: 7px;
-				left: calc(100% + 17px);
-				opacity: 0;
-				padding: 40px 21px;
-				pointer-events: none;
-				position: absolute;
-				top: 50%;
-				transform: translateY(0);
-				transition: all 0.25s;
-				transition-delay: 1s;
-				width: 250px;
-				white-space: normal;
-				z-index: 100;
-
-				&::before {
-					border: 15px solid transparent;
-					border-right-color: var(--active-color);
-					content: '';
-					height: 0;
-					left: -14px;
-					position: absolute;
-					transform: translateY(-50%);
-					transition: all 0.25s;
-					top: 50%;
-					width: 0;
-				}
-
-				b {
-					color: #fff;
-				}
-
-				p {
-					font-weight: normal;
-				}
-			}
-
-			&:hover {
-				.tip {
-					opacity: 1;
-					transform: translateY(-50%);
-
-					&::before {
-						left: -24px;
-					}
-				}
+			&::before {
+				color: #999;
 			}
 		}
 	}

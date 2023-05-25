@@ -1,0 +1,25 @@
+.movementPage {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 21px;
+	padding: 21px;
+
+	.buttons {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+	}
+
+	.calendarAndTable {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+
+		.tableContainer {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+		}
+	}
+}

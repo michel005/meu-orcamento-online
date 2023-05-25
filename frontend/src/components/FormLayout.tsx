@@ -1,18 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import style from './FormLayout.module.scss'
 import { Input, InputType } from '../components/Input'
+import { Select, SelectType } from './Select'
+import { CalendarInput } from './CalendarInput'
 
 export type FormLayoutType = {
-	header: {
-		title: string
-		description?: string
-	}
 	children?: null | ((fields: any) => any)
-	footer: any
+	footer?: any
 	footerAlignment?: 'center' | 'left' | 'right'
-	fields: (InputType & {
-		id: string
-	})[]
+	fields: (InputType &
+		SelectType & {
+			id: string
+		})[]
 	value?: any
 	onChange: (value: any) => void
 	disableAllFields?: boolean
@@ -20,7 +19,6 @@ export type FormLayoutType = {
 
 export const FormLayout = ({
 	children = null,
-	header,
 	fields,
 	footer,
 	footerAlignment = 'right',
@@ -31,34 +29,69 @@ export const FormLayout = ({
 	let allInputs = useMemo(() => {
 		let all: any = {}
 		fields.forEach((field) => {
-			all[field.id] = (
-				<Input
-					key={field.id}
-					{...field}
-					disabled={disableAllFields || field.disabled}
-					value={value[field.id]}
-					onChange={(inputValue) => {
-						onChange((x: any) => {
-							x[field.id] = inputValue
-							return { ...x }
-						})
-					}}
-				/>
-			)
+			if (field.type === 'select') {
+				all[field.id] = (
+					<Select
+						{...field}
+						label={field.label}
+						key={field.id}
+						options={field.options}
+						value={value[field.id]}
+						idModifier={field.idModifier}
+						valueModifier={field.valueModifier}
+						nullable={field.nullable}
+						nullableLabel={field.nullableLabel}
+						onChange={(inputValue) => {
+							onChange((x: any) => {
+								x[field.id] = inputValue
+								return { ...x }
+							})
+						}}
+					/>
+				)
+			} else if (field.type === 'date') {
+				all[field.id] = (
+					<CalendarInput
+						{...field}
+						label={field.label}
+						key={field.id}
+						value={value[field.id]}
+						onChange={(inputValue) => {
+							onChange((x: any) => {
+								x[field.id] = inputValue ? inputValue() : null
+								return { ...x }
+							})
+						}}
+					/>
+				)
+			} else {
+				all[field.id] = (
+					<Input
+						key={field.id}
+						{...field}
+						disabled={disableAllFields || field.disabled}
+						value={value[field.id]}
+						onChange={(inputValue) => {
+							onChange((x: any) => {
+								x[field.id] = inputValue
+								return { ...x }
+							})
+						}}
+					/>
+				)
+			}
 		})
 		return all
-	}, [fields])
+	}, [fields, children])
 
 	return (
 		<div className={style.formLayout}>
-			<div className={style.header}>
-				<h1>{header.title}</h1>
-				<p>{header.description}</p>
-			</div>
 			<div className={style.content}>{children ? children(allInputs) : allInputs}</div>
-			<div className={style.footer} data-alignment={footerAlignment}>
-				{footer}
-			</div>
+			{footer && (
+				<div className={style.footer} data-alignment={footerAlignment}>
+					{footer}
+				</div>
+			)}
 		</div>
 	)
 }

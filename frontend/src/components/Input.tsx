@@ -2,7 +2,6 @@ import React, { HTMLAttributes, useEffect, useRef, useState } from 'react'
 import { Button, ButtonType } from './Button'
 import style from './Input.module.scss'
 import styleButton from './Button.module.scss'
-import { OptionType } from './Select'
 
 interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
 	disabled?: boolean | undefined
@@ -21,6 +20,7 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
 		| 'text'
 		| 'checkbox'
 		| 'search'
+		| 'select'
 		| undefined
 	accept?: string | undefined
 	value?: any | undefined

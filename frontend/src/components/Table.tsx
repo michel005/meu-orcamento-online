@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import style from './Table.module.scss'
 
 export type TableDefinition = {
-	align?: 'left' | 'center' | 'right'
+	align?: string
 	className?: string | undefined
 	field: string
 	headerIcon?: string | null
@@ -14,10 +14,19 @@ export type TableType = {
 	value: any[]
 	definition?: TableDefinition[]
 	onClick?: (row: any) => void
+	selected?: any
+	onChangeSelected?: (value: any) => void
 }
 
-export const Table = ({ definition = [], value, onClick = () => null }: TableType) => {
+export const Table = ({
+	definition = [],
+	value,
+	onClick = () => null,
+	selected,
+	onChangeSelected,
+}: TableType) => {
 	const [sort, setSort] = useState<any>({})
+	const [selection, setSelection] = useState<any | null>(selected)
 
 	const sortValues = (x: any, y: any) => {
 		let result = 0
@@ -81,7 +90,17 @@ export const Table = ({ definition = [], value, onClick = () => null }: TableTyp
 				{value &&
 					value.sort(sortValues).map((row, rowKey) => {
 						return (
-							<tr key={rowKey} onDoubleClick={() => onClick(row)}>
+							<tr
+								data-selected={selected && selected?.id === row.id}
+								key={rowKey}
+								onClick={() => {
+									if (selected !== undefined) {
+										setSelection(row)
+										onChangeSelected?.(row)
+									}
+								}}
+								onDoubleClick={() => onClick(row)}
+							>
 								{definition.map((def) => {
 									return (
 										<td

@@ -28,6 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers("/ping").permitAll()
+                .antMatchers("/api/*").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .httpBasic()

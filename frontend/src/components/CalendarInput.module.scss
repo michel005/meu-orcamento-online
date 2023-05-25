@@ -1,0 +1,45 @@
+.calendarInput {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	position: relative;
+
+	label {
+		align-items: center;
+		color: #aaa;
+		display: flex;
+		flex-direction: row;
+		font-size: 14px;
+		font-weight: bold;
+		gap: 4px;
+		transition: all 0.25s;
+	}
+
+	& > button {
+		z-index: 101;
+	}
+
+	.calendar {
+		border: 2px solid var(--active-color);
+		border-radius: 7px;
+		box-shadow: #3336 0 0 7px;
+		left: 0;
+		position: absolute;
+		top: 100%;
+		z-index: 100;
+
+		& > div {
+			box-shadow: none;
+		}
+	}
+
+	&[data-show='true'] {
+		& > button {
+			border-radius: 7px 7px 0 0;
+		}
+
+		.calendar {
+			border-radius: 0 7px 7px;
+		}
+	}
+}

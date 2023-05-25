@@ -1,39 +1,56 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Card } from '../components/Card'
 import style from './DashboardPage.module.scss'
 import { Table } from '../components/Table'
 import { BarChart } from '../components/BarChart'
+import { DatabaseContext } from '../context/DatabaseContext'
 
-export const DashboardPage = () => {
+type Card = {
+	header: string
+	description: string
+	value: number
+}
+
+type Movement = {
+	date: string
+	description: string
+	value: number
+}
+
+type Category = {
+	name: string
+	value: number
+}
+
+export type DashboardPageType = {
+	cardCollection?: Card[]
+	pendentMovements?: Movement[]
+	sumByCategory?: Category[]
+}
+
+export const DashboardPage = ({
+	cardCollection = [],
+	pendentMovements = [],
+	sumByCategory = [],
+}: DashboardPageType) => {
 	return (
 		<div className={style.dashboardPage}>
 			<h1>Bem vindo</h1>
 			<div className={style.cardCollection}>
-				<Card>
-					<h2>Saldo Atual</h2>
-					<p>Valor acumulado em todas as suas contas até o dia de hoje</p>
-					<b>R$ 1200,00</b>
-				</Card>
-				<Card>
-					<h2>Saldo Atual</h2>
-					<p>Valor acumulado em todas as suas contas até o dia de hoje</p>
-					<b>R$ 1200,00</b>
-				</Card>
-				<Card>
-					<h2>Saldo Atual</h2>
-					<p>Valor acumulado em todas as suas contas até o dia de hoje</p>
-					<b>R$ 1200,00</b>
-				</Card>
-				<Card>
-					<h2>Saldo Atual</h2>
-					<p>Valor acumulado em todas as suas contas até o dia de hoje</p>
-					<b>R$ 1200,00</b>
-				</Card>
-				<Card>
-					<h2>Saldo Atual</h2>
-					<p>Valor acumulado em todas as suas contas até o dia de hoje</p>
-					<b>R$ 1200,00</b>
-				</Card>
+				{cardCollection.map((card, cardKey) => {
+					return (
+						<Card key={cardKey}>
+							<h2>{card.header}</h2>
+							<p>{card.description}</p>
+							<b>
+								{(card.value / 100).toLocaleString('pt-br', {
+									style: 'currency',
+									currency: 'BRL',
+								})}
+							</b>
+						</Card>
+					)
+				})}
 			</div>
 			<div className={style.cardCollection}>
 				<Card>
@@ -59,30 +76,12 @@ export const DashboardPage = () => {
 									}),
 							},
 						]}
-						value={[
-							{
-								date: '10/05/2023',
-								description: 'Recebimento de Salário',
-								value: 1200000,
-							},
-							{
-								date: '15/05/2023',
-								description: 'Conta de Energia',
-								value: -15000,
-							},
-						]}
+						value={pendentMovements}
 					/>
 				</Card>
 				<Card>
 					<h2>Categorias</h2>
-					<BarChart
-						data={[
-							['Carro', 1200],
-							['Energia', 150],
-							['Água', 70],
-							['Alimentação', 480],
-						]}
-					/>
+					<BarChart data={sumByCategory.map(({ name, value }) => [name, value])} />
 				</Card>
 			</div>
 			<div className={style.cardCollection} style={{ justifyContent: 'center' }}>

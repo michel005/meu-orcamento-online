@@ -1,50 +1,117 @@
 .select {
-	border-radius: 7px;
 	display: flex;
 	flex-direction: column;
+	gap: 4px;
 	position: relative;
 
-	& > button {
-		border-radius: 7px;
-	}
-
-	.options {
-		background-color: #fff;
-		border: 2px solid var(--active-color);
-		border-radius: 0 7px 7px !important;
-		box-shadow: #3333 2px 2px 4px;
+	.label {
+		align-items: center;
+		color: #aaa;
 		display: flex;
-		flex-direction: column;
-		opacity: 0;
-		overflow: hidden;
-		pointer-events: none;
-		position: absolute;
-		top: calc(100% - 2px);
+		flex-direction: row;
+		font-size: 14px;
+		font-weight: bold;
+		gap: 4px;
 		transition: all 0.25s;
-		min-width: 110%;
-		z-index: 100;
 
-		& > button {
-			border: none;
-			border-radius: 0px;
-			white-space: nowrap;
+		.help {
+			position: relative;
+
+			button {
+				&::before {
+					font-size: 14px !important;
+				}
+			}
+
+			.helpFloatingPanel {
+				background-color: #fff;
+				border-radius: 7px;
+				box-shadow: #ccc 0 0 4px;
+				color: #333;
+				font-weight: normal;
+				left: calc(100% + 4px);
+				max-width: 300px;
+				min-width: 150px;
+				padding: 14px;
+				position: absolute;
+				top: 4px;
+				z-index: 100;
+			}
 		}
 	}
 
-	&[data-show-options='true'] {
+	.insideSelect {
+		border-radius: 7px;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+
 		& > button {
-			border-radius: 7px 7px 0 0;
-			white-space: nowrap;
+			border-radius: 7px;
+
+			span {
+				flex-grow: 1;
+				text-align: left;
+			}
 
 			&::after {
-				rotate: 180deg;
+				align-self: flex-end;
+				float: right;
 			}
 		}
 
 		.options {
-			border-radius: 0 0 7px 7px;
-			opacity: 1;
-			pointer-events: auto;
+			background-color: #fff;
+			border: 2px solid var(--active-color);
+			border-radius: 0 0 7px 7px !important;
+			box-shadow: #3333 2px 2px 4px;
+			display: flex;
+			flex-direction: column;
+			opacity: 0;
+			overflow: hidden;
+			pointer-events: none;
+			position: absolute;
+			top: calc(100% - 2px);
+			transition: all 0.25s;
+			min-width: 100%;
+			z-index: 100;
+
+			& > button {
+				border: none;
+				border-radius: 0px;
+				white-space: nowrap;
+
+				&[data-variation='secondary'][data-selected='true'] {
+					color: #fff;
+				}
+
+				&[data-selected='true'] {
+					background-color: var(--active-color-cc);
+				}
+			}
+		}
+	}
+
+	&[data-show-options='true'] {
+		.label {
+			color: var(--active-color);
+		}
+
+		.insideSelect {
+			& > button {
+				border-radius: 7px 7px 0 0;
+				white-space: nowrap;
+
+				&::after {
+					rotate: 180deg;
+				}
+			}
+
+			.options {
+				border-radius: 0 0 7px 7px;
+				opacity: 1;
+				pointer-events: auto;
+			}
 		}
 	}
 }

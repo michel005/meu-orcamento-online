@@ -20,8 +20,6 @@ export type FormLayoutType = {
 export const FormLayout = ({
 	children = null,
 	fields,
-	footer,
-	footerAlignment = 'right',
 	value,
 	onChange,
 	disableAllFields = false,
@@ -87,11 +85,6 @@ export const FormLayout = ({
 	return (
 		<div className={style.formLayout}>
 			<div className={style.content}>{children ? children(allInputs) : allInputs}</div>
-			{footer && (
-				<div className={style.footer} data-alignment={footerAlignment}>
-					{footer}
-				</div>
-			)}
 		</div>
 	)
 }

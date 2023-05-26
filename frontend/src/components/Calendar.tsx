@@ -38,9 +38,10 @@ export const Calendar = ({ value, range = false, onChange = () => null }: Calend
 	const getSelectedDay = (tmp: any) => {
 		if (range) {
 			if (value?.start && value?.end) {
-				return (
-					tmp >= DateUtils.stringToDate(value.start) &&
-					tmp <= DateUtils.stringToDate(value.end)
+				return DateUtils.between(
+					tmp,
+					DateUtils.stringToDate(value.start),
+					DateUtils.stringToDate(value.end)
 				)
 			}
 			if (value?.start) {

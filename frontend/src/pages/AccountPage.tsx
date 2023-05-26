@@ -3,14 +3,12 @@ import style from './AccountPage.module.scss'
 import { Account, AccountType, DatabaseContext } from '../context/DatabaseContext'
 import { Button } from '../components/Button'
 import { Table } from '../components/Table'
-import { Modal } from '../components/Modal'
 import { FormLayout } from '../components/FormLayout'
 import { Label } from '../components/Label'
-import { MonthName } from '../constants/Months'
-import { ButtonGroup } from '../components/ButtonGroup'
+import { MovementUtils } from '../utils/MovementUtils'
 
 export const AccountPage = () => {
-	const databaseContext = useContext(DatabaseContext)
+	const { accounts, movements, create, update, remove } = useContext(DatabaseContext)
 	const [showForm, setShowForm] = useState<Account | null>(null)
 
 	return (
@@ -40,12 +38,36 @@ export const AccountPage = () => {
 							label: 'Tipo',
 							valueModifier: (row: any) => AccountType[row.type],
 						},
+						{
+							field: 'balance',
+							label: 'Saldo Atual',
+							align: 'right',
+							valueModifier: (row: any) =>
+								(MovementUtils.balance(movements, row) / 100).toLocaleString(
+									'pt-br',
+									{
+										style: 'currency',
+										currency: 'BRL',
+									}
+								),
+						},
+					]}
+					footer={[
+						<>
+							<td colSpan={2}>Saldo Geral</td>
+							<td data-alignment="right">
+								{(MovementUtils.balance(movements) / 100).toLocaleString('pt-br', {
+									style: 'currency',
+									currency: 'BRL',
+								})}
+							</td>
+						</>,
 					]}
 					selected={showForm}
 					onChangeSelected={(row) => {
 						setShowForm({ ...row })
 					}}
-					value={databaseContext.accounts}
+					value={accounts}
 				/>
 			</div>
 			{showForm && (
@@ -71,11 +93,11 @@ export const AccountPage = () => {
 									leftIcon="save"
 									onClick={() => {
 										if (showForm.id) {
-											databaseContext.update('account', showForm, () => {
+											update('account', showForm, () => {
 												setShowForm(null)
 											})
 										} else {
-											databaseContext.create('account', showForm, () => {
+											create('account', showForm, () => {
 												setShowForm(null)
 											})
 										}
@@ -88,13 +110,9 @@ export const AccountPage = () => {
 										leftIcon="delete"
 										variation="secondary"
 										onClick={() => {
-											databaseContext.remove(
-												'account',
-												showForm.id || '',
-												() => {
-													setShowForm(null)
-												}
-											)
+											remove('account', showForm.id || '', () => {
+												setShowForm(null)
+											})
 										}}
 									>
 										Excluir

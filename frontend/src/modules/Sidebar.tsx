@@ -7,13 +7,10 @@ const options = [
 	['dashboard', 'Dashboard', '/'],
 	['wallet', 'Contas', '/accounts'],
 	['shopping_cart', 'Lançamentos', '/movements'],
+	['description', 'Templates', '/templates'],
 	['flag', 'Metas Financeiras', '/goals'],
+	['print', 'Relatórios', '/reports'],
 	['settings', 'Ajustes', '/settings'],
-]
-
-const tips: any = [
-	'Informações básicas para ter uma noção geral de sua situação financeira.',
-	'Gerencie suas contas financeiras por tipo de conta, veja o saldo atual e previsto.',
 ]
 
 export const Sidebar = () => {

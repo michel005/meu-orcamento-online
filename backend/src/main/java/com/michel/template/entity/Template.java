@@ -9,19 +9,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Data
-@Document("movement")
-public class Movement extends AbstractEntity{
+@Document("template")
+public class Template extends AbstractEntity{
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate date;
+    private Integer day;
     private String description;
     @DBRef
     private Account account;
-    @DBRef
-    private Template template;
     private Long value;
-
-    private boolean approved = false;
 
 }

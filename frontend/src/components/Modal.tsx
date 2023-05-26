@@ -1,15 +1,25 @@
 import React, { HTMLProps, HtmlHTMLAttributes } from 'react'
 import style from './Modal.module.scss'
 import styleButton from './Button.module.scss'
-import { Button } from './Button'
+import { Button, ButtonType } from './Button'
+import { Tabs, TabsType } from './Tabs'
 
 export type ModalType = HtmlHTMLAttributes<HTMLDivElement> & {
-	header?: string
+	header?: any
 	onClose?: () => void
 	children: any | null | undefined
+	tabs?: TabsType
+	buttons?: (ButtonType | null)[]
 }
 
-export const Modal = ({ header, children, onClose = () => null, ...props }: ModalType) => {
+export const Modal = ({
+	header,
+	tabs,
+	buttons,
+	children,
+	onClose = () => null,
+	...props
+}: ModalType) => {
 	return (
 		<div {...props} className={`${style.modal} ${props.className}`}>
 			<div className={style.content}>
@@ -24,7 +34,17 @@ export const Modal = ({ header, children, onClose = () => null, ...props }: Moda
 						/>
 					</div>
 				)}
+				{tabs && <Tabs {...tabs} className={style.tabs} />}
 				<div className={style.insideContent}>{children}</div>
+				{buttons && (
+					<div className={style.buttons}>
+						{buttons
+							.filter((button) => button)
+							.map((button, buttonKey) => (
+								<Button {...button} key={buttonKey} />
+							))}
+					</div>
+				)}
 			</div>
 		</div>
 	)

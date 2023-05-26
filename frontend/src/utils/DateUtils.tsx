@@ -24,4 +24,16 @@ export class DateUtils {
 			parseInt(tempTime[2])
 		)
 	}
+
+	static betweenString = (value: string, start: string, end: string) => {
+		return DateUtils.between(
+			DateUtils.stringToDate(value),
+			DateUtils.stringToDate(start),
+			DateUtils.stringToDate(end)
+		)
+	}
+
+	static between = (value: Date, start: Date, end: Date) => {
+		return value >= start && value <= end
+	}
 }

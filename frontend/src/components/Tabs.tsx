@@ -14,6 +14,7 @@ export type TabsType = {
 	currentTab: number
 	onChange?: (currentTab: number) => void
 	children?: (tab: Tab | undefined) => any
+	className?: string | undefined
 }
 
 export const Tabs = ({
@@ -23,9 +24,10 @@ export const Tabs = ({
 	variation = 'primary',
 	alignment = 'left',
 	children = () => null,
+	className,
 }: TabsType) => {
 	return (
-		<div className={style.tabs} data-alignment={alignment}>
+		<div className={`${style.tabs} ${className}`} data-alignment={alignment}>
 			<div className={style.tabSelector}>
 				{tabs.map((tab, tabKey) => {
 					return (
@@ -41,9 +43,11 @@ export const Tabs = ({
 					)
 				})}
 			</div>
-			<div className={style.content}>
-				{children(tabs.find((tab, tabKey) => tabKey === currentTab))}
-			</div>
+			{children && (
+				<div className={style.content}>
+					{children(tabs.find((_, tabKey) => tabKey === currentTab))}
+				</div>
+			)}
 		</div>
 	)
 }

@@ -1,20 +1,15 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Card } from '../components/Card'
 import style from './DashboardPage.module.scss'
 import { Table } from '../components/Table'
-import { BarChart } from '../components/BarChart'
-import { DatabaseContext } from '../context/DatabaseContext'
+import { DatabaseContext, Movement } from '../context/DatabaseContext'
+import { MovementUtils } from '../utils/MovementUtils'
+import { MovementStatus } from '../constants/MovementStatus'
+import { ModalContext } from '../context/ModalContext'
 
-type Card = {
+type CardType = {
 	header: string
-	description: string
-	value: number
-}
-
-type Movement = {
-	date: string
-	description: string
-	value: number
+	value: any
 }
 
 type Category = {
@@ -23,16 +18,36 @@ type Category = {
 }
 
 export type DashboardPageType = {
-	cardCollection?: Card[]
 	pendentMovements?: Movement[]
 	sumByCategory?: Category[]
 }
 
-export const DashboardPage = ({
-	cardCollection = [],
-	pendentMovements = [],
-	sumByCategory = [],
-}: DashboardPageType) => {
+export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: DashboardPageType) => {
+	const { movements } = useContext(DatabaseContext)
+	const { show } = useContext(ModalContext)
+
+	const utils = useMemo(() => new MovementUtils(movements), [movements])
+	const balance = utils.balance()
+
+	const cardCollection: CardType[] = [
+		{
+			header: 'Saldo Atual',
+			value: balance.current,
+		},
+		{
+			header: 'Receitas',
+			value: balance.income,
+		},
+		{
+			header: 'Despesas',
+			value: balance.expense,
+		},
+		{
+			header: 'Balanço Mensal',
+			value: balance.monthBalance,
+		},
+	]
+
 	return (
 		<div className={style.dashboardPage}>
 			<h1>Bem vindo</h1>
@@ -41,7 +56,6 @@ export const DashboardPage = ({
 					return (
 						<Card key={cardKey}>
 							<h2>{card.header}</h2>
-							<p>{card.description}</p>
 							<b>
 								{(card.value / 100).toLocaleString('pt-br', {
 									style: 'currency',
@@ -52,38 +66,55 @@ export const DashboardPage = ({
 					)
 				})}
 			</div>
-			<div className={style.cardCollection}>
-				<Card>
-					<h2>Lançamentos Pendentes</h2>
-					<Table
-						definition={[
-							{
-								field: 'date',
-								label: 'Data',
+			<Card>
+				<h2>Lançamentos Pendentes</h2>
+				<p>Lançamentos que ainda não foram efetivados até o ultimo dia do mês atual</p>
+				<Table
+					noDataFoundLabel={'Parabéns, você não possui lançamentos pendentes =]'}
+					initialSort={{
+						field: 'date',
+						direction: 'DESC',
+					}}
+					blockSort={true}
+					definition={[
+						{
+							field: 'date',
+							type: 'date',
+							label: 'Data',
+						},
+						{
+							field: 'description',
+							label: 'Descrição',
+						},
+						{
+							field: 'value',
+							label: 'Valor',
+							align: 'right',
+							valueModifier: (row) =>
+								(row.value / 100).toLocaleString('pt-br', {
+									style: 'currency',
+									currency: 'BRL',
+								}),
+						},
+						{
+							field: 'status',
+							label: 'Situação',
+							valueModifier: (row: Movement) =>
+								MovementStatus[row?.status || 'pendent'],
+						},
+					]}
+					onClick={(row) => {
+						show({
+							entity: 'movement',
+							modal: {
+								...row,
+								value: row.value / 100,
 							},
-							{
-								field: 'description',
-								label: 'Descrição',
-							},
-							{
-								field: 'value',
-								label: 'Valor',
-								align: 'right',
-								valueModifier: (row) =>
-									(row.value / 100).toLocaleString('pt-br', {
-										style: 'currency',
-										currency: 'BRL',
-									}),
-							},
-						]}
-						value={pendentMovements}
-					/>
-				</Card>
-				<Card>
-					<h2>Categorias</h2>
-					<BarChart data={sumByCategory.map(({ name, value }) => [name, value])} />
-				</Card>
-			</div>
+						})
+					}}
+					value={utils.pendentMovements()}
+				/>
+			</Card>
 			<div className={style.cardCollection} style={{ justifyContent: 'center' }}>
 				<div className={style.allForToday}>
 					<img src="https://cdn-icons-png.flaticon.com/256/6065/6065481.png" />

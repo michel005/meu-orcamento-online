@@ -16,7 +16,6 @@
 		box-shadow: #3333 2px 2px 4px;
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
 		position: absolute;
 		top: calc(100% - 2px);
 		transition: all 0.25s;
@@ -26,8 +25,47 @@
 		& > button {
 			background-color: var(--active-color-cc);
 			border: none;
-			border-radius: 0px;
+			border-radius: 0;
 			white-space: nowrap;
+		}
+
+		.innerDropdown {
+			border-radius: 0;
+
+			& > button {
+				background-color: var(--active-color-cc);
+				border: none;
+				justify-content: flex-start;
+
+				&:hover {
+					background-color: var(--active-color-aa);
+				}
+
+				&::after {
+					rotate: -90deg;
+				}
+			}
+
+			& > .list {
+				border-radius: 0 7px 7px;
+				left: 100%;
+				top: 0;
+			}
+
+			&[data-show='false'] {
+
+				& > button {
+					&::after {
+						rotate: 90deg;
+					}
+				}
+			}
+
+			&[data-show='true'] {
+				& > button {
+					background-color: var(--active-color-aa);
+				}
+			}
 		}
 	}
 

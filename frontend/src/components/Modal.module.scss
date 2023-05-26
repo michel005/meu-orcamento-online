@@ -12,6 +12,16 @@
 	width: 100%;
 	z-index: 200;
 
+	.tabs {
+		background-color: var(--active-color-33);
+
+		& > div:nth-child(1) {
+			gap: 7px;
+			padding-inline: 21px;
+			padding-top: 14px;
+		}
+	}
+
 	.content {
 		background-color: #fff;
 		border: 2px solid var(--active-color);
@@ -19,17 +29,16 @@
 		box-shadow: #ccc 0 0 4px;
 		display: flex;
 		flex-direction: column;
-		gap: 14px;
 		margin: 21px;
 		max-width: calc(100% - 28px);
 		position: relative;
 		width: 800px;
 
 		.header {
-			background-color: var(--active-color-33);
+			background-color: var(--active-color-99);
 			border-bottom: 2px solid var(--active-color);
 			border-radius: 5px 5px 0 0;
-			color: var(--active-color);
+			color: #fff;
 			display: flex;
 			flex-direction: row;
 			font-size: 24px;
@@ -37,13 +46,19 @@
 
 			span {
 				flex-grow: 1;
+
+				span {
+					display: inline;
+					margin-left: 4px;
+				}
 			}
 
 			& > button {
 				align-items: center;
 
 				&::before {
-					font-size: 18px;
+					color: #fff;
+					font-size: 22px;
 				}
 			}
 		}
@@ -51,6 +66,16 @@
 		.insideContent {
 			display: flex;
 			flex-direction: column;
+			padding: 21px;
+		}
+
+		.buttons {
+			background-color: var(--background-color);
+			border-top: 2px solid var(--active-color);
+			display: flex;
+			flex-direction: row;
+			gap: 14px;
+			justify-content: flex-end;
 			padding: 21px;
 		}
 	}

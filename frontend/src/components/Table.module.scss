@@ -99,9 +99,8 @@
 		}
 	}
 
-	tbody {
+	tbody, tfoot {
 		tr {
-			background-color: #fff;
 			position: relative;
 			transition: background-color 0.5s;
 
@@ -117,15 +116,19 @@
 				}
 			}
 
-			&:nth-child(even) {
-				background-color: #f7f7f7;
-			}
-
 			td {
 				color: #444;
 				padding: 14px;
 				position: relative;
 				transition: all 0.25s;
+			}
+		}
+	}
+
+	tfoot {
+		tr {
+			td {
+				font-weight: bold;
 			}
 		}
 	}

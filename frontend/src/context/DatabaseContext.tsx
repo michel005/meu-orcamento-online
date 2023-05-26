@@ -17,7 +17,18 @@ export type Account = {
 
 export type Movement = {
 	id?: string | null
-	date?: Date | string | null
+	date?: string | null
+	description?: string
+	account?: Account | null
+	template?: Template | null
+	value: number
+	approved?: boolean | null
+	status?: 'late' | 'pendent' | 'approved' | 'today'
+}
+
+export type Template = {
+	id?: string | null
+	day?: number | null
 	description?: string
 	account?: Account | null
 	value: number
@@ -32,16 +43,20 @@ export type Goal = {
 	targetDate: Date
 }
 
-export type Settings = {}
+export type Settings = {
+	id?: string | null
+	colorSchema?: string | null
+}
 
 export type DatabaseResponse = {
 	accounts: Account[]
 	movements: Movement[]
+	templates: Template[]
 	goals: Goal[]
 	settings: Settings
 }
 
-export type Entity = 'account' | 'movement' | 'goal' | 'settings'
+export type Entity = 'account' | 'movement' | 'template' | 'goal' | 'settings'
 
 export type DatabaseContextType = DatabaseResponse & {
 	refresh: () => void
@@ -49,12 +64,12 @@ export type DatabaseContextType = DatabaseResponse & {
 	create: (
 		entity: Entity,
 		value: Account | Movement | Goal | Settings,
-		after: (response: any) => void
+		after?: (response: any) => void
 	) => void
 	update: (
 		entity: Entity,
 		value: Account | Movement | Goal | Settings,
-		after: (response: any) => void
+		after?: (response: any) => void
 	) => void
 	remove: (entity: Entity, id: string, after: (response: any) => void) => void
 }
@@ -66,6 +81,7 @@ export type DatabaseContextInputType = {
 export const DatabaseContext = React.createContext<DatabaseContextType>({
 	accounts: [],
 	movements: [],
+	templates: [],
 	goals: [],
 	settings: {},
 	refresh: () => null,
@@ -78,6 +94,7 @@ export const DatabaseContext = React.createContext<DatabaseContextType>({
 export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 	const [accounts, setAccounts] = useState<Account[]>([])
 	const [movements, setMovements] = useState<Movement[]>([])
+	const [templates, setTemplates] = useState<Template[]>([])
 	const [goals, setGoals] = useState<Goal[]>([])
 	const [settings, setSettings] = useState<Settings>({})
 	const [loading, setLoading] = useState<boolean | null>(null)
@@ -89,6 +106,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 			.then((response) => {
 				setAccounts(response.data?.accounts || [])
 				setMovements(response.data?.movements || [])
+				setTemplates(response.data?.templates || [])
 				setGoals(response.data?.goals || [])
 				setSettings(response.data?.settings || {})
 			})
@@ -100,29 +118,29 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 	const create = (
 		entity: Entity,
 		value: Account | Movement | Goal | Settings,
-		after: (response: any) => void
+		after?: (response: any) => void
 	) => {
 		Axios.post(`/${entity}`, value).then((response) => {
 			refresh()
-			after(response)
+			after?.(response)
 		})
 	}
 
 	const update = (
 		entity: Entity,
 		value: Account | Movement | Goal | Settings,
-		after: (response: any) => void
+		after?: (response: any) => void
 	) => {
 		Axios.put(`/${entity}`, value).then((response) => {
 			refresh()
-			after(response)
+			after?.(response)
 		})
 	}
 
-	const remove = (entity: Entity, id: string, after: (response: any) => void) => {
+	const remove = (entity: Entity, id: string, after?: (response: any) => void) => {
 		Axios.delete(`/${entity}?id=${id}`).then((response) => {
 			refresh()
-			after(response)
+			after?.(response)
 		})
 	}
 
@@ -138,6 +156,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 			value={{
 				accounts,
 				movements,
+				templates,
 				goals,
 				settings,
 				refresh,

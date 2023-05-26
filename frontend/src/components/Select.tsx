@@ -4,7 +4,7 @@ import { Button } from './Button'
 
 export type SelectType = {
 	label?: string | null
-	help?: string | null
+	help?: any | null
 	variation?: 'primary' | 'secondary'
 	options?: any[]
 	nullable?: boolean
@@ -80,7 +80,7 @@ export const Select = ({
 					{options?.map((option) => {
 						return (
 							<Button
-								key={option.id}
+								key={idModifier(option)}
 								variation={variation}
 								data-selected={idModifier(option) === idModifier(value)}
 								onClick={() => {

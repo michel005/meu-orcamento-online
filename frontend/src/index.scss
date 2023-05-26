@@ -1,18 +1,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200&display=swap');
 
-// $ACTIVE_COLOR: '#3399ff';
-// $ACTIVE_COLOR: '#0099ff';
-$ACTIVE_COLOR: '#9999ff';
-// $ACTIVE_COLOR: '#9900ff';
-// $ACTIVE_COLOR: '#ff9900';
-// $ACTIVE_COLOR: '#ff9999';
+$ACTIVE_COLOR_PURPLE: '#9999ff';
+[data-color-schema='purple'] {
+	--active-color: #{$ACTIVE_COLOR_PURPLE};
+	--active-color-aa: #{$ACTIVE_COLOR_PURPLE}aa;
+	--active-color-cc: #{$ACTIVE_COLOR_PURPLE}cc;
+	--active-color-99: #{$ACTIVE_COLOR_PURPLE}99;
+	--active-color-66: #{$ACTIVE_COLOR_PURPLE}66;
+	--active-color-33: #{$ACTIVE_COLOR_PURPLE}33;
+	--background-color: #{$ACTIVE_COLOR_PURPLE}11;
+}
+
+$ACTIVE_COLOR_BLUE: '#3399ff';
+[data-color-schema='blue'] {
+	--active-color: #{$ACTIVE_COLOR_BLUE};
+	--active-color-aa: #{$ACTIVE_COLOR_BLUE}aa;
+	--active-color-cc: #{$ACTIVE_COLOR_BLUE}cc;
+	--active-color-99: #{$ACTIVE_COLOR_BLUE}99;
+	--active-color-66: #{$ACTIVE_COLOR_BLUE}66;
+	--active-color-33: #{$ACTIVE_COLOR_BLUE}33;
+	--background-color: #{$ACTIVE_COLOR_BLUE}11;
+}
+
+$ACTIVE_COLOR_ORANGE: '#ff9900';
+[data-color-schema='orange'] {
+	--active-color: #{$ACTIVE_COLOR_ORANGE};
+	--active-color-aa: #{$ACTIVE_COLOR_ORANGE}aa;
+	--active-color-cc: #{$ACTIVE_COLOR_ORANGE}cc;
+	--active-color-99: #{$ACTIVE_COLOR_ORANGE}99;
+	--active-color-66: #{$ACTIVE_COLOR_ORANGE}66;
+	--active-color-33: #{$ACTIVE_COLOR_ORANGE}33;
+	--background-color: #{$ACTIVE_COLOR_ORANGE}11;
+}
+
+$ACTIVE_COLOR_PINK: '#ff9999';
+[data-color-schema='pink'] {
+	--active-color: #{$ACTIVE_COLOR_PINK};
+	--active-color-aa: #{$ACTIVE_COLOR_PINK}aa;
+	--active-color-cc: #{$ACTIVE_COLOR_PINK}cc;
+	--active-color-99: #{$ACTIVE_COLOR_PINK}99;
+	--active-color-66: #{$ACTIVE_COLOR_PINK}66;
+	--active-color-33: #{$ACTIVE_COLOR_PINK}33;
+	--background-color: #{$ACTIVE_COLOR_PINK}11;
+}
 
 :root {
-	--active-color: #{$ACTIVE_COLOR};
-	--active-color-aa: #{$ACTIVE_COLOR}aa;
-	--active-color-cc: #{$ACTIVE_COLOR}cc;
-	--active-color-33: #{$ACTIVE_COLOR}33;
-	--background-color: #{$ACTIVE_COLOR}11;
 	--responsive-size: 1000px;
 }
 

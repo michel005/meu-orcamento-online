@@ -7,6 +7,13 @@
 	& > button {
 		border-radius: 7px 7px 0 0;
 		justify-content: center;
+
+		&::after {
+			position: absolute;
+			right: 14px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
 	}
 
 	.list {
@@ -76,13 +83,47 @@
 			white-space: nowrap;
 
 			&::after {
-				rotate: 180deg;
+				transform: translateY(-50%) rotate(180deg);
 			}
 		}
 
 		.list {
 			opacity: 0;
 			pointer-events: none;
+		}
+	}
+
+	&[data-sidebar-mode=true] {
+		& > button {
+			background-color: #fff2;
+			border: none;
+			border-radius: 7px;
+			justify-content: flex-start;
+
+			&:hover {
+				background-color: #fff4;
+			}
+		}
+
+		.list {
+			border-radius: 0 0 7px 7px;
+			border: none;
+			box-shadow: none;
+			min-width: 100%;
+			top: 100%;
+
+			& > button {
+				border: none;
+				justify-content: flex-start;
+				text-align: left;
+				white-space: initial;
+			}
+		}
+
+		&[data-show='true'] {
+			& > button {
+				border-radius: 7px 7px 0 0;
+			}
 		}
 	}
 }

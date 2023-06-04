@@ -1,10 +1,7 @@
 package com.michel.template.api;
 
 import com.michel.template.entity.Settings;
-import com.michel.template.repository.AccountRepo;
-import com.michel.template.repository.SettingsRepo;
-import com.michel.template.repository.MovementRepo;
-import com.michel.template.repository.TemplateRepo;
+import com.michel.template.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,13 +28,16 @@ public class AllAPI {
     @Autowired
     private SettingsRepo settingsRepo;
 
+    @Autowired
+    private GoalRepo goalRepo;
+
     @GetMapping("/all")
     private ResponseEntity<?> all() {
         Map<String, Object> all = new TreeMap<>();
         all.put("accounts", accountRepo.findAll());
         all.put("movements", movementRepo.findAll());
         all.put("templates", templateRepo.findAll());
-        all.put("goals", new ArrayList<>());
+        all.put("goals", goalRepo.findAll());
         all.put("settings", settingsRepo.findAll().stream().findFirst().orElse(new Settings()));
         return ResponseEntity.ok(all);
     }

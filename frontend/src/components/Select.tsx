@@ -1,9 +1,10 @@
-import React, { SelectHTMLAttributes, useEffect, useState } from 'react'
+import React, { HTMLAttributes, SelectHTMLAttributes, useEffect, useState } from 'react'
 import style from './Select.module.scss'
 import { Button } from './Button'
 
-export type SelectType = {
+export type SelectType = HTMLAttributes<HTMLSelectElement> & {
 	label?: string | null
+	sidebarMode?: boolean
 	help?: any | null
 	variation?: 'primary' | 'secondary'
 	options?: any[]
@@ -12,12 +13,14 @@ export type SelectType = {
 	onChange?: (value: any) => void
 	idModifier?: (options: any) => any
 	valueModifier?: (options: any) => any
-} & SelectHTMLAttributes<HTMLSelectElement>
+	value?: any | null
+}
 
 export const Select = ({
 	label,
 	help,
 	variation = 'primary',
+	sidebarMode = false,
 	options,
 	idModifier = (option: any) => option?.id,
 	valueModifier = (option: any) => option?.label,
@@ -39,7 +42,11 @@ export const Select = ({
 	}, [props.value])
 
 	return (
-		<div className={style.select} data-show-options={showOptions}>
+		<div
+			className={style.select}
+			data-show-options={showOptions}
+			data-sidebar-mode={sidebarMode}
+		>
 			{label && (
 				<div className={style.label}>
 					{label}

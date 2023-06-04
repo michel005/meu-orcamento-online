@@ -113,4 +113,51 @@
 			}
 		}
 	}
+
+	&[data-sidebar-mode=true] {
+		background-color: #fff2;
+		box-shadow: none;
+
+		.buttons {
+			span {
+				color: #fff;
+				font-size: 14px;
+				font-weight: normal;
+			}
+
+			& > button {
+				background-color: #fff2;
+				border: none;
+				padding: 4px;
+			}
+		}
+
+		.content {
+			box-shadow: none;
+		}
+
+		.weekDays {
+			background-color: var(--active-color);
+
+			button {
+				background-color: transparent;
+				font-size: 10px;
+				height: 32px;
+				min-width: auto;
+			}
+		}
+
+		.days {
+			.day {
+				font-size: 10px;
+				height: 32px;
+				padding-inline: 0;
+				min-width: auto;
+			}
+		}
+
+		.links {
+			display: none;
+		}
+	}
 }

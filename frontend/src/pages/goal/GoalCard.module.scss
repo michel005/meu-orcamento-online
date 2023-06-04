@@ -1,0 +1,37 @@
+.card {
+	.header {
+		display: flex;
+		flex-direction: row;
+		gap: 7px;
+
+		.title {
+			flex-grow: 1;
+		}
+
+		.buttons {
+			display: flex;
+			flex-direction: row;
+			gap: 7px;
+		}
+	}
+
+	p {
+		flex-grow: 1;
+	}
+
+	.labels {
+		display: flex;
+		flex-direction: row;
+		gap: 7px;
+	}
+
+	.values {
+		display: flex;
+		flex-direction: row;
+		gap: 7px;
+
+		.fade {
+			opacity: 0.2;
+		}
+	}
+}

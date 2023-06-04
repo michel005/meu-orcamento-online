@@ -36,6 +36,12 @@
 		}
 	}
 
+	.goals {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 14px;
+	}
+
 	.allForToday {
 		background-color: var(--active-color);
 		border-radius: 50%;
@@ -48,6 +54,12 @@
 
 		img {
 			width: 300px;
+		}
+	}
+
+	@media (max-width: 1300px) {
+		.goals {
+			grid-template-columns: 1fr 1fr;
 		}
 	}
 
@@ -66,6 +78,10 @@
 				align-self: center;
 				max-width: 300px;
 			}
+		}
+
+		.goals {
+			grid-template-columns: 1fr;
 		}
 	}
 }

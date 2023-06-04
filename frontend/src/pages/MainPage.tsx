@@ -2,43 +2,33 @@ import React, { useContext } from 'react'
 import style from './MainPage.module.scss'
 import { Sidebar } from '../modules/Sidebar'
 import { Route, Routes } from 'react-router-dom'
-import { DashboardPage } from './DashboardPage'
-import { AccountPage } from './AccountPage'
-import { MovementPage } from './MovementPage'
+import { DashboardPage } from './dashboard/DashboardPage'
+import { AccountPage } from './account/AccountPage'
+import { MovementPage } from './movement/MovementPage'
 import { SettingsPage } from './SettingsPage'
 import { DatabaseContext } from '../context/DatabaseContext'
-import { ModalByEntity, ModalContext } from '../context/ModalContext'
-
-const ModalContainer = () => {
-	const { modalCollection } = useContext(ModalContext)
-
-	return (
-		<>
-			{modalCollection.map((modal) => {
-				const Modal: any = ModalByEntity.find(([entity]) => {
-					return entity === modal.entity
-				})
-				const ModalTag = Modal[1]
-				return <ModalTag key={Modal[0]} entity={modal.modal} />
-			})}
-		</>
-	)
-}
+import { ModalContainer } from '../modules/ModalContainer'
+import { TemplatePage } from './template/TemplatePage'
+import { GoalPage } from './goal/GoalPage'
 
 export const MainPage = () => {
-	const { settings } = useContext(DatabaseContext)
+	const { settings, loading } = useContext(DatabaseContext)
 
 	return (
 		<div className={style.mainPage} data-color-schema={settings?.colorSchema || 'blue'}>
 			<Sidebar />
-			<div className={style.content}>
-				<Routes>
-					<Route path="/" element={<DashboardPage />} />
-					<Route path="/accounts" element={<AccountPage />} />
-					<Route path="/movements" element={<MovementPage />} />
-					<Route path="/settings" element={<SettingsPage />} />
-				</Routes>
-			</div>
+			{!loading && (
+				<div className={style.content}>
+					<Routes>
+						<Route path="/" element={<DashboardPage />} />
+						<Route path="/accounts" element={<AccountPage />} />
+						<Route path="/movements" element={<MovementPage />} />
+						<Route path="/template" element={<TemplatePage />} />
+						<Route path="/goals" element={<GoalPage />} />
+						<Route path="/settings" element={<SettingsPage />} />
+					</Routes>
+				</div>
+			)}
 			<ModalContainer />
 		</div>
 	)

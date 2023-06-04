@@ -79,7 +79,7 @@
 				&::after {
 					background-color: #ccc3;
 					content: '';
-					height: calc((var(--data-length) * 100%) + 100%);
+					height: calc((var(--data-length) * 200%) + 200%);
 					opacity: 0;
 					pointer-events: none;
 					position: absolute;
@@ -101,6 +101,11 @@
 
 	tbody, tfoot {
 		tr {
+			background-color: #fff;
+
+			&:nth-child(even) {
+				background-color: #f7f7f7;
+			}
 			position: relative;
 			transition: background-color 0.5s;
 

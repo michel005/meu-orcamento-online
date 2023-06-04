@@ -1,4 +1,4 @@
-export const MovementStatus = {
+export const MovementStatus: any = {
 	pendent: 'Pendente',
 	late: 'Atrasado',
 	today: 'Vence Hoje',

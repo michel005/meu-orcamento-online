@@ -10,6 +10,7 @@ export type ModalType = HtmlHTMLAttributes<HTMLDivElement> & {
 	children: any | null | undefined
 	tabs?: TabsType
 	buttons?: (ButtonType | null)[]
+	noOverflow?: boolean
 }
 
 export const Modal = ({
@@ -18,10 +19,15 @@ export const Modal = ({
 	buttons,
 	children,
 	onClose = () => null,
+	noOverflow = false,
 	...props
 }: ModalType) => {
 	return (
-		<div {...props} className={`${style.modal} ${props.className}`}>
+		<div
+			{...props}
+			className={`${style.modal} ${props.className}`}
+			data-no-overflow={noOverflow}
+		>
 			<div className={style.content}>
 				{header && (
 					<div className={style.header}>

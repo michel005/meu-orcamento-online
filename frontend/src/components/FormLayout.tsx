@@ -40,10 +40,9 @@ export const FormLayout = ({
 						nullable={field.nullable}
 						nullableLabel={field.nullableLabel}
 						onChange={(inputValue) => {
-							onChange((x: any) => {
-								x[field.id] = inputValue
-								return { ...x }
-							})
+							let x = value
+							x[field.id] = inputValue
+							onChange({ ...x })
 						}}
 					/>
 				)
@@ -55,10 +54,9 @@ export const FormLayout = ({
 						key={field.id}
 						value={value[field.id]}
 						onChange={(inputValue) => {
-							onChange((x: any) => {
-								x[field.id] = inputValue ? inputValue() : null
-								return { ...x }
-							})
+							let x = value
+							x[field.id] = inputValue
+							onChange({ ...x })
 						}}
 					/>
 				)
@@ -70,10 +68,9 @@ export const FormLayout = ({
 						disabled={disableAllFields || field.disabled}
 						value={value[field.id]}
 						onChange={(inputValue) => {
-							onChange((x: any) => {
-								x[field.id] = inputValue
-								return { ...x }
-							})
+							let x = value
+							x[field.id] = inputValue
+							onChange({ ...x })
 						}}
 					/>
 				)

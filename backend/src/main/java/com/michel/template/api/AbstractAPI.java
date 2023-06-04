@@ -11,7 +11,7 @@ import java.util.UUID;
 public abstract class AbstractAPI <E extends AbstractEntity, R extends MongoRepository<E, UUID>> {
 
     @Autowired
-    private R repo;
+    protected R repo;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody E e) {

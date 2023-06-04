@@ -1,13 +1,15 @@
-import { Account, Movement } from '../context/DatabaseContext'
+import { Account } from '../context/DatabaseContext'
 import { DateUtils } from './DateUtils'
+import { MovementType } from '../types/MovementType'
+import { GoalType } from '../types/GoalType'
 
 export class MovementUtils {
-	movements: Movement[] = []
+	movements: MovementType[] = []
 
 	startMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 	endMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
-	constructor(movements: Movement[]) {
+	constructor(movements: MovementType[]) {
 		this.movements = MovementUtils.status(movements)
 	}
 	pendentMovements = () => {
@@ -34,7 +36,19 @@ export class MovementUtils {
 				.reduce((x, y) => x + y.value, 0),
 		}
 	}
-	static balance = (movements: Movement[], account?: Account, date?: string) => {
+	goalBalance = (goal: GoalType) => {
+		const data = this.movements.filter(
+			(movement) => movement.goal && goal.id === movement.goal.id
+		)
+		return {
+			current: data
+				.filter((movement) => DateUtils.stringToDate(movement.date || '') <= new Date())
+				.filter((movement) => movement.approved)
+				.reduce((x, y) => x + y.value, 0),
+			future: data.reduce((x, y) => x + y.value, 0),
+		}
+	}
+	static balance = (movements: MovementType[], account?: Account, date?: string) => {
 		return movements
 			.filter((movement) => movement.approved)
 			.filter((movement) => DateUtils.stringToDate(movement.date || '') <= new Date())
@@ -46,7 +60,7 @@ export class MovementUtils {
 			)
 			.reduce((x, y) => x + y.value, 0)
 	}
-	static futureBalance = (movements: Movement[], account?: Account, date?: string) => {
+	static futureBalance = (movements: MovementType[], account?: Account, date?: string) => {
 		return movements
 			.filter((movement) => DateUtils.stringToDate(movement.date || '') <= new Date())
 			.filter((movement) => !account || movement?.account?.id === account.id)
@@ -58,7 +72,7 @@ export class MovementUtils {
 			.reduce((x, y) => x + y.value, 0)
 	}
 
-	static status = (movements: Movement[]) => {
+	static status = (movements: MovementType[]) => {
 		return movements.map((movement) => {
 			if (movement.approved) {
 				movement.status = 'approved'

@@ -25,6 +25,13 @@
 				width: 100%;
 			}
 		}
+
+		[data-no-strech] {
+			& > * {
+				flex-grow: 0;
+				width: auto;
+			}
+		}
 	}
 
 	.footer {

@@ -22,4 +22,15 @@
 		transition: all 0.25s;
 		width: calc(var(--value) - var(--border-space) - var(--border-space));
 	}
+
+	&::after {
+		background-color: var(--active-color-99);
+		border-radius: 7px;
+		content: '';
+		height: calc(100% - var(--border-space) - var(--border-space));
+		left: 2px;
+		position: absolute;
+		transition: all 0.25s;
+		width: calc(var(--value2) - var(--border-space) - var(--border-space));
+	}
 }

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Axios } from '../configs/Axios'
+import { TemplateRecurrenceType } from '../types/TemplateRecurrenceType'
+import { GoalType } from '../types/GoalType'
+import { MovementType } from '../types/MovementType'
 
 export const AccountType: any = {
 	DEBIT: 'Débito',
@@ -9,21 +12,12 @@ export const AccountType: any = {
 	SALARY: 'Salário',
 }
 
+export type AccountType = 'DEBIT' | 'CREDIT' | 'SAVINGS' | 'INVESTMENTS' | 'SALARY'
+
 export type Account = {
 	id?: string | null
 	name: string
-	type: 'DEBIT' | 'CREDIT' | 'SAVINGS' | 'INVESTMENTS' | 'SALARY'
-}
-
-export type Movement = {
-	id?: string | null
-	date?: string | null
-	description?: string
-	account?: Account | null
-	template?: Template | null
-	value: number
-	approved?: boolean | null
-	status?: 'late' | 'pendent' | 'approved' | 'today'
+	type: AccountType
 }
 
 export type Template = {
@@ -31,16 +25,9 @@ export type Template = {
 	day?: number | null
 	description?: string
 	account?: Account | null
+	goal?: GoalType | null
 	value: number
-}
-
-export type Goal = {
-	id: string | null
-	name: string
-	description: string
-	status: 'completed' | 'inProgress' | 'canceled'
-	targetValue: number
-	targetDate: Date
+	recurrence: TemplateRecurrenceType
 }
 
 export type Settings = {
@@ -50,9 +37,9 @@ export type Settings = {
 
 export type DatabaseResponse = {
 	accounts: Account[]
-	movements: Movement[]
+	movements: MovementType[]
 	templates: Template[]
-	goals: Goal[]
+	goals: GoalType[]
 	settings: Settings
 }
 
@@ -63,15 +50,16 @@ export type DatabaseContextType = DatabaseResponse & {
 	loading: boolean | null
 	create: (
 		entity: Entity,
-		value: Account | Movement | Goal | Settings,
+		value: Account | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => void
 	update: (
 		entity: Entity,
-		value: Account | Movement | Goal | Settings,
+		value: Account | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => void
 	remove: (entity: Entity, id: string, after: (response: any) => void) => void
+	offline: boolean
 }
 
 export type DatabaseContextInputType = {
@@ -89,19 +77,23 @@ export const DatabaseContext = React.createContext<DatabaseContextType>({
 	create: () => null,
 	update: () => null,
 	remove: () => null,
+	offline: false,
 })
 
 export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 	const [accounts, setAccounts] = useState<Account[]>([])
-	const [movements, setMovements] = useState<Movement[]>([])
+	const [movements, setMovements] = useState<MovementType[]>([])
 	const [templates, setTemplates] = useState<Template[]>([])
-	const [goals, setGoals] = useState<Goal[]>([])
+	const [goals, setGoals] = useState<GoalType[]>([])
 	const [settings, setSettings] = useState<Settings>({})
 	const [loading, setLoading] = useState<boolean | null>(null)
 	const [initialized, setInitialized] = useState<boolean>(false)
 
+	const [offline, setOffline] = useState<boolean>(false)
+
 	const refresh = () => {
 		setLoading(true)
+		setOffline(false)
 		Axios.get<DatabaseResponse>('/all')
 			.then((response) => {
 				setAccounts(response.data?.accounts || [])
@@ -110,6 +102,9 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 				setGoals(response.data?.goals || [])
 				setSettings(response.data?.settings || {})
 			})
+			.catch(() => {
+				setOffline(true)
+			})
 			.finally(() => {
 				setLoading(false)
 			})
@@ -117,7 +112,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 
 	const create = (
 		entity: Entity,
-		value: Account | Movement | Goal | Settings,
+		value: Account | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => {
 		Axios.post(`/${entity}`, value).then((response) => {
@@ -128,7 +123,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 
 	const update = (
 		entity: Entity,
-		value: Account | Movement | Goal | Settings,
+		value: Account | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => {
 		Axios.put(`/${entity}`, value).then((response) => {
@@ -164,6 +159,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 				create,
 				update,
 				remove,
+				offline,
 			}}
 		>
 			{children}

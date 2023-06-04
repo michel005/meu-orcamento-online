@@ -5,6 +5,18 @@
 	gap: 21px;
 	padding: 21px;
 
+	.description {
+		button {
+			display: inline;
+			margin-left: 4px;
+			opacity: 1;
+
+			&::before {
+				font-size: 14px;
+			}
+		}
+	}
+
 	.buttons {
 		display: flex;
 		flex-direction: row;

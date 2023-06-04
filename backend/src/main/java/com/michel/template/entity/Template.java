@@ -16,6 +16,9 @@ public class Template extends AbstractEntity{
     private String description;
     @DBRef
     private Account account;
+    @DBRef
+    private Goal goal;
     private Long value;
+    private TemplateRecurrence recurrence;
 
 }

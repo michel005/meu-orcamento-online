@@ -46,6 +46,8 @@ $ACTIVE_COLOR_PINK: '#ff9999';
 
 :root {
 	--responsive-size: 1000px;
+	--zindex-modal: 150;
+	--zindex-message: 200;
 }
 
 * {

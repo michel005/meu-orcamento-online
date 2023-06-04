@@ -5,15 +5,25 @@ import { InputType } from './Input'
 
 export type DropdownType = ButtonType & {
 	list?: (ButtonType & DropdownType)[]
+	sidebarMode?: boolean
 	onClick?: (setShowList: any) => void
 	fatherClose?: () => void
 }
 
-export const Dropdown = ({ list = [], fatherClose, ...props }: DropdownType) => {
+export const Dropdown = ({
+	list = [],
+	sidebarMode = false,
+	fatherClose,
+	...props
+}: DropdownType) => {
 	const [showList, setShowList] = useState(false)
 
 	return (
-		<div className={`${style.dropdown} ${props.className}`} data-show={showList}>
+		<div
+			className={`${style.dropdown} ${props.className}`}
+			data-show={showList}
+			data-sidebar-mode={sidebarMode}
+		>
 			<Button
 				{...props}
 				onClick={() => {

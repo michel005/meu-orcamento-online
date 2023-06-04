@@ -15,13 +15,23 @@ const WEEKDAYS = [
 
 export type CalendarType = {
 	value?: any | null
+	monthYear?: Date | null
 	range?: boolean
 	onChange?: (value: any | null) => void
+	sidebarMode?: boolean
 }
 
-export const Calendar = ({ value, range = false, onChange = () => null }: CalendarType) => {
+export const Calendar = ({
+	value,
+	monthYear = null,
+	range = false,
+	onChange = () => null,
+	sidebarMode = false,
+}: CalendarType) => {
 	const [currentDate, setCurrentDate] = useState<Date>(
-		new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+		!!monthYear
+			? new Date(monthYear.getFullYear(), monthYear.getMonth(), 1)
+			: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 	)
 
 	const discoverFirstDay = (date: Date) => {
@@ -57,7 +67,7 @@ export const Calendar = ({ value, range = false, onChange = () => null }: Calend
 	const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
 
 	return (
-		<div className={style.calendar}>
+		<div className={style.calendar} data-sidebar-mode={sidebarMode}>
 			<div className={style.buttons}>
 				<Button
 					leftIcon="chevron_left"
@@ -85,7 +95,13 @@ export const Calendar = ({ value, range = false, onChange = () => null }: Calend
 			<div className={style.content}>
 				<div className={style.weekDays}>
 					{Object.keys(WEEKDAYS).map((weekDay: any) => {
-						return <Button>{WEEKDAYS[weekDay].substring(0, 3)}</Button>
+						return (
+							<Button key={weekDay}>
+								{sidebarMode
+									? WEEKDAYS[weekDay].substring(0, 1).toUpperCase()
+									: WEEKDAYS[weekDay].substring(0, 3)}
+							</Button>
+						)
 					})}
 				</div>
 				<div className={style.days}>
@@ -104,35 +120,36 @@ export const Calendar = ({ value, range = false, onChange = () => null }: Calend
 								className={style.day}
 								disabled={tmp.getMonth() !== currentDate.getMonth()}
 								onClick={() => {
-									onChange((x: any) => {
-										if (range) {
-											if (!x) {
-												x = {}
-											}
-											if (!x.start && !x.end) {
-												x.start = DateUtils.dateToString(tmp)
-											} else if (x.start && !x.end) {
-												x.end = DateUtils.dateToString(tmp)
-											} else if (x.start && x.end) {
-												return null
-											}
+									let x = value
+									let result
+									if (range) {
+										if (!x) {
+											x = {}
+										}
+										if (!x.start && !x.end) {
+											x.start = DateUtils.dateToString(tmp)
+										} else if (x.start && !x.end) {
+											x.end = DateUtils.dateToString(tmp)
+										} else if (x.start && x.end) {
+											x = null
+										}
 
-											if (x && x.start && x.end) {
-												if (
-													DateUtils.stringToDate(x.start).getTime() >
-													DateUtils.stringToDate(x.end).getTime()
-												) {
-													x = {
-														start: x.end,
-														end: x.start,
-													}
+										if (x && x.start && x.end) {
+											if (
+												DateUtils.stringToDate(x.start).getTime() >
+												DateUtils.stringToDate(x.end).getTime()
+											) {
+												x = {
+													start: x.end,
+													end: x.start,
 												}
 											}
-											return x ? { ...x } : null
-										} else {
-											return DateUtils.dateToString(tmp)
 										}
-									})
+										result = x ? { ...x } : null
+									} else {
+										result = DateUtils.dateToString(tmp)
+									}
+									onChange(result)
 								}}
 							>
 								{tmp.getDate()}

@@ -16,7 +16,7 @@
 	}
 
 	& > button {
-		z-index: 101;
+		z-index: 10;
 	}
 
 	.calendar {
@@ -34,12 +34,38 @@
 	}
 
 	&[data-show='true'] {
+		.calendar {
+			border-radius: 0 7px 7px;
+		}
+	}
+
+	&[data-sidebar-mode=true] {
+		label {
+			color: #fffc;
+		}
 		& > button {
-			border-radius: 7px 7px 0 0;
+			background-color: #fff2;
+			border: none;
+			color: #fffa;
+
+			&:hover {
+				background-color: #fff4;
+			}
 		}
 
 		.calendar {
-			border-radius: 0 7px 7px;
+			background-color: #fff4;
+			box-shadow: none;
+			border: none;
+			position: relative;
+			top: auto;
+		}
+
+
+		&[data-show='true'] {
+			& > button {
+				background-color: #fff4;
+			}
 		}
 	}
 }

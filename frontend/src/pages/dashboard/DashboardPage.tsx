@@ -1,11 +1,13 @@
 import React, { useContext, useMemo } from 'react'
-import { Card } from '../components/Card'
+import { Card } from '../../components/Card'
 import style from './DashboardPage.module.scss'
-import { Table } from '../components/Table'
-import { DatabaseContext, Movement } from '../context/DatabaseContext'
-import { MovementUtils } from '../utils/MovementUtils'
-import { MovementStatus } from '../constants/MovementStatus'
-import { ModalContext } from '../context/ModalContext'
+import { Table } from '../../components/Table'
+import { DatabaseContext } from '../../context/DatabaseContext'
+import { MovementUtils } from '../../utils/MovementUtils'
+import { MovementStatus } from '../../constants/MovementStatus'
+import { ModalContext } from '../../context/ModalContext'
+import { MovementType } from '../../types/MovementType'
+import { GoalCard } from '../goal/GoalCard'
 
 type CardType = {
 	header: string
@@ -18,13 +20,13 @@ type Category = {
 }
 
 export type DashboardPageType = {
-	pendentMovements?: Movement[]
+	pendentMovements?: MovementType[]
 	sumByCategory?: Category[]
 }
 
 export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: DashboardPageType) => {
-	const { movements } = useContext(DatabaseContext)
-	const { show } = useContext(ModalContext)
+	const { movements, goals, update } = useContext(DatabaseContext)
+	const { close, show, showQuestionWithOptions } = useContext(ModalContext)
 
 	const utils = useMemo(() => new MovementUtils(movements), [movements])
 	const balance = utils.balance()
@@ -99,22 +101,58 @@ export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: Das
 						{
 							field: 'status',
 							label: 'Situação',
-							valueModifier: (row: Movement) =>
+							valueModifier: (row: MovementType) =>
 								MovementStatus[row?.status || 'pendent'],
 						},
 					]}
 					onClick={(row) => {
-						show({
-							entity: 'movement',
-							modal: {
-								...row,
-								value: row.value / 100,
+						showQuestionWithOptions(
+							'Lançamento Pendente',
+							'O que deseja fazer com este lançamento?',
+							{
+								children: 'Aprovar',
+								leftIcon: 'check',
+								onClick: () => {
+									const tempRow = { ...row }
+									tempRow.approved = true
+									update('movement', tempRow, () => {
+										close('message')
+									})
+								},
 							},
-						})
+							{
+								children: 'Abrir',
+								variation: 'secondary',
+								leftIcon: 'file_open',
+								onClick: () => {
+									show({
+										entity: 'movement',
+										modal: {
+											...row,
+											value: row.value / 100,
+										},
+									})
+									close('message')
+								},
+							},
+							{
+								children: 'Cancelar',
+								variation: 'secondary',
+								leftIcon: 'close',
+								onClick: () => {
+									close('message')
+								},
+							}
+						)
 					}}
 					value={utils.pendentMovements()}
 				/>
 			</Card>
+			<div className={style.goals}>
+				{goals.map((goal) => {
+					return <GoalCard key={goal.id} goal={goal} />
+				})}
+			</div>
 			<div className={style.cardCollection} style={{ justifyContent: 'center' }}>
 				<div className={style.allForToday}>
 					<img src="https://cdn-icons-png.flaticon.com/256/6065/6065481.png" />

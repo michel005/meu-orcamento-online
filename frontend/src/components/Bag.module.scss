@@ -1,0 +1,49 @@
+.bag {
+	border-radius: 50%;
+	font-size: 10px;
+	padding: 4px 7px;
+	right: 14px;
+
+	&[data-color='white'] {
+		background-color: #fff4;
+		color: #fff;
+	}
+
+	&[data-color='red'] {
+		background-color: #F049;
+		color: #fff;
+	}
+
+	&[data-side='left'] {
+		float: left;
+		left: 14px;
+		margin-left: 0;
+		margin-right: auto;
+		right: auto;
+	}
+
+	&[data-side='right'] {
+		float: right;
+		left: auto;
+		margin-left: auto;
+		margin-right: 0;
+		right: 14px;
+	}
+
+	&[data-fixed=true] {
+		float: none;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+
+		&[data-side='left'] {
+			left: 14px;
+			right: auto;
+		}
+
+		&[data-side='right'] {
+			left: auto;
+			right: 14px;
+		}
+	}
+}

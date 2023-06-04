@@ -1,28 +1,24 @@
 import React, { useContext, useState } from 'react'
 import { Modal } from '../../components/Modal'
 import { ModalContext } from '../../context/ModalContext'
-import { DatabaseContext, Movement } from '../../context/DatabaseContext'
 import { FormLayout } from '../../components/FormLayout'
-import { Label } from '../../components/Label'
+import { TransferType } from '../../types/TransferType'
+import { DatabaseContext } from '../../context/DatabaseContext'
 
-export type MovementModalType = {
-	entity: Movement
+export type TransferModalType = {
+	entity: TransferType
 }
 
-export const MovementModal = ({ entity }: MovementModalType) => {
+export const MovementModal = ({ entity }: TransferModalType) => {
 	const { accounts, create, update, remove } = useContext(DatabaseContext)
-	const { show, close } = useContext(ModalContext)
+	const { showQuestion, close } = useContext(ModalContext)
 
-	const [movement, setMovement] = useState<Movement>(entity)
+	const [movement, setMovement] = useState<TransferType>(entity)
 
 	return (
 		<Modal
-			header={
-				<p>
-					Formulário de Movimentação{' '}
-					{movement?.template && <Label>{movement.template.description}</Label>}
-				</p>
-			}
+			style={{ zIndex: 'calc(var(--zindex-modal) + 1)' }}
+			header="Formulário de Transferência"
 			onClose={() => {
 				close('movement')
 			}}
@@ -40,30 +36,21 @@ export const MovementModal = ({ entity }: MovementModalType) => {
 						}
 					},
 				},
-				movement?.template
-					? {
-							leftIcon: 'description',
-							children: 'Template',
-							variation: 'secondary',
-							onClick: () => {
-								show({
-									entity: 'template',
-									modal: {
-										...movement?.template,
-										value: (movement?.template?.value || 0) / 100,
-									},
-								})
-								close('movement')
-							},
-					  }
-					: null,
 				{
 					leftIcon: 'delete',
 					children: 'Excluir',
 					disabled: !movement.id,
 					variation: 'secondary',
 					onClick: () => {
-						remove('movement', movement?.id || '', () => close('movement'))
+						showQuestion(
+							'Exclusão de Lançamento',
+							'Deseja realmente excluir este lançamento?',
+							() => {
+								remove('movement', movement?.id || '', () => {
+									close('movement')
+								})
+							}
+						)
 					},
 				},
 			]}
@@ -112,7 +99,9 @@ export const MovementModal = ({ entity }: MovementModalType) => {
 							</div>
 							{fields.description}
 							{fields.value}
-							<div data-row>{fields.approved}</div>
+							<div data-row data-no-strech>
+								{fields.approved}
+							</div>
 						</>
 					)
 				}}

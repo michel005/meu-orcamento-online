@@ -7,11 +7,13 @@ import { DateUtils } from '../utils/DateUtils'
 export type CalendarInput = CalendarType & {
 	label?: string
 	variation?: 'primary' | 'secondary'
+	sidebarMode?: boolean
 }
 
 export const CalendarInput = ({
 	label,
 	variation = 'primary',
+	sidebarMode = false,
 	value,
 	range,
 	onChange,
@@ -35,7 +37,11 @@ export const CalendarInput = ({
 	}
 
 	return (
-		<div className={style.calendarInput} data-show={showCalendar}>
+		<div
+			className={style.calendarInput}
+			data-show={showCalendar}
+			data-sidebar-mode={sidebarMode}
+		>
 			{label && <label>{label}</label>}
 			<Button
 				variation={variation}
@@ -50,18 +56,18 @@ export const CalendarInput = ({
 				<div className={style.calendar}>
 					<Calendar
 						value={value}
+						monthYear={value?.start ? DateUtils.stringToDate(value?.start) : null}
 						range={range}
-						onChange={(value: any) => {
+						sidebarMode={sidebarMode}
+						onChange={(val: any) => {
 							if (!range) {
 								setShowCalendar(false)
 							} else {
-								if (value?.start && value?.end) {
+								if (val?.start && val?.end) {
 									setShowCalendar(false)
 								}
 							}
-							if (onChange) {
-								onChange(value)
-							}
+							onChange?.(val)
 						}}
 					/>
 				</div>

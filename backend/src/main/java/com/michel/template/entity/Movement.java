@@ -20,6 +20,8 @@ public class Movement extends AbstractEntity{
     private Account account;
     @DBRef
     private Template template;
+    @DBRef
+    private Goal goal;
     private Long value;
 
     private boolean approved = false;

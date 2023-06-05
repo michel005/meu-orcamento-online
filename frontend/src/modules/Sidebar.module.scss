@@ -2,13 +2,13 @@
 	--width-pages: 70px;
 	--width-options: 280px;
 
-	background-color: var(--active-color);
 	display: flex;
 	flex-direction: row;
 	position: relative;
 	transition: all 0.25s;
 
 	.pages {
+		background-color: var(--active-color);
 		display: flex;
 		flex-direction: column;
 		gap: 7px;
@@ -36,38 +36,46 @@
 	}
 
 	.options {
-		background-color: #0001;
+		background-color: var(--background-color);
+		border-right: 2px solid var(--active-color);
 		display: flex;
 		flex-direction: column;
 		gap: 7px;
+		max-height: 100%;
 		overflow-y: auto;
 		padding: 24px 17px;
+		transition: width 0.25s, opacity 0.25s;
 		width: var(--width-options);
-		max-height: 100%;
+	}
 
-		h3 {
-			color: #fffe;
-			padding-block: 14px;
+	&[data-reduced=true] {
+		.options {
+			opacity: 0;
+			padding-inline: 0;
+			width: auto;
+
+			& > * {
+				display: none;
+				white-space: nowrap;
+			}
+		}
+	}
+
+	@media (max-width: 1000px) {
+		.pages {
+			background-color: var(--active-color);
+			z-index: 110;
 		}
 
-		h5 {
-			color: #fffe;
-			font-size: 16px;
-			padding-block: 14px 7px;
-		}
-
-		& > button {
-			background-color: #fff2;
-			border: none;
-
-			&:hover {
-				background-color: #fff4;
-			}
-
-			&[data-variation='link'] {
-				background-color: transparent;
-				color: #fffc;
-			}
+		.options {
+			background-color: #fffc;
+			backdrop-filter: blur(10px);
+			height: 100%;
+			left: var(--width-pages);
+			position: fixed;
+			top: 0;
+			width: calc(100% - var(--width-pages));
+			z-index: 100;
 		}
 	}
 }

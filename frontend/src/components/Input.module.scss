@@ -283,6 +283,23 @@
 		}
 	}
 
+	&[data-type='color'] {
+		&::before {
+			content: attr(data-value);
+			color: #fff;
+			left: 14px;
+			pointer-events: none;
+			position: absolute;
+			top: 33px;
+			z-index: 100;
+		}
+
+		input {
+			border: 2px solid var(--active-color);
+			min-width: 100px;
+		}
+	}
+
 	&[data-type='checkbox'] {
 		small {
 			align-items: center;

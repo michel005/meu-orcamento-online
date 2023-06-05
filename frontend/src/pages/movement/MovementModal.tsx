@@ -159,22 +159,28 @@ export const MovementModal = ({ entity }: MovementModalType) => {
 									<Card className={style.goalCard}>
 										{showGoals ? (
 											<>
-												{goals.map((goal) => {
-													return (
-														<Button
-															key={goal.id}
-															onClick={() => {
-																setShowGoals(false)
-																setMovement((x) => {
-																	x.goal = { ...goal }
-																	return { ...x }
-																})
-															}}
-														>
-															{goal.name}
-														</Button>
+												{goals
+													.filter(
+														(x) =>
+															x.status !== 'CANCELED' &&
+															x.status !== 'DONE'
 													)
-												})}
+													.map((goal) => {
+														return (
+															<Button
+																key={goal.id}
+																onClick={() => {
+																	setShowGoals(false)
+																	setMovement((x) => {
+																		x.goal = { ...goal }
+																		return { ...x }
+																	})
+																}}
+															>
+																{goal.name}
+															</Button>
+														)
+													})}
 												<Button
 													variation="secondary"
 													onClick={() => {

@@ -20,52 +20,31 @@
 	}
 
 	.calendar {
+		background-color: var(--background-color);
+		backdrop-filter: blur(4px);
 		border: 2px solid var(--active-color);
 		border-radius: 7px;
 		box-shadow: #3336 0 0 7px;
+		height: 100%;
 		left: 0;
-		position: absolute;
-		top: 100%;
-		z-index: 100;
+		position: fixed;
+		top: 0;
+		width: 100%;
+		z-index: 249;
 
 		& > div {
-			box-shadow: none;
-		}
-	}
-
-	&[data-show='true'] {
-		.calendar {
-			border-radius: 0 7px 7px;
+			box-shadow: #0003 0 0 4px;
+			left: 50%;
+			position: fixed;
+			top: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			z-index: 250;
 		}
 	}
 
 	&[data-sidebar-mode=true] {
 		label {
-			color: #fffc;
-		}
-		& > button {
-			background-color: #fff2;
-			border: none;
-			color: #fffa;
-
-			&:hover {
-				background-color: #fff4;
-			}
-		}
-
-		.calendar {
-			background-color: #fff4;
-			box-shadow: none;
-			border: none;
-			position: relative;
-			top: auto;
-		}
-
-
-		&[data-show='true'] {
-			& > button {
-				background-color: #fff4;
-			}
+			color: #333;
 		}
 	}
 }

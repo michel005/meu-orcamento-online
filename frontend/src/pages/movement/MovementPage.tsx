@@ -24,6 +24,9 @@ export const MovementPage = () => {
 				!data.movement?.account?.id || data.movement?.account?.id === movement?.account?.id
 		)
 		.filter(
+			(movement) => !data.movement?.goal?.id || data.movement?.goal?.id === movement?.goal?.id
+		)
+		.filter(
 			(movement) =>
 				dateFilter?.start &&
 				dateFilter?.end &&

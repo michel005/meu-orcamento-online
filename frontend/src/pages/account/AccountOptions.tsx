@@ -34,7 +34,7 @@ export const AccountOptions = () => {
 			</Button>
 			<h5>Filtros</h5>
 			<ButtonGroup
-				sidebarMode={true}
+				variation="secondary"
 				orientation="vertical"
 				list={allAccounts}
 				nullable={true}

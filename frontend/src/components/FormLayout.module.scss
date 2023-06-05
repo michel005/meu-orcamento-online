@@ -53,4 +53,12 @@
 			justify-content: flex-end;
 		}
 	}
+
+	@media (max-width: 1000px) {
+		.content {
+			[data-row] {
+				flex-direction: column;
+			}
+		}
+	}
 }

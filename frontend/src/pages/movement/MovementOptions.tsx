@@ -36,6 +36,7 @@ export const MovementOptions = () => {
 				Movimentação
 			</Button>
 			<Button
+				variation="secondary"
 				leftIcon="add"
 				onClick={() => {
 					show({
@@ -54,6 +55,7 @@ export const MovementOptions = () => {
 			<Dropdown
 				leftIcon="add"
 				sidebarMode={true}
+				variation="secondary"
 				list={templates
 					.sort((x, y) => {
 						if ((x.day || '') > (y.day || '')) return 1
@@ -92,7 +94,6 @@ export const MovementOptions = () => {
 			>
 				Template
 			</Dropdown>
-			<h5>Filtros</h5>
 			<CalendarInput
 				label="Período"
 				range={true}
@@ -131,19 +132,18 @@ export const MovementOptions = () => {
 					defineData('movement', 'goal', x)
 				}}
 			/>
-			<ButtonGroup
+			<Select
+				label="Situação"
+				variation="secondary"
 				sidebarMode={true}
-				orientation="vertical"
-				list={Object.keys(MovementStatus).map((x) => ({
-					id: x,
-					value: x,
-					label: MovementStatus[x],
-				}))}
-				value={data?.movement?.status}
+				options={Object.keys(MovementStatus)}
 				nullable={true}
 				nullableLabel="Todas as Situações"
+				value={data?.movement?.status}
+				idModifier={(x: string) => x}
+				valueModifier={(x: string) => MovementStatus[x]}
 				onChange={(x) => {
-					defineData('movement', 'status', x?.value)
+					defineData('movement', 'status', x)
 				}}
 			/>
 			<h5>Filtros Rápidos</h5>

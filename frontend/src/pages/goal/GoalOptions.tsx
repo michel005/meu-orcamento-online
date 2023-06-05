@@ -27,7 +27,8 @@ export const GoalOptions = () => {
 			</Button>
 			<h5>Filtros</h5>
 			<ButtonGroup
-				sidebarMode={true}
+				variation="secondary"
+				orientation="vertical"
 				list={Object.keys(GoalStatus).map((x) => ({
 					id: x,
 					value: x,

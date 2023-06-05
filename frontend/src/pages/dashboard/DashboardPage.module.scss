@@ -42,6 +42,15 @@
 		gap: 14px;
 	}
 
+	.balanceByDay {
+		height: 300px;
+		overflow-x: auto;
+
+		& > div {
+			height: 100%;
+		}
+	}
+
 	.allForToday {
 		background-color: var(--active-color);
 		border-radius: 50%;
@@ -66,8 +75,10 @@
 	@media (max-width: 1000px) {
 		.cardCollection {
 			flex-wrap: wrap;
+			gap: 7px;
+
 			& > div {
-				min-width: 300px;
+				min-width: 100%;
 
 				p {
 					display: none;
@@ -82,6 +93,14 @@
 
 		.goals {
 			grid-template-columns: 1fr;
+		}
+
+		.allForToday {
+			min-width: 100%;
+
+			img {
+				width: 100%;
+			}
 		}
 	}
 }

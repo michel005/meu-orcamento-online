@@ -67,14 +67,19 @@
 			box-shadow: #3333 2px 2px 4px;
 			display: none;
 			flex-direction: column;
+			max-height: 200px;
+			min-width: 100%;
 			opacity: 0;
-			overflow: hidden;
+			overflow-y: auto;
 			pointer-events: none;
 			position: absolute;
 			top: calc(100% - 2px);
 			transition: all 0.25s;
-			min-width: 100%;
 			z-index: 100;
+
+			&::-webkit-scrollbar {
+				border-bottom-right-radius: 7px;
+			}
 
 			& > button {
 				border: none;
@@ -126,22 +131,11 @@
 
 	&[data-sidebar-mode=true] {
 		.label {
-			color: #fff;
+			color: #333;
 		}
 
 		.insideSelect {
-			& > button {
-				background-color: #fff2;
-				border: none;
-				color: #fff;
-
-				&:hover {
-					background-color: #fff4;
-				}
-			}
-
 			.options {
-				border: none;
 				box-shadow: none;
 				margin-top: -2px;
 				position: sticky;

@@ -72,6 +72,7 @@ export const Input = ({
 			data-type={type}
 			data-focus={focus}
 			data-search={openSearch}
+			data-value={value}
 		>
 			<div className={style.container}>
 				{label && (

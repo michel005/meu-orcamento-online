@@ -6,13 +6,15 @@ import { ModalContext } from '../../context/ModalContext'
 import { GoalStatus } from '../../constants/GoalStatus'
 import { Alert } from '../../components/Alert'
 import { DatabaseContext } from '../../context/DatabaseContext'
+import { MovementUtils } from '../../utils/MovementUtils'
+import { GoalUtils } from '../../utils/GoalUtils'
 
 export type GoalModalType = {
 	entity: GoalType
 }
 
 export const GoalModal = ({ entity }: GoalModalType) => {
-	const { create, update, remove } = useContext(DatabaseContext)
+	const { movements, create, update, remove } = useContext(DatabaseContext)
 	const {
 		close,
 		modalCollection,
@@ -22,6 +24,9 @@ export const GoalModal = ({ entity }: GoalModalType) => {
 	} = useContext(ModalContext)
 
 	const [goal, setGoal] = useState(entity)
+
+	const balance = new MovementUtils(movements).goalBalance(goal)
+	const monthsToFinish = GoalUtils.monthsToFinish(goal)
 
 	const afterSave = (response: any) => {
 		const responseGoal = response.data
@@ -35,7 +40,10 @@ export const GoalModal = ({ entity }: GoalModalType) => {
 						modal: {
 							description: responseGoal.name,
 							goal: responseGoal,
-							value: responseGoal.targetValue / 10,
+							value:
+								Math.round(
+									(responseGoal.targetValue - balance.current) / monthsToFinish
+								) / 100,
 						},
 					})
 				}

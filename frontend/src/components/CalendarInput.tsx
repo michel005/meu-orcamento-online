@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import style from './CalendarInput.module.scss'
 import { Calendar, CalendarType } from './Calendar'
 import { Button } from './Button'
@@ -36,6 +36,8 @@ export const CalendarInput = ({
 		return value
 	}
 
+	const id = useMemo(() => `calendar_${Math.random().toString()}`, [])
+
 	return (
 		<div
 			className={style.calendarInput}
@@ -53,12 +55,19 @@ export const CalendarInput = ({
 				{getFormattedValue()}
 			</Button>
 			{showCalendar && (
-				<div className={style.calendar}>
+				<div
+					className={style.calendar}
+					onClick={(e: any) => {
+						if (e.target.className === style.calendar) {
+							setShowCalendar(false)
+						}
+					}}
+				>
 					<Calendar
+						id={id}
 						value={value}
 						monthYear={value?.start ? DateUtils.stringToDate(value?.start) : null}
 						range={range}
-						sidebarMode={sidebarMode}
 						onChange={(val: any) => {
 							if (!range) {
 								setShowCalendar(false)

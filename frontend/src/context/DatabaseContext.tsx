@@ -40,7 +40,7 @@ export type DatabaseResponse = {
 	movements: MovementType[]
 	templates: Template[]
 	goals: GoalType[]
-	settings: Settings
+	settings: Settings | null
 }
 
 export type Entity = 'account' | 'movement' | 'template' | 'goal' | 'settings'
@@ -85,7 +85,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 	const [movements, setMovements] = useState<MovementType[]>([])
 	const [templates, setTemplates] = useState<Template[]>([])
 	const [goals, setGoals] = useState<GoalType[]>([])
-	const [settings, setSettings] = useState<Settings>({})
+	const [settings, setSettings] = useState<Settings | null>(null)
 	const [loading, setLoading] = useState<boolean | null>(null)
 	const [initialized, setInitialized] = useState<boolean>(false)
 

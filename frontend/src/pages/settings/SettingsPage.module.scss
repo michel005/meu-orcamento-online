@@ -10,16 +10,11 @@
 		padding-block: 14px 0;
 	}
 
-	.field {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-	}
-
-	.colorList {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		gap: 7px;
+	.color {
+		background-color: var(--color);
+		border-radius: 7px;
+		box-shadow: #0003 0 0 4px;
+		height: 200px;
+		width: 200px;
 	}
 }

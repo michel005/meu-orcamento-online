@@ -8,9 +8,12 @@ import { MovementStatus } from '../../constants/MovementStatus'
 import { ModalContext } from '../../context/ModalContext'
 import { MovementType } from '../../types/MovementType'
 import { GoalCard } from '../goal/GoalCard'
+import { DashboardUtils } from '../../utils/DashboardUtils'
+import { BarChart } from '../../components/BarChart'
 
 type CardType = {
 	header: string
+	description?: string
 	value: any
 }
 
@@ -29,11 +32,13 @@ export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: Das
 	const { close, show, showQuestionWithOptions } = useContext(ModalContext)
 
 	const utils = useMemo(() => new MovementUtils(movements), [movements])
+	const dashboardUtils = useMemo(() => new DashboardUtils(movements), [movements])
 	const balance = utils.balance()
 
 	const cardCollection: CardType[] = [
 		{
 			header: 'Saldo Atual',
+			description: 'Soma de todas as movimentações aprovadas do mês atual',
 			value: balance.current,
 		},
 		{
@@ -46,6 +51,7 @@ export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: Das
 		},
 		{
 			header: 'Balanço Mensal',
+			description: 'Soma de todas as movimentações do mês atual',
 			value: balance.monthBalance,
 		},
 	]
@@ -58,6 +64,7 @@ export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: Das
 					return (
 						<Card key={cardKey}>
 							<h2>{card.header}</h2>
+							{card.description && <p>{card.description}</p>}
 							<b>
 								{(card.value / 100).toLocaleString('pt-br', {
 									style: 'currency',
@@ -149,10 +156,23 @@ export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: Das
 				/>
 			</Card>
 			<div className={style.goals}>
-				{goals.map((goal) => {
-					return <GoalCard key={goal.id} goal={goal} />
-				})}
+				{goals
+					.filter((x) => x.status !== 'CANCELED' && x.status !== 'DONE')
+					.map((goal) => {
+						return <GoalCard key={goal.id} goal={goal} />
+					})}
 			</div>
+			<Card>
+				<h2>Saldo por Dia</h2>
+				<div className={style.balanceByDay}>
+					<BarChart
+						data={dashboardUtils.balanceByDay.map((balance, balanceDay) => [
+							balanceDay + 1,
+							balance / 100,
+						])}
+					/>
+				</div>
+			</Card>
 			<div className={style.cardCollection} style={{ justifyContent: 'center' }}>
 				<div className={style.allForToday}>
 					<img src="https://cdn-icons-png.flaticon.com/256/6065/6065481.png" />

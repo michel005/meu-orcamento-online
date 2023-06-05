@@ -14,19 +14,19 @@ const WEEKDAYS = [
 ]
 
 export type CalendarType = {
+	id?: string
 	value?: any | null
 	monthYear?: Date | null
 	range?: boolean
 	onChange?: (value: any | null) => void
-	sidebarMode?: boolean
 }
 
 export const Calendar = ({
+	id = Math.random().toString(),
 	value,
 	monthYear = null,
 	range = false,
 	onChange = () => null,
-	sidebarMode = false,
 }: CalendarType) => {
 	const [currentDate, setCurrentDate] = useState<Date>(
 		!!monthYear
@@ -67,7 +67,7 @@ export const Calendar = ({
 	const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
 
 	return (
-		<div className={style.calendar} data-sidebar-mode={sidebarMode}>
+		<div className={style.calendar}>
 			<div className={style.buttons}>
 				<Button
 					leftIcon="chevron_left"
@@ -95,13 +95,7 @@ export const Calendar = ({
 			<div className={style.content}>
 				<div className={style.weekDays}>
 					{Object.keys(WEEKDAYS).map((weekDay: any) => {
-						return (
-							<Button key={weekDay}>
-								{sidebarMode
-									? WEEKDAYS[weekDay].substring(0, 1).toUpperCase()
-									: WEEKDAYS[weekDay].substring(0, 3)}
-							</Button>
-						)
+						return <Button key={weekDay}>{WEEKDAYS[weekDay].substring(0, 3)}</Button>
 					})}
 				</div>
 				<div className={style.days}>
@@ -170,11 +164,19 @@ export const Calendar = ({
 						variation="link"
 						onClick={() => {
 							if (range) {
-								setCurrentDate(
-									new Date(value.start.getFullYear(), value.start.getMonth(), 1)
-								)
+								const start = value?.start
+									? DateUtils.stringToDate(value?.start)
+									: null
+								if (start) {
+									setCurrentDate(
+										new Date(start.getFullYear(), start.getMonth(), 1)
+									)
+								}
 							} else {
-								setCurrentDate(new Date(value.getFullYear(), value.getMonth(), 1))
+								const v = value ? DateUtils.stringToDate(value) : null
+								if (v) {
+									setCurrentDate(new Date(v.getFullYear(), v.getMonth(), 1))
+								}
 							}
 						}}
 					>

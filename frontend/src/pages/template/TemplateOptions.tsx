@@ -26,7 +26,8 @@ export const TemplateOptions = () => {
 			</Button>
 			<h5>Filtros</h5>
 			<ButtonGroup
-				sidebarMode={true}
+				variation="secondary"
+				orientation="vertical"
 				list={Object.keys(TemplateRecurrence).map((x) => ({
 					id: x,
 					value: x,

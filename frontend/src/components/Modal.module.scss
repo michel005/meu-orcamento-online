@@ -87,4 +87,30 @@
 			overflow-y: initial;
 		}
 	}
+
+	@media (max-width: 1000px) {
+		.content {
+			border: none;
+			border-radius: 0;
+			height: 100%;
+			margin: 0;
+			max-height: 100%;
+			max-width: 100%;
+			width: 100%;
+
+			.header {
+
+				border-radius: 0;
+			}
+
+			.insideContent {
+				flex-grow: 1;
+			}
+
+			.buttons {
+				border-radius: 0;
+				flex-direction: column;
+			}
+		}
+	}
 }

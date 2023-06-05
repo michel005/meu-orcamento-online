@@ -1,17 +1,17 @@
 .bag {
 	border-radius: 50%;
+	color: var(--active-color);
 	font-size: 10px;
+	font-weight: bold;
 	padding: 4px 7px;
 	right: 14px;
 
 	&[data-color='white'] {
-		background-color: #fff4;
-		color: #fff;
+		background-color: #fff7;
 	}
 
 	&[data-color='red'] {
 		background-color: #F049;
-		color: #fff;
 	}
 
 	&[data-side='left'] {

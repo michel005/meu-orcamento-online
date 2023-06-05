@@ -26,20 +26,5 @@
 	&[data-sidebar-mode=true] {
 		border: none;
 		flex-direction: column;
-		overflow: initial;
-
-		button {
-			&[data-selected=true] {
-				background-color: #fff4;
-			}
-
-			&:first-child {
-				border-radius: 7px 7px 0 0;
-			}
-
-			&:last-child {
-				border-radius: 0 0 7px 7px;
-			}
-		}
 	}
 }

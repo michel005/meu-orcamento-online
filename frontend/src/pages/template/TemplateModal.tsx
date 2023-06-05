@@ -7,7 +7,7 @@ import { TemplateRecurrence } from '../../constants/TemplateRecurrence'
 import { GoalCard } from '../goal/GoalCard'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
-import style from '../movement/MovementModal.module.scss'
+import style from './TemplateModal.module.scss'
 
 export type TemplateModalType = {
 	entity: Template
@@ -26,6 +26,7 @@ export const TemplateModal = ({ entity }: TemplateModalType) => {
 
 	return (
 		<Modal
+			className={style.modal}
 			style={{ zIndex: 'calc(var(--zindex-modal) + 2)' }}
 			header="Formulário de Template"
 			onClose={() => {
@@ -136,22 +137,28 @@ export const TemplateModal = ({ entity }: TemplateModalType) => {
 									<Card className={style.goalCard}>
 										{showGoals ? (
 											<>
-												{goals.map((goal) => {
-													return (
-														<Button
-															key={goal.id}
-															onClick={() => {
-																setShowGoals(false)
-																setTemplate((x) => {
-																	x.goal = { ...goal }
-																	return { ...x }
-																})
-															}}
-														>
-															{goal.name}
-														</Button>
+												{goals
+													.filter(
+														(x) =>
+															x.status !== 'CANCELED' &&
+															x.status !== 'DONE'
 													)
-												})}
+													.map((goal) => {
+														return (
+															<Button
+																key={goal.id}
+																onClick={() => {
+																	setShowGoals(false)
+																	setTemplate((x) => {
+																		x.goal = { ...goal }
+																		return { ...x }
+																	})
+																}}
+															>
+																{goal.name}
+															</Button>
+														)
+													})}
 												<Button
 													variation="secondary"
 													onClick={() => {

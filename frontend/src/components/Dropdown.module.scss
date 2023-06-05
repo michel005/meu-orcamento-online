@@ -23,11 +23,17 @@
 		box-shadow: #3333 2px 2px 4px;
 		display: flex;
 		flex-direction: column;
+		max-height: 200px;
+		min-width: 110%;
+		overflow-y: auto;
 		position: absolute;
 		top: calc(100% - 2px);
 		transition: all 0.25s;
-		min-width: 110%;
 		z-index: 100;
+
+		&::-webkit-scrollbar {
+			border-bottom-right-radius: 7px;
+		}
 
 		& > button {
 			background-color: var(--active-color-cc);
@@ -95,14 +101,8 @@
 
 	&[data-sidebar-mode=true] {
 		& > button {
-			background-color: #fff2;
-			border: none;
 			border-radius: 7px;
 			justify-content: flex-start;
-
-			&:hover {
-				background-color: #fff4;
-			}
 		}
 
 		.list {

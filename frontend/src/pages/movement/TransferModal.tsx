@@ -9,63 +9,53 @@ export type TransferModalType = {
 	entity: TransferType
 }
 
-export const MovementModal = ({ entity }: TransferModalType) => {
+export const TransferModal = ({ entity }: TransferModalType) => {
 	const { accounts, create, update, remove } = useContext(DatabaseContext)
 	const { showQuestion, close } = useContext(ModalContext)
 
-	const [movement, setMovement] = useState<TransferType>(entity)
+	const [transfer, setTransfer] = useState<TransferType>(entity)
 
 	return (
 		<Modal
 			style={{ zIndex: 'calc(var(--zindex-modal) + 1)' }}
 			header="Formulário de Transferência"
 			onClose={() => {
-				close('movement')
+				close('transfer')
 			}}
 			buttons={[
 				{
 					leftIcon: 'save',
 					children: 'Salvar',
 					onClick: () => {
-						let tmp = { ...movement }
+						let tmp = { ...transfer }
 						tmp.value = tmp.value * 100
-						if (movement.id) {
-							update('movement', tmp, () => close('movement'))
-						} else {
-							create('movement', tmp, () => close('movement'))
-						}
-					},
-				},
-				{
-					leftIcon: 'delete',
-					children: 'Excluir',
-					disabled: !movement.id,
-					variation: 'secondary',
-					onClick: () => {
-						showQuestion(
-							'Exclusão de Lançamento',
-							'Deseja realmente excluir este lançamento?',
-							() => {
-								remove('movement', movement?.id || '', () => {
-									close('movement')
-								})
-							}
-						)
 					},
 				},
 			]}
+			noOverflow={true}
 		>
 			<FormLayout
 				fields={[
 					{
 						id: 'date',
 						type: 'date',
+						variation: 'secondary',
 						label: 'Data de Vencimento',
 					},
 					{
-						id: 'account',
+						id: 'originAccount',
 						type: 'select',
-						label: 'Conta Financeira',
+						label: 'Conta de Origem',
+						nullableLabel: 'Selecione uma conta',
+						options: accounts,
+						variation: 'secondary',
+						idModifier: (row) => row?.id,
+						valueModifier: (row) => row?.name,
+					},
+					{
+						id: 'destinyAccount',
+						type: 'select',
+						label: 'Conta de Destino',
 						nullableLabel: 'Selecione uma conta',
 						options: accounts,
 						variation: 'secondary',
@@ -81,27 +71,20 @@ export const MovementModal = ({ entity }: TransferModalType) => {
 						type: 'number',
 						label: 'Valor',
 					},
-					{
-						id: 'approved',
-						type: 'checkbox',
-						label: 'Aprovado',
-					},
 				]}
-				onChange={setMovement}
-				value={movement}
+				onChange={setTransfer}
+				value={transfer}
 			>
 				{(fields) => {
 					return (
 						<>
+							{fields.date}
 							<div data-row>
-								{fields.date}
-								{fields.account}
+								{fields.originAccount}
+								{fields.destinyAccount}
 							</div>
 							{fields.description}
 							{fields.value}
-							<div data-row data-no-strech>
-								{fields.approved}
-							</div>
 						</>
 					)
 				}}

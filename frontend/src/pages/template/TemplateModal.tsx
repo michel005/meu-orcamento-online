@@ -114,11 +114,12 @@ export const TemplateModal = ({ entity }: TemplateModalType) => {
 							{fields.recurrence}
 							{fields.description}
 							{fields.value}
+							<h3>Meta Financeira</h3>
 							{template.goal ? (
-								<GoalCard
-									goal={template.goal}
-									buttons={
-										<>
+								<>
+									<GoalCard
+										goal={template.goal}
+										buttons={
 											<Button
 												leftIcon="delete"
 												variation="link"
@@ -129,57 +130,55 @@ export const TemplateModal = ({ entity }: TemplateModalType) => {
 													})
 												}}
 											/>
-										</>
-									}
-								/>
+										}
+									/>
+								</>
 							) : (
 								<>
-									<Card className={style.goalCard}>
-										{showGoals ? (
-											<>
-												{goals
-													.filter(
-														(x) =>
-															x.status !== 'CANCELED' &&
-															x.status !== 'DONE'
+									{showGoals ? (
+										<Card className={style.goalCard}>
+											{goals
+												.filter(
+													(x) =>
+														x.status !== 'CANCELED' &&
+														x.status !== 'DONE'
+												)
+												.map((goal) => {
+													return (
+														<Button
+															key={goal.id}
+															onClick={() => {
+																setShowGoals(false)
+																setTemplate((x) => {
+																	x.goal = { ...goal }
+																	return { ...x }
+																})
+															}}
+														>
+															{goal.name}
+														</Button>
 													)
-													.map((goal) => {
-														return (
-															<Button
-																key={goal.id}
-																onClick={() => {
-																	setShowGoals(false)
-																	setTemplate((x) => {
-																		x.goal = { ...goal }
-																		return { ...x }
-																	})
-																}}
-															>
-																{goal.name}
-															</Button>
-														)
-													})}
-												<Button
-													variation="secondary"
-													onClick={() => {
-														setShowGoals(false)
-													}}
-												>
-													Cancelar
-												</Button>
-											</>
-										) : (
+												})}
 											<Button
-												leftIcon="add"
-												variation="link"
+												variation="secondary"
 												onClick={() => {
-													setShowGoals(true)
+													setShowGoals(false)
 												}}
 											>
-												Atribuir Meta Financeira
+												Cancelar
 											</Button>
-										)}
-									</Card>
+										</Card>
+									) : (
+										<Button
+											leftIcon="add"
+											variation="secondary"
+											onClick={() => {
+												setShowGoals(true)
+											}}
+										>
+											Atribuir Meta Financeira
+										</Button>
+									)}
 								</>
 							)}
 						</>

@@ -51,6 +51,7 @@ export const MovementPage = () => {
 							{
 								field: 'date',
 								label: 'Data',
+								type: 'date',
 							},
 							{
 								field: 'description',

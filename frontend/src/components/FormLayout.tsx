@@ -3,6 +3,7 @@ import style from './FormLayout.module.scss'
 import { Input, InputType } from '../components/Input'
 import { Select, SelectType } from './Select'
 import { CalendarInput } from './CalendarInput'
+import { Button } from './Button'
 
 export type FormLayoutType = {
 	children?: null | ((fields: any) => any)
@@ -15,6 +16,7 @@ export type FormLayoutType = {
 	value?: any
 	onChange: (value: any) => void
 	disableAllFields?: boolean
+	formValidation?: Map<string, string>
 }
 
 export const FormLayout = ({
@@ -23,6 +25,7 @@ export const FormLayout = ({
 	value,
 	onChange,
 	disableAllFields = false,
+	formValidation = new Map(),
 }: FormLayoutType) => {
 	let allInputs = useMemo(() => {
 		let all: any = {}
@@ -32,18 +35,15 @@ export const FormLayout = ({
 					<Select
 						{...field}
 						label={field.label}
-						key={field.id}
-						options={field.options}
 						value={value[field.id]}
 						idModifier={field.idModifier}
 						valueModifier={field.valueModifier}
-						nullable={field.nullable}
-						nullableLabel={field.nullableLabel}
 						onChange={(inputValue) => {
 							let x = value
 							x[field.id] = inputValue
 							onChange({ ...x })
 						}}
+						key={field.id}
 					/>
 				)
 			} else if (field.type === 'date') {
@@ -51,20 +51,21 @@ export const FormLayout = ({
 					<CalendarInput
 						{...field}
 						label={field.label}
-						key={field.id}
 						value={value[field.id]}
 						onChange={(inputValue) => {
 							let x = value
 							x[field.id] = inputValue
 							onChange({ ...x })
 						}}
+						key={field.id}
 					/>
 				)
 			} else {
 				all[field.id] = (
 					<Input
-						key={field.id}
 						{...field}
+						error={null}
+						info={null}
 						disabled={disableAllFields || field.disabled}
 						value={value[field.id]}
 						onChange={(inputValue) => {
@@ -72,12 +73,29 @@ export const FormLayout = ({
 							x[field.id] = inputValue
 							onChange({ ...x })
 						}}
+						key={field.id}
 					/>
 				)
 			}
+
+			all[field.id] = (
+				<div key={field.id}>
+					{all[field.id]}
+					{formValidation.has(field.id) && !!formValidation.has(field.id) && (
+						<Button
+							variation="link"
+							className={style.error}
+							disabled={true}
+							leftIcon="warning"
+						>
+							{formValidation.get(field.id)}
+						</Button>
+					)}
+				</div>
+			)
 		})
 		return all
-	}, [fields, children])
+	}, [fields, children, formValidation])
 
 	return (
 		<div className={style.formLayout}>

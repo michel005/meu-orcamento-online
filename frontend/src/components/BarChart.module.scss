@@ -9,6 +9,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 7px;
+		position: relative;
 		width: 100%;
 
 		.bar {
@@ -22,7 +23,7 @@
 			width: 100%;
 
 			&::before {
-				background-color: var(--active-color-cc);
+				background-color: var(--active-color-aa);
 				border-radius: 7px;
 				bottom: 0;
 				content: '';
@@ -32,6 +33,15 @@
 				transition: all 0.25s;
 				width: 100%;
 			}
+		}
+
+		span {
+			color: var(--active-color);
+			left: 50%;
+			position: absolute;
+			top: 100%;
+			transform: translateX(-50%) translateY(calc(-100% - 57px)) rotate(180deg);
+			writing-mode: vertical-lr;
 		}
 
 		.label {

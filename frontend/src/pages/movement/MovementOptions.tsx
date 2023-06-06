@@ -40,7 +40,7 @@ export const MovementOptions = () => {
 				leftIcon="add"
 				onClick={() => {
 					show({
-						entity: 'movement',
+						entity: 'transfer',
 						modal: {
 							date: DateUtils.dateToString(new Date()),
 							account: null,

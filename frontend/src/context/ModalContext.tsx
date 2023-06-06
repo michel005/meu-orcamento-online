@@ -5,6 +5,7 @@ import { Message } from '../components/Message'
 import { ButtonType } from '../components/Button'
 import { AccountModal } from '../pages/account/AccountModal'
 import { GoalModal } from '../pages/goal/GoalModal'
+import { TransferModal } from '../pages/movement/TransferModal'
 
 export type ModalByEntityType = [string, any]
 
@@ -27,6 +28,7 @@ export const ModalByEntity: ModalByEntityType[] = [
 	['message', Message],
 	['account', AccountModal],
 	['movement', MovementModal],
+	['transfer', TransferModal],
 	['template', TemplateModal],
 	['goal', GoalModal],
 ]

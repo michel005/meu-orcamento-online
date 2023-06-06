@@ -18,8 +18,6 @@ export const MainPage = () => {
 
 	const colorSchema = settings?.colorSchema || '#3399ff'
 
-	console.log({ colorSchema })
-
 	return (
 		<div
 			className={style.mainPage}

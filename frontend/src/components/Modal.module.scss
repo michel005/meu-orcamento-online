@@ -1,7 +1,7 @@
 .modal {
 	align-items: center;
 	background-color: var(--background-color);
-	backdrop-filter: blur(4px);
+	backdrop-filter: blur(10px);
 	display: flex;
 	flex-direction: row;
 	height: 100%;
@@ -85,6 +85,34 @@
 	&[data-no-overflow=true] {
 		.insideContent {
 			overflow-y: initial;
+		}
+	}
+
+	&[data-message=true] {
+		.content {
+			.header {
+				background-color: transparent;
+				border: none;
+				color: #000;
+				font-size: 28px;
+				font-weight: bold;
+				padding-bottom: 7px;
+
+				button {
+					&::before {
+						color: #000;
+					}
+				}
+			}
+
+			.insideContent {
+				font-size: 20px;
+			}
+
+			.buttons {
+				background-color: transparent;
+				border: none;
+			}
 		}
 	}
 

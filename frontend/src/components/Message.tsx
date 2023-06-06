@@ -19,6 +19,7 @@ export const Message = ({ entity }: MessageType) => {
 			header={entity.header}
 			buttons={entity.options}
 			onClose={() => close('message')}
+			messageMode={true}
 		>
 			{entity.message}
 		</Modal>

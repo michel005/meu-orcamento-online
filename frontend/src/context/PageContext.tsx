@@ -112,12 +112,6 @@ export const PageProvider = ({ children }: any) => {
 			path: '/goals',
 			options: <GoalOptions />,
 		},
-		{
-			id: 'print',
-			icon: 'print',
-			name: 'Relatórios',
-			path: '/reports',
-		},
 	]
 
 	const defineData = useCallback((page: string, field: string, value: any) => {

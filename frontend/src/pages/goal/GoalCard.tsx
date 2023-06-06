@@ -22,7 +22,10 @@ export const GoalCard = ({ goal, buttons }: GoalCardType) => {
 	const balance = new MovementUtils(movements).goalBalance(goal)
 
 	return (
-		<Card className={style.card}>
+		<Card
+			className={style.card}
+			data-archived={goal.status === 'DONE' || goal.status === 'CANCELED'}
+		>
 			<div className={style.header}>
 				<Button
 					className={style.title}

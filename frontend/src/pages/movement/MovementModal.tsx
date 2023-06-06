@@ -9,6 +9,7 @@ import { MovementType } from '../../types/MovementType'
 import { GoalCard } from '../goal/GoalCard'
 import { Card } from '../../components/Card'
 import style from './MovementModal.module.scss'
+import { useFormValidation } from '../../hook/useFormValidation'
 
 export type MovementModalType = {
 	entity: MovementType
@@ -17,6 +18,21 @@ export type MovementModalType = {
 export const MovementModal = ({ entity }: MovementModalType) => {
 	const { accounts, goals, create, update, remove } = useContext(DatabaseContext)
 	const { show, showQuestion, close } = useContext(ModalContext)
+
+	const { validate, errors } = useFormValidation((movement: MovementType, errors) => {
+		if (!movement.date) {
+			errors.set('date', 'A data é obrigatória')
+		}
+		if (!movement.account) {
+			errors.set('account', 'A conta financeira é obrigatória')
+		}
+		if (!movement.description || movement.description.trim() === '') {
+			errors.set('description', 'A descrição é obrigatória')
+		}
+		if (!movement.value || movement.value === 0) {
+			errors.set('value', 'O valor é obrigatório e deve ser maior que zero')
+		}
+	})
 
 	const [movement, setMovement] = useState<MovementType>(entity)
 	const [showGoals, setShowGoals] = useState<boolean>(false)
@@ -40,6 +56,10 @@ export const MovementModal = ({ entity }: MovementModalType) => {
 					onClick: () => {
 						let tmp = { ...movement }
 						tmp.value = tmp.value * 100
+
+						if (!validate(tmp)) {
+							return
+						}
 						if (tmp.id) {
 							update('movement', tmp, () => close('movement'))
 						} else {
@@ -100,6 +120,7 @@ export const MovementModal = ({ entity }: MovementModalType) => {
 				]}
 				onChange={setMovement}
 				value={movement}
+				formValidation={errors}
 			>
 				{(fields) => {
 					return (
@@ -133,75 +154,71 @@ export const MovementModal = ({ entity }: MovementModalType) => {
 									</Button>
 								</Alert>
 							)}
+							<h3>Meta Financeira</h3>
 							{movement.goal ? (
 								<>
-									<h3>Meta Financeira</h3>
 									<GoalCard
 										goal={movement.goal}
 										buttons={
-											<>
-												<Button
-													leftIcon="delete"
-													variation="link"
-													onClick={() => {
-														setMovement((x) => {
-															x.goal = null
-															return { ...x }
-														})
-													}}
-												/>
-											</>
+											<Button
+												leftIcon="delete"
+												variation="link"
+												onClick={() => {
+													setMovement((x) => {
+														x.goal = null
+														return { ...x }
+													})
+												}}
+											/>
 										}
 									/>
 								</>
 							) : (
 								<>
-									<Card className={style.goalCard}>
-										{showGoals ? (
-											<>
-												{goals
-													.filter(
-														(x) =>
-															x.status !== 'CANCELED' &&
-															x.status !== 'DONE'
+									{showGoals ? (
+										<Card className={style.goalCard}>
+											{goals
+												.filter(
+													(x) =>
+														x.status !== 'CANCELED' &&
+														x.status !== 'DONE'
+												)
+												.map((goal) => {
+													return (
+														<Button
+															key={goal.id}
+															onClick={() => {
+																setShowGoals(false)
+																setMovement((x) => {
+																	x.goal = { ...goal }
+																	return { ...x }
+																})
+															}}
+														>
+															{goal.name}
+														</Button>
 													)
-													.map((goal) => {
-														return (
-															<Button
-																key={goal.id}
-																onClick={() => {
-																	setShowGoals(false)
-																	setMovement((x) => {
-																		x.goal = { ...goal }
-																		return { ...x }
-																	})
-																}}
-															>
-																{goal.name}
-															</Button>
-														)
-													})}
-												<Button
-													variation="secondary"
-													onClick={() => {
-														setShowGoals(false)
-													}}
-												>
-													Cancelar
-												</Button>
-											</>
-										) : (
+												})}
 											<Button
-												leftIcon="add"
-												variation="link"
+												variation="secondary"
 												onClick={() => {
-													setShowGoals(true)
+													setShowGoals(false)
 												}}
 											>
-												Atribuir Meta Financeira
+												Cancelar
 											</Button>
-										)}
-									</Card>
+										</Card>
+									) : (
+										<Button
+											leftIcon="add"
+											variation="secondary"
+											onClick={() => {
+												setShowGoals(true)
+											}}
+										>
+											Atribuir Meta Financeira
+										</Button>
+									)}
 								</>
 							)}
 						</>

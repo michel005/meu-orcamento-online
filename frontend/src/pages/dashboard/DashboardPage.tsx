@@ -170,14 +170,15 @@ export const DashboardPage = ({ pendentMovements = [], sumByCategory = [] }: Das
 							balanceDay + 1,
 							balance / 100,
 						])}
+						valueModifier={(value) =>
+							value.toLocaleString('pt-br', {
+								style: 'currency',
+								currency: 'BRL',
+							})
+						}
 					/>
 				</div>
 			</Card>
-			<div className={style.cardCollection} style={{ justifyContent: 'center' }}>
-				<div className={style.allForToday}>
-					<img src="https://cdn-icons-png.flaticon.com/256/6065/6065481.png" />
-				</div>
-			</div>
 		</div>
 	)
 }

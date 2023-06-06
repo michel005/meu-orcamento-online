@@ -18,14 +18,12 @@
 		display: flex;
 		flex-direction: row;
 		gap: 21px;
-		justify-content: center;
 
 		& > div {
 			flex-grow: 1;
 			width: 100px;
 
 			h2 {
-
 				flex-grow: 1;
 			}
 
@@ -51,21 +49,6 @@
 		}
 	}
 
-	.allForToday {
-		background-color: var(--active-color);
-		border-radius: 50%;
-		display: flex;
-		flex-direction: column;
-		flex-grow: 0 !important;
-		margin-block: 50px;
-		opacity: 0.1;
-		min-width: 300px;
-
-		img {
-			width: 300px;
-		}
-	}
-
 	@media (max-width: 1300px) {
 		.goals {
 			grid-template-columns: 1fr 1fr;
@@ -73,16 +56,18 @@
 	}
 
 	@media (max-width: 1000px) {
+		gap: 7px;
+
+		h1 {
+			margin-bottom: 14px;
+		}
+
 		.cardCollection {
 			flex-wrap: wrap;
 			gap: 7px;
 
 			& > div {
 				min-width: 100%;
-
-				p {
-					display: none;
-				}
 			}
 
 			.allForToday {
@@ -93,14 +78,6 @@
 
 		.goals {
 			grid-template-columns: 1fr;
-		}
-
-		.allForToday {
-			min-width: 100%;
-
-			img {
-				width: 100%;
-			}
 		}
 	}
 }

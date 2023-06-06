@@ -32,6 +32,18 @@
 				width: auto;
 			}
 		}
+
+		.error {
+			color: red;
+			gap: 4px;
+			font-size: 14px;
+			margin-top: 4px;
+			opacity: 1;
+
+			&::before {
+				font-size: inherit;
+			}
+		}
 	}
 
 	.footer {

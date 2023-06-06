@@ -3,6 +3,7 @@ import { Modal } from '../../components/Modal'
 import { ModalContext } from '../../context/ModalContext'
 import { Account, AccountType, DatabaseContext } from '../../context/DatabaseContext'
 import { FormLayout } from '../../components/FormLayout'
+import { useFormValidation } from '../../hook/useFormValidation'
 
 export type AccountModalType = {
 	entity: Account
@@ -11,6 +12,15 @@ export type AccountModalType = {
 export const AccountModal = ({ entity }: AccountModalType) => {
 	const { create, update, remove } = useContext(DatabaseContext)
 	const { showQuestion, close } = useContext(ModalContext)
+
+	const { validate, errors } = useFormValidation((account: Account, errors) => {
+		if (!account.name || account.name.trim() === '') {
+			errors.set('name', 'Nome da conta é obrigatório')
+		}
+		if (!account.type) {
+			errors.set('type', 'Tipo da conta é obrigatório')
+		}
+	})
 
 	const [account, setAccount] = useState<Account>(entity)
 
@@ -31,6 +41,9 @@ export const AccountModal = ({ entity }: AccountModalType) => {
 					leftIcon: 'save',
 					children: 'Salvar',
 					onClick: () => {
+						if (!validate(account)) {
+							return
+						}
 						if (account.id) {
 							update('account', account, () => close('account'))
 						} else {
@@ -76,6 +89,7 @@ export const AccountModal = ({ entity }: AccountModalType) => {
 				]}
 				onChange={setAccount}
 				value={account}
+				formValidation={errors}
 			>
 				{(fields) => {
 					return (

@@ -1,12 +1,12 @@
 import React, { createContext, useCallback, useState } from 'react'
 import { DateUtils } from '../utils/DateUtils'
-import { Account, AccountType } from './DatabaseContext'
 import { AccountOptions } from '../pages/account/AccountOptions'
 import { MovementOptions } from '../pages/movement/MovementOptions'
 import { TemplateOptions } from '../pages/template/TemplateOptions'
 import { TemplateRecurrenceType } from '../types/TemplateRecurrenceType'
 import { GoalOptions } from '../pages/goal/GoalOptions'
 import { GoalStatusType, GoalType } from '../types/GoalType'
+import { AccountCategoriesType, AccountType } from '../types/AccountType'
 
 export type PageDefinitionType = {
 	id: string
@@ -30,11 +30,11 @@ export const PageContext = createContext<PageContextType>({
 
 export type DataType = {
 	account?: {
-		type?: null | AccountType
+		category?: null | AccountCategoriesType
 	}
 	movement?: {
 		status: string | null
-		account?: Account | null
+		account?: AccountType | null
 		goal?: GoalType | null
 		date?: {
 			start?: string
@@ -51,7 +51,7 @@ export type DataType = {
 
 const initialData: DataType = {
 	account: {
-		type: null,
+		category: null,
 	},
 	movement: {
 		status: null,
@@ -101,7 +101,7 @@ export const PageProvider = ({ children }: any) => {
 		{
 			id: 'template',
 			icon: 'description',
-			name: 'Template de Lançamento',
+			name: 'Template',
 			path: '/template',
 			options: <TemplateOptions />,
 		},

@@ -8,21 +8,7 @@ import { Button } from '../../components/Button'
 export const SettingsPage = () => {
 	const { settings, create, update } = useContext(DatabaseContext)
 
-	const [config, setConfig] = useState<Settings | null>(settings || {})
-
-	const updateColorSchema = (color: string) => {
-		if (config?.id) {
-			update('settings', {
-				...config,
-				colorSchema: color,
-			})
-		} else {
-			create('settings', {
-				...config,
-				colorSchema: color,
-			})
-		}
-	}
+	const [config, setConfig] = useState<Settings>(settings || {})
 
 	useEffect(() => {
 		setConfig(settings)
@@ -38,22 +24,22 @@ export const SettingsPage = () => {
 						type: 'color',
 					},
 					{
-						id: 'showCards',
+						id: 'showBalanceCards',
 						label: 'Mostrar cartões de saldo',
 						type: 'checkbox',
 					},
 					{
-						id: 'pendentMovements',
+						id: 'showPendentMovements',
 						label: 'Mostrar lançamentos pendentes',
 						type: 'checkbox',
 					},
 					{
-						id: 'goals',
+						id: 'showGoals',
 						label: 'Mostrar metas financeiras',
 						type: 'checkbox',
 					},
 					{
-						id: 'balanceByDay',
+						id: 'showBalanceByDayChart',
 						label: 'Mostrar saldo por dia do mês',
 						type: 'checkbox',
 					},
@@ -66,10 +52,10 @@ export const SettingsPage = () => {
 						<h1>Configurações</h1>
 						{fields.colorSchema}
 						<h2>Dashboard</h2>
-						{fields.showCards}
-						{fields.pendentMovements}
-						{fields.goals}
-						{fields.balanceByDay}
+						{fields.showBalanceCards}
+						{fields.showPendentMovements}
+						{fields.showGoals}
+						{fields.showBalanceByDayChart}
 					</>
 				)}
 			</FormLayout>
@@ -77,7 +63,11 @@ export const SettingsPage = () => {
 				<Button
 					leftIcon="save"
 					onClick={() => {
-						updateColorSchema(config?.colorSchema || '#3399ff')
+						if (config?.id) {
+							update('settings', config)
+						} else {
+							create('settings', config)
+						}
 					}}
 				>
 					Salvar

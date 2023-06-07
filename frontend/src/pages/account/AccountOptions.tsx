@@ -1,26 +1,19 @@
 import { Button } from '../../components/Button'
-import { ButtonGroup } from '../../components/ButtonGroup'
 import React, { useContext } from 'react'
-import { AccountType, DatabaseContext } from '../../context/DatabaseContext'
 import { PageContext } from '../../context/PageContext'
 import { ModalContext } from '../../context/ModalContext'
+import { AccountCategories } from '../../constants/AccountCategories'
+import { Select } from '../../components/Select'
 
 export const AccountOptions = () => {
-	const { accounts } = useContext(DatabaseContext)
 	const { data, defineData } = useContext(PageContext)
 	const { show } = useContext(ModalContext)
-
-	const allAccounts = Object.keys(AccountType).map((x) => ({
-		id: x,
-		value: x,
-		label: AccountType[x],
-		bag: accounts.filter((y) => y.type === x).length.toString(),
-	}))
 
 	return (
 		<>
 			<Button
 				leftIcon="add"
+				variation="sidebar"
 				onClick={() => {
 					show({
 						entity: 'account',
@@ -32,17 +25,18 @@ export const AccountOptions = () => {
 			>
 				Cadastrar
 			</Button>
-			<h5>Filtros</h5>
-			<ButtonGroup
-				variation="secondary"
-				orientation="vertical"
-				list={allAccounts}
+			<div style={{ flexGrow: 1 }} />
+			<Select
+				label="Categoria"
+				variation="sidebar"
+				options={Object.keys(AccountCategories)}
 				nullable={true}
-				nullableLabel="Todos os Tipos"
-				nullableBag={accounts.length}
-				value={{ id: data.account?.type }}
+				nullableLabel="Todas as Categorias"
+				idModifier={(category: string) => category}
+				valueModifier={(category: string) => AccountCategories[category]}
+				value={data.account?.category}
 				onChange={(x) => {
-					defineData('account', 'type', x?.value)
+					defineData('account', 'category', x)
 				}}
 			/>
 		</>

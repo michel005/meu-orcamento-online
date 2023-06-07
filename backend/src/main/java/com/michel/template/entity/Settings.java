@@ -11,4 +11,9 @@ public class Settings extends AbstractEntity {
 
     private String colorSchema;
 
+    private boolean showBalanceCards;
+    private boolean showPendentMovements;
+    private boolean showGoals;
+    private boolean showBalanceByDayChart;
+
 }

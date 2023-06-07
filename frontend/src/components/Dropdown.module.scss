@@ -99,18 +99,27 @@
 		}
 	}
 
-	&[data-sidebar-mode=true] {
+	&[data-variation=sidebar] {
 		& > button {
+			background-color: #fff4;
 			border-radius: 7px;
+			border: none !important;
+			color: #fff;
 			justify-content: flex-start;
+
+			&:hover {
+				background-color: #fff3 !important;
+			}
 		}
 
 		.list {
 			border-radius: 0 0 7px 7px;
 			border: none;
 			box-shadow: none;
+			display: none;
 			min-width: 100%;
-			top: 100%;
+			position: relative;
+			top: auto;
 
 			& > button {
 				border: none;
@@ -123,6 +132,10 @@
 		&[data-show='true'] {
 			& > button {
 				border-radius: 7px 7px 0 0;
+			}
+
+			.list {
+				display: flex;
 			}
 		}
 	}

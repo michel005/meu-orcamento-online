@@ -1,12 +1,12 @@
 package com.michel.template.entity;
 
-public enum AccountType {
+public enum AccountCategory {
 
     DEBIT("Débito"), CREDIT("Crédito"), SAVINGS("Poupança"), INVESTMENT("Investimento"), SALARY("Salário");
 
     private final String description;
 
-    AccountType(String description) {
+    AccountCategory(String description) {
         this.description = description;
     }
 

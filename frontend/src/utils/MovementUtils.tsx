@@ -1,7 +1,7 @@
-import { Account } from '../context/DatabaseContext'
 import { DateUtils } from './DateUtils'
 import { MovementType } from '../types/MovementType'
 import { GoalType } from '../types/GoalType'
+import { AccountType } from '../types/AccountType'
 
 export class MovementUtils {
 	movements: MovementType[] = []
@@ -42,13 +42,17 @@ export class MovementUtils {
 		)
 		return {
 			current: data
-				.filter((movement) => DateUtils.stringToDate(movement.date || '') <= new Date())
-				.filter((movement) => movement.approved)
+				.filter(
+					(movement) =>
+						DateUtils.stringToDate(movement.date || '') <= new Date() ||
+						movement.approved
+				)
 				.reduce((x, y) => x + y.value, 0),
 			future: data.reduce((x, y) => x + y.value, 0),
 		}
 	}
-	static balance = (movements: MovementType[], account?: Account, date?: string) => {
+
+	static balance = (movements: MovementType[], account?: AccountType, date?: string) => {
 		return movements
 			.filter((movement) => movement.approved)
 			.filter((movement) => DateUtils.stringToDate(movement.date || '') <= new Date())
@@ -60,9 +64,12 @@ export class MovementUtils {
 			)
 			.reduce((x, y) => x + y.value, 0)
 	}
-	static futureBalance = (movements: MovementType[], account?: Account, date?: string) => {
+	static futureBalance = (
+		movements: MovementType[],
+		account?: AccountType | null,
+		date?: string
+	) => {
 		return movements
-			.filter((movement) => DateUtils.stringToDate(movement.date || '') <= new Date())
 			.filter((movement) => !account || movement?.account?.id === account.id)
 			.filter(
 				(movement) =>

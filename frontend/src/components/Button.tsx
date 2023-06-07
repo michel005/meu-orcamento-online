@@ -2,7 +2,7 @@ import React, { ButtonHTMLAttributes } from 'react'
 import style from './Button.module.scss'
 
 export type ButtonType = {
-	variation?: 'primary' | 'secondary' | 'link'
+	variation?: 'primary' | 'secondary' | 'link' | 'sidebar'
 	leftIcon?: string
 	rightIcon?: string
 	loading?: boolean

@@ -3,28 +3,13 @@ import { Axios } from '../configs/Axios'
 import { TemplateRecurrenceType } from '../types/TemplateRecurrenceType'
 import { GoalType } from '../types/GoalType'
 import { MovementType } from '../types/MovementType'
-
-export const AccountType: any = {
-	DEBIT: 'Débito',
-	CREDIT: 'Crédito',
-	SAVINGS: 'Poupança',
-	INVESTMENT: 'Investimento',
-	SALARY: 'Salário',
-}
-
-export type AccountType = 'DEBIT' | 'CREDIT' | 'SAVINGS' | 'INVESTMENTS' | 'SALARY'
-
-export type Account = {
-	id?: string | null
-	name: string
-	type: AccountType
-}
+import { AccountType } from '../types/AccountType'
 
 export type Template = {
 	id?: string | null
 	day?: number | null
 	description?: string
-	account?: Account | null
+	account?: AccountType | null
 	goal?: GoalType | null
 	value: number
 	recurrence: TemplateRecurrenceType
@@ -33,14 +18,18 @@ export type Template = {
 export type Settings = {
 	id?: string | null
 	colorSchema?: string | null
+	showBalanceCards?: boolean
+	showPendentMovements?: boolean
+	showGoals?: boolean
+	showBalanceByDayChart?: boolean
 }
 
 export type DatabaseResponse = {
-	accounts: Account[]
+	accounts: AccountType[]
 	movements: MovementType[]
 	templates: Template[]
 	goals: GoalType[]
-	settings: Settings | null
+	settings: Settings
 }
 
 export type Entity = 'account' | 'movement' | 'template' | 'goal' | 'settings'
@@ -50,12 +39,12 @@ export type DatabaseContextType = DatabaseResponse & {
 	loading: boolean | null
 	create: (
 		entity: Entity,
-		value: Account | MovementType | GoalType | Settings,
+		value: AccountType | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => void
 	update: (
 		entity: Entity,
-		value: Account | MovementType | GoalType | Settings,
+		value: AccountType | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => void
 	remove: (entity: Entity, id: string, after: (response: any) => void) => void
@@ -81,11 +70,11 @@ export const DatabaseContext = React.createContext<DatabaseContextType>({
 })
 
 export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
-	const [accounts, setAccounts] = useState<Account[]>([])
+	const [accounts, setAccounts] = useState<AccountType[]>([])
 	const [movements, setMovements] = useState<MovementType[]>([])
 	const [templates, setTemplates] = useState<Template[]>([])
 	const [goals, setGoals] = useState<GoalType[]>([])
-	const [settings, setSettings] = useState<Settings | null>(null)
+	const [settings, setSettings] = useState<Settings>({})
 	const [loading, setLoading] = useState<boolean | null>(null)
 	const [initialized, setInitialized] = useState<boolean>(false)
 
@@ -112,7 +101,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 
 	const create = (
 		entity: Entity,
-		value: Account | MovementType | GoalType | Settings,
+		value: AccountType | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => {
 		Axios.post(`/${entity}`, value).then((response) => {
@@ -123,7 +112,7 @@ export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
 
 	const update = (
 		entity: Entity,
-		value: Account | MovementType | GoalType | Settings,
+		value: AccountType | MovementType | GoalType | Settings,
 		after?: (response: any) => void
 	) => {
 		Axios.put(`/${entity}`, value).then((response) => {

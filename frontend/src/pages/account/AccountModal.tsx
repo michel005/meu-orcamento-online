@@ -1,28 +1,37 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Modal } from '../../components/Modal'
 import { ModalContext } from '../../context/ModalContext'
-import { Account, AccountType, DatabaseContext } from '../../context/DatabaseContext'
+import { DatabaseContext } from '../../context/DatabaseContext'
 import { FormLayout } from '../../components/FormLayout'
 import { useFormValidation } from '../../hook/useFormValidation'
+import { AccountType } from '../../types/AccountType'
+import { AccountCategories, AccountCategoriesDescription } from '../../constants/AccountCategories'
+import { Alert } from '../../components/Alert'
 
 export type AccountModalType = {
-	entity: Account
+	entity: AccountType
 }
 
 export const AccountModal = ({ entity }: AccountModalType) => {
-	const { create, update, remove } = useContext(DatabaseContext)
+	const { accounts, create, update, remove } = useContext(DatabaseContext)
 	const { showQuestion, close } = useContext(ModalContext)
 
-	const { validate, errors } = useFormValidation((account: Account, errors) => {
+	const { validate, errors } = useFormValidation((account: AccountType, errors) => {
 		if (!account.name || account.name.trim() === '') {
 			errors.set('name', 'Nome da conta é obrigatório')
 		}
-		if (!account.type) {
-			errors.set('type', 'Tipo da conta é obrigatório')
+		const accountWithSameName = accounts.find(
+			(x) => x.name.toUpperCase() === account.name.toUpperCase()
+		)
+		if (accountWithSameName && accountWithSameName.id !== account.id) {
+			errors.set('name', 'Nome já foi utilizado por outra conta')
+		}
+		if (!account.category) {
+			errors.set('category', 'Categoria é obrigatório')
 		}
 	})
 
-	const [account, setAccount] = useState<Account>(entity)
+	const [account, setAccount] = useState<AccountType>(entity)
 
 	useEffect(() => {
 		setAccount((x) => ({ ...x, ...entity }))
@@ -77,14 +86,14 @@ export const AccountModal = ({ entity }: AccountModalType) => {
 						label: 'Nome da Conta',
 					},
 					{
-						id: 'type',
+						id: 'category',
 						type: 'select',
-						label: 'Tipo de Conta',
-						options: Object.keys(AccountType).map((x) => x),
+						label: 'Categoria',
+						options: Object.keys(AccountCategories).map((x) => x),
 						idModifier: (type) => type,
-						valueModifier: (type) => AccountType[type],
+						valueModifier: (type) => AccountCategories[type],
 						variation: 'secondary',
-						nullableLabel: 'Selecione um tipo de conta',
+						nullableLabel: 'Selecione uma categoria',
 					},
 				]}
 				onChange={setAccount}
@@ -94,8 +103,15 @@ export const AccountModal = ({ entity }: AccountModalType) => {
 				{(fields) => {
 					return (
 						<>
-							{fields.name}
-							{fields.type}
+							<div data-row>
+								{fields.name}
+								{fields.category}
+							</div>
+							{account.category && (
+								<Alert icon="info">
+									{AccountCategoriesDescription[account.category]}
+								</Alert>
+							)}
 						</>
 					)
 				}}

@@ -78,7 +78,7 @@ export const Table = ({
 			className={style.table}
 			style={
 				{
-					'--data-length': (value.length + (footer?.length || 0)).toString(),
+					'--data-length': value.length.toString(),
 				} as React.CSSProperties
 			}
 		>

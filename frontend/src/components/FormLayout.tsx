@@ -43,6 +43,7 @@ export const FormLayout = ({
 							x[field.id] = inputValue
 							onChange({ ...x })
 						}}
+						variation="secondary"
 						key={field.id}
 					/>
 				)
@@ -57,6 +58,7 @@ export const FormLayout = ({
 							x[field.id] = inputValue
 							onChange({ ...x })
 						}}
+						variation="secondary"
 						key={field.id}
 					/>
 				)

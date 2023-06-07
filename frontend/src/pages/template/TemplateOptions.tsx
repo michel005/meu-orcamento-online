@@ -1,9 +1,9 @@
 import { Button } from '../../components/Button'
 import React, { useContext } from 'react'
 import { ModalContext } from '../../context/ModalContext'
-import { ButtonGroup } from '../../components/ButtonGroup'
 import { TemplateRecurrence } from '../../constants/TemplateRecurrence'
 import { PageContext } from '../../context/PageContext'
+import { Select } from '../../components/Select'
 
 export const TemplateOptions = () => {
 	const { show } = useContext(ModalContext)
@@ -13,6 +13,7 @@ export const TemplateOptions = () => {
 		<>
 			<Button
 				leftIcon="add"
+				variation="sidebar"
 				onClick={() => {
 					show({
 						entity: 'template',
@@ -24,20 +25,18 @@ export const TemplateOptions = () => {
 			>
 				Cadastrar
 			</Button>
-			<h5>Filtros</h5>
-			<ButtonGroup
-				variation="secondary"
-				orientation="vertical"
-				list={Object.keys(TemplateRecurrence).map((x) => ({
-					id: x,
-					value: x,
-					label: TemplateRecurrence[x],
-				}))}
+			<div style={{ flexGrow: 1 }} />
+			<Select
+				label="Recorrência"
+				variation="sidebar"
+				options={Object.keys(TemplateRecurrence)}
+				idModifier={(x: string) => x}
+				valueModifier={(x: string) => TemplateRecurrence[x]}
 				nullable={true}
 				nullableLabel="Todas as Recorrências"
-				value={{ id: data?.template?.recurrence }}
+				value={data?.template?.recurrence}
 				onChange={(value) => {
-					defineData('template', 'recurrence', value?.value)
+					defineData('template', 'recurrence', value)
 				}}
 			/>
 		</>

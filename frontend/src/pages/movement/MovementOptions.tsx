@@ -2,25 +2,26 @@ import { Button } from '../../components/Button'
 import { DateUtils } from '../../utils/DateUtils'
 import { CalendarInput } from '../../components/CalendarInput'
 import React, { useContext } from 'react'
-import { Account, DatabaseContext } from '../../context/DatabaseContext'
+import { DatabaseContext } from '../../context/DatabaseContext'
 import { ModalContext } from '../../context/ModalContext'
 import { PageContext } from '../../context/PageContext'
 import { Select } from '../../components/Select'
 import { Dropdown } from '../../components/Dropdown'
-import { ButtonGroup } from '../../components/ButtonGroup'
 import { MovementStatus } from '../../constants/MovementStatus'
 import { Bag } from '../../components/Bag'
 import { GoalType } from '../../types/GoalType'
+import { AccountType } from '../../types/AccountType'
 
 export const MovementOptions = () => {
 	const { accounts, goals, templates } = useContext(DatabaseContext)
-	const { show, showMessage } = useContext(ModalContext)
+	const { show } = useContext(ModalContext)
 	const { data, defineData } = useContext(PageContext)
 
 	return (
 		<>
 			<Button
 				leftIcon="add"
+				variation="sidebar"
 				onClick={() => {
 					show({
 						entity: 'movement',
@@ -36,7 +37,7 @@ export const MovementOptions = () => {
 				Movimentação
 			</Button>
 			<Button
-				variation="secondary"
+				variation="sidebar"
 				leftIcon="add"
 				onClick={() => {
 					show({
@@ -54,8 +55,7 @@ export const MovementOptions = () => {
 			</Button>
 			<Dropdown
 				leftIcon="add"
-				sidebarMode={true}
-				variation="secondary"
+				variation="sidebar"
 				list={templates
 					.sort((x, y) => {
 						if ((x.day || '') > (y.day || '')) return 1
@@ -94,11 +94,11 @@ export const MovementOptions = () => {
 			>
 				Template
 			</Dropdown>
+			<div style={{ flexGrow: 1 }} />
 			<CalendarInput
 				label="Período"
 				range={true}
-				variation="secondary"
-				sidebarMode={true}
+				variation="sidebar"
 				value={data?.movement?.date}
 				onChange={(x) => {
 					defineData('movement', 'date', x)
@@ -106,13 +106,12 @@ export const MovementOptions = () => {
 			/>
 			<Select
 				label="Contas"
-				variation="secondary"
-				sidebarMode={true}
+				variation="sidebar"
 				options={accounts || []}
 				nullable={true}
 				nullableLabel="Todas as Contas"
-				idModifier={(account: Account) => account?.id}
-				valueModifier={(account: Account) => account?.name}
+				idModifier={(account: AccountType) => account?.id}
+				valueModifier={(account: AccountType) => account?.name}
 				value={data?.movement?.account}
 				onChange={(x) => {
 					defineData('movement', 'account', x)
@@ -120,8 +119,7 @@ export const MovementOptions = () => {
 			/>
 			<Select
 				label="Metas Financeiras"
-				variation="secondary"
-				sidebarMode={true}
+				variation="sidebar"
 				options={goals || []}
 				nullable={true}
 				nullableLabel="Todas as Metas"
@@ -134,8 +132,7 @@ export const MovementOptions = () => {
 			/>
 			<Select
 				label="Situação"
-				variation="secondary"
-				sidebarMode={true}
+				variation="sidebar"
 				options={Object.keys(MovementStatus)}
 				nullable={true}
 				nullableLabel="Todas as Situações"
@@ -146,50 +143,6 @@ export const MovementOptions = () => {
 					defineData('movement', 'status', x)
 				}}
 			/>
-			<h5>Filtros Rápidos</h5>
-			<Button
-				leftIcon="calendar_month"
-				variation="link"
-				onClick={() => {
-					defineData('movement', 'date', {
-						start: DateUtils.dateToString(new Date()),
-						end: DateUtils.dateToString(new Date()),
-					})
-				}}
-			>
-				Hoje
-			</Button>
-			<Button
-				leftIcon="calendar_month"
-				variation="link"
-				onClick={() => {
-					defineData('movement', 'date', {
-						start: DateUtils.dateToString(
-							new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-						),
-						end: DateUtils.dateToString(
-							new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
-						),
-					})
-				}}
-			>
-				Mês Atual
-			</Button>
-			<Button
-				leftIcon="calendar_month"
-				variation="link"
-				onClick={() => {
-					const first = new Date().getMonth() >= 0 || new Date().getMonth() <= 5 ? 0 : 6
-					defineData('movement', 'date', {
-						start: DateUtils.dateToString(new Date(new Date().getFullYear(), first, 1)),
-						end: DateUtils.dateToString(
-							new Date(new Date().getFullYear(), first + 6, 0)
-						),
-					})
-				}}
-			>
-				Semestre Atual
-			</Button>
 		</>
 	)
 }

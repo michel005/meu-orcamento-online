@@ -2,6 +2,7 @@
 	--width-pages: 70px;
 	--width-options: 280px;
 
+	background-color: var(--active-color);
 	display: flex;
 	flex-direction: row;
 	position: relative;
@@ -36,8 +37,7 @@
 	}
 
 	.options {
-		background-color: var(--background-color);
-		border-right: 2px solid var(--active-color);
+		background-color: #0002;
 		display: flex;
 		flex-direction: column;
 		gap: 7px;
@@ -46,6 +46,10 @@
 		padding: 24px 17px;
 		transition: width 0.25s, opacity 0.25s;
 		width: var(--width-options);
+
+		h3, h5 {
+			color: #fff;
+		}
 	}
 
 	&[data-reduced=true] {
@@ -63,12 +67,11 @@
 
 	@media (max-width: 1000px) {
 		.pages {
-			background-color: var(--active-color);
 			z-index: 110;
 		}
 
 		.options {
-			background-color: #fffc;
+			background-color: var(--active-color-cc);
 			backdrop-filter: blur(10px);
 			height: 100%;
 			left: var(--width-pages);

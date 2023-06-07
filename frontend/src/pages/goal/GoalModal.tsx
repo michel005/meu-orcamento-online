@@ -120,7 +120,6 @@ export const GoalModal = ({ entity }: GoalModalType) => {
 						options: Object.keys(GoalStatus).map((x) => x),
 						idModifier: (row) => row,
 						valueModifier: (row) => GoalStatus[row],
-						variation: 'secondary',
 					},
 					{
 						id: 'targetValue',
@@ -147,8 +146,7 @@ export const GoalModal = ({ entity }: GoalModalType) => {
 							{fields.targetDate}
 						</div>
 						<Alert icon="info">
-							Para acumular valores, atribua essa meta a todas as movimentações na
-							hora de registrar uma nova movimentação.
+							Para acumular valores, atribua essa meta a suas movimentações.
 						</Alert>
 					</>
 				)}

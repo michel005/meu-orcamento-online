@@ -1,11 +1,12 @@
 import { GoalType } from './GoalType'
-import { Account, Template } from '../context/DatabaseContext'
+import { Template } from '../context/DatabaseContext'
+import { AccountType } from './AccountType'
 
 export type MovementType = {
 	id?: string | null
 	date?: string | null
 	description?: string
-	account?: Account | null
+	account?: AccountType | null
 	template?: Template | null
 	goal?: GoalType | null
 	value: number

@@ -39,7 +39,7 @@ export const GoalPage = () => {
 								<>
 									{!template && (
 										<Button
-											variation="link"
+											variation="secondary"
 											onClick={() => {
 												show({
 													entity: 'template',
@@ -64,7 +64,7 @@ export const GoalPage = () => {
 										goal.status !== 'CANCELED' &&
 										goal.status !== 'DONE' && (
 											<Button
-												variation="link"
+												variation="secondary"
 												onClick={() => {
 													show({
 														entity: 'movement',
@@ -88,9 +88,6 @@ export const GoalPage = () => {
 												Nova Lançamento
 											</Button>
 										)}
-									{goal.status !== 'CANCELED' && goal.status !== 'DONE' && (
-										<Button variation="link">Cancelar</Button>
-									)}
 								</>
 							}
 						/>

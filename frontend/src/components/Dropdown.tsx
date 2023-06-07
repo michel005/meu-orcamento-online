@@ -14,6 +14,7 @@ export const Dropdown = ({
 	list = [],
 	sidebarMode = false,
 	fatherClose,
+	variation,
 	...props
 }: DropdownType) => {
 	const [showList, setShowList] = useState(false)
@@ -22,7 +23,7 @@ export const Dropdown = ({
 		<div
 			className={`${style.dropdown} ${props.className}`}
 			data-show={showList}
-			data-sidebar-mode={sidebarMode}
+			data-variation={variation}
 		>
 			<Button
 				{...props}

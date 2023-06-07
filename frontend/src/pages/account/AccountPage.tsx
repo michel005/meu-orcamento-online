@@ -1,10 +1,12 @@
 import React, { useContext } from 'react'
 import style from './AccountPage.module.scss'
-import { AccountType, DatabaseContext } from '../../context/DatabaseContext'
+import { DatabaseContext } from '../../context/DatabaseContext'
 import { Table } from '../../components/Table'
 import { MovementUtils } from '../../utils/MovementUtils'
 import { PageContext } from '../../context/PageContext'
 import { ModalContext } from '../../context/ModalContext'
+import { AccountCategories } from '../../constants/AccountCategories'
+import { DateUtils } from '../../utils/DateUtils'
 
 export const AccountPage = () => {
 	const { accounts, movements } = useContext(DatabaseContext)
@@ -21,9 +23,9 @@ export const AccountPage = () => {
 							label: 'Nome da Conta',
 						},
 						{
-							field: 'type',
-							label: 'Tipo',
-							valueModifier: (row: any) => AccountType[row.type],
+							field: 'category',
+							label: 'Categoria',
+							valueModifier: (row: any) => AccountCategories[row.category],
 						},
 						{
 							field: 'balance',
@@ -38,6 +40,28 @@ export const AccountPage = () => {
 									}
 								),
 						},
+						{
+							field: 'futurebalance',
+							label: 'Saldo Previsto',
+							align: 'right',
+							valueModifier: (row: any) =>
+								(
+									MovementUtils.futureBalance(
+										movements,
+										row,
+										DateUtils.dateToString(
+											new Date(
+												new Date().getFullYear(),
+												new Date().getMonth() + 1,
+												0
+											)
+										)
+									) / 100
+								).toLocaleString('pt-br', {
+									style: 'currency',
+									currency: 'BRL',
+								}),
+						},
 					]}
 					footer={[
 						<>
@@ -47,8 +71,30 @@ export const AccountPage = () => {
 									MovementUtils.balance(
 										movements.filter(
 											(x) =>
-												!data.account?.type ||
-												x.account?.type === data.account?.type
+												!data.account?.category ||
+												x.account?.category === data.account?.category
+										)
+									) / 100
+								).toLocaleString('pt-br', {
+									style: 'currency',
+									currency: 'BRL',
+								})}
+							</td>
+							<td data-alignment="right">
+								{(
+									MovementUtils.futureBalance(
+										movements.filter(
+											(x) =>
+												!data.account?.category ||
+												x.account?.category === data.account?.category
+										),
+										null,
+										DateUtils.dateToString(
+											new Date(
+												new Date().getFullYear(),
+												new Date().getMonth() + 1,
+												0
+											)
 										)
 									) / 100
 								).toLocaleString('pt-br', {
@@ -65,7 +111,7 @@ export const AccountPage = () => {
 						})
 					}}
 					value={accounts.filter(
-						(x) => !data.account?.type || x.type === data.account?.type
+						(x) => !data.account?.category || x.category === data.account?.category
 					)}
 				/>
 			</div>

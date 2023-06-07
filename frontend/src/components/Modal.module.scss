@@ -1,6 +1,6 @@
 .modal {
 	align-items: center;
-	background-color: var(--background-color);
+	background-color: var(--active-color-33);
 	backdrop-filter: blur(10px);
 	display: flex;
 	flex-direction: row;
@@ -24,7 +24,6 @@
 
 	.content {
 		background-color: #fff;
-		border: 2px solid var(--active-color);
 		border-radius: 7px;
 		box-shadow: #ccc 0 0 4px;
 		display: flex;
@@ -36,13 +35,11 @@
 		width: 800px;
 
 		.header {
-			background-color: var(--active-color);
-			border-bottom: 2px solid var(--active-color);
-			border-radius: 5px 5px 0 0;
-			color: #fff;
+			color: #000;
 			display: flex;
 			flex-direction: row;
-			font-size: 24px;
+			font-size: 28px;
+			font-weight: bold;
 			padding: 21px;
 
 			span {
@@ -58,7 +55,6 @@
 				align-items: center;
 
 				&::before {
-					color: #fff;
 					font-size: 22px;
 				}
 			}
@@ -72,8 +68,6 @@
 		}
 
 		.buttons {
-			background-color: var(--background-color);
-			border-top: 2px solid var(--active-color);
 			display: flex;
 			flex-direction: row;
 			gap: 14px;
@@ -90,29 +84,7 @@
 
 	&[data-message=true] {
 		.content {
-			.header {
-				background-color: transparent;
-				border: none;
-				color: #000;
-				font-size: 28px;
-				font-weight: bold;
-				padding-bottom: 7px;
-
-				button {
-					&::before {
-						color: #000;
-					}
-				}
-			}
-
-			.insideContent {
-				font-size: 20px;
-			}
-
-			.buttons {
-				background-color: transparent;
-				border: none;
-			}
+			width: 700px;
 		}
 	}
 
@@ -136,8 +108,20 @@
 			}
 
 			.buttons {
-				border-radius: 0;
 				flex-direction: column;
+			}
+		}
+
+		&[data-message=true] {
+			.content {
+				border-radius: 7px ;
+				height: auto;
+				margin: 21px;
+			}
+
+			.buttons {
+				flex-direction: row;
+				flex-wrap: wrap;
 			}
 		}
 	}

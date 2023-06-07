@@ -6,7 +6,7 @@ import { DateUtils } from '../utils/DateUtils'
 
 export type CalendarInput = CalendarType & {
 	label?: string
-	variation?: 'primary' | 'secondary'
+	variation?: 'primary' | 'secondary' | 'sidebar'
 	sidebarMode?: boolean
 }
 
@@ -43,6 +43,7 @@ export const CalendarInput = ({
 			className={style.calendarInput}
 			data-show={showCalendar}
 			data-sidebar-mode={sidebarMode}
+			data-variation={variation}
 		>
 			{label && <label>{label}</label>}
 			<Button

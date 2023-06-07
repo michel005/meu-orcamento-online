@@ -48,6 +48,12 @@
 
 		& > button {
 			border-radius: 7px;
+			border: 2px solid #aaa;
+			color: #333;
+
+			&:hover {
+				background-color: transparent !important;
+			}
 
 			span {
 				flex-grow: 1;
@@ -105,6 +111,56 @@
 		}
 	}
 
+	&[data-variation=sidebar] {
+		.label {
+			color: #fff;
+		}
+
+		.insideSelect {
+			& > button {
+				background-color: #fff4;
+				border-radius: 7px;
+				border: none !important;
+				color: #fff;
+
+				&:hover {
+					background-color: #fff3 !important;
+				}
+			}
+		}
+
+		&[data-show-options='true'] {
+			.label {
+				color: #fff;
+			}
+
+			.insideSelect {
+				& > button {
+					color: #fff;
+				}
+
+				.options {
+					border: none;
+					position: relative;
+					top: auto;
+
+					& > button {
+						color: #333;
+
+						&:hover {
+							background-color: var(--active-color-33);
+						}
+
+						&[data-selected='true'] {
+							background-color: var(--active-color-cc);
+							color: #fff;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	&[data-show-options='true'] {
 		.label {
 			color: var(--active-color);
@@ -112,7 +168,9 @@
 
 		.insideSelect {
 			& > button {
+				border: 2px solid var(--active-color);
 				border-radius: 7px 7px 0 0;
+				color: var(--active-color);
 				white-space: nowrap;
 
 				&::after {
@@ -121,33 +179,11 @@
 			}
 
 			.options {
+				border: 2px solid var(--active-color);
 				border-radius: 0 0 7px 7px;
 				display: flex;
 				opacity: 1;
 				pointer-events: auto;
-			}
-		}
-	}
-
-	&[data-sidebar-mode=true] {
-		.label {
-			color: #333;
-		}
-
-		.insideSelect {
-			.options {
-				box-shadow: none;
-				margin-top: -2px;
-				position: sticky;
-				top: 0;
-			}
-		}
-
-		&[data-show-options='true'] {
-			.insideSelect {
-				& > button {
-					background-color: #fff4;
-				}
 			}
 		}
 	}

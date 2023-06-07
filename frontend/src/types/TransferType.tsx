@@ -1,10 +1,10 @@
-import { Account } from '../context/DatabaseContext'
+import { AccountType } from './AccountType'
 
 export type TransferType = {
 	id: string
 	date: string
-	accountOrigin: Account
-	accountDestiny: Account
+	accountOrigin: AccountType
+	accountDestiny: AccountType
 	description: string
 	value: number
 }

@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Account extends AbstractEntity {
 
     private String name;
-    private AccountType type;
+    private AccountCategory category;
 
 }

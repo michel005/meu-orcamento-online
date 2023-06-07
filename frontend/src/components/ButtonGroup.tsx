@@ -14,7 +14,7 @@ export type ButtonGroupItem = {
 export type ButtonGroupType = {
 	list: ButtonGroupItem[]
 	value?: any | null
-	variation?: 'primary' | 'secondary'
+	variation?: 'primary' | 'secondary' | 'sidebar'
 	sidebarMode?: boolean
 	onChange: (value: ButtonGroupItem | null) => void
 	nullable?: boolean

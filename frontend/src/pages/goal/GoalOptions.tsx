@@ -1,9 +1,9 @@
 import { Button } from '../../components/Button'
 import React, { useContext } from 'react'
 import { ModalContext } from '../../context/ModalContext'
-import { ButtonGroup } from '../../components/ButtonGroup'
 import { PageContext } from '../../context/PageContext'
 import { GoalStatus } from '../../constants/GoalStatus'
+import { Select } from '../../components/Select'
 
 export const GoalOptions = () => {
 	const { show } = useContext(ModalContext)
@@ -13,6 +13,7 @@ export const GoalOptions = () => {
 		<>
 			<Button
 				leftIcon="add"
+				variation="sidebar"
 				onClick={() => {
 					show({
 						entity: 'goal',
@@ -25,20 +26,18 @@ export const GoalOptions = () => {
 			>
 				Cadastrar
 			</Button>
-			<h5>Filtros</h5>
-			<ButtonGroup
-				variation="secondary"
-				orientation="vertical"
-				list={Object.keys(GoalStatus).map((x) => ({
-					id: x,
-					value: x,
-					label: GoalStatus[x],
-				}))}
+			<div style={{ flexGrow: 1 }} />
+			<Select
+				label="Situações"
+				variation="sidebar"
+				options={Object.keys(GoalStatus)}
+				idModifier={(x: string) => x}
+				valueModifier={(x: string) => GoalStatus[x]}
 				nullable={true}
 				nullableLabel="Todas as Situações"
-				value={{ id: data.goal?.status }}
+				value={data.goal?.status}
 				onChange={(x) => {
-					defineData('goal', 'status', x?.value)
+					defineData('goal', 'status', x)
 				}}
 			/>
 		</>

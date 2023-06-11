@@ -12,12 +12,20 @@
 		flex-direction: row;
 		gap: 10px;
 
-		span {
+		.monthYear {
+			display: flex;
+			flex-direction: row;
 			flex-grow: 1;
 			font-size: 18px;
 			font-weight: bold;
+			gap: 7px;
+			justify-content: center;
 			margin-block: auto;
 			text-align: center;
+
+			[data-variation=link] {
+				font-size: 18px;
+			}
 		}
 	}
 

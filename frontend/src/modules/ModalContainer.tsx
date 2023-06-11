@@ -6,12 +6,13 @@ export const ModalContainer = () => {
 
 	return (
 		<>
-			{modalCollection.map((modal) => {
-				const Modal: any = ModalByEntity.find(([entity]) => {
-					return entity === modal.entity
-				})
+			{Array.from(modalCollection, ([key, value]) => ({
+				key,
+				value,
+			})).map((modal) => {
+				const Modal: any = ModalByEntity.find(([entity]) => entity === modal.key)
 				const ModalTag = Modal[1]
-				return <ModalTag key={Modal[0]} entity={modal.modal} />
+				return <ModalTag />
 			})}
 		</>
 	)

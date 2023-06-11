@@ -45,6 +45,8 @@
 				position: relative;
 				text-align: left;
 				transition: all 0.25s;
+				width: var(--width);
+				max-width: var(--width);
 
 				div {
 					color: #fff;
@@ -127,6 +129,48 @@
 				padding: 14px;
 				position: relative;
 				transition: all 0.25s;
+
+				&[data-image] {
+					padding: 7px 14px;
+					text-align: center;
+					width: 36px;
+
+					& > div {
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						gap: 7px;
+					}
+
+					img {
+						background-color: #ccc;
+						border-radius: 7px;
+						height: 36px;
+						object-position: var(--position-x) var(--position-y);
+						width: 36px;
+					}
+				}
+
+				&[data-image-list] {
+					padding: 7px 14px;
+					text-align: left;
+
+					& > div {
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						gap: 7px;
+					}
+
+					img {
+						background-color: #ccc;
+						border-radius: 7px;
+						box-shadow: #ccc 0 0 4px;
+						height: 36px;
+						object-position: var(--position-x) var(--position-y);
+						width: 36px;
+					}
+				}
 			}
 		}
 	}

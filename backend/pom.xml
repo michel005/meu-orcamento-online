@@ -68,7 +68,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.michel.template.RestauranteFacilApplication</mainClass>
+                            <mainClass>com.michel.template.GerFinWEBApplication</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

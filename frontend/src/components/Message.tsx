@@ -11,8 +11,11 @@ export type MessageType = {
 	}
 }
 
-export const Message = ({ entity }: MessageType) => {
-	const { close } = useContext(ModalContext)
+export const Message = () => {
+	const { modalCollection, close } = useContext(ModalContext)
+
+	const entity = modalCollection.get('message')
+
 	return (
 		<Modal
 			style={{ zIndex: 'var(--zindex-message)' }}

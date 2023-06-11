@@ -26,6 +26,12 @@
 			}
 		}
 
+		[data-column] {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
 		[data-no-strech] {
 			& > * {
 				flex-grow: 0;
@@ -43,26 +49,6 @@
 			&::before {
 				font-size: inherit;
 			}
-		}
-	}
-
-	.footer {
-		align-items: center;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		gap: 14px;
-
-		&[data-alignment='left'] {
-			justify-content: flex-start;
-		}
-
-		&[data-alignment='center'] {
-			justify-content: center;
-		}
-
-		&[data-alignment='right'] {
-			justify-content: flex-end;
 		}
 	}
 

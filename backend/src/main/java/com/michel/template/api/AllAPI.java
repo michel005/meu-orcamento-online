@@ -31,6 +31,9 @@ public class AllAPI {
     @Autowired
     private GoalRepo goalRepo;
 
+    @Autowired
+    private TransferRepo transferRepo;
+
     @GetMapping("/all")
     private ResponseEntity<?> all() {
         Map<String, Object> all = new TreeMap<>();
@@ -39,6 +42,7 @@ public class AllAPI {
         all.put("templates", templateRepo.findAll());
         all.put("goals", goalRepo.findAll());
         all.put("settings", settingsRepo.findAll().stream().findFirst().orElse(new Settings()));
+        all.put("transfers", transferRepo.findAll());
         return ResponseEntity.ok(all);
     }
 

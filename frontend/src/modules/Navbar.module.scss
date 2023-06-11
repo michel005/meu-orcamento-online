@@ -1,0 +1,48 @@
+:root {
+	--navbar-height: 70px;
+}
+
+.navbar {
+	align-items: center;
+	background-color: #333;
+	display: flex;
+	flex-direction: row;
+	height: var(--navbar-height);
+	width: 100%;
+
+	.header {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+		padding-inline: 21px;
+		width: var(--sidebar-width);
+
+		& > button {
+			color: #fff;
+			opacity: 1;
+
+			&::before {
+				font-size: 24px;
+			}
+		}
+
+		span {
+			color: #fff;
+			font-size: 20px;
+			margin-block: auto;
+		}
+	}
+
+	.search {
+		display: flex;
+		flex-direction: row;
+		flex-grow: 1;
+		justify-content: flex-end;
+		gap: 14px;
+		padding-inline: 21px;
+
+		.searchInput {
+			width: 500px;
+		}
+	}
+}

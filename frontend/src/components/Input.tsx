@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useEffect, useRef, useState } from 'react'
+import React, { HTMLAttributes, useRef, useState } from 'react'
 import { Button, ButtonType } from './Button'
 import style from './Input.module.scss'
 import styleButton from './Button.module.scss'
@@ -10,18 +10,6 @@ interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
 	placeholder?: string | undefined
 	readOnly?: boolean | undefined
 	step?: number | string | undefined
-	type?:
-		| 'color'
-		| 'date'
-		| 'file'
-		| 'number'
-		| 'password'
-		| 'range'
-		| 'text'
-		| 'checkbox'
-		| 'search'
-		| 'select'
-		| undefined
 	accept?: string | undefined
 	value?: any | undefined
 }
@@ -31,10 +19,10 @@ export type InputType = InputHTMLAttributes<HTMLInputElement> & {
 	leftButton?: ButtonType | null
 	rightButton?: ButtonType | null
 	info?: any | null
-	error?: any | null
 	help?: any | null
 	masterProps?: any | null
 	searchOptions?: ButtonType[]
+	searchOptionsWithGroups?: { label: string; options: ButtonType[] }[]
 	onChange?: (value: string | Date | null) => void
 }
 
@@ -42,7 +30,6 @@ export const Input = ({
 	label,
 	info,
 	help,
-	error,
 	leftButton = null,
 	rightButton = null,
 	onChange = () => null,
@@ -50,25 +37,20 @@ export const Input = ({
 	value,
 	type,
 	searchOptions = [],
+	searchOptionsWithGroups = [],
 	...props
-}: InputType) => {
+}: InputType & {
+	type?: string
+}) => {
 	const [showHelp, setShowHelp] = useState(false)
 	const [focus, setFocus] = useState(false)
 	const [openSearch, setOpenSearch] = useState(false)
 	const ref = useRef<HTMLInputElement>(null)
 
-	const getValue = () => {
-		if (type === 'file') {
-			return ''
-		}
-		return value || ''
-	}
-
 	return (
 		<div
 			{...masterProps}
 			className={style.input}
-			data-error={!!error}
 			data-type={type}
 			data-focus={focus}
 			data-search={openSearch}
@@ -90,52 +72,6 @@ export const Input = ({
 						)}
 					</div>
 				)}
-				{type === 'file' && (
-					<>
-						<div className={style.fileButton}>
-							{!value && (
-								<>
-									<Button
-										leftIcon="folder"
-										onClick={() => {
-											if (ref.current) {
-												ref.current.click()
-											}
-										}}
-									>
-										Buscar Arquivo
-									</Button>
-								</>
-							)}
-							{!!value && (
-								<>
-									<Button
-										leftIcon="edit"
-										onClick={() => {
-											if (ref.current) {
-												ref.current.click()
-											}
-										}}
-									/>
-									<Button
-										leftIcon="close"
-										variation="secondary"
-										onClick={() => {
-											onChange(null)
-										}}
-									/>
-									<Button
-										className={`${styleButton.button} ${style.showImage}`}
-										variation="link"
-									>
-										{value?.file?.name}
-										{!!value && <img src={URL.createObjectURL(value?.file)} />}
-									</Button>
-								</>
-							)}
-						</div>
-					</>
-				)}
 				<div className={style.inputWithButton}>
 					{leftButton && (
 						<Button
@@ -145,12 +81,11 @@ export const Input = ({
 						/>
 					)}
 					<input
-						accept={props.accept}
 						ref={ref}
 						{...props}
 						type={type}
 						checked={type === 'checkbox' ? value || false : undefined}
-						value={getValue()}
+						value={value || ''}
 						onBlur={() => {
 							setFocus(false)
 						}}
@@ -160,12 +95,7 @@ export const Input = ({
 						}}
 						onChange={(e: any) => {
 							let x = e.target.value
-							if (type === 'file') {
-								x = {
-									file: e.target.files[0],
-									value: e.target.value,
-								}
-							} else if (type === 'date') {
+							if (type === 'date') {
 								if (x !== '') {
 									x = new Date(e.target.value)
 								}
@@ -196,27 +126,58 @@ export const Input = ({
 				</div>
 			</div>
 			<div className={style.searchResults}>
-				{searchOptions.map((option, optionKey) => {
-					return (
-						<Button
-							{...option}
-							key={optionKey}
-							variation="link"
-							onClick={(e) => {
-								setOpenSearch(false)
-								option?.onClick?.(e)
-							}}
-						/>
-					)
-				})}
-				{searchOptions.length === 0 && (
+				{searchOptionsWithGroups
+					.filter((x) => x.options.length > 0)
+					.map((option, optionKey) => {
+						return (
+							<div key={optionKey} className={style.searchGroup}>
+								<h3>{option?.label}</h3>
+								{option?.options
+									.filter((_, index) => index < 5)
+									.map((opt, optKey) => {
+										return (
+											<Button
+												key={optKey}
+												{...opt}
+												variation="link"
+												onClick={(e) => {
+													setOpenSearch(false)
+													opt?.onClick?.(e)
+												}}
+											/>
+										)
+									})}
+							</div>
+						)
+					})}
+				{searchOptionsWithGroups && searchOptionsWithGroups.length === 0 && (
+					<Button disabled variation="link">
+						Nenhum resultado encontrado
+					</Button>
+				)}
+				{!searchOptionsWithGroups &&
+					searchOptions
+						.filter((_, index) => index < 5)
+						.map((option, optionKey) => {
+							return (
+								<Button
+									key={optionKey}
+									{...option}
+									variation="link"
+									onClick={(e) => {
+										setOpenSearch(false)
+										option?.onClick?.(e)
+									}}
+								/>
+							)
+						})}
+				{!searchOptionsWithGroups && searchOptions.length === 0 && (
 					<Button disabled variation="link">
 						Nenhum resultado encontrado
 					</Button>
 				)}
 			</div>
 			{info && <small className={style.info}>{info}</small>}
-			{error && <small className={style.error}>{error}</small>}
 		</div>
 	)
 }

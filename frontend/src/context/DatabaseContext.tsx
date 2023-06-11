@@ -1,54 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import { Axios } from '../configs/Axios'
-import { TemplateRecurrenceType } from '../types/TemplateRecurrenceType'
-import { GoalType } from '../types/GoalType'
-import { MovementType } from '../types/MovementType'
-import { AccountType } from '../types/AccountType'
+import { ProductType } from '../types/ProductType'
+import { ProductOutputType } from '../types/ProductOutputType'
+import { CustomerType } from '../types/CustomerType'
 
-export type Template = {
-	id?: string | null
-	day?: number | null
-	description?: string
-	account?: AccountType | null
-	goal?: GoalType | null
-	value: number
-	recurrence: TemplateRecurrenceType
-}
-
-export type Settings = {
-	id?: string | null
-	colorSchema?: string | null
-	showBalanceCards?: boolean
-	showPendentMovements?: boolean
-	showGoals?: boolean
-	showBalanceByDayChart?: boolean
-}
-
-export type DatabaseResponse = {
-	accounts: AccountType[]
-	movements: MovementType[]
-	templates: Template[]
-	goals: GoalType[]
-	settings: Settings
-}
-
-export type Entity = 'account' | 'movement' | 'template' | 'goal' | 'settings'
-
-export type DatabaseContextType = DatabaseResponse & {
-	refresh: () => void
-	loading: boolean | null
-	create: (
-		entity: Entity,
-		value: AccountType | MovementType | GoalType | Settings,
-		after?: (response: any) => void
-	) => void
-	update: (
-		entity: Entity,
-		value: AccountType | MovementType | GoalType | Settings,
-		after?: (response: any) => void
-	) => void
-	remove: (entity: Entity, id: string, after: (response: any) => void) => void
+export type DatabaseContextType = {
+	content: DatabaseContextContentType
 	offline: boolean
+	save: ({ entity, value, success, failed }: InsertType) => void
+	insert: ({ entity, value, success, failed }: InsertType) => void
+	update: ({ entity, value, success, failed }: InsertType) => void
+	remove: ({ entity, id, success, failed }: DeleteType) => void
+}
+
+export type DatabaseContextContentType = {
+	customer: CustomerType[]
+	product: ProductType[]
+	productOutput: ProductOutputType[]
+}
+
+export type EntityType = 'product' | 'productOutput' | 'customer'
+
+export type InsertType = {
+	entity: EntityType
+	value: any
+	success?: (value: any) => void
+	failed?: (response: any) => void
+}
+
+export type DeleteType = {
+	entity: EntityType
+	id: string
+	success?: () => void
+	failed?: (response: any) => void
 }
 
 export type DatabaseContextInputType = {
@@ -56,99 +39,108 @@ export type DatabaseContextInputType = {
 }
 
 export const DatabaseContext = React.createContext<DatabaseContextType>({
-	accounts: [],
-	movements: [],
-	templates: [],
-	goals: [],
-	settings: {},
-	refresh: () => null,
-	loading: false,
-	create: () => null,
-	update: () => null,
-	remove: () => null,
+	content: {
+		customer: [],
+		product: [],
+		productOutput: [],
+	},
 	offline: false,
+	save: () => {},
+	insert: () => {},
+	update: () => {},
+	remove: () => {},
 })
 
 export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
-	const [accounts, setAccounts] = useState<AccountType[]>([])
-	const [movements, setMovements] = useState<MovementType[]>([])
-	const [templates, setTemplates] = useState<Template[]>([])
-	const [goals, setGoals] = useState<GoalType[]>([])
-	const [settings, setSettings] = useState<Settings>({})
-	const [loading, setLoading] = useState<boolean | null>(null)
+	const [content, setContent] = useState<DatabaseContextContentType>({
+		customer: [],
+		product: [],
+		productOutput: [],
+	})
+	const [offline, setOffline] = useState<boolean>(false)
 	const [initialized, setInitialized] = useState<boolean>(false)
 
-	const [offline, setOffline] = useState<boolean>(false)
-
-	const refresh = () => {
-		setLoading(true)
-		setOffline(false)
-		Axios.get<DatabaseResponse>('/all')
-			.then((response) => {
-				setAccounts(response.data?.accounts || [])
-				setMovements(response.data?.movements || [])
-				setTemplates(response.data?.templates || [])
-				setGoals(response.data?.goals || [])
-				setSettings(response.data?.settings || {})
-			})
-			.catch(() => {
-				setOffline(true)
-			})
-			.finally(() => {
-				setLoading(false)
-			})
+	const save = (props: InsertType) => {
+		if (props.value?.id) {
+			update(props)
+		} else {
+			insert(props)
+		}
 	}
 
-	const create = (
-		entity: Entity,
-		value: AccountType | MovementType | GoalType | Settings,
-		after?: (response: any) => void
-	) => {
-		Axios.post(`/${entity}`, value).then((response) => {
-			refresh()
-			after?.(response)
+	const insert = ({ entity, value, success, failed }: InsertType) => {
+		setContent((x) => {
+			if (!x?.[entity]) {
+				x[entity] = []
+			}
+			x[entity].push({ ...value, id: x[entity].length + 1 })
+			success?.(x[entity][x[entity].length - 1])
+			return { ...x }
 		})
 	}
 
-	const update = (
-		entity: Entity,
-		value: AccountType | MovementType | GoalType | Settings,
-		after?: (response: any) => void
-	) => {
-		Axios.put(`/${entity}`, value).then((response) => {
-			refresh()
-			after?.(response)
+	const update = ({ entity, value, success, failed }: InsertType) => {
+		setContent((x: DatabaseContextContentType) => {
+			let index = -1
+			x[entity].forEach((y, yKey) => {
+				if (y.id === value.id) {
+					index = yKey
+				}
+			})
+			if (index >= 0) {
+				x[entity][index] = value
+				success?.(value)
+			}
+			return { ...x }
 		})
 	}
 
-	const remove = (entity: Entity, id: string, after?: (response: any) => void) => {
-		Axios.delete(`/${entity}?id=${id}`).then((response) => {
-			refresh()
-			after?.(response)
+	const remove = ({ entity, id, success, failed }: DeleteType) => {
+		setContent((x) => {
+			let index = -1
+			x[entity].forEach((y, yKey) => {
+				if (y.id === id) {
+					index = yKey
+				}
+			})
+			if (index > 0) {
+				x[entity].splice(index, 1)
+				success?.()
+			}
+			return { ...x }
 		})
 	}
 
 	useEffect(() => {
+		if (initialized) {
+			localStorage.setItem('database', JSON.stringify(content))
+		}
+	}, [initialized, content])
+
+	useEffect(() => {
 		if (!initialized) {
 			setInitialized(true)
-			refresh()
+			if (localStorage.getItem('database')) {
+				setContent(JSON.parse(localStorage.getItem('database') || '{  }'))
+			} else {
+				setContent({
+					customer: [],
+					product: [],
+					productOutput: [],
+				})
+			}
 		}
 	}, [initialized])
 
 	return (
 		<DatabaseContext.Provider
 			value={{
-				accounts,
-				movements,
-				templates,
-				goals,
-				settings,
-				refresh,
-				loading,
-				create,
+				content,
+				offline,
+				save,
+				insert,
 				update,
 				remove,
-				offline,
 			}}
 		>
 			{children}

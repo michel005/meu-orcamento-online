@@ -19,6 +19,7 @@ export const Button = ({
 	return (
 		<button
 			{...props}
+			type="button"
 			className={`${style.button} ${props.className}`}
 			data-loading={loading}
 			data-variation={variation}

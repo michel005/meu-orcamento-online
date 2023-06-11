@@ -1,0 +1,14 @@
+.imageList {
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	overflow-x: auto;
+
+	& > div {
+		box-shadow: none;
+
+		button[data-upload] {
+			border: 1px solid #ccc;
+		}
+	}
+}

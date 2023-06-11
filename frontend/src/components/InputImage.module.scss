@@ -1,0 +1,157 @@
+.modalImage {
+	border-radius: 7px;
+}
+
+.input {
+	background-color: #fff;
+	box-shadow: #aaa 0 0 4px;
+	border-radius: 7px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-height: 200px;
+	max-width: 200px;
+	min-width: 200px;
+	overflow: hidden;
+	position: relative;
+	width: 200px;
+
+	& > img {
+		display: none;
+		height: 200px;
+		max-height: 200px;
+		min-height: 200px;
+		object-fit: cover;
+		object-position: var(--position-x) var(--position-y);
+		pointer-events: auto;
+		width: 200px;
+	}
+
+	.label {
+		align-items: center;
+		background-color: transparent;
+		color: #999;
+		display: flex;
+		flex-direction: row;
+		font-size: 14px;
+		font-weight: bold;
+		gap: 4px;
+		padding: 14px;
+		pointer-events: none;
+		position: absolute;
+		transition: all 0.25s;
+		width: 100%;
+		z-index: 100;
+	}
+
+	.imagePlaceholder {
+		background-color: #fff;
+		border: none;
+		box-shadow: #ccc 0 0 4px;
+		color: #999;
+		display: flex;
+		flex-direction: column;
+		font-size: 16px;
+		justify-content: center;
+		height: 200px;
+		max-height: 200px;
+		min-height: 200px;
+		padding: 0;
+		text-align: center;
+		width: 100%;
+
+		&:hover {
+			background-color: #f4f4f4;
+
+			&::before {
+				content: 'add_photo_alternate';
+			}
+		}
+
+		&::before {
+			font-size: 36px;
+		}
+	}
+
+	.buttons {
+		background-color: #3339;
+		bottom: 0;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 10px;
+		justify-content: flex-end;
+		padding: 14px;
+		position: absolute;
+		transition: all 0.25s;
+		width: 100%;
+		z-index: 100;
+
+		button {
+			color: #fff;
+
+			&::before {
+				font-size: 14px;
+			}
+		}
+	}
+
+	input {
+		display: none;
+	}
+
+	&[data-value=true][data-mouse-down=true] {
+		.label {
+			transform: translateY(-100%);
+		}
+		.buttons {
+			transform: translateY(100%);
+
+			&:active:hover {
+				transform: none;
+			}
+		}
+	}
+
+	&[data-full-width=true] {
+		width: 100%;
+		max-width: none;
+
+		img {
+			width: 100%;
+		}
+
+		.imagePlaceholder {
+			width: 100%;
+		}
+
+		.buttons {
+			width: 100%;
+		}
+	}
+
+	&[data-value=true] {
+		.label {
+			background-color: #3339;
+			color: #fff;
+		}
+
+		img {
+			display: block !important;
+		}
+
+		.imagePlaceholder {
+			background-color: transparent;
+
+			&:active {
+				cursor: move !important;
+			}
+		}
+	}
+
+	&[data-read-only=true] {
+		.buttons {
+			display: none;
+		}
+	}
+}

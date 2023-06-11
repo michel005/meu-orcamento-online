@@ -78,10 +78,12 @@ export const Calendar = ({
 						})
 					}}
 				/>
-				<span>
-					{(currentDate.getMonth() + 1).toString().padStart(2, '0')} /{' '}
-					{currentDate.getFullYear()}
-				</span>
+				<div className={style.monthYear}>
+					<Button variation="link">
+						{(currentDate.getMonth() + 1).toString().padStart(2, '0')}
+					</Button>
+					/<Button variation="link">{currentDate.getFullYear()}</Button>
+				</div>
 				<Button
 					leftIcon="chevron_right"
 					onClick={() => {

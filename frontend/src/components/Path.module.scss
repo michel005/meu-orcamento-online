@@ -1,0 +1,28 @@
+.path {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	gap: 7px;
+	justify-content: flex-start;
+
+	& > .pathLink {
+		color: #333;
+		opacity: 1 !important;
+
+		&::after {
+			color: #333;
+		}
+
+		&[data-current=true] {
+			color: var(--active-color);
+		}
+
+		&[data-current=false] {
+			cursor: default;
+		}
+
+		&[data-first=true] {
+			font-weight: bold;
+		}
+	}
+}

@@ -1,19 +1,13 @@
 import React, { createContext, useCallback, useState } from 'react'
-import { DateUtils } from '../utils/DateUtils'
-import { AccountOptions } from '../pages/account/AccountOptions'
-import { MovementOptions } from '../pages/movement/MovementOptions'
-import { TemplateOptions } from '../pages/template/TemplateOptions'
-import { TemplateRecurrenceType } from '../types/TemplateRecurrenceType'
-import { GoalOptions } from '../pages/goal/GoalOptions'
-import { GoalStatusType, GoalType } from '../types/GoalType'
-import { AccountCategoriesType, AccountType } from '../types/AccountType'
+import { ProductType } from '../types/ProductType'
+import { ProductOutputType } from '../types/ProductOutputType'
+import { CustomerType } from '../types/CustomerType'
 
 export type PageDefinitionType = {
 	id: string
 	icon: string
 	name: string
 	path: string
-	options?: any
 }
 
 export type PageContextType = {
@@ -25,52 +19,43 @@ export type PageContextType = {
 export const PageContext = createContext<PageContextType>({
 	pages: [],
 	defineData: () => null,
-	data: {},
+	data: {
+		navbar: {
+			search: '',
+		},
+		product: {
+			detail: null,
+			output: null,
+		},
+		customer: {
+			detail: null,
+		},
+	},
 })
 
 export type DataType = {
-	account?: {
-		category?: null | AccountCategoriesType
+	navbar: {
+		search: string
 	}
-	movement?: {
-		status: string | null
-		account?: AccountType | null
-		goal?: GoalType | null
-		date?: {
-			start?: string
-			end?: string
-		}
+	product: {
+		detail: ProductType | null
+		output: ProductOutputType | null
 	}
-	template?: {
-		recurrence?: TemplateRecurrenceType | null
-	}
-	goal?: {
-		status?: GoalStatusType | null
+	customer: {
+		detail: CustomerType | null
 	}
 }
 
 const initialData: DataType = {
-	account: {
-		category: null,
+	navbar: {
+		search: '',
 	},
-	movement: {
-		status: null,
-		account: null,
-		goal: null,
-		date: {
-			start: DateUtils.dateToString(
-				new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-			),
-			end: DateUtils.dateToString(
-				new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
-			),
-		},
+	product: {
+		detail: null,
+		output: null,
 	},
-	template: {
-		recurrence: null,
-	},
-	goal: {
-		status: null,
+	customer: {
+		detail: null,
 	},
 }
 
@@ -85,32 +70,22 @@ export const PageProvider = ({ children }: any) => {
 			path: '/',
 		},
 		{
-			id: 'account',
-			icon: 'wallet',
-			name: 'Conta',
-			path: '/accounts',
-			options: <AccountOptions />,
+			id: 'customer',
+			icon: 'person',
+			name: 'Clientes',
+			path: '/customer',
 		},
 		{
-			id: 'movement',
+			id: 'product',
+			icon: 'list',
+			name: 'Produtos',
+			path: '/product',
+		},
+		{
+			id: 'sell',
 			icon: 'shopping_cart',
-			name: 'Lançamentos',
-			path: '/movements',
-			options: <MovementOptions />,
-		},
-		{
-			id: 'template',
-			icon: 'description',
-			name: 'Template',
-			path: '/template',
-			options: <TemplateOptions />,
-		},
-		{
-			id: 'goal',
-			icon: 'flag',
-			name: 'Metas',
-			path: '/goals',
-			options: <GoalOptions />,
+			name: 'Vendas',
+			path: '/sell',
 		},
 	]
 

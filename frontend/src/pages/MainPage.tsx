@@ -1,22 +1,18 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import style from './MainPage.module.scss'
 import { Sidebar } from '../modules/Sidebar'
 import { Route, Routes } from 'react-router-dom'
-import { DashboardPage } from './dashboard/DashboardPage'
-import { AccountPage } from './account/AccountPage'
-import { MovementPage } from './movement/MovementPage'
-import { SettingsPage } from './settings/SettingsPage'
-import { DatabaseContext } from '../context/DatabaseContext'
+import { ProductPage } from './product/ProductPage'
 import { ModalContainer } from '../modules/ModalContainer'
-import { TemplatePage } from './template/TemplatePage'
-import { GoalPage } from './goal/GoalPage'
 import { CSSProperties } from 'styled-components'
-import { Button } from '../components/Button'
+import { Navbar } from '../modules/Navbar'
+import { ProductDetail } from './product/ProductDetail'
+import { ProductOutput } from './product/ProductOutput'
+import { CustomerPage } from './customer/CustomerPage'
+import { CustomerDetail } from './customer/CustomerDetail'
 
 export const MainPage = () => {
-	const { settings, loading } = useContext(DatabaseContext)
-
-	const colorSchema = settings?.colorSchema || '#3399ff'
+	const colorSchema = '#3399ff'
 
 	return (
 		<div
@@ -33,23 +29,21 @@ export const MainPage = () => {
 				} as CSSProperties
 			}
 		>
-			<Sidebar />
-			{loading && (
-				<div className={style.loading}>
-					<Button variation="link" disabled={true} leftIcon="refresh" />
+			<Navbar />
+			<div className={style.sidebarAndContent}>
+				<Sidebar />
+				<div className={style.content}>
+					<Routes>
+						<Route path="/" element={<></>} />
+						<Route path="/product" element={<ProductPage />} />
+						<Route path="/product/output" element={<ProductOutput />} />
+						<Route path="/product/details" element={<ProductDetail />} />
+						<Route path="/customer" element={<CustomerPage />} />
+						<Route path="/customer/details" element={<CustomerDetail />} />
+					</Routes>
 				</div>
-			)}
-			<div className={style.content}>
-				<Routes>
-					<Route path="/" element={<DashboardPage />} />
-					<Route path="/accounts" element={<AccountPage />} />
-					<Route path="/movements" element={<MovementPage />} />
-					<Route path="/template" element={<TemplatePage />} />
-					<Route path="/goals" element={<GoalPage />} />
-					<Route path="/settings" element={<SettingsPage />} />
-				</Routes>
+				<ModalContainer />
 			</div>
-			<ModalContainer />
 		</div>
 	)
 }

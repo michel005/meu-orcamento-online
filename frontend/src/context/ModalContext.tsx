@@ -1,23 +1,14 @@
 import React, { createContext, useState } from 'react'
-import { MovementModal } from '../pages/movement/MovementModal'
-import { TemplateModal } from '../pages/template/TemplateModal'
 import { Message } from '../components/Message'
 import { ButtonType } from '../components/Button'
-import { AccountModal } from '../pages/account/AccountModal'
-import { GoalModal } from '../pages/goal/GoalModal'
-import { TransferModal } from '../pages/movement/TransferModal'
+import { ProductDetail } from '../pages/product/ProductDetail'
 
 export type ModalByEntityType = [string, any]
 
-export type ModalRecord = {
-	entity: string
-	modal: any
-}
-
 export type ModalContextType = {
-	modalCollection: ModalRecord[]
-	show: (modalInfo: ModalRecord) => void
-	update: (modalInfo: ModalRecord) => void
+	modalCollection: Map<string, any>
+	show: (entity: string, value: any) => void
+	update: (entity: string, value: any) => void
 	showMessage: (header: string, message?: string) => void
 	showQuestion: (header: string, message: string, confirm: () => void) => void
 	showQuestionWithOptions: (header: string, message: string, ...options: ButtonType[]) => void
@@ -26,15 +17,11 @@ export type ModalContextType = {
 
 export const ModalByEntity: ModalByEntityType[] = [
 	['message', Message],
-	['account', AccountModal],
-	['movement', MovementModal],
-	['transfer', TransferModal],
-	['template', TemplateModal],
-	['goal', GoalModal],
+	['product', ProductDetail],
 ]
 
 export const ModalContext = createContext<ModalContextType>({
-	modalCollection: [],
+	modalCollection: new Map(),
 	show: () => null,
 	update: () => null,
 	showMessage: () => null,
@@ -44,99 +31,84 @@ export const ModalContext = createContext<ModalContextType>({
 })
 
 export const ModalProvider = ({ children }: any) => {
-	const [modalCollection, setModalCollection] = useState<ModalRecord[]>([])
+	const [modalCollection, setModalCollection] = useState<Map<string, any>>(new Map())
 
-	const show = (modalInfo: ModalRecord) => {
+	const show = (entity: string, value: any) => {
 		setModalCollection((collection) => {
-			collection.push(modalInfo)
-			return [...collection]
+			collection.set(entity, value)
+			return new Map(collection)
 		})
 	}
 
-	const update = (modalInfo: ModalRecord) => {
+	const update = (entity: string, value: any) => {
 		setModalCollection((collection) => {
-			const found: any = collection.find((x) => x.entity === modalInfo.entity)
-			if (found) {
-				found.modal = { ...found.modal, ...modalInfo.modal }
-			}
-			return [...collection]
+			collection.set(entity, value)
+			return new Map(collection)
 		})
 	}
 
 	const showMessage = (header: string, message?: string) => {
 		setModalCollection((collection) => {
-			collection.push({
-				entity: 'message',
-				modal: {
-					header,
-					message,
-					options: [
-						{
-							children: 'Confirmar',
-							leftIcon: 'check',
-							onClick: () => {
-								close('message')
-							},
+			collection.set('message', {
+				header,
+				message,
+				options: [
+					{
+						children: 'Confirmar',
+						leftIcon: 'check',
+						onClick: () => {
+							close('message')
 						},
-					],
-				},
+					},
+				],
 			})
-			return [...collection]
+			return new Map(collection)
 		})
 	}
 
 	const showQuestion = (header: string, message: string, confirm: () => void) => {
 		setModalCollection((collection) => {
-			collection.push({
-				entity: 'message',
-				modal: {
-					header,
-					message,
-					options: [
-						{
-							children: 'Confirmar',
-							leftIcon: 'check',
-							onClick: () => {
-								confirm()
-								close('message')
-							},
+			collection.set('message', {
+				header,
+				message,
+				options: [
+					{
+						children: 'Confirmar',
+						leftIcon: 'check',
+						onClick: () => {
+							confirm()
+							close('message')
 						},
-						{
-							children: 'Cancelar',
-							leftIcon: 'close',
-							variation: 'secondary',
-							onClick: () => {
-								close('message')
-							},
+					},
+					{
+						children: 'Cancelar',
+						leftIcon: 'close',
+						variation: 'secondary',
+						onClick: () => {
+							close('message')
 						},
-					],
-				},
+					},
+				],
 			})
-			return [...collection]
+			return new Map(collection)
 		})
 	}
 
 	const showQuestionWithOptions = (header: string, message: string, ...options: ButtonType[]) => {
 		setModalCollection((collection) => {
-			collection.push({
-				entity: 'message',
-				modal: {
-					header,
-					message,
-					options,
-				},
+			collection.set('message', {
+				header,
+				message,
+				options,
 			})
-			return [...collection]
+			return new Map(collection)
 		})
 	}
 
 	const close = (entity: string) => {
 		setModalCollection((collection) => {
-			const row = collection.find((row) => row.entity === entity)
-			if (row) {
-				collection.splice(collection.indexOf(row), 1)
-			}
-			return [...collection]
+			collection.delete(entity)
+			return new Map(collection)
 		})
 	}
 

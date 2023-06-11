@@ -43,6 +43,17 @@ export const Modal = ({
 						/>
 					</div>
 				)}
+				{!header && onClose && (
+					<div className={style.header}>
+						<div style={{ flexGrow: 1 }} />
+						<Button
+							leftIcon="close"
+							variation="link"
+							className={`${styleButton.button} ${style.closeButton}`}
+							onClick={onClose}
+						/>
+					</div>
+				)}
 				{tabs && <Tabs {...tabs} className={style.tabs} />}
 				<div className={style.insideContent}>{children}</div>
 				{buttons && (

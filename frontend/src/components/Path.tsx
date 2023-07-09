@@ -1,6 +1,7 @@
 import React, { MouseEventHandler } from 'react'
 import { Button } from './Button'
 import style from './Path.module.scss'
+import { IconType } from '../types/IconType'
 
 export type PathType = {
 	paths: {
@@ -13,22 +14,23 @@ export type PathType = {
 export const Path = ({ paths }: PathType) => {
 	return (
 		<div className={style.path}>
-			{paths.map((path, pathKey) => {
-				return (
-					<Button
-						key={pathKey}
-						className={style.pathLink}
-						leftIcon={path.icon}
-						variation="link"
-						onClick={path.onClick}
-						data-current={!!path.onClick}
-						data-first={pathKey === 0}
-						rightIcon={pathKey < paths.length - 1 ? 'chevron_right' : ''}
-					>
-						{path.name}
-					</Button>
-				)
-			})}
+			<div className={style.insidePath}>
+				{paths.map((path, pathKey) => {
+					return (
+						<Button
+							key={pathKey}
+							className={style.pathLink}
+							leftIcon={path.icon as IconType}
+							variation="link"
+							onClick={path.onClick}
+							data-current={!!path.onClick}
+							rightIcon={pathKey < paths.length - 1 ? 'chevron_right' : null}
+						>
+							{path.name}
+						</Button>
+					)
+				})}
+			</div>
 		</div>
 	)
 }

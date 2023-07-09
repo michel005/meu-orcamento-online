@@ -28,6 +28,11 @@
 		color: #fff;
 	}
 
+	&[data-variation='purple'] {
+		background-color: #953EE199;
+		color: #fff;
+	}
+
 	&[data-rounded='no'] {
 		border-radius: 0;
 	}

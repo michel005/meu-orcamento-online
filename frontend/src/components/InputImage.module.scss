@@ -3,50 +3,38 @@
 }
 
 .input {
-	background-color: #fff;
-	box-shadow: #aaa 0 0 4px;
-	border-radius: 7px;
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
-	max-height: 200px;
-	max-width: 200px;
-	min-width: 200px;
-	overflow: hidden;
 	position: relative;
 	width: 200px;
 
-	& > img {
-		display: none;
-		height: 200px;
-		max-height: 200px;
-		min-height: 200px;
-		object-fit: cover;
-		object-position: var(--position-x) var(--position-y);
-		pointer-events: auto;
-		width: 200px;
-	}
-
 	.label {
 		align-items: center;
-		background-color: transparent;
-		color: #999;
+		color: #aaa;
 		display: flex;
 		flex-direction: row;
 		font-size: 14px;
 		font-weight: bold;
 		gap: 4px;
-		padding: 14px;
-		pointer-events: none;
-		position: absolute;
 		transition: all 0.25s;
+	}
+
+	.imageContainer {
+		background-color: #eee;
+		border-radius: 7px;
+		box-shadow: #ccc 0 0 4px;
+		display: none;
+		height: 200px;
+		object-position: var(--position-x) var(--position-y);
+		pointer-events: auto !important;
 		width: 100%;
-		z-index: 100;
 	}
 
 	.imagePlaceholder {
 		background-color: #fff;
 		border: none;
+		border-radius: 7px;
 		box-shadow: #ccc 0 0 4px;
 		color: #999;
 		display: flex;
@@ -74,21 +62,28 @@
 	}
 
 	.buttons {
-		background-color: #3339;
-		bottom: 0;
+		background: #1119;
+		border-radius: 7px;
+		box-shadow: #aaa 0 0 4px;
+		top: 220px;
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		flex-wrap: wrap;
-		gap: 10px;
-		justify-content: flex-end;
+		gap: 14px;
+		left: -54px;
 		padding: 14px;
 		position: absolute;
 		transition: all 0.25s;
-		width: 100%;
+		transform: translateY(-100%);
 		z-index: 100;
 
 		button {
 			color: #fff;
+			transition: all 0.5s;
+
+			&:hover {
+				color: var(--active-color);
+			}
 
 			&::before {
 				font-size: 14px;
@@ -98,19 +93,6 @@
 
 	input {
 		display: none;
-	}
-
-	&[data-value=true][data-mouse-down=true] {
-		.label {
-			transform: translateY(-100%);
-		}
-		.buttons {
-			transform: translateY(100%);
-
-			&:active:hover {
-				transform: none;
-			}
-		}
 	}
 
 	&[data-full-width=true] {
@@ -131,11 +113,6 @@
 	}
 
 	&[data-value=true] {
-		.label {
-			background-color: #3339;
-			color: #fff;
-		}
-
 		img {
 			display: block !important;
 		}

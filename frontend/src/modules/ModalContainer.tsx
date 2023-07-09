@@ -1,5 +1,12 @@
 import React, { useContext } from 'react'
-import { ModalByEntity, ModalContext } from '../context/ModalContext'
+import { ModalByEntityType, ModalContext } from '../context/ModalContext'
+import { Message } from '../components/Message'
+import { CustomerModal } from '../modals/CustomerModal'
+
+export const ModalByEntity: ModalByEntityType[] = [
+	['message', Message],
+	['customer', CustomerModal],
+]
 
 export const ModalContainer = () => {
 	const { modalCollection } = useContext(ModalContext)
@@ -9,10 +16,10 @@ export const ModalContainer = () => {
 			{Array.from(modalCollection, ([key, value]) => ({
 				key,
 				value,
-			})).map((modal) => {
+			})).map((modal, modalKey) => {
 				const Modal: any = ModalByEntity.find(([entity]) => entity === modal.key)
 				const ModalTag = Modal[1]
-				return <ModalTag />
+				return <ModalTag key={modalKey} />
 			})}
 		</>
 	)

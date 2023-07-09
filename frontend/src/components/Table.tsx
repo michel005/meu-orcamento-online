@@ -1,18 +1,28 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import style from './Table.module.scss'
-import { DateUtils } from '../utils/DateUtils'
 import { CSSProperties } from 'styled-components'
 import { InputImageValue } from './InputImage'
+import { Image } from './Image'
+import { IconType } from '../types/IconType'
+import { SortUtils } from '../utils/SortUtils'
+import { Input } from './Input'
+import { Button } from './Button'
+import { CalendarInput } from './CalendarInput'
+import { Select } from './Select'
+import { DateUtils } from '../utils/DateUtils'
+import { Calendar } from './Calendar'
 
 export type TableDefinition = {
 	align?: string
 	className?: string | undefined
 	field: string
-	headerIcon?: string | null
+	headerIcon?: IconType | null
 	label: string
-	type?: 'string' | 'date' | 'number' | 'image' | 'imageList'
+	type?: 'string' | 'date' | 'number' | 'image' | 'imageList' | 'currency' | 'boolean' | 'select'
 	valueModifier?: (row: any) => any
 	width?: string
+	selectValues?: Map<string, string>
+	filterPlaceholder?: string
 }
 
 export type TableType = {
@@ -28,6 +38,8 @@ export type TableType = {
 	}
 	blockSort?: boolean | null
 	footer?: any[]
+	filters?: Map<string, any>
+	onChangeFilters?: (value: Map<string, any>) => void
 }
 
 export const Table = ({
@@ -38,10 +50,13 @@ export const Table = ({
 	onChangeSelected,
 	noDataFoundLabel = 'Nenhum registro encontrado',
 	initialSort = {},
-	blockSort = false,
 	footer,
+	filters,
+	onChangeFilters,
 }: TableType) => {
 	const [sort, setSort] = useState<any>(initialSort)
+	const [focusedColumn, setFocusedColumn] = useState<string | null>(null)
+	const [showFilter, setShowFilter] = useState<string | null>(null)
 
 	const sortValues = (x: any, y: any) => {
 		let result = 0
@@ -50,18 +65,7 @@ export const Table = ({
 			if (!sort.field) {
 				result = 0
 			}
-			if (
-				DateUtils.stringToDate(x[sort.field] || '') >
-				DateUtils.stringToDate(y[sort.field] || '')
-			) {
-				result = 1
-			}
-			if (
-				DateUtils.stringToDate(x[sort.field] || '') <
-				DateUtils.stringToDate(y[sort.field] || '')
-			) {
-				result = -1
-			}
+			result = SortUtils.sortDate(x, y, sort.field, sort.direction)
 		} else {
 			if (!sort.field) {
 				result = 0
@@ -72,9 +76,49 @@ export const Table = ({
 			if ((x[sort.field] || '') < (y[sort.field] || '')) {
 				result = -1
 			}
+			result = sort.direction === 'ASC' ? result : result * -1
 		}
-		return sort.direction === 'ASC' ? result : result * -1
+		return result
 	}
+
+	const filteredValue = useMemo(
+		() =>
+			value.filter((x) => {
+				if (!filters || filters.size === 0) {
+					return true
+				}
+
+				const allApproved: any = {}
+				Array.from(filters.keys()).forEach((a) => {
+					allApproved[a] = true
+				})
+				const find = Array.from(filters.keys()).find((y: string) => {
+					const def = definition.find((d) => d.field === y) || ({} as TableDefinition)
+					if (!def.type || def.type === 'string') {
+						allApproved[y] =
+							filters?.get(y) !== null &&
+							x[y] !== null &&
+							x[y] !== undefined &&
+							(x[y] + '').indexOf(filters?.get(y)) !== -1
+					} else if (def.type === 'date') {
+						allApproved[y] =
+							filters?.get(y) !== null &&
+							x[y] !== null &&
+							x[y] !== undefined &&
+							DateUtils.betweenString(
+								x[y],
+								filters?.get(y)?.start || SortUtils.today,
+								filters?.get(y)?.end || SortUtils.today
+							)
+					} else {
+						allApproved[y] = filters?.get(y) !== null && filters?.get(y) === x[y]
+					}
+				})
+
+				return Object.keys(allApproved).find((a) => !allApproved[a]) ? false : true
+			}),
+		[value, filters]
+	)
 
 	return (
 		<table
@@ -90,51 +134,222 @@ export const Table = ({
 					{definition.map((def) => {
 						return (
 							<th
-								onClick={() => {
-									if (blockSort) {
-										return
-									}
-									setSort((x: any) => {
-										if (x.field === def.field) {
-											if (x.direction === 'ASC') {
-												x.direction = 'DESC'
-											} else {
-												x.direction = 'ASC'
-											}
-										} else {
-											x.direction = 'ASC'
-										}
-										x.field = def.field
-										return { ...x }
-									})
-								}}
+								onMouseEnter={() => setFocusedColumn(def.field)}
+								onMouseLeave={() => setFocusedColumn(null)}
 								key={def.field}
 								className={def?.className}
 								data-alignment={def?.align}
-								data-icon={def.headerIcon}
 								style={{ '--width': def.width } as CSSProperties}
 							>
-								<div
-									data-icon={def.headerIcon}
-									data-sort-desc={
-										sort.field === def.field && sort.direction === 'DESC'
-									}
-									data-sort={sort.field === def.field}
+								<Button
+									data-sort-direction={sort.direction}
+									leftIcon={def.headerIcon}
+									rightIcon={sort.field == def.field ? 'sort' : null}
+									variation="link"
+									className={style.sortMode}
+									onClick={() => {
+										setShowFilter((x) => (x ? null : def.field))
+									}}
 								>
 									{def.label}
-								</div>
+									{filters?.has(def.field) &&
+										filters?.get(def.field) !== null &&
+										filters?.get(def.field) !== '' && (
+											<Button
+												className={style.filterIndicator}
+												leftIcon="filter_alt"
+												variation="link"
+											/>
+										)}
+								</Button>
+								{showFilter && showFilter === def.field && (
+									<div className={style.columnOptions}>
+										{filters && onChangeFilters && (
+											<>
+												{def.type === 'select' && (
+													<>
+														<label
+															style={{
+																color: '#aaa',
+																fontWeight: 'bold',
+																display: 'flex',
+																flexDirection: 'row',
+																fontSize: '14px',
+																marginBottom: '-4px',
+															}}
+														>
+															{def.label}
+														</label>
+														<Select
+															placeholder={def.filterPlaceholder}
+															value={filters?.get(def.field) || ''}
+															onChange={(value) => {
+																if (!filters) {
+																	filters = new Map()
+																}
+																if (!value) {
+																	filters.delete(def.field)
+																} else {
+																	filters.set(def.field, value)
+																}
+																setShowFilter(null)
+																onChangeFilters?.(new Map(filters))
+															}}
+															options={Array.from(
+																def?.selectValues?.keys() || []
+															)}
+															idModifier={(row) => row}
+															valueModifier={(row) =>
+																def?.selectValues?.get(row)
+															}
+															nullable={true}
+														/>
+													</>
+												)}
+												{def.type === 'date' && (
+													<>
+														<label
+															style={{
+																color: '#aaa',
+																fontWeight: 'bold',
+																display: 'flex',
+																flexDirection: 'row',
+																fontSize: '14px',
+																marginBottom: '-4px',
+															}}
+														>
+															{def.label}
+														</label>
+														<Calendar
+															value={filters?.get(def.field)}
+															range={true}
+															onChange={(value) => {
+																if (!filters) {
+																	filters = new Map()
+																}
+																if (!value) {
+																	filters.delete(def.field)
+																} else {
+																	filters.set(def.field, value)
+																}
+																if (value?.start && value?.end) {
+																	setShowFilter(null)
+																}
+																onChangeFilters?.(new Map(filters))
+															}}
+														/>
+													</>
+												)}
+												{def.type === 'boolean' && (
+													<>
+														<Input
+															type="checkbox"
+															label={def.label}
+															value={filters?.get(def.field)}
+															onChange={(value) => {
+																if (!filters) {
+																	filters = new Map()
+																}
+																filters.set(def.field, value)
+																setShowFilter(null)
+																onChangeFilters?.(new Map(filters))
+															}}
+														/>
+														{filters?.has(def.field) &&
+															filters?.get(def.field) !== null && (
+																<Button
+																	onClick={() => {
+																		if (!filters) {
+																			filters = new Map()
+																		}
+																		filters.delete(def.field)
+																		setShowFilter(null)
+																		onChangeFilters?.(
+																			new Map(filters)
+																		)
+																	}}
+																>
+																	Remover Filtro
+																</Button>
+															)}
+													</>
+												)}
+												{def.type !== 'date' &&
+													def.type !== 'image' &&
+													def.type !== 'imageList' &&
+													def.type !== 'boolean' &&
+													def.type !== 'select' && (
+														<Input
+															label={def.label}
+															placeholder={def.filterPlaceholder}
+															value={filters?.get(def.field)}
+															onChange={(value) => {
+																if (!filters) {
+																	filters = new Map()
+																}
+																if (value === '') {
+																	filters.delete(def.field)
+																} else {
+																	filters.set(def.field, value)
+																}
+																onChangeFilters?.(new Map(filters))
+															}}
+														/>
+													)}
+											</>
+										)}
+										<Button
+											variation={
+												sort.field === def.field && sort.direction === 'ASC'
+													? 'primary'
+													: 'secondary'
+											}
+											leftIcon="sort"
+											data-invert
+											onClick={() => {
+												setSort((x: any) => {
+													x.direction = 'ASC'
+													x.field = def.field
+													return { ...x }
+												})
+												setShowFilter(null)
+											}}
+										>
+											Ordem Crescente
+										</Button>
+										<Button
+											variation={
+												sort.field === def.field &&
+												sort.direction === 'DESC'
+													? 'primary'
+													: 'secondary'
+											}
+											leftIcon="sort"
+											onClick={() => {
+												setSort((x: any) => {
+													x.direction = 'DESC'
+													x.field = def.field
+													return { ...x }
+												})
+												setShowFilter(null)
+											}}
+										>
+											Ordem Decrescente
+										</Button>
+									</div>
+								)}
 							</th>
 						)
 					})}
 				</tr>
 			</thead>
 			<tbody>
-				{value &&
-					value.sort(sortValues).map((row, rowKey) => {
+				{filteredValue &&
+					filteredValue.sort(sortValues).map((row, rowKey) => {
 						return (
 							<tr
 								data-selected={selected && selected?.id === row.id}
-								key={rowKey}
+								key={JSON.stringify(row)}
 								onClick={() => {
 									if (selected !== undefined) {
 										onChangeSelected?.(row)
@@ -143,38 +358,26 @@ export const Table = ({
 								onDoubleClick={() => onClick(row, rowKey)}
 							>
 								{definition.map((def) => {
-									if (def?.type === 'image') {
+									if (def?.type === 'image' && row?.[def.field]?.base64) {
 										return (
 											<td
+												data-focus={focusedColumn === def.field}
 												key={`${rowKey}_${def.field}`}
 												data-alignment={def?.align}
 												className={def?.className}
 												data-image
 											>
-												<div>
-													<img
-														alt={''}
-														src={row?.[def.field]?.base64 || 'x'}
-														style={
-															{
-																'--position-x': `${
-																	row?.[def.field]?.position?.x *
-																	-1
-																}%`,
-																'--position-y': `${
-																	row?.[def.field]?.position?.y *
-																	-1
-																}%`,
-															} as CSSProperties
-														}
-													/>
-												</div>
+												<Image {...row?.[def.field]} />
 											</td>
 										)
 									}
-									if (def?.type === 'imageList') {
+									if (
+										def?.type === 'imageList' &&
+										(row?.[def.field] || []).length > 0
+									) {
 										return (
 											<td
+												data-focus={focusedColumn === def.field}
 												key={`${rowKey}_${def.field}`}
 												data-alignment={def?.align}
 												className={def?.className}
@@ -187,23 +390,7 @@ export const Table = ({
 															imageKey: number
 														) => {
 															return (
-																<img
-																	key={imageKey}
-																	alt={''}
-																	src={image?.base64 || 'x'}
-																	style={
-																		{
-																			'--position-x': `${
-																				(image?.position
-																					?.x || 0) * -1
-																			}%`,
-																			'--position-y': `${
-																				(image?.position
-																					?.y || 0) * -1
-																			}%`,
-																		} as CSSProperties
-																	}
-																/>
+																<Image {...image} key={imageKey} />
 															)
 														}
 													)}
@@ -211,8 +398,28 @@ export const Table = ({
 											</td>
 										)
 									}
+									if (def.type === 'currency') {
+										return (
+											<td
+												data-focus={focusedColumn === def.field}
+												key={`${rowKey}_${def.field}`}
+												data-alignment={def?.align}
+												className={def?.className}
+											>
+												{(
+													((def?.valueModifier
+														? def?.valueModifier(row)
+														: row[def.field]) / 100) as number
+												).toLocaleString('pt-br', {
+													style: 'currency',
+													currency: 'BRL',
+												})}
+											</td>
+										)
+									}
 									return (
 										<td
+											data-focus={focusedColumn === def.field}
 											key={`${rowKey}_${def.field}`}
 											data-alignment={def?.align}
 											className={def?.className}
@@ -226,14 +433,14 @@ export const Table = ({
 							</tr>
 						)
 					})}
-				{!value ||
-					(value.length === 0 && (
+				{!filteredValue ||
+					(filteredValue.length === 0 && (
 						<tr>
 							<td colSpan={definition.length}>{noDataFoundLabel}</td>
 						</tr>
 					))}
 			</tbody>
-			{footer && value && value.length > 0 && (
+			{footer && filteredValue && filteredValue.length > 0 && (
 				<tfoot>
 					{footer.map((f, fKey) => {
 						return <tr key={fKey}>{f}</tr>

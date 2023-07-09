@@ -1,10 +1,11 @@
 import React, { ButtonHTMLAttributes } from 'react'
 import style from './Button.module.scss'
+import { IconType } from '../types/IconType'
 
 export type ButtonType = {
 	variation?: 'primary' | 'secondary' | 'link' | 'sidebar'
-	leftIcon?: string
-	rightIcon?: string
+	leftIcon?: IconType | null | undefined
+	rightIcon?: IconType | null | undefined
 	loading?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
@@ -20,7 +21,7 @@ export const Button = ({
 		<button
 			{...props}
 			type="button"
-			className={`${style.button} ${props.className}`}
+			className={`${props.className} ${style.button}`}
 			data-loading={loading}
 			data-variation={variation}
 			data-icon-left={leftIcon || undefined}

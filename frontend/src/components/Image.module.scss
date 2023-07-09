@@ -1,0 +1,9 @@
+.image {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: #ccc 0 0 4px;
+	height: var(--size, 36px);
+	object-position: var(--position-x) var(--position-y);
+	position: relative;
+	width: var(--size, 36px);
+}

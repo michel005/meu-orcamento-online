@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useEffect, useRef, useState } from 'react'
+import React, { HTMLAttributes, useRef, useState } from 'react'
 import { Button } from './Button'
 import style from './InputImage.module.scss'
 import { CSSProperties } from 'styled-components'
@@ -11,9 +11,9 @@ export type InputImagePositionType = {
 }
 
 export type InputImageValue = {
-	id: string | null
+	identifier: string | null
 	base64?: string | null
-	position?: InputImagePositionType
+	position: InputImagePositionType
 }
 
 export type InputImageType = HTMLAttributes<HTMLDivElement> & {
@@ -36,29 +36,15 @@ export const InputImage = ({
 	placeholder = 'Nenhuma imagem selecionada',
 	...props
 }: InputImageType) => {
-	const [position, setPosition] = useState<InputImagePositionType>(
-		value?.position || {
-			x: 0,
-			y: 0,
-		}
-	)
-	const [oldPosition, setOldPosition] = useState<InputImagePositionType | null>({
+	const [oldPosition, setOldPosition] = useState<InputImagePositionType>({
 		x: 0,
 		y: 0,
 	})
 	const [start, setStart] = useState<InputImagePositionType | null>(null)
 	const [showModal, setShowModal] = useState<boolean>(false)
-	const [rootMouseDown, setRootMouseDown] = useState<boolean>(false)
 	const ref = useRef<HTMLInputElement>(null)
 
-	useEffect(() => {
-		if (position && value) {
-			onChange({
-				...value,
-				position,
-			})
-		}
-	}, [position])
+	console.log(props.className)
 
 	return (
 		<div
@@ -66,71 +52,68 @@ export const InputImage = ({
 			data-full-width={fullWidth}
 			data-value={!!value}
 			data-read-only={readOnly}
-			data-mouse-down={rootMouseDown && !showModal}
-			onMouseUp={() => {
-				setRootMouseDown(false)
-			}}
-			onMouseOut={() => {
-				setRootMouseDown(false)
-			}}
-			onMouseDown={() => {
-				setRootMouseDown(true)
-			}}
 			style={
 				{
-					'--position-x': `${position.x * -1}%`,
-					'--position-y': `${position.y * -1}%`,
+					'--position-x': `${(value?.position.x || 0) * -1}%`,
+					'--position-y': `${(value?.position.y || 0) * -1}%`,
 				} as CSSProperties
 			}
 			className={`${style.input} ${props.className}`}
 		>
 			{label && <div className={style.label}>{label}</div>}
-			<img
-				alt="image"
-				onMouseDown={(e) => {
-					if (!start && enableRepositioning) {
-						setStart({
-							y: e.clientY,
-							x: e.clientX,
+			{value && (
+				<img
+					className={style.imageContainer}
+					onMouseDown={(e) => {
+						if (!start && enableRepositioning && value) {
+							setStart({
+								y: e.clientY,
+								x: e.clientX,
+							})
+							setOldPosition(value.position)
+						}
+					}}
+					onMouseUp={() => {
+						setStart(null)
+						setOldPosition({
+							x: 0,
+							y: 0,
 						})
-						setOldPosition({ ...position })
-					}
-				}}
-				onMouseUp={() => {
-					setStart(null)
-					setOldPosition(null)
-				}}
-				onMouseOut={() => {
-					setStart(null)
-					setOldPosition(null)
-				}}
-				onMouseMove={(e) => {
-					if (!!start && !!oldPosition) {
-						setPosition((pos) => {
-							pos.y = (oldPosition?.y || 0) + e.clientY - start.y
-							pos.x = (oldPosition?.x || 0) + e.clientX - start.x
-							if (pos.y > 0) {
-								pos.y = 0
-							}
-							if (pos.y < -100) {
-								pos.y = -100
-							}
-							if (pos.x > 0) {
-								pos.x = 0
-							}
-							if (pos.x < -100) {
-								pos.x = -100
-							}
-							return { ...pos }
+					}}
+					onMouseOut={() => {
+						setStart(null)
+						setOldPosition({
+							x: 0,
+							y: 0,
 						})
-					}
-				}}
-				onDragStart={(e) => {
-					e.preventDefault()
-					e.stopPropagation()
-				}}
-				src={value?.base64 || ''}
-			/>
+					}}
+					onMouseMove={(e) => {
+						if (!!start && !!oldPosition && value) {
+							value.position.y = (oldPosition?.y || 0) + (e.clientY - start.y)
+							value.position.x = (oldPosition?.x || 0) + (e.clientX - start.x)
+							if (value.position.y > 0) {
+								value.position.y = 0
+							}
+							if (value.position.y < -100) {
+								value.position.y = -100
+							}
+							if (value.position.x > 0) {
+								value.position.x = 0
+							}
+							if (value.position.x < -100) {
+								value.position.x = -100
+							}
+							onChange({ ...value })
+						}
+					}}
+					onDragStart={(e) => {
+						e.preventDefault()
+						e.stopPropagation()
+					}}
+					alt="image"
+					src={value?.base64 || ''}
+				/>
+			)}
 			{!value && (
 				<Button
 					data-upload
@@ -180,8 +163,12 @@ export const InputImage = ({
 				onChange={(e: any) => {
 					FileUtils.fileToBase64(e.target.files[0], (x) => {
 						onChange({
-							id: Math.random().toString(),
+							identifier: Math.random().toString(),
 							base64: x,
+							position: {
+								x: 0,
+								y: 0,
+							},
 						})
 					})
 				}}

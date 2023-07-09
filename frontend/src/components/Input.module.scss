@@ -4,32 +4,7 @@
 	gap: 4px;
 	position: relative;
 
-	.container {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		position: relative;
-	}
-
-	&[data-focus='true'] {
-		.label {
-			color: var(--active-color);
-		}
-
-		.inputWithButton {
-			button {
-				border: 1px solid var(--active-color) !important;
-
-				&:disabled {
-					background-color: var(--active-color-33) !important;
-					border-color: var(--active-color) !important;
-					color: var(--active-color) !important;
-				}
-			}
-		}
-	}
-
-	.label {
+	label {
 		align-items: center;
 		color: #aaa;
 		display: flex;
@@ -38,225 +13,114 @@
 		font-weight: bold;
 		gap: 4px;
 		transition: all 0.25s;
-
-		.help {
-			position: relative;
-
-			button {
-				&::before {
-					font-size: 14px !important;
-				}
-			}
-
-			.helpFloatingPanel {
-				background-color: #fff;
-				border-radius: 7px;
-				box-shadow: #ccc 0 0 4px;
-				color: #333;
-				font-weight: normal;
-				left: calc(100% + 4px);
-				max-width: 300px;
-				min-width: 150px;
-				padding: 14px;
-				position: absolute;
-				top: 4px;
-				z-index: 100;
-			}
-		}
 	}
 
 	.inputWithButton {
+		border: 1px solid #ccc;
 		border-radius: 7px;
 		display: flex;
 		flex-direction: row;
-
-		button.leftButton {
-			border-radius: 7px 0 0 7px;
-		}
-
-		button.rightButton {
-			border-radius: 0 7px 7px 0;
-		}
+		height: 44px;
+		overflow: hidden;
+		transition: all 0.25s;
 
 		button.leftButton,
 		button.rightButton {
-			border: 1px solid #aaa;
+			background-color: #fff;
+			border: none;
+			border-radius: 0;
+			color: #aaa;
+			padding-inline: 14px;
+
+			&:hover {
+				background-color: #f8f8f8;
+				color: var(--active-color);
+			}
+
+			&:active {
+				background-color: #f4f4f4;
+			}
 
 			&:disabled {
 				background-color: #eee;
-				border-color: #aaa;
 				color: #aaa;
 				opacity: 1;
 			}
 		}
 
-		input {
-			height: 100%;
-
-			&[data-have-left-button='true'] {
-				border-top-left-radius: 0;
-				border-bottom-left-radius: 0;
-				border-left-width: 0;
-			}
-
-			&[data-have-right-button='true'] {
-				border-top-right-radius: 0;
-				border-bottom-right-radius: 0;
-				border-right-width: 0;
-			}
-		}
-	}
-
-	input {
-		border: 1px solid #aaa;
-		border-radius: 7px;
-		color: #555;
-		flex-grow: 1;
-		font-size: 16px;
-		height: 44px;
-		min-height: 44px;
-		padding: 10px;
-		transition: border-color 0.5s, color 0.5s;
-		max-width: 100%;
-
-		&:focus {
-			border-color: var(--active-color);
-		}
-
-		&::placeholder {
-			color: #ddd;
-		}
-
-		&:disabled {
-			background-color: #f4f4f4;
-			border: 2px solid #aaa;
-		}
-
-		&[type='number'] {
-			text-align: right;
-		}
-
-		&[type='color'] {
-			padding: 0;
-			position: relative;
-			overflow: hidden;
-			width: 42px;
-
-			&::-webkit-color-swatch {
-				border: none;
-				height: 100%;
-				left: 0;
-				position: absolute;
-				top: 0;
-				width: 100%;
-			}
-		}
-
-		&[type='range'] {
-			appearance: none;
-			background-color: var(--active-color-33);
+		input, textarea {
+			background-color: #fff;
 			border: none;
-			border-radius: 4px;
-			height: 8px;
-			margin-top: 4px;
-			padding: 0;
-			transition: all 0.25s;
+			color: #333;
+			flex-grow: 1;
+			font-size: 16px;
+			padding: 14px;
+			transition: all 0.5s;
+			max-width: 100%;
 
-			&::-webkit-slider-thumb {
+			&::placeholder {
+				color: #ccc;
+			}
+
+			&:disabled {
+				background-color: #f4f4f4;
+				color: #999;
+			}
+
+			&[type='number'] {
+				text-align: right;
+			}
+
+			&[type='color'] {
+				padding: 0;
+				position: relative;
+				overflow: hidden;
+				width: 42px;
+
+				&::-webkit-color-swatch {
+					border: none;
+					height: 100%;
+					left: 0;
+					position: absolute;
+					top: 0;
+					width: 100%;
+				}
+			}
+
+			&[type='range'] {
 				appearance: none;
-				background-color: var(--active-color);
-				border-radius: 50%;
-				cursor: pointer;
-				height: 16px;
+				background-color: var(--active-color-33);
+				border: none;
+				border-radius: 4px;
+				height: 8px;
+				margin-top: 4px;
+				padding: 0;
 				transition: all 0.25s;
-				width: 16px;
 
-				&:hover {
-					scale: 1.2;
+				&::-webkit-slider-thumb {
+					appearance: none;
+					background-color: var(--active-color);
+					border-radius: 50%;
+					cursor: pointer;
+					height: 16px;
+					transition: all 0.25s;
+					width: 16px;
 
-					&:active {
-						scale: 1.1;
+					&:hover {
+						scale: 1.2;
+
+						&:active {
+							scale: 1.1;
+						}
 					}
 				}
 			}
 		}
-	}
 
-	&[data-error='true'] {
-		& > input {
-			border-color: #ff0000;
-		}
-	}
-
-	small {
-		align-items: center;
-		color: var(--active-color-aa);
-		display: flex;
-		flex-direction: row;
-		font-size: 14px;
-		gap: 4px;
-
-		&.info {
-			color: var(--active-color-aa);
-		}
-
-		span[data-icon]::before {
-			color: inherit;
-			content: attr(data-icon);
-			font-family: 'Material Symbols Outlined';
-			font-size: inherit;
-			font-weight: inherit;
-		}
-	}
-
-	.searchResults {
-		background-color: #fff;
-		border: 1px solid #aaa;
-		border-top-width: 0;
-		border-radius: 0 0 7px 7px;
-		box-shadow: #ccc 0 0 4px;
-		display: flex;
-		flex-direction: column;
-		gap: 14px;
-		max-height: 300px;
-		opacity: 0;
-		overflow-y: auto;
-		padding: 14px;
-		pointer-events: none;
-		position: absolute;
-		top: 100%;
-		width: 100%;
-		z-index: 2;
-
-		.searchGroup {
-			display: flex;
-			flex-direction: column;
-			gap: 7px;
-
-			h3 {
-				color: #333;
-			}
-		}
-	}
-
-	&[data-search='true'][data-type='search'] {
-		.inputWithButton {
-			border-radius: 7px 7px 0 0;
-			z-index: 2;
-		}
-		input {
-			border-bottom-left-radius: 0;
-			border-bottom-right-radius: 0;
-		}
-
-		button.leftButton,
-		button.rightButton {
-			border-bottom-left-radius: 0;
-			border-bottom-right-radius: 0;
-		}
-		.searchResults {
-			opacity: 1;
-			pointer-events: auto;
+		textarea {
+			height: 150px;
+			min-height: 100px;
+			resize: vertical;
 		}
 	}
 
@@ -282,15 +146,20 @@
 			align-items: center;
 		}
 
+		.inputWithButton {
+			border: none;
+		}
+
 		input {
 			appearance: none;
 			background-color: #ccc;
 			border: none;
 			border-radius: 12px;
 			cursor: pointer;
-			min-height: auto;
+			padding: 0;
 			position: relative;
 			height: 24px;
+			max-height: none;
 			transition: all 0.25s;
 			max-width: 44px;
 
@@ -311,11 +180,22 @@
 
 			&:checked {
 				background-color: var(--active-color);
+
 				&::before {
 					background-color: #fff;
 					left: calc(100% - 20px);
 				}
 			}
+		}
+	}
+
+	&[data-focus=true] {
+		label {
+			color: var(--active-color);
+		}
+
+		.inputWithButton {
+			border-color: #999;
 		}
 	}
 }

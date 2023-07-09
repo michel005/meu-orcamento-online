@@ -1,136 +1,144 @@
 import React, { useEffect, useState } from 'react'
-import { ProductType } from '../types/ProductType'
-import { ProductOutputType } from '../types/ProductOutputType'
-import { CustomerType } from '../types/CustomerType'
+import { DateUtils } from '../utils/DateUtils'
+
+export interface Entity {
+	id?: string
+}
 
 export type DatabaseContextType = {
-	content: DatabaseContextContentType
+	content: Map<string, any[]>
 	offline: boolean
-	save: ({ entity, value, success, failed }: InsertType) => void
-	insert: ({ entity, value, success, failed }: InsertType) => void
-	update: ({ entity, value, success, failed }: InsertType) => void
-	remove: ({ entity, id, success, failed }: DeleteType) => void
-}
-
-export type DatabaseContextContentType = {
-	customer: CustomerType[]
-	product: ProductType[]
-	productOutput: ProductOutputType[]
-}
-
-export type EntityType = 'product' | 'productOutput' | 'customer'
-
-export type InsertType = {
-	entity: EntityType
-	value: any
-	success?: (value: any) => void
-	failed?: (response: any) => void
-}
-
-export type DeleteType = {
-	entity: EntityType
-	id: string
-	success?: () => void
-	failed?: (response: any) => void
-}
-
-export type DatabaseContextInputType = {
-	children: any
+	save: <T extends Entity>(
+		entity: string,
+		value: T,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) => void
+	insert: <T extends Entity>(
+		entity: string,
+		value: T,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) => void
+	update: <T extends Entity>(
+		entity: string,
+		value: T,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) => void
+	remove: <T extends Entity>(
+		entity: string,
+		id: string,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) => void
 }
 
 export const DatabaseContext = React.createContext<DatabaseContextType>({
-	content: {
-		customer: [],
-		product: [],
-		productOutput: [],
-	},
+	content: new Map(),
 	offline: false,
-	save: () => {},
-	insert: () => {},
-	update: () => {},
-	remove: () => {},
+	save: () => null,
+	insert: () => null,
+	update: () => null,
+	remove: () => null,
 })
 
-export const DatabaseProvider = ({ children }: DatabaseContextInputType) => {
-	const [content, setContent] = useState<DatabaseContextContentType>({
-		customer: [],
-		product: [],
-		productOutput: [],
-	})
+export const DatabaseProvider = ({ children }: any) => {
+	const [content, setContent] = useState<Map<string, any[]>>(new Map())
 	const [offline, setOffline] = useState<boolean>(false)
-	const [initialized, setInitialized] = useState<boolean>(false)
+	const [init, setInit] = useState<boolean>(false)
 
-	const save = (props: InsertType) => {
-		if (props.value?.id) {
-			update(props)
+	function save<T extends Entity>(
+		entity: string,
+		value: T,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) {
+		if (value?.id) {
+			update<T>(entity, value, success, failed)
 		} else {
-			insert(props)
+			insert<T>(entity, value, success, failed)
 		}
 	}
 
-	const insert = ({ entity, value, success, failed }: InsertType) => {
+	function insert<T extends Entity>(
+		entity: string,
+		value: T,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) {
 		setContent((x) => {
-			if (!x?.[entity]) {
-				x[entity] = []
+			if (!x.get(entity)) {
+				x.set(entity, [])
 			}
-			x[entity].push({ ...value, id: x[entity].length + 1 })
-			success?.(x[entity][x[entity].length - 1])
-			return { ...x }
+			const values = x.get(entity) || []
+			value.id = DateUtils.dateTimeToString(new Date())
+			x.set(entity, [...values, { ...value }])
+			success?.(value)
+			return new Map(x)
 		})
 	}
 
-	const update = ({ entity, value, success, failed }: InsertType) => {
-		setContent((x: DatabaseContextContentType) => {
-			let index = -1
-			x[entity].forEach((y, yKey) => {
-				if (y.id === value.id) {
-					index = yKey
-				}
-			})
-			if (index >= 0) {
-				x[entity][index] = value
+	function update<T extends Entity>(
+		entity: string,
+		value: T,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) {
+		setContent((x) => {
+			const values = x.get(entity) || []
+			const index = values.findIndex((y) => y.id === value.id)
+			if (index !== -1) {
+				values[index] = { ...value }
+				x.set(entity, [...values])
 				success?.(value)
-			}
-			return { ...x }
-		})
-	}
-
-	const remove = ({ entity, id, success, failed }: DeleteType) => {
-		setContent((x) => {
-			let index = -1
-			x[entity].forEach((y, yKey) => {
-				if (y.id === id) {
-					index = yKey
-				}
-			})
-			if (index > 0) {
-				x[entity].splice(index, 1)
-				success?.()
-			}
-			return { ...x }
-		})
-	}
-
-	useEffect(() => {
-		if (initialized) {
-			localStorage.setItem('database', JSON.stringify(content))
-		}
-	}, [initialized, content])
-
-	useEffect(() => {
-		if (!initialized) {
-			setInitialized(true)
-			if (localStorage.getItem('database')) {
-				setContent(JSON.parse(localStorage.getItem('database') || '{  }'))
 			} else {
-				setContent({
-					customer: [],
-					product: [],
-					productOutput: [],
+				failed?.('ID was not found')
+			}
+			return new Map(x)
+		})
+	}
+
+	function remove<T extends Entity>(
+		entity: string,
+		id: string,
+		success?: (value: T) => void,
+		failed?: (error: any) => void
+	) {
+		setContent((x) => {
+			const values = x.get(entity) || []
+			const index = values.findIndex((y) => y.id === id)
+			const removedValues = values.splice(index, 1)
+			x.set(entity, [...values])
+			success?.(removedValues[0])
+			return new Map(x)
+		})
+	}
+
+	useEffect(() => {
+		if (!init) {
+			setInit(true)
+			const storage = localStorage.getItem('database')
+			let map = new Map()
+			if (storage) {
+				let parsedStorage = JSON.parse(storage)
+				parsedStorage.forEach((row: any[]) => {
+					map.set(row[0], row[1])
 				})
 			}
+			setContent(map)
 		}
-	}, [initialized])
+	}, [init])
+
+	useEffect(() => {
+		if (init) {
+			let storageToSave: any[] = []
+			Array.from(content.keys()).forEach((row) => {
+				storageToSave.push([row, content.get(row)])
+			})
+			localStorage.setItem('database', JSON.stringify(storageToSave))
+		}
+	}, [init, content])
 
 	return (
 		<DatabaseContext.Provider

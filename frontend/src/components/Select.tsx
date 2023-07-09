@@ -1,100 +1,80 @@
 import React, { HTMLAttributes, useEffect, useState } from 'react'
 import style from './Select.module.scss'
-import { Button } from './Button'
+import { Button, ButtonType } from './Button'
+import styleButton from './Button.module.scss'
 
 export type SelectType = HTMLAttributes<HTMLSelectElement> & {
 	label?: string | null
 	help?: any | null
-	variation?: 'primary' | 'secondary' | 'sidebar'
+	variation?: 'primary' | 'secondary' | 'link' | 'sidebar'
 	options?: any[]
 	nullable?: boolean
-	nullableLabel?: string
-	onChange?: (value: any) => void
+	nullableLabel?: any
+	onChange?: (value: any | null) => void
 	idModifier?: (options: any) => any
 	valueModifier?: (options: any) => any
+	leftButton?: ButtonType | null
+	rightButton?: ButtonType | null
 	value?: any | null
 }
 
 export const Select = ({
 	label,
-	help,
-	variation = 'primary',
 	options,
 	idModifier = (option: any) => option?.id,
 	valueModifier = (option: any) => option?.label,
+	leftButton = null,
+	rightButton = null,
 	nullable = false,
 	nullableLabel = '',
 	onChange = () => null,
+	value,
 	...props
 }: SelectType) => {
-	const [showOptions, setShowOptions] = useState(false)
-	const [value, setValue] = useState<any>(
-		options?.find((option) => idModifier(option) === idModifier(props.value))
-	)
-	const [showHelp, setShowHelp] = useState<boolean>(false)
-
-	useEffect(() => {
-		if (props.value !== value) {
-			setValue(options?.find((option) => idModifier(option) === idModifier(props.value)))
-		}
-	}, [props.value])
+	const [focus, setFocus] = useState(false)
 
 	return (
-		<div className={style.select} data-show-options={showOptions} data-variation={variation}>
-			{label && (
-				<div className={style.label}>
-					{label}
-					{help && (
-						<div className={style.help}>
-							<Button
-								variation="link"
-								leftIcon="help"
-								onClick={() => setShowHelp((x) => !x)}
-							/>
-							{showHelp && <div className={style.helpFloatingPanel}>{help}</div>}
-						</div>
-					)}
-				</div>
-			)}
-			<div className={style.insideSelect}>
-				<Button
-					rightIcon="expand_more"
-					variation={variation}
-					onClick={() => setShowOptions((x) => !x)}
+		<div className={style.select} data-focus={focus}>
+			{label && <label>{label}</label>}
+			<div className={style.selectWrapper}>
+				{leftButton && (
+					<Button
+						{...leftButton}
+						variation="secondary"
+						className={`${styleButton.button} ${style.leftButton}`}
+					/>
+				)}
+				<select
+					{...props}
+					onFocus={() => setFocus(true)}
+					onBlur={() => setFocus(false)}
+					value={idModifier(value)}
+					onChange={(e) => {
+						setFocus(false)
+						let selected = e.target.selectedIndex
+						if (nullable) {
+							selected--
+						}
+						console.log({ selected })
+						onChange(options?.[selected] || null)
+					}}
 				>
-					<span>{value ? valueModifier(value) : nullableLabel}</span>
-				</Button>
-				<div className={style.options}>
-					{nullable && (
-						<Button
-							variation={variation}
-							data-selected={!value}
-							onClick={() => {
-								setShowOptions(false)
-								setValue(null)
-								onChange(null)
-							}}
-						>
-							{nullableLabel || 'Sem valor'}
-						</Button>
-					)}
-					{options?.map((option) => {
+					{nullable && <option>{nullableLabel || 'Sem valor'}</option>}
+					{options?.map((option, optionKey) => {
 						return (
-							<Button
-								key={idModifier(option)}
-								variation={variation}
-								data-selected={idModifier(option) === idModifier(value)}
-								onClick={() => {
-									setShowOptions(false)
-									setValue(option)
-									onChange(option)
-								}}
-							>
+							<option key={optionKey} value={idModifier(option)}>
 								{valueModifier(option)}
-							</Button>
+							</option>
 						)
 					})}
-				</div>
+				</select>
+				{rightButton && (
+					<Button
+						{...rightButton}
+						variation="secondary"
+						className={`${styleButton.button} ${style.rightButton}`}
+					/>
+				)}
 			</div>
 		</div>
 	)

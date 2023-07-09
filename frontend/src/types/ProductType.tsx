@@ -1,9 +1,17 @@
-export type ProductType = {
-	id?: string
+import { Entity } from '../context/DatabaseContext'
+import { InputImageValue } from '../components/InputImage'
+
+export type ProductPriceType = {
+	condition?: string
+	value: number
+}
+
+export type ProductType = Entity & {
+	picture?: InputImageValue
 	name?: string
-	images?: []
+	group?: string
+	subGroup?: string
 	description?: string
-	currentAmount?: number
-	price?: number
-	active?: boolean
+	observation?: string
+	prices?: ProductPriceType[]
 }

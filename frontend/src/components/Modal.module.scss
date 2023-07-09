@@ -1,6 +1,6 @@
 .modal {
 	align-items: center;
-	background-color: var(--active-color-33);
+	background-color: #1113;
 	backdrop-filter: blur(10px);
 	display: flex;
 	flex-direction: row;
@@ -28,7 +28,6 @@
 		box-shadow: #ccc 0 0 4px;
 		display: flex;
 		flex-direction: column;
-		margin: 21px;
 		max-height: calc(100% - 28px);
 		max-width: calc(100% - 28px);
 		position: relative;
@@ -40,6 +39,7 @@
 			flex-direction: row;
 			font-size: 28px;
 			font-weight: bold;
+			gap: 7px;
 			padding: 21px;
 
 			span {
@@ -89,6 +89,13 @@
 		}
 	}
 
+	&[data-expand=true] {
+		.content {
+			height: 100%;
+			width: 100%;
+		}
+	}
+
 	@media (max-width: 1000px) {
 		.content {
 			border: none;
@@ -109,7 +116,8 @@
 			}
 
 			.buttons {
-				flex-direction: column;
+				flex-direction: row;
+				flex-wrap: wrap;
 			}
 		}
 

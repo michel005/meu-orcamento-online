@@ -1,11 +1,11 @@
 import React, { HTMLAttributes, useMemo } from 'react'
-import style from './FormLayout.module.scss'
 import { Input, InputType } from '../components/Input'
-import { Select, SelectType } from './Select'
-import { CalendarInput } from './CalendarInput'
-import { Button } from './Button'
-import { InputImage, InputImageType } from './InputImage'
-import { ImageList, ImageListType } from './ImageList'
+import { Select, SelectType } from '../components/Select'
+import { CalendarInput } from '../components/CalendarInput'
+import { Button } from '../components/Button'
+import { InputImage, InputImageType } from '../components/InputImage'
+import { ImageList, ImageListType } from '../components/ImageList'
+import style from './UseFormLayout.module.scss'
 
 export interface Fields extends HTMLAttributes<any> {
 	label: string
@@ -16,6 +16,7 @@ export interface Fields extends HTMLAttributes<any> {
 		| 'imageList'
 		| 'number'
 		| 'password'
+		| 'currency'
 		| 'range'
 		| 'text'
 		| 'checkbox'
@@ -24,25 +25,24 @@ export interface Fields extends HTMLAttributes<any> {
 		| undefined
 }
 
-export type FormLayoutType = {
+export type UseLayoutType<T> = {
 	children?: null | ((fields: any) => any)
-	footer?: any
 	footerAlignment?: 'center' | 'left' | 'right'
 	fields: (Fields | SelectType | InputType | InputImageType | ImageListType)[]
 	value?: any
-	onChange: (value: any) => void
+	onChange: (value: T) => void
 	disableAllFields?: boolean
 	formValidation?: Map<string, string>
 }
 
-export const FormLayout = ({
+export function useFormLayout<T>({
 	children = null,
 	fields,
 	value,
 	onChange,
 	disableAllFields = false,
 	formValidation = new Map(),
-}: FormLayoutType) => {
+}: UseLayoutType<T>) {
 	let allInputs = useMemo(() => {
 		let all: any = {}
 		fields.forEach((field: any) => {
@@ -54,13 +54,12 @@ export const FormLayout = ({
 					<Select
 						{...fd}
 						label={fd.label}
-						value={value?.[id]}
+						value={(value as any)?.[id]}
 						idModifier={fd.idModifier}
 						valueModifier={fd.valueModifier}
-						onChange={(inputValue) => {
-							let x = value
-							x[id] = inputValue
-							onChange({ ...x })
+						onChange={(x) => {
+							value[id] = x
+							onChange({ ...value })
 						}}
 						variation="secondary"
 						key={id}
@@ -72,11 +71,10 @@ export const FormLayout = ({
 					<CalendarInput
 						{...fd}
 						label={field.label}
-						value={value?.[id]}
-						onChange={(inputValue) => {
-							let x = value
-							x[id] = inputValue
-							onChange({ ...x })
+						value={(value as any)?.[id]}
+						onChange={(x) => {
+							value[id] = x
+							onChange({ ...value })
 						}}
 						variation="secondary"
 						key={id}
@@ -84,14 +82,15 @@ export const FormLayout = ({
 				)
 			} else if (field.type === 'image') {
 				const fd = field as InputImageType
+				console.log(fd)
 				all[id] = (
 					<InputImage
+						{...fd}
 						label={field.label}
-						value={value?.[id]}
-						onChange={(inputValue) => {
-							let x = value
-							x[id] = inputValue
-							onChange({ ...x })
+						value={(value as any)?.[id]}
+						onChange={(x) => {
+							value[id] = x
+							onChange({ ...value })
 						}}
 						key={id}
 						fullWidth={fd.fullWidth || false}
@@ -103,13 +102,28 @@ export const FormLayout = ({
 				const fd = field as ImageListType
 				all[id] = (
 					<ImageList
-						value={value?.[id] || []}
-						onChange={(inputValue) => {
-							value[id] = inputValue
+						value={(value as any)?.[id] || []}
+						onChange={(x) => {
+							value[id] = x
 							onChange({ ...value })
 						}}
 						key={id}
 						imageLimit={fd.imageLimit}
+					/>
+				)
+			} else if (field.type === 'currency') {
+				all[id] = (
+					<Input
+						{...field}
+						type="number"
+						info={null}
+						disabled={disableAllFields || field.disabled}
+						value={(value as any)?.[id] ? (value as any)?.[id] / 100 : 0}
+						onChange={(x) => {
+							value[id] = parseInt(x as string) * 100
+							onChange({ ...value })
+						}}
+						key={id}
 					/>
 				)
 			} else {
@@ -118,11 +132,10 @@ export const FormLayout = ({
 						{...field}
 						info={null}
 						disabled={disableAllFields || field.disabled}
-						value={value?.[id]}
-						onChange={(inputValue) => {
-							let x = value
-							x[id] = inputValue
-							onChange({ ...x })
+						value={(value as any)?.[id]}
+						onChange={(x) => {
+							value[id] = x
+							onChange({ ...value })
 						}}
 						key={id}
 					/>
@@ -131,12 +144,12 @@ export const FormLayout = ({
 
 			if (field.type !== 'image') {
 				all[id] = (
-					<div>
+					<div className={style.inputGroup}>
 						{all[id]}
 						{formValidation.has(id) && !!formValidation.has(id) && (
 							<Button
-								variation="link"
 								className={style.error}
+								variation="link"
 								disabled={true}
 								leftIcon="warning"
 							>
@@ -148,11 +161,7 @@ export const FormLayout = ({
 			}
 		})
 		return all
-	}, [fields, children, formValidation])
+	}, [fields, children, formValidation, value])
 
-	return (
-		<div className={style.formLayout}>
-			<div className={style.content}>{children ? children(allInputs) : allInputs}</div>
-		</div>
-	)
+	return allInputs
 }

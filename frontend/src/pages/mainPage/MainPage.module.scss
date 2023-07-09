@@ -1,0 +1,43 @@
+:root {
+	--active-color: #39f;
+	--active-color-33: #39f3;
+	--active-color-66: #39f6;
+	--active-color-99: #39f9;
+	--active-color-aa: #39fa;
+	--active-color-cc: #39fc;
+	--background-color: #39f1;
+}
+
+.mainPage {
+	--navbar-height: 80px;
+	--sidebar-width: 300px;
+
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+
+	.content {
+		background-color: #f4f4f4;
+		display: flex;
+		flex-direction: row;
+		flex-grow: 1;
+		gap: 14px;
+		height: 100%;
+		justify-content: center;
+
+		.centeredContent {
+			background-color: #fff1;
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+			max-width: var(--middle-width);
+			padding: 21px;
+			transition: all 0.25s;
+			width: var(--middle-width);
+		}
+	}
+}

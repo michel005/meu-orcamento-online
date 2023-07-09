@@ -1,0 +1,24 @@
+.row {
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+
+	& > div {
+		flex-grow: 1;
+	}
+
+	@media (max-width: 1000px) {
+		flex-direction: column;
+	}
+}
+
+.productImage {
+	border-radius: 7px !important;
+	margin-inline: auto;
+	width: 300px !important;
+
+	@media (max-width: 1000px) {
+		margin-inline: 0 auto;
+		width: 100% !important;
+	}
+}

@@ -1,6 +1,7 @@
 import React from 'react'
 import style from './Tabs.module.scss'
 import { Button } from './Button'
+import { IconType } from '../types/IconType'
 
 export type Tab = {
 	label: string
@@ -34,7 +35,7 @@ export const Tabs = ({
 						<Button
 							data-active={tabKey === currentTab}
 							key={tabKey}
-							leftIcon={tab.icon}
+							leftIcon={tab.icon as IconType}
 							variation={variation}
 							onClick={() => onChange(tabKey)}
 						>

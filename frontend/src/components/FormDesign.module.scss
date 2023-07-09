@@ -1,0 +1,65 @@
+.formDesign {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+
+	[data-picture-left-form-right] {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+
+		[data-picture] {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 2;
+			gap: 14px;
+		}
+
+		[data-form] {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 8;
+			gap: 14px;
+		}
+	}
+
+	[data-row] {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+
+		& > div {
+			flex-grow: 1;
+			width: 100%;
+		}
+
+		&[data-not-grow] {
+			& > div {
+				flex-grow: 0;
+				width: auto;
+			}
+		}
+	}
+
+	[data-label] {
+		--label-size: 200px;
+
+		align-self: flex-end;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		padding-bottom: 14px;
+		position: relative;
+		width: calc(100% - 200px);
+
+		&::before {
+			border-top: 1px solid #ccc;
+			content: attr(data-label);
+			font-weight: bold;
+			margin-bottom: -28px;
+			margin-left: -200px;
+			padding: 14px 0 0 0;
+			text-align: left;
+		}
+	}
+}

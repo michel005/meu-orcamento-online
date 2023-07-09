@@ -1,97 +1,140 @@
-import React, { useContext, useState } from 'react'
+import React from 'react'
 import style from './CustomerPage.module.scss'
+import { CustomerType } from '../../utils/CustomerType'
+import { useDatabase } from '../../hook/useDatabase'
 import { Table } from '../../components/Table'
+import { ButtonToolbar } from '../../components/ButtonToolbar'
 import { Button } from '../../components/Button'
-import { DatabaseContext } from '../../context/DatabaseContext'
+import { useModalData } from '../../hook/useModalData'
+import { PersonType } from '../../constants/PersonType'
+import { Label } from '../../components/Label'
+import { Image } from '../../components/Image'
+import { usePageData } from '../../hook/usePageData'
 import { Path } from '../../components/Path'
 import { useNavigate } from 'react-router-dom'
-import { PageContext } from '../../context/PageContext'
-import { PersonType } from '../../constants/PersonType'
-import { Pagination } from '../../components/Pagination'
-import { usePagination } from '../../hook/usePagination'
 
 export const CustomerPage = () => {
-	const { content } = useContext(DatabaseContext)
-	const { defineData } = useContext(PageContext)
+	const { content } = useDatabase<CustomerType>('customer')
+	const { data, updateData } = usePageData<{
+		filters: Map<string, any>
+	}>('customer', {
+		filters: new Map([['active', true]]),
+	})
+	const { data: formData, updateData: formUpdateData } = usePageData<CustomerType | null>(
+		'customer_form',
+		null
+	)
 
-	const pagination = usePagination(content.customer || [], 5)
 	const navigate = useNavigate()
 
 	return (
-		<div className={style.dashboardPage}>
-			<Path
-				paths={[
-					{
-						name: <h1>Clientes</h1>,
-					},
-				]}
-			/>
-			<div className={style.filters}>
+		<>
+			<ButtonToolbar align="right">
+				<Path
+					paths={[
+						{
+							icon: 'group',
+							name: 'Clientes',
+							onClick: () => {
+								navigate('/customer')
+							},
+						},
+						{
+							name: 'Todos',
+						},
+					]}
+				/>
+				<div style={{ flexGrow: 1 }} />
 				<Button
-					leftIcon="add"
+					leftIcon="person_add"
 					onClick={() => {
-						defineData('customer', 'detail', {
-							fullName: 'Novo Cliente',
-							type: 'PF',
+						formUpdateData({
+							active: true,
 						})
-						navigate('/customer/details')
+						navigate('/customer/form')
 					}}
 				>
-					Cadastrar
+					Novo Cliente
 				</Button>
-				<div style={{ flexGrow: 1 }} />
-				<Button leftIcon="filter_alt">Filtros</Button>
-			</div>
+			</ButtonToolbar>
 			<Table
+				initialSort={{
+					field: 'fullName',
+					direction: 'ASC',
+				}}
 				definition={[
 					{
-						field: 'picture',
-						type: 'image',
-						label: '',
-					},
-					{
+						headerIcon: 'person',
+						className: style.fullName,
 						field: 'fullName',
 						label: 'Nome Completo',
-					},
-					{
-						field: 'type',
-						label: 'Tipo de Pessoa',
-						valueModifier: (row) => PersonType[row.type],
-					},
-					{
-						field: 'email',
-						label: 'E-mail',
-					},
-					{
-						field: 'addresses',
-						label: 'Endereços',
-						width: '200px',
-						valueModifier: (row) => (
-							<Button
-								variation="secondary"
-								disabled={true}
-								style={{
-									marginBlock: '-7px',
-									opacity: 1,
-								}}
-							>
-								{(row.addresses || []).length === 1
-									? '1 endereço'
-									: (row.addresses || []).length === 0
-									? 'Sem endereços'
-									: `${(row.addresses || []).length} endereços`}
-							</Button>
+						valueModifier: (customer: CustomerType) => (
+							<div className={style.insideFullName}>
+								{customer.profilePicture ? (
+									<Image {...customer.profilePicture} />
+								) : (
+									<Button
+										className={style.profilePictureFallback}
+										leftIcon="person"
+									/>
+								)}
+								<span>{customer.fullName}</span>
+							</div>
 						),
 					},
+					{
+						headerIcon: 'card_membership',
+						className: style.personType,
+						field: 'personType',
+						label: 'Tipo de Pessoa',
+						valueModifier: (row) => (
+							<div>
+								<Label data-type={row?.personType}>
+									{PersonType?.[row?.personType]}
+								</Label>
+							</div>
+						),
+						type: 'select',
+						selectValues: new Map([
+							['PF', 'Pessoa Física'],
+							['PJ', 'Pessoa Jurídica'],
+						]),
+						width: '200px',
+					},
+					{
+						field: 'birthday',
+						headerIcon: 'calendar_today',
+						label: 'Data de Nascimento',
+						type: 'date',
+					},
+					{
+						headerIcon: 'mail',
+						field: 'email',
+						label: 'E-mail',
+						width: '300px',
+					},
+					{
+						align: 'right',
+						headerIcon: 'star',
+						field: 'active',
+						label: 'Situação',
+						type: 'boolean',
+						valueModifier: (row) => (row.active ? 'Ativo' : 'Inativo'),
+					},
 				]}
-				noDataFoundLabel="Nenhum cliente cadatsrado"
 				onClick={(row) => {
-					defineData('customer', 'detail', { ...row })
-					navigate('/customer/details')
+					formUpdateData({ ...row })
+					navigate('/customer/form')
 				}}
-				value={pagination.result}
+				value={content}
+				filters={data.filters}
+				onChangeFilters={(value) => {
+					updateData({
+						...data,
+						filters: value,
+					})
+				}}
 			/>
-			<Pagination {...pagination} />
-		</div>
+		</>
 	)
 }

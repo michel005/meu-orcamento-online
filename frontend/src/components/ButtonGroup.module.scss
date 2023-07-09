@@ -11,7 +11,12 @@
 		border-radius: 0;
 
 		&[data-selected='true'] {
-			background-color: var(--active-color-33);
+			background-color: var(--active-color);
+			color: #fff;
+
+			&:hover {
+				background-color: var(--active-color-cc);
+			}
 		}
 
 		&[data-selected='true'][data-variation='primary'] {
@@ -26,5 +31,21 @@
 	&[data-sidebar-mode=true] {
 		border: none;
 		flex-direction: column;
+	}
+
+	&[data-variation=sidebar] {
+		border: none;
+
+		button {
+			background-color: #fff3;
+
+			&:hover {
+				background-color: #fff4;
+			}
+
+			&[data-selected='true'] {
+				background-color: #fff6;
+			}
+		}
 	}
 }

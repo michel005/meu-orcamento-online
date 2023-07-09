@@ -1,28 +1,35 @@
 .path {
-	align-items: center;
+	border-radius: 7px;
 	display: flex;
 	flex-direction: row;
-	gap: 7px;
 	justify-content: flex-start;
 
-	& > .pathLink {
-		color: #333;
-		opacity: 1 !important;
+	.insidePath {
+		align-items: center;
+		background: #fff9;
+		border-radius: 7px;
+		display: flex;
+		flex-direction: row;
+		gap: 7px;
+		justify-content: flex-start;
+		padding: 10px 17px;
 
-		&::after {
-			color: #333;
-		}
+		& > .pathLink {
+			color: #aaa;
+			opacity: 1 !important;
+			width: auto;
 
-		&[data-current=true] {
-			color: var(--active-color);
-		}
+			&::after {
+				color: #aaa;
+			}
 
-		&[data-current=false] {
-			cursor: default;
-		}
+			&[data-current=true] {
+				color: var(--active-color);
+			}
 
-		&[data-first=true] {
-			font-weight: bold;
+			&[data-current=false] {
+				cursor: default;
+			}
 		}
 	}
 }

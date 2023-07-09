@@ -1,7 +1,6 @@
 import React, { createContext, useState } from 'react'
 import { Message } from '../components/Message'
 import { ButtonType } from '../components/Button'
-import { ProductDetail } from '../pages/product/ProductDetail'
 
 export type ModalByEntityType = [string, any]
 
@@ -12,13 +11,8 @@ export type ModalContextType = {
 	showMessage: (header: string, message?: string) => void
 	showQuestion: (header: string, message: string, confirm: () => void) => void
 	showQuestionWithOptions: (header: string, message: string, ...options: ButtonType[]) => void
-	close: (modalId: string) => void
+	close: (entity: string) => void
 }
-
-export const ModalByEntity: ModalByEntityType[] = [
-	['message', Message],
-	['product', ProductDetail],
-]
 
 export const ModalContext = createContext<ModalContextType>({
 	modalCollection: new Map(),

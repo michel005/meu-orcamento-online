@@ -4,194 +4,68 @@
 	gap: 4px;
 	position: relative;
 
-	.label {
-		align-items: center;
+	label {
 		color: #aaa;
-		display: flex;
-		flex-direction: row;
 		font-size: 14px;
 		font-weight: bold;
-		gap: 4px;
 		transition: all 0.25s;
-
-		.help {
-			position: relative;
-
-			button {
-				&::before {
-					font-size: 14px !important;
-				}
-			}
-
-			.helpFloatingPanel {
-				background-color: #fff;
-				border-radius: 7px;
-				box-shadow: #ccc 0 0 4px;
-				color: #333;
-				font-weight: normal;
-				left: calc(100% + 4px);
-				max-width: 300px;
-				min-width: 150px;
-				padding: 14px;
-				position: absolute;
-				top: 4px;
-				z-index: 100;
-			}
-		}
 	}
 
-	.insideSelect {
+	.selectWrapper {
+		background-color: #f4f4f4;
+		border: 1px solid #ccc;
 		border-radius: 7px;
 		display: flex;
-		flex-direction: column;
-		position: relative;
+		flex-direction: row;
+		height: 44px;
+		overflow: hidden;
 
-		& > button {
+		button {
 			background-color: #fff;
-			border-radius: 7px;
-			border: 1px solid #aaa;
-			color: #333;
-			min-height: 44px;
-
-			span {
-				flex-grow: 1;
-				text-align: left;
-			}
+			border-radius: 0;
+			color: #aaa;
+			padding-inline: 14px;
 
 			&:hover {
-				background-color: #fff !important;
-			}
-
-			&::after {
-				align-self: flex-end;
-				float: right;
-			}
-		}
-
-		.options {
-			background-color: #fff;
-			border: 1px solid var(--active-color);
-			border-radius: 0 0 7px 7px !important;
-			box-shadow: #3333 2px 2px 4px;
-			display: none;
-			flex-direction: column;
-			max-height: 200px;
-			min-width: 100%;
-			opacity: 0;
-			overflow-y: auto;
-			pointer-events: none;
-			position: absolute;
-			top: calc(100% - 2px);
-			transition: all 0.25s;
-			z-index: 100;
-
-			&::-webkit-scrollbar {
-				border-bottom-right-radius: 7px;
-			}
-
-			& > button {
-				background-color: #fff;
-				border: none;
-				border-radius: 0;
-				white-space: nowrap;
-
-				&:hover {
-					background-color: var(--active-color-33);
-				}
-
-				&[data-variation='secondary'][data-selected='true'] {
-					color: #fff;
-				}
-
-				&[data-selected='true'] {
-					background-color: var(--active-color-cc);
-				}
-			}
-		}
-	}
-
-	&[data-push-options=true] {
-		.options {
-			margin-top: -2px;
-			position: sticky;
-			top: 0;
-		}
-	}
-
-	&[data-variation=sidebar] {
-		.label {
-			color: #fff;
-		}
-
-		.insideSelect {
-			& > button {
-				background-color: #fff4;
-				border-radius: 7px;
-				border: none !important;
-				color: #fff;
-
-				&:hover {
-					background-color: #fff3 !important;
-				}
-			}
-		}
-
-		&[data-show-options='true'] {
-			.label {
-				color: #fff;
-			}
-
-			.insideSelect {
-				& > button {
-					color: #fff;
-				}
-
-				.options {
-					border: none;
-					position: relative;
-					top: auto;
-
-					& > button {
-						color: #333;
-
-						&:hover {
-							background-color: var(--active-color-33);
-						}
-
-						&[data-selected='true'] {
-							background-color: var(--active-color-cc);
-							color: #fff;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	&[data-show-options='true'] {
-		.label {
-			color: var(--active-color);
-		}
-
-		.insideSelect {
-			& > button {
-				border: 1px solid var(--active-color);
-				border-radius: 7px 7px 0 0;
+				background-color: #f8f8f8;
 				color: var(--active-color);
-				white-space: nowrap;
-
-				&::after {
-					rotate: 180deg;
-				}
 			}
 
-			.options {
-				border: 1px solid var(--active-color);
-				border-radius: 0 0 7px 7px;
-				display: flex;
+			&:active {
+				background-color: #f4f4f4;
+			}
+
+			&:disabled {
+				background-color: #fff;
+				color: #333;
 				opacity: 1;
-				pointer-events: auto;
 			}
+
+			&.leftButton {
+				border: none;
+				border-right: 1px solid #ccc;
+			}
+
+			&.rightButton {
+				border: none;
+				border-left: 1px solid #ccc;
+			}
+		}
+
+		select {
+			align-self: stretch;
+			appearance: none;
+			background-image: url(https://raw.githubusercontent.com/solodev/styling-select-boxes/master/select1.png);
+			background-position: calc(100% - 14px) center;
+			background-size: 10px;
+			background-repeat: no-repeat;
+			border: none;
+			color: #333;
+			flex-grow: 1;
+			font-size: 16px;
+			height: 100%;
+			padding: 10px 36px 10px 14px;
+			transition: all 0.25s;
 		}
 	}
 }

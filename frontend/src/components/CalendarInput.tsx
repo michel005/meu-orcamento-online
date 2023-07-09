@@ -3,6 +3,7 @@ import style from './CalendarInput.module.scss'
 import { Calendar, CalendarType } from './Calendar'
 import { Button } from './Button'
 import { DateUtils } from '../utils/DateUtils'
+import { Input } from './Input'
 
 export type CalendarInput = CalendarType & {
 	label?: string
@@ -21,9 +22,6 @@ export const CalendarInput = ({
 	const [showCalendar, setShowCalendar] = useState(false)
 
 	const getFormattedValue = () => {
-		if (!value) {
-			return 'Sem data'
-		}
 		if (value?.start && value?.end) {
 			if (value.start === value.end) {
 				return value.start
@@ -36,7 +34,7 @@ export const CalendarInput = ({
 		return value
 	}
 
-	const id = useMemo(() => `calendar_${Math.random().toString()}`, [])
+	const [string, setString] = useState(!!value ? getFormattedValue() : '')
 
 	return (
 		<div
@@ -46,15 +44,36 @@ export const CalendarInput = ({
 			data-variation={variation}
 		>
 			{label && <label>{label}</label>}
-			<Button
-				variation={variation}
-				onClick={() => {
-					setShowCalendar((x) => !x)
+			<Input
+				value={string}
+				placeholder={!!value ? '' : 'Sem data'}
+				disabled={range}
+				onChange={setString}
+				rightButton={{
+					leftIcon: 'calendar_month',
+					onClick: () => {
+						setShowCalendar((x) => !x)
+					},
 				}}
-				leftIcon="calendar_month"
-			>
-				{getFormattedValue()}
-			</Button>
+				onBlur={() => {
+					if (!range) {
+						console.log('Validando')
+						try {
+							const result: string | Date = DateUtils.stringToDate(string)
+							if (result.toString() !== 'Invalid Date') {
+								onChange?.(string)
+								console.log('Sucesso')
+							} else {
+								setString(!!value ? getFormattedValue() : '')
+								console.log('Erro')
+							}
+						} catch (e) {
+							setString(!!value ? getFormattedValue() : '')
+							console.log('Erro')
+						}
+					}
+				}}
+			/>
 			{showCalendar && (
 				<div
 					className={style.calendar}
@@ -65,9 +84,16 @@ export const CalendarInput = ({
 					}}
 				>
 					<Calendar
-						id={id}
 						value={value}
-						monthYear={value?.start ? DateUtils.stringToDate(value?.start) : null}
+						monthYear={
+							range
+								? value?.start
+									? DateUtils.stringToDate(value?.start)
+									: null
+								: value
+								? DateUtils.stringToDate(value)
+								: null
+						}
 						range={range}
 						onChange={(val: any) => {
 							if (!range) {

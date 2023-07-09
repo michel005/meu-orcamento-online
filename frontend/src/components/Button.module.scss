@@ -1,6 +1,5 @@
 .button {
 	align-items: center;
-	border: none;
 	border-radius: 7px;
 	color: #666;
 	cursor: pointer;
@@ -29,7 +28,7 @@
 		color: inherit;
 		content: attr(data-icon-left);
 		font-family: 'Material Symbols Outlined';
-		font-size: 16px;
+		font-size: inherit;
 		font-weight: inherit;
 	}
 
@@ -37,12 +36,13 @@
 		color: inherit;
 		content: attr(data-icon-right);
 		font-family: 'Material Symbols Outlined';
-		font-size: 16px;
+		font-size: inherit;
 		font-weight: inherit;
 	}
 
 	&[data-variation='primary'] {
 		background-color: var(--active-color);
+		border: 1px solid var(--active-color);
 		color: #fff;
 
 		&:hover {
@@ -56,6 +56,7 @@
 
 	&[data-variation='secondary'] {
 		background-color: var(--background-color);
+		border: 1px solid var(--background-color);
 		color: var(--active-color);
 
 		&:hover {
@@ -69,6 +70,7 @@
 
 	&[data-variation='link'] {
 		background-color: transparent;
+		border: none;
 		color: var(--active-color);
 		padding: 0;
 		transition: opacity 0.5s;
@@ -76,24 +78,6 @@
 		&:hover {
 			border: none;
 			opacity: 0.8;
-		}
-	}
-
-	&[data-variation='sidebar'] {
-		background-color: #fff4;
-		color: #fff;
-
-		&:hover {
-			background-color: #fff3;
-		}
-
-		&[data-variation=secondary] {
-			color: #fff;
-		}
-
-		&[data-variation=link] {
-			background-color: transparent;
-			color: #fff;
 		}
 	}
 

@@ -1,4 +1,4 @@
-import React, { HTMLProps, HtmlHTMLAttributes } from 'react'
+import React, { HTMLProps, HtmlHTMLAttributes, useState } from 'react'
 import style from './Modal.module.scss'
 import styleButton from './Button.module.scss'
 import { Button, ButtonType } from './Button'
@@ -24,17 +24,30 @@ export const Modal = ({
 	messageMode = false,
 	...props
 }: ModalType) => {
+	const [expand, setExpand] = useState(false)
+
 	return (
 		<div
 			{...props}
 			className={`${style.modal} ${props.className}`}
 			data-no-overflow={noOverflow}
+			data-expand={expand}
 			data-message={messageMode}
 		>
 			<div className={style.content}>
 				{header && (
 					<div className={style.header}>
 						<span>{header}</span>
+						{!messageMode && (
+							<Button
+								leftIcon={expand ? 'fullscreen_exit' : 'fullscreen'}
+								variation="link"
+								className={`${styleButton.button} ${style.closeButton}`}
+								onClick={() => {
+									setExpand((x) => !x)
+								}}
+							/>
+						)}
 						<Button
 							leftIcon="close"
 							variation="link"
@@ -46,6 +59,16 @@ export const Modal = ({
 				{!header && onClose && (
 					<div className={style.header}>
 						<div style={{ flexGrow: 1 }} />
+						{!messageMode && (
+							<Button
+								leftIcon={expand ? 'fullscreen_exit' : 'fullscreen'}
+								variation="link"
+								className={`${styleButton.button} ${style.closeButton}`}
+								onClick={() => {
+									setExpand((x) => !x)
+								}}
+							/>
+						)}
 						<Button
 							leftIcon="close"
 							variation="link"

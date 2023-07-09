@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from './Button'
-import style from './Calendar.module.scss'
 import { DateUtils } from '../utils/DateUtils'
+import { Select } from './Select'
+import { MonthName } from '../constants/Months'
+import style from './Calendar.module.scss'
 
 const WEEKDAYS = [
 	'Domingo',
@@ -14,7 +16,6 @@ const WEEKDAYS = [
 ]
 
 export type CalendarType = {
-	id?: string
 	value?: any | null
 	monthYear?: Date | null
 	range?: boolean
@@ -22,7 +23,6 @@ export type CalendarType = {
 }
 
 export const Calendar = ({
-	id = Math.random().toString(),
 	value,
 	monthYear = null,
 	range = false,
@@ -70,6 +70,7 @@ export const Calendar = ({
 		<div className={style.calendar}>
 			<div className={style.buttons}>
 				<Button
+					className={style.backButton}
 					leftIcon="chevron_left"
 					onClick={() => {
 						setCurrentDate((x) => {
@@ -78,13 +79,11 @@ export const Calendar = ({
 						})
 					}}
 				/>
-				<div className={style.monthYear}>
-					<Button variation="link">
-						{(currentDate.getMonth() + 1).toString().padStart(2, '0')}
-					</Button>
-					/<Button variation="link">{currentDate.getFullYear()}</Button>
-				</div>
+				<Button className={style.monthYear}>
+					{MonthName[currentDate.getMonth()]} / {currentDate.getFullYear()}
+				</Button>
 				<Button
+					className={style.nextButton}
 					leftIcon="chevron_right"
 					onClick={() => {
 						setCurrentDate((x) => {
@@ -97,7 +96,7 @@ export const Calendar = ({
 			<div className={style.content}>
 				<div className={style.weekDays}>
 					{Object.keys(WEEKDAYS).map((weekDay: any) => {
-						return <Button key={weekDay}>{WEEKDAYS[weekDay].substring(0, 3)}</Button>
+						return <Button key={weekDay}>{WEEKDAYS[weekDay].substring(0, 1)}</Button>
 					})}
 				</div>
 				<div className={style.days}>
@@ -153,47 +152,6 @@ export const Calendar = ({
 						)
 					})}
 				</div>
-			</div>
-			<div className={style.links}>
-				{value && (
-					<Button leftIcon="clear" variation="link" onClick={() => onChange(null)}>
-						Limpar Seleção
-					</Button>
-				)}
-				{value && (
-					<Button
-						leftIcon="calendar_month"
-						variation="link"
-						onClick={() => {
-							if (range) {
-								const start = value?.start
-									? DateUtils.stringToDate(value?.start)
-									: null
-								if (start) {
-									setCurrentDate(
-										new Date(start.getFullYear(), start.getMonth(), 1)
-									)
-								}
-							} else {
-								const v = value ? DateUtils.stringToDate(value) : null
-								if (v) {
-									setCurrentDate(new Date(v.getFullYear(), v.getMonth(), 1))
-								}
-							}
-						}}
-					>
-						Seleção atual
-					</Button>
-				)}
-				<Button
-					leftIcon="calendar_month"
-					variation="link"
-					onClick={() => {
-						setCurrentDate(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
-					}}
-				>
-					Mês atual
-				</Button>
 			</div>
 		</div>
 	)

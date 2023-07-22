@@ -20,12 +20,12 @@ export const PageContext = createContext<PageContextType>({
 export const PageProvider = ({ children }: any) => {
 	const [data, setData] = useState<Map<string, any>>(new Map())
 
-	const defineData = useCallback((field: string, value: any) => {
+	const defineData = (field: string, value: any) => {
 		setData((x) => {
 			x.set(field, value)
 			return new Map(x)
 		})
-	}, [])
+	}
 
 	return (
 		<PageContext.Provider

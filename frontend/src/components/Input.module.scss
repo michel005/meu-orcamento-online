@@ -122,6 +122,10 @@
 			min-height: 100px;
 			resize: vertical;
 		}
+
+		&[data-text-area=true] {
+			height: auto;
+		}
 	}
 
 	&[data-type='color'] {

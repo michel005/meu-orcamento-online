@@ -6,6 +6,8 @@ import { Button } from '../components/Button'
 import { InputImage, InputImageType } from '../components/InputImage'
 import { ImageList, ImageListType } from '../components/ImageList'
 import style from './UseFormLayout.module.scss'
+import { Text } from '../components/Text'
+import { CalendarType } from '../components/Calendar'
 
 export interface Fields extends HTMLAttributes<any> {
 	label: string
@@ -28,7 +30,7 @@ export interface Fields extends HTMLAttributes<any> {
 export type UseLayoutType<T> = {
 	children?: null | ((fields: any) => any)
 	footerAlignment?: 'center' | 'left' | 'right'
-	fields: (Fields | SelectType | InputType | InputImageType | ImageListType)[]
+	fields: (Fields | SelectType | InputType | InputImageType | ImageListType | CalendarType)[]
 	value?: any
 	onChange: (value: T) => void
 	disableAllFields?: boolean
@@ -36,132 +38,134 @@ export type UseLayoutType<T> = {
 }
 
 export function useFormLayout<T>({
-	children = null,
 	fields,
 	value,
 	onChange,
 	disableAllFields = false,
 	formValidation = new Map(),
 }: UseLayoutType<T>) {
-	let allInputs = useMemo(() => {
-		let all: any = {}
-		fields.forEach((field: any) => {
-			const id = field.id || ''
+	let allInputs = useMemo(
+		() =>
+			fields.map((field: any) => {
+				const id = field.id || ''
 
-			if (field.type === 'select') {
-				const fd = field as SelectType
-				all[id] = (
-					<Select
-						{...fd}
-						label={fd.label}
-						value={(value as any)?.[id]}
-						idModifier={fd.idModifier}
-						valueModifier={fd.valueModifier}
-						onChange={(x) => {
-							value[id] = x
-							onChange({ ...value })
-						}}
-						variation="secondary"
-						key={id}
-					/>
-				)
-			} else if (field.type === 'date') {
-				const fd = field as CalendarInput
-				all[id] = (
-					<CalendarInput
-						{...fd}
-						label={field.label}
-						value={(value as any)?.[id]}
-						onChange={(x) => {
-							value[id] = x
-							onChange({ ...value })
-						}}
-						variation="secondary"
-						key={id}
-					/>
-				)
-			} else if (field.type === 'image') {
-				const fd = field as InputImageType
-				console.log(fd)
-				all[id] = (
-					<InputImage
-						{...fd}
-						label={field.label}
-						value={(value as any)?.[id]}
-						onChange={(x) => {
-							value[id] = x
-							onChange({ ...value })
-						}}
-						key={id}
-						fullWidth={fd.fullWidth || false}
-						enableRepositioning={fd?.enableRepositioning || false}
-						readOnly={fd?.readOnly || false}
-					/>
-				)
-			} else if (field.type === 'imageList') {
-				const fd = field as ImageListType
-				all[id] = (
-					<ImageList
-						value={(value as any)?.[id] || []}
-						onChange={(x) => {
-							value[id] = x
-							onChange({ ...value })
-						}}
-						key={id}
-						imageLimit={fd.imageLimit}
-					/>
-				)
-			} else if (field.type === 'currency') {
-				all[id] = (
-					<Input
-						{...field}
-						type="number"
-						info={null}
-						disabled={disableAllFields || field.disabled}
-						value={(value as any)?.[id] ? (value as any)?.[id] / 100 : 0}
-						onChange={(x) => {
-							value[id] = parseInt(x as string) * 100
-							onChange({ ...value })
-						}}
-						key={id}
-					/>
-				)
-			} else {
-				all[id] = (
-					<Input
-						{...field}
-						info={null}
-						disabled={disableAllFields || field.disabled}
-						value={(value as any)?.[id]}
-						onChange={(x) => {
-							value[id] = x
-							onChange({ ...value })
-						}}
-						key={id}
-					/>
-				)
-			}
+				if (field.type === 'select') {
+					const fd = field as SelectType
+					return [
+						id,
+						<Select
+							{...fd}
+							label={fd.label}
+							value={(value as any)?.[id]}
+							idModifier={fd.idModifier}
+							valueModifier={fd.valueModifier}
+							onChange={(x) => {
+								value[id] = x
+								onChange({ ...value })
+							}}
+							variation="secondary"
+							key={id}
+						/>,
+					]
+				} else if (field.type === 'date') {
+					const fd = field as CalendarInput
+					return [
+						id,
+						<CalendarInput
+							{...fd}
+							label={field.label}
+							value={value?.[id]}
+							onChange={(x) => {
+								value[id] = x
+								onChange({ ...value })
+							}}
+							variation="secondary"
+							key={id}
+						/>,
+					]
+				} else if (field.type === 'image') {
+					const fd = field as InputImageType
+					return [
+						id,
+						<InputImage
+							{...fd}
+							label={field.label}
+							value={(value as any)?.[id]}
+							onChange={(x) => {
+								value[id] = x
+								onChange({ ...value })
+							}}
+							key={id}
+							fullWidth={fd.fullWidth || false}
+							enableRepositioning={fd?.enableRepositioning || false}
+							readOnly={fd?.readOnly || false}
+						/>,
+					]
+				} else if (field.type === 'imageList') {
+					const fd = field as ImageListType
+					return [
+						id,
+						<ImageList
+							value={(value as any)?.[id] || []}
+							onChange={(x) => {
+								value[id] = x
+								onChange({ ...value })
+							}}
+							key={id}
+							imageLimit={fd.imageLimit}
+						/>,
+					]
+				} else if (field.type === 'currency') {
+					return [
+						id,
+						<Input
+							{...field}
+							type="number"
+							info={null}
+							disabled={disableAllFields || field.disabled}
+							value={(value as any)?.[id] ? (value as any)?.[id] / 100 : 0}
+							onChange={(x) => {
+								value[id] = parseInt(x as string) * 100
+								onChange({ ...value })
+							}}
+							key={id}
+						/>,
+					]
+				} else {
+					return [
+						id,
+						<Input
+							{...field}
+							info={null}
+							disabled={disableAllFields || field.disabled}
+							value={(value as any)?.[id]}
+							onChange={(x) => {
+								value[id] = x
+								onChange({ ...value })
+							}}
+							key={id}
+						/>,
+					]
+				}
+			}),
+		[value, fields]
+	)
 
-			if (field.type !== 'image') {
-				all[id] = (
-					<div className={style.inputGroup}>
-						{all[id]}
-						{formValidation.has(id) && !!formValidation.has(id) && (
-							<Button
-								className={style.error}
-								variation="link"
-								disabled={true}
-								leftIcon="warning"
-							>
-								{formValidation.get(id)}
-							</Button>
-						)}
-					</div>
-				)
-			}
-		})
-		return all
-	}, [fields, children, formValidation, value])
+	let all: any = {}
 
-	return allInputs
+	allInputs.forEach((def) => {
+		const id = def[0]
+		all[id] = (
+			<div className={style.inputGroup}>
+				{def[1]}
+				{formValidation.has(id) && !!formValidation.has(id) && (
+					<Text className={style.error} leftIcon="warning">
+						{formValidation.get(id)}
+					</Text>
+				)}
+			</div>
+		)
+	})
+
+	return all as T
 }

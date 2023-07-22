@@ -6,7 +6,7 @@
 
 	.insidePath {
 		align-items: center;
-		background: #fff9;
+		background-color: #fff;
 		border-radius: 7px;
 		display: flex;
 		flex-direction: row;
@@ -19,16 +19,12 @@
 			opacity: 1 !important;
 			width: auto;
 
-			&::after {
-				color: #aaa;
+			&[data-current=false] {
+				cursor: default;
 			}
 
 			&[data-current=true] {
 				color: var(--active-color);
-			}
-
-			&[data-current=false] {
-				cursor: default;
 			}
 		}
 	}

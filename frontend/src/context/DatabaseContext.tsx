@@ -72,7 +72,9 @@ export const DatabaseProvider = ({ children }: any) => {
 				x.set(entity, [])
 			}
 			const values = x.get(entity) || []
-			value.id = DateUtils.dateTimeToString(new Date())
+			value.id =
+				DateUtils.dateToString(new Date()).replaceAll('/', '') +
+				DateUtils.timeToString(new Date()).replaceAll(':', '')
 			x.set(entity, [...values, { ...value }])
 			success?.(value)
 			return new Map(x)

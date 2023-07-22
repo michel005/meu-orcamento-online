@@ -1,12 +1,11 @@
 .table {
-	--border-radius: 7px;
-
 	border-collapse: collapse;
 	filter: drop-shadow(0 0 4px #ccc);
 	font-size: 16px;
 
 	thead {
-		background-color: #222;
+		background-color: var(--active-color);
+		border-radius: var(--border-radius);
 		color: #fff;
 
 		tr {
@@ -117,7 +116,8 @@
 				}
 
 				&[data-image-list] {
-					padding: 14px;
+					align-items: center;
+					padding: 4px 7px;
 					text-align: left;
 
 					& > div {

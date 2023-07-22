@@ -1,0 +1,28 @@
+.cardLayout {
+	--gap: 28px;
+
+	display: flex;
+	flex-direction: row;
+	flex-flow: column;
+	flex-wrap: wrap;
+	gap: var(--gap);
+
+	[data-row] {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: var(--gap);
+
+		& > div {
+			flex-grow: 1;
+			width: calc(100% / 5);
+		}
+	}
+
+	[data-column] {
+		display: flex;
+		flex-direction: column;
+		gap: var(--gap);
+		width: 10%;
+	}
+}

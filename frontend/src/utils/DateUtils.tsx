@@ -3,6 +3,10 @@ export class DateUtils {
 		return date?.toLocaleDateString?.('pt-BR') || ''
 	}
 
+	static timeToString = (date: Date | null) => {
+		return date?.toLocaleTimeString?.('pt-BR') || ''
+	}
+
 	static dateTimeToString = (date: Date | null) => {
 		return date?.toLocaleString?.('pt-BR') || ''
 	}
@@ -35,5 +39,14 @@ export class DateUtils {
 
 	static between = (value: Date, start: Date, end: Date) => {
 		return value >= start && value <= end
+	}
+
+	static daysBetween = (data1: string, data2: string) => {
+		const date1 = DateUtils.stringToDate(data1)
+		const date2 = DateUtils.stringToDate(data2)
+		const diffEmMilissegundos = date1.getTime() - date2.getTime()
+		const diffEmDias = Math.floor(diffEmMilissegundos / (1000 * 60 * 60 * 24))
+
+		return diffEmDias + 1
 	}
 }

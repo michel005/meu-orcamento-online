@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { Message } from '../components/Message'
 import { ButtonType } from '../components/Button'
 
@@ -26,6 +26,30 @@ export const ModalContext = createContext<ModalContextType>({
 
 export const ModalProvider = ({ children }: any) => {
 	const [modalCollection, setModalCollection] = useState<Map<string, any>>(new Map())
+	const [status, setStatus] = useState('IDLE')
+
+	useEffect(() => {
+		if (status === 'IDLE') {
+			setStatus('LOADED')
+			const modalData = new Map<string, any>(
+				JSON.parse(localStorage.getItem('modal') || '[]')
+			)
+			setModalCollection(modalData)
+		}
+	}, [status])
+
+	useEffect(() => {
+		if (status === 'LOADED') {
+			localStorage.setItem(
+				'modal',
+				JSON.stringify(
+					Array.from(modalCollection.keys())
+						.filter((x) => x !== 'message')
+						.map((x) => [x, modalCollection.get(x)])
+				)
+			)
+		}
+	}, [status, modalCollection.keys()])
 
 	const show = (entity: string, value: any) => {
 		setModalCollection((collection) => {
@@ -67,18 +91,18 @@ export const ModalProvider = ({ children }: any) => {
 				message,
 				options: [
 					{
-						children: 'Confirmar',
-						leftIcon: 'check',
-						onClick: () => {
-							confirm()
-							close('message')
-						},
-					},
-					{
 						children: 'Cancelar',
 						leftIcon: 'close',
 						variation: 'secondary',
 						onClick: () => {
+							close('message')
+						},
+					},
+					{
+						children: 'Confirmar',
+						leftIcon: 'check',
+						onClick: () => {
+							confirm()
 							close('message')
 						},
 					},

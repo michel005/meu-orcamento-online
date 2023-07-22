@@ -1,51 +1,20 @@
 .buttonGroup {
-	border: 2px solid var(--active-color);
+	border: 1px solid #ccc;
 	border-radius: 7px;
 	display: flex;
 	flex-direction: row;
 	overflow: hidden;
 
 	button {
-		background-color: transparent;
 		border: none !important;
 		border-radius: 0;
 
 		&[data-selected='true'] {
-			background-color: var(--active-color);
-			color: #fff;
-
-			&:hover {
-				background-color: var(--active-color-cc);
-			}
-		}
-
-		&[data-selected='true'][data-variation='primary'] {
-			background-color: var(--active-color-cc);
+			font-weight: bold;
 		}
 	}
 
 	&[data-orientation='vertical'] {
 		flex-direction: column;
-	}
-
-	&[data-sidebar-mode=true] {
-		border: none;
-		flex-direction: column;
-	}
-
-	&[data-variation=sidebar] {
-		border: none;
-
-		button {
-			background-color: #fff3;
-
-			&:hover {
-				background-color: #fff4;
-			}
-
-			&[data-selected='true'] {
-				background-color: #fff6;
-			}
-		}
 	}
 }

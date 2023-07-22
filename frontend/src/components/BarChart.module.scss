@@ -2,29 +2,30 @@
 	display: flex;
 	flex-direction: row;
 	flex-grow: 1;
-	gap: 7px;
-	min-height: 200px;
+	min-height: 350px;
+	overflow: hidden;
 
 	.barContent {
 		display: flex;
 		flex-direction: column;
-		gap: 7px;
+		padding-top: 14px;
 		position: relative;
+		transition: all 0.25s;
 		width: 100%;
 
 		.bar {
-			background-color: #eee;
-			border-radius: 7px;
+			display: flex;
+			flex-direction: column;
 			flex-grow: 1;
 			height: 100%;
+			justify-content: flex-start;
 			min-width: 50px;
 			position: relative;
 			transition: all 0.25s;
 			width: 100%;
 
 			&::before {
-				background-color: var(--active-color-aa);
-				border-radius: 7px;
+				background-color: var(--active-color-66);
 				bottom: 0;
 				content: '';
 				height: var(--value, 10%);
@@ -33,24 +34,93 @@
 				transition: all 0.25s;
 				width: 100%;
 			}
-		}
 
-		span {
-			color: var(--active-color);
-			left: 50%;
-			position: absolute;
-			top: 100%;
-			transform: translateX(-50%) translateY(calc(-100% - 57px)) rotate(180deg);
-			writing-mode: vertical-lr;
+			&::after {
+				align-self: center;
+				color: #111;
+				top: 7px;
+				content: attr(data-value);
+				font-size: 18px;
+				position: absolute;
+				transition: all 0.25s;
+				writing-mode: vertical-lr;
+			}
 		}
 
 		.label {
-			background-color: var(--active-color);
-			border-radius: 7px;
+			background-color: var(--active-color-99);
 			color: #fff;
 			padding-block: 7px;
 			text-align: center;
 			width: 100%;
+		}
+
+		&:nth-child(even) {
+			.bar {
+				&::before {
+					background-color: var(--active-color-33);
+				}
+			}
+
+			.label {
+				background-color: var(--active-color-66);
+			}
+		}
+	}
+
+	&[data-orientation=horizontal] {
+		&:hover {
+			.barContent {
+				opacity: 0.3;
+
+				&:hover {
+					opacity: 1;
+				}
+			}
+		}
+	}
+
+	&[data-orientation=vertical] {
+		flex-direction: column;
+		min-height: auto;
+
+		.barContent {
+			flex-direction: row-reverse;
+			padding-top: 0;
+			width: auto;
+
+			.bar {
+				padding-block: 28px;
+
+				&::before {
+					height: 100%;
+					width: var(--value, 10%);
+				}
+
+				&::after {
+					bottom: 50%;
+					left: 14px;
+					transform: translateY(50%);
+					writing-mode: initial;
+				}
+			}
+
+			.label {
+				height: auto;
+				padding: 7px;
+				width: auto;
+				writing-mode: vertical-lr;
+			}
+		}
+
+		&:hover {
+			.barContent {
+				opacity: 0.3;
+
+				&:hover {
+					opacity: 1;
+				}
+			}
 		}
 	}
 }

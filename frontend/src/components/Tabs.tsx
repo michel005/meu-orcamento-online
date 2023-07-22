@@ -4,7 +4,7 @@ import { Button } from './Button'
 import { IconType } from '../types/IconType'
 
 export type Tab = {
-	label: string
+	label?: string
 	icon?: string
 }
 

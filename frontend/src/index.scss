@@ -3,13 +3,13 @@
 :root {
 	--zindex-modal: 150;
 	--zindex-message: 200;
-	--border-radius: 7px;
+	--border-radius: 10px;
 	--middle-width: 1300px;
 }
 
 * {
 	box-sizing: border-box;
-	font-family: 'Fira Sans', sans-serif;
+	font-family: 'Arial', sans-serif;
 	margin: 0;
 	outline: transparent;
 	padding: 0;
@@ -61,5 +61,4 @@ h5 {
 	display: flex;
 	flex-direction: row;
 	gap: 4px;
-	margin-right: auto;
 }

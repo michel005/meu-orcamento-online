@@ -55,7 +55,6 @@ export const Select = ({
 						if (nullable) {
 							selected--
 						}
-						console.log({ selected })
 						onChange(options?.[selected] || null)
 					}}
 				>

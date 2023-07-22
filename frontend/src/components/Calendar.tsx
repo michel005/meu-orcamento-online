@@ -36,7 +36,7 @@ export const Calendar = ({
 
 	const discoverFirstDay = (date: Date) => {
 		let temp = new Date(date.getFullYear(), date.getMonth(), 1)
-		if (temp.getDay() !== 6) {
+		if (temp.getDay() !== 0) {
 			while (temp.getDay() > 0) {
 				temp.setDate(temp.getDate() - 1)
 				temp = new Date(temp)

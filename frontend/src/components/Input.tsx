@@ -29,7 +29,6 @@ export const Input = ({
 	rightButton = null,
 	onChange = () => null,
 	textArea = false,
-	sidebarMode = false,
 	value,
 	type,
 	...props
@@ -37,23 +36,21 @@ export const Input = ({
 	type?: string
 }) => {
 	const [focus, setFocus] = useState(false)
-	const [openSearch, setOpenSearch] = useState(false)
 
 	return (
 		<div
 			className={style.input}
 			data-type={type}
 			data-focus={focus}
-			data-search={openSearch}
-			data-sidebar-mode={sidebarMode}
 			data-value={value}
+			data-has-value={!!value && value !== ''}
 		>
 			{label && <label>{label}</label>}
-			<div className={style.inputWithButton}>
+			<div className={style.inputWithButton} data-text-area={textArea}>
 				{leftButton && (
 					<Button
 						{...leftButton}
-						variation={sidebarMode ? 'sidebar' : 'secondary'}
+						variation={'secondary'}
 						className={`${styleButton.button} ${style.leftButton}`}
 					/>
 				)}
@@ -85,7 +82,6 @@ export const Input = ({
 						}}
 						onFocus={(e) => {
 							setFocus(true)
-							setOpenSearch(true)
 							props?.onFocus?.(e)
 						}}
 						onChange={(e: any) => {
@@ -103,21 +99,12 @@ export const Input = ({
 						data-have-right-button={!!rightButton}
 					/>
 				)}
-				{type === 'search' && openSearch ? (
+				{rightButton && (
 					<Button
-						leftIcon="close"
-						variation={sidebarMode ? 'sidebar' : 'secondary'}
+						{...rightButton}
+						variation={'secondary'}
 						className={`${styleButton.button} ${style.rightButton}`}
-						onClick={() => setOpenSearch(false)}
 					/>
-				) : (
-					rightButton && (
-						<Button
-							{...rightButton}
-							variation={sidebarMode ? 'sidebar' : 'secondary'}
-							className={`${styleButton.button} ${style.rightButton}`}
-						/>
-					)
 				)}
 			</div>
 		</div>

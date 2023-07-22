@@ -1,3 +1,39 @@
+.groupWithLabel {
+	border-top: 1px solid #ccc;
+	display: flex;
+	flex-direction: row;
+	gap: 35px;
+
+	.left {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding-block: 10px;
+		width: 300px;
+
+		label {
+			color: #333;
+			font-size: 16px;
+			font-weight: bold;
+		}
+
+		p {
+			color: #aaa;
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.right {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		gap: 14px;
+		padding-block: 14px;
+		width: 100%;
+	}
+}
+
 .formDesign {
 	display: flex;
 	flex-direction: column;

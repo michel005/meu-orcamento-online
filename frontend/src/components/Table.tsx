@@ -315,7 +315,7 @@ export const Table = ({
 												setShowFilter(null)
 											}}
 										>
-											Ordem Crescente
+											Crescente
 										</Button>
 										<Button
 											variation={
@@ -334,7 +334,7 @@ export const Table = ({
 												setShowFilter(null)
 											}}
 										>
-											Ordem Decrescente
+											Decrescente
 										</Button>
 									</div>
 								)}

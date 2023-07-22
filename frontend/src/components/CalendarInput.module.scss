@@ -59,24 +59,12 @@
 
 
 .calendar {
-	background-color: var(--background-color);
-	backdrop-filter: blur(4px);
-	border: 2px solid var(--active-color);
-	border-radius: 7px;
-	box-shadow: #3336 0 0 7px;
-	height: 100%;
-	left: 0;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	z-index: 249;
+	position: absolute;
+	top: 100%;
 
 	& > div {
-		box-shadow: #0003 0 0 4px;
-		left: 50%;
+		box-shadow: #0003 0 0 7px;
 		position: fixed;
-		top: 50%;
-		transform: translateX(-50%) translateY(-50%);
 		z-index: 250;
 	}
 }

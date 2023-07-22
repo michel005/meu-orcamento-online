@@ -1,9 +1,0 @@
-.row {
-	display: flex;
-	flex-direction: row;
-	gap: 14px;
-
-	& > div {
-		flex-grow: 1;
-	}
-}

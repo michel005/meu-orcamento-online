@@ -1,0 +1,36 @@
+.list {
+	background-color: #ccc;
+	border: 1px solid #ccc;
+	border-radius: var(--border-radius);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	.listItem {
+		background-color: #fff;
+		border-bottom: 1px solid #ccc;
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+		padding: 14px;
+		transition: all 0.25s;
+
+		&:hover {
+			background-color: #fffc;
+		}
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		.left, .right {
+			display: flex;
+			flex-direction: row;
+			flex-grow: 1;
+		}
+
+		.right {
+			justify-content: flex-end;
+		}
+	}
+}

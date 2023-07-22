@@ -1,0 +1,16 @@
+.mealOptions {
+	display: flex;
+	flex-direction: row;
+}
+
+.row {
+	align-items: flex-end;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+
+	button {
+		align-self: flex-end;
+		height: 42px;
+	}
+}

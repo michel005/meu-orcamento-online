@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
 import { ModalByEntityType, ModalContext } from '../context/ModalContext'
 import { Message } from '../components/Message'
-import { CustomerModal } from '../modals/CustomerModal'
+import { EatingModal } from '../pages/eating/modal'
+import { GymModal } from '../pages/gym/modal'
 
 export const ModalByEntity: ModalByEntityType[] = [
 	['message', Message],
-	['customer', CustomerModal],
+	['eating', EatingModal],
+	['gym', GymModal],
 ]
 
 export const ModalContainer = () => {

@@ -1,54 +1,27 @@
+import { TabsStyle } from './Tabs.style'
+import { TabsType } from './Tabs.type'
 import React from 'react'
-import style from './Tabs.module.scss'
-import { Button } from './Button'
-import { IconType } from '../types/IconType'
 
-export type Tab = {
-	label?: string
-	icon?: string
-}
-
-export type TabsType = {
-	tabs: Tab[]
-	alignment?: 'left' | 'center' | 'right'
-	variation?: 'primary' | 'secondary'
-	currentTab: number
-	onChange?: (currentTab: number) => void
-	children?: (tab: Tab | undefined) => any
-	className?: string | undefined
-}
-
-export const Tabs = ({
-	currentTab = 0,
-	onChange = () => null,
-	tabs,
-	variation = 'primary',
-	alignment = 'left',
-	children = () => null,
-	className,
-}: TabsType) => {
+export const Tabs = ({ tabs, currentTab, onChange }: TabsType) => {
 	return (
-		<div className={`${style.tabs} ${className}`} data-alignment={alignment}>
-			<div className={style.tabSelector}>
-				{tabs.map((tab, tabKey) => {
+		<TabsStyle>
+			<section>
+				{Object.keys(tabs).map((tab) => {
+					const tabInfo = tabs[tab]
 					return (
-						<Button
-							data-active={tabKey === currentTab}
-							key={tabKey}
-							leftIcon={tab.icon as IconType}
-							variation={variation}
-							onClick={() => onChange(tabKey)}
+						<button
+							key={tab}
+							data-selected={currentTab === tab}
+							onClick={() => {
+								onChange?.(tab)
+							}}
 						>
-							{tab.label}
-						</Button>
+							{tabInfo.label}
+						</button>
 					)
 				})}
-			</div>
-			{children && (
-				<div className={style.content}>
-					{children(tabs.find((_, tabKey) => tabKey === currentTab))}
-				</div>
-			)}
-		</div>
+			</section>
+			<div>{tabs?.[currentTab as keyof typeof tabs]?.children}</div>
+		</TabsStyle>
 	)
 }

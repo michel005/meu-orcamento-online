@@ -1,0 +1,14 @@
+@keyframes fadeOut {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes rotate {
+	to {
+		transform: rotate(180deg);
+	}
+}

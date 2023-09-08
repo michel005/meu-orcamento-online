@@ -35,7 +35,7 @@ export const SelectStyle = styled.div`
 		flex-grow: 1;
 		font-size: inherit;
 		height: var(--input-height);
-		outline: 1px solid #aaa;
+		outline: 1px solid var(--input-border-color);
 		order: 1;
 		padding-inline: 10px;
 		transition: all 0.5s;

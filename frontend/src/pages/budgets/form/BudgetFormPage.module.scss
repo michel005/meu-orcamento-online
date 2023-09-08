@@ -1,0 +1,17 @@
+.budgetFormPage {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 14px;
+	padding: 14px;
+}
+
+.customerInfo {
+	img {
+		border-radius: var(--border-radius);
+		box-shadow: #aaa 0 0 4px;
+		height: 150px;
+		object-fit: cover;
+		width: 150px;
+	}
+}

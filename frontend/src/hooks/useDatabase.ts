@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { ConfigContext } from '../contexts/ConfigContext'
+import { DateUtils } from '../utils/DateUtils'
 
 export const useDatabase = <T>(key: string) => {
 	const { database, setDatabase } = useContext(ConfigContext)
@@ -17,6 +18,7 @@ export const useDatabase = <T>(key: string) => {
 				prevState[key].push({
 					id: Math.random(),
 					...value,
+					created: DateUtils.dateTimeToString(new Date()),
 				})
 				return structuredClone(prevState)
 			})
@@ -27,6 +29,10 @@ export const useDatabase = <T>(key: string) => {
 				prevState[key][index] = {
 					id: Math.random(),
 					...value,
+					updated: DateUtils.dateTimeToString(new Date()),
+				}
+				if (!prevState[key][index]?.created) {
+					prevState[key][index].created = DateUtils.dateTimeToString(new Date())
 				}
 				return structuredClone(prevState)
 			})

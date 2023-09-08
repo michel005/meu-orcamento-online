@@ -1,0 +1,18 @@
+@mixin reloadActiveColor {
+	--active-color: rgb(var(--active-color-value), 1);
+	--active-color-90: rgb(var(--active-color-value), 0.9);
+	--active-color-80: rgb(var(--active-color-value), 0.8);
+	--active-color-70: rgb(var(--active-color-value), 0.7);
+	--active-color-60: rgb(var(--active-color-value), 0.6);
+	--active-color-50: rgb(var(--active-color-value), 0.5);
+	--active-color-40: rgb(var(--active-color-value), 0.4);
+	--active-color-30: rgb(var(--active-color-value), 0.3);
+	--active-color-20: rgb(var(--active-color-value), 0.2);
+	--active-color-10: rgb(var(--active-color-value), 0.1);
+}
+
+@mixin useGoogleFonts {
+	font-size: inherit;
+	font-family: 'Material Symbols Outlined', sans-serif;
+	font-weight: inherit;
+}

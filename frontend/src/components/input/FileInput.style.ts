@@ -7,7 +7,7 @@ export const FileInputStyle = styled.div`
 	gap: 4px;
 
 	& > section {
-		border: 1px solid #ccc;
+		border: 1px solid var(--input-border-color);
 		border-radius: var(--border-radius);
 		display: flex;
 		flex-direction: row;

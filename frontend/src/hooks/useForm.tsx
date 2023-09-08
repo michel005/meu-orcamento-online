@@ -177,24 +177,11 @@ export const useForm = <T,>({
 						label={fieldDefinition.label}
 						placeholder={fieldDefinition.placeholder}
 						image={fieldDefinition?.image}
-						value={
-							value?.[field as keyof typeof value] as
-								| {
-										name: string
-										base64: string
-								  }
-								| undefined
-								| null
-						}
+						value={value?.[field as keyof typeof value] as string | undefined | null}
 						onChange={(innerValue) => {
 							if (value) {
-								;(value[field as keyof typeof value] as
-									| {
-											name: string
-											base64: string
-									  }
-									| undefined
-									| null) = innerValue
+								;(value[field as keyof typeof value] as string | undefined | null) =
+									innerValue
 							}
 							onChange(structuredClone(value) as T)
 						}}

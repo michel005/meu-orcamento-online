@@ -4,11 +4,16 @@ import { NavbarItems } from '../constants/NavbarItems'
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { Message } from '../components/Message'
-import { SupplierFormPage_ProductsModal } from './supplier/SupplierFormPage_ProductsModal'
+import { useData } from '../hooks/useData'
+import { useMessage } from '../hooks/useMessage'
 
 export const MainPage = () => {
+	const mainData = useData('main', {
+		expand: true,
+	})
 	const { message, modal } = useContext(ConfigContext)
 	const location = useLocation()
+	const { showQuestion } = useMessage()
 
 	const currentRoute = useMemo(
 		() => NavbarItems.find((x) => x.link === location.pathname),
@@ -24,25 +29,44 @@ export const MainPage = () => {
 	}, [currentRoute])
 
 	return (
-		<MainPageStyle>
-			<nav>
-				{NavbarItems.filter((item) => item.context.includes('navbar')).map(
-					(item, itemKey) => {
-						return <NavLink to={item.link} data-icon={item.icon}></NavLink>
-					}
-				)}
-			</nav>
-			{currentRoute?.sidebar && (
+		<MainPageStyle data-hide-menu={!currentRoute?.sidebar || !mainData.data?.expand}>
+			<section>
+				<nav className="options">
+					{NavbarItems.filter((item) => item.context.includes('navbar')).map(
+						(item, itemKey) => {
+							return <NavLink key={item.link} to={item.link} data-icon={item.icon} />
+						}
+					)}
+					<div style={{ flexGrow: 1 }} />
+					<a
+						data-icon="logout"
+						onClick={() => {
+							showQuestion('Deseja realmente sair de sua conta?', '', () => {})
+						}}
+					/>
+					<a
+						data-icon={mainData.data?.expand ? 'menu_open' : 'menu'}
+						onClick={() => {
+							mainData.setDataProp('expand', !mainData.data?.expand)
+						}}
+					/>
+				</nav>
 				<nav className="subOptions">
 					<header>
 						<h2>{currentRoute?.title}</h2>
-						<small>{currentRoute?.subTitle}</small>
+						{currentRoute?.subTitle && <small>{currentRoute?.subTitle}</small>}
 					</header>
 					{currentRoute?.sidebar}
 				</nav>
-			)}
+			</section>
 			<main>
 				<section>
+					{(!currentRoute?.sidebar || !mainData.data?.expand) && (
+						<header>
+							<h2>{currentRoute?.title}</h2>
+							{currentRoute?.subTitle && <small>{currentRoute?.subTitle}</small>}
+						</header>
+					)}
 					<Routes>
 						{NavbarItems.map((item, itemKey) => {
 							return (
@@ -57,9 +81,12 @@ export const MainPage = () => {
 					</Routes>
 				</section>
 			</main>
-			{modal.supplierProduct && <SupplierFormPage_ProductsModal />}
 			{message.map((messageContent, messageContentIndex) => (
-				<Message index={messageContentIndex} {...messageContent} />
+				<Message
+					key={messageContentIndex}
+					index={messageContentIndex}
+					{...messageContent}
+				/>
 			))}
 		</MainPageStyle>
 	)

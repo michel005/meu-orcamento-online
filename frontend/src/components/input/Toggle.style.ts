@@ -13,8 +13,7 @@ export const ToggleStyle = styled.div`
 
 		label {
 			cursor: pointer;
-			font-size: 1em;
-			font-weight: initial;
+			margin-block: auto !important;
 		}
 
 		& > div {

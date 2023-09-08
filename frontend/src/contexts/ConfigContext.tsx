@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { ConfigContextType } from './ConfigContext.type'
+import { ConfigContextType, StatusType } from './ConfigContext.type'
+import { MichelUser } from '../constants/MichelUser'
 
 export const ConfigContext = createContext<ConfigContextType>({
 	status: {},
@@ -21,18 +22,16 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 		[key: string]: any
 	}>({})
 	const [message, setMessage] = useState<any[]>([])
-	const [status, setStatus] = useState<{
-		modal: boolean
-		database: boolean
-		data: boolean
-	}>({
+	const [status, setStatus] = useState<StatusType>({
 		modal: false,
 		database: false,
 		data: false,
 	})
 	const [database, setDatabase] = useState<{
 		[key: string]: any
-	}>({})
+	}>({
+		user: [MichelUser],
+	})
 
 	useEffect(() => {
 		if (!status.database) {
@@ -47,6 +46,12 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 	}, [status])
 
 	useEffect(() => {
+		if (status.database) {
+			localStorage.setItem('database', JSON.stringify(database))
+		}
+	}, [status, database])
+
+	useEffect(() => {
 		if (!status.modal) {
 			if (localStorage.getItem('modal')) {
 				setModal(JSON.parse(localStorage.getItem('modal') || '{}'))
@@ -59,36 +64,10 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 	}, [status])
 
 	useEffect(() => {
-		if (!status.data) {
-			if (localStorage.getItem('data')) {
-				setData(JSON.parse(localStorage.getItem('data') || '{}'))
-			}
-			setStatus((x) => {
-				x.data = true
-				return { ...x }
-			})
-		}
-	}, [status])
-
-	useEffect(() => {
-		if (status.data) {
-			localStorage.setItem('data', JSON.stringify(data))
-		}
-	}, [status, data])
-
-	useEffect(() => {
-		if (status.database) {
-			localStorage.setItem('database', JSON.stringify(database))
-		}
-	}, [status, database])
-
-	useEffect(() => {
 		if (status.modal) {
 			localStorage.setItem('modal', JSON.stringify(modal))
 		}
 	}, [status, modal])
-
-	console.log(database)
 
 	return (
 		<ConfigContext.Provider

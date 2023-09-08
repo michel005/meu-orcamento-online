@@ -1,6 +1,4 @@
-import styled from 'styled-components'
-
-export const ButtonGroupStyle = styled.div`
+.buttonGroup {
 	align-items: center;
 	display: flex;
 	flex-direction: row;
@@ -18,4 +16,4 @@ export const ButtonGroupStyle = styled.div`
 	&[data-align='right'] {
 		justify-content: flex-end;
 	}
-`
+}

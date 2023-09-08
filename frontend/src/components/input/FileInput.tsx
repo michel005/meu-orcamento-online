@@ -25,10 +25,7 @@ export const FileInput = ({
 		const reader = new FileReader()
 		reader.onload = () => {
 			const base64String = reader.result
-			onChange({
-				base64: base64String as string,
-				name: file.name,
-			})
+			onChange(base64String as string)
 		}
 		reader.readAsDataURL(file)
 	}
@@ -45,7 +42,7 @@ export const FileInput = ({
 			data-disabled={disabled}
 			style={
 				{
-					'--value': `url(${value?.base64})`,
+					'--value': `url(${value})`,
 				} as CSSProperties
 			}
 		>
@@ -64,7 +61,7 @@ export const FileInput = ({
 				)}
 				{!showDragHint && (
 					<div>
-						{image && value && value.base64 && <img src={value?.base64} />}
+						{image && value && value && <img src={value} />}
 						{!value && (
 							<span>
 								Nenhum arquivo selecionado.{' '}
@@ -101,10 +98,7 @@ export const FileInput = ({
 					if (e.target.files) {
 						const file = e.target.files[0] as File
 						FileUtils.fileToBase64(file, (x) => {
-							onChange({
-								name: file.name,
-								base64: x,
-							})
+							onChange(x)
 						})
 					}
 				}}

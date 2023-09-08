@@ -1,6 +1,7 @@
 import React from 'react'
 import { ToggleType } from './Toggle.type'
 import { ToggleStyle } from './Toggle.style'
+import { Label } from '../Label.style'
 
 export const Toggle = ({ error, label, onChange, value, disabled, loading }: ToggleType) => {
 	return (
@@ -17,13 +18,13 @@ export const Toggle = ({ error, label, onChange, value, disabled, loading }: Tog
 					}}
 				/>
 				{label && (
-					<label
+					<Label
 						onClick={() => {
 							onChange(!value)
 						}}
 					>
 						{label}
-					</label>
+					</Label>
 				)}
 			</section>
 			{error && <span>{error}</span>}

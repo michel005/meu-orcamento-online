@@ -1,0 +1,20 @@
+.budgetSidebar {
+	align-items: stretch;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	width: 100%;
+
+	.notFound {
+		color: #fff6;
+	}
+
+	button {
+		text-align: left;
+		width: 100%;
+
+		&::before {
+			align-self: center;
+		}
+	}
+}

@@ -1,57 +1,46 @@
-export type OrderItemType = {
-	productId: number
-	quantity: number
-	price: number
-}
-
-export const OrderStatus: any = {
-	available: 'Disponível',
-	soldOut: 'Esgotado',
-	onSale: 'Em Promoção',
-	preOrder: 'Pré-venda',
-	reserved: 'Reservado',
-	unavailable: 'Indisponível',
-}
-
-export type OrderType = {
-	id: number
-	userId: number
-	items: OrderItemType[]
-	status?: string | null
-}
-
-export type Supplier = {
-	id?: number
-	picture?: {
-		name: string
-		base64: string
-	}
-	name?: string
-	email?: string
-	phone?: string
-	address?: AddressType
-	active?: boolean
-}
-
-export type AddressType = {
-	street?: string
-	number?: string
-	complement?: string
-	zipCode?: string
-	city?: string
-	state?: string
+export type Address = {
+	streetNumber: string
+	streetName: string
+	complement: string
+	city: string
+	state: string
+	zipCode: string
 	country?: string
 }
 
-export type ProductType = {
+export type Customer = {
 	id?: number
-	picture?: {
-		name: string
-		base64: string
-	}
+	created?: string
+	updated?: string
+	picture?: string
+	name?: string
+	personType?: 'PF' | 'PJ'
+	documentType?: 'RG' | 'CPF' | 'CNPJ'
+	documentNumber?: string
+	email?: string
+	phone?: string
+	active?: boolean
+	address?: Address
+}
+
+export type Service = {
+	picture?: string
 	name?: string
 	description?: string
 	price?: number
-	categories?: string
-	supplierId?: number
+}
+
+type BudgetStatus = 'pending' | 'accepted' | 'rejected' | 'completed'
+
+export type Budget = {
+	id?: number
+	created?: string
+	updated?: string
+	title?: string
+	customerId?: number
+	services?: Service[]
+	date?: string
+	amount?: number
+	description?: string
+	status?: BudgetStatus
 }

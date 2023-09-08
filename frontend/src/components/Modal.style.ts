@@ -30,13 +30,6 @@ export const ModalStyle = styled.div`
 		position: relative;
 		width: 600px;
 
-		hr {
-			background-color: #eee;
-			height: 1px;
-			border: none;
-			appearance: none;
-		}
-
 		& > button {
 			background-color: transparent;
 			border: none;

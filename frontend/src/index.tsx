@@ -5,4 +5,3 @@ import './index.scss'
 
 const container = document.getElementById('root')
 createRoot(container!).render(<App />)
-

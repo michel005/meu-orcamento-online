@@ -3,11 +3,15 @@ export type TableType = {
 		[key: string]: {
 			alignment?: 'left' | 'center' | 'right'
 			label: string
+			show?: boolean
 			type?: 'text' | 'currency'
-			valueModifier?: (row: any) => any
+			valueModifier?: (row: any, rowIndex: number) => any
 			width?: string
 		}
 	}
-	rowComplement?: (row: any) => any
+	page?: {
+		pageSize?: number
+		currentPage: number
+	}
 	value: any[]
 }

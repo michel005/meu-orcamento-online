@@ -1,11 +1,11 @@
 import React from 'react'
-import { ButtonGroupStyle } from './ButtonGroup.style'
+import style from './ButtonGroup.module.scss'
 import { ButtonGroupType } from './ButtonGroup.type'
 
 export const ButtonGroup = ({ children, align = 'left', className }: ButtonGroupType) => {
 	return (
-		<ButtonGroupStyle data-align={align} className={className}>
+		<div className={`${style.buttonGroup} ${className}`} data-align={align}>
 			{children}
-		</ButtonGroupStyle>
+		</div>
 	)
 }

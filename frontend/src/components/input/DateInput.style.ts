@@ -5,6 +5,7 @@ export const DateInputStyle = styled.div`
 	flex-direction: column;
 	font-size: 16px;
 	gap: 4px;
+	min-width: 250px;
 
 	& > div {
 		display: flex;
@@ -18,7 +19,7 @@ export const DateInputStyle = styled.div`
 			flex-grow: 1;
 			font-size: inherit;
 			height: var(--input-height);
-			outline: 1px solid #aaa;
+			outline: 1px solid var(--input-border-color);
 			order: 1;
 			padding-inline: 10px;
 			transition: all 0.5s;

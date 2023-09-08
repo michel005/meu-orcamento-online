@@ -15,7 +15,7 @@ export const TextStyle = styled.div`
 		height: var(--input-height);
 		max-width: 100%;
 		min-width: 100%;
-		outline: 1px solid #aaa;
+		outline: 1px solid var(--input-border-color);
 		order: 1;
 		padding-inline: 10px;
 		transition: all 0.5s;

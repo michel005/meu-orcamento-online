@@ -1,0 +1,114 @@
+@import '../../utils.scss';
+@import '../../keyframe.scss';
+
+.button {
+	background-color: var(--active-color);
+	border: none;
+	border-radius: var(--border-radius);
+	color: #fff;
+	cursor: pointer;
+	display: flex;
+	flex-direction: row;
+	font-size: 16px;
+	gap: 7px;
+	overflow: hidden;
+	padding: 10px 14px;
+	position: relative;
+	transition: all 0.25s;
+	user-select: none;
+	width: fit-content;
+
+	& > div {
+		background-color: rgb(40, 40, 40);
+		height: 4px;
+		position: absolute;
+		inset-block-end: 0;
+		inset-inline-start: 0;
+		transition: all 0.5s;
+		width: var(--progress);
+		z-index: 100;
+	}
+
+	&[data-left-icon]::before,
+	&[data-right-icon]::after {
+		color: inherit;
+		font-size: inherit;
+		font-family: 'Material Symbols Outlined';
+		font-weight: inherit;
+	}
+
+	&[data-left-icon]::before {
+		content: attr(data-left-icon);
+	}
+
+	&[data-right-icon]::after {
+		content: attr(data-right-icon);
+	}
+
+	&:hover {
+		background-color: var(--active-color-70);
+	}
+
+	&:active {
+		background-color: var(--active-color-90);
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	span:empty {
+		display: none;
+	}
+
+	&[data-loading=true] {
+		@keyframes loading {
+			0% {
+				transform: translateX(-100%);
+			}
+			100% {
+				transform: translateX(200%);
+			}
+		}
+		background-color: var(--active-color-90);
+		pointer-events: none;
+
+		& > div {
+			animation: loading 1.5s infinite linear reverse;
+			background: linear-gradient(90deg, #fff, transparent);
+			background-color: transparent;
+			border-radius: var(--border-radius);
+			width: 150%;
+		}
+	}
+
+	&[data-variation='secondary'] {
+		--active-color-value: 40, 40, 40;
+		@include reloadActiveColor;
+
+		& > div {
+			background-color: rgb(51, 153, 255);
+		}
+	}
+
+	&[data-variation='ghost'] {
+		background-color: transparent;
+		color: #333;
+	}
+
+	&[data-variation='sidebar'] {
+		background-color: rgba(255, 255, 255, 0.2);
+		color: #fffc;
+		width: 100%;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.3);
+		}
+
+		&:active {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+	}
+}

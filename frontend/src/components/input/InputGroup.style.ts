@@ -33,7 +33,11 @@ export const InputGroupStyle = styled.div`
 		padding-block-start: 4px;
 		width: 1000px;
 
-		& > .row {
+		.row {
+			display: flex;
+			flex-direction: row;
+			gap: 10px;
+
 			& > div {
 				flex-grow: 1;
 			}

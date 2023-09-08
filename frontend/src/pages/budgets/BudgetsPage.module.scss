@@ -1,0 +1,17 @@
+.budgetsPage {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 14px;
+	padding: 14px;
+}
+
+.filters {
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+}
+
+.fullWidth {
+	width: 100%;
+}

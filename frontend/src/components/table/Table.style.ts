@@ -16,14 +16,30 @@ export const TableStyle = styled.table`
 
 				&[data-alignment='left'] {
 					text-align: left;
+
+					div {
+						justify-content: flex-start;
+					}
 				}
 
 				&[data-alignment='center'] {
 					text-align: center;
+
+					div {
+						justify-content: center;
+					}
 				}
 
 				&[data-alignment='right'] {
 					text-align: right;
+
+					div {
+						justify-content: flex-end;
+					}
+				}
+
+				a {
+					color: #333;
 				}
 			}
 		}
@@ -41,11 +57,13 @@ export const TableStyle = styled.table`
 				text-align: left;
 
 				img {
+					align-self: center;
 					border-radius: var(--border-radius);
-					height: 32px;
+					box-shadow: #ccc 0 0 4px;
+					height: 42px;
 					margin-inline-start: -4px;
 					object-fit: cover;
-					width: 32px;
+					width: 42px;
 				}
 
 				&[data-alignment='left'] {
@@ -70,6 +88,14 @@ export const TableStyle = styled.table`
 					background-color: transparent;
 				}
 			}
+		}
+	}
+
+	.pagination {
+		padding-block-start: 21px;
+
+		div {
+			margin-inline: auto;
 		}
 	}
 `

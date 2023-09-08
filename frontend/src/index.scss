@@ -1,21 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap');
+@import './utils.scss';
 
 :root {
 	--active-color-value: 51, 153, 255;
-	--active-color: rgb(var(--active-color-value), 1);
-	--active-color-90: rgb(var(--active-color-value), 0.9);
-	--active-color-80: rgb(var(--active-color-value), 0.8);
-	--active-color-70: rgb(var(--active-color-value), 0.7);
-	--active-color-60: rgb(var(--active-color-value), 0.6);
-	--active-color-50: rgb(var(--active-color-value), 0.5);
-	--active-color-40: rgb(var(--active-color-value), 0.4);
-	--active-color-30: rgb(var(--active-color-value), 0.3);
-	--active-color-20: rgb(var(--active-color-value), 0.2);
-	--active-color-10: rgb(var(--active-color-value), 0.1);
 	--border-radius: 10px;
 	--input-height: 38px;
 
 	--center-width: 1300px;
+
+	--input-border-color: #ccc;
+	@include reloadActiveColor;
 }
 
 * {
@@ -32,17 +26,9 @@ a {
 	text-decoration: none;
 }
 
-@keyframes fadeOut {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-@keyframes rotate {
-	to {
-		transform: rotate(-180deg);
-	}
+hr {
+	appearance: none;
+	background-color: #ccc;
+	border: none;
+	height: 1px;
 }

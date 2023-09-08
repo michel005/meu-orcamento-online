@@ -5,7 +5,7 @@ export const useData = <T>(key: string, defaultValue?: T) => {
 	const { data, setData } = useContext(ConfigContext)
 
 	return {
-		data: data?.[key] || defaultValue,
+		data: (data?.[key] || defaultValue) as T,
 		setData: (value: T | null) => {
 			setData((prevState) => {
 				prevState[key] = value

@@ -1,7 +1,13 @@
 import { Dispatch, SetStateAction } from 'react'
 
+export type StatusType = {
+	modal?: boolean
+	database?: boolean
+	data?: boolean
+}
+
 export type ConfigContextType = {
-	status: any
+	status: StatusType
 	data: {
 		[key: string]: any
 	}

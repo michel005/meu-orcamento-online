@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 
 export const MainPageStyle = styled.main`
+	--sub-menu-width: 300px;
+
 	background-color: #fff;
 	display: flex;
 	flex-direction: row;
@@ -9,62 +11,81 @@ export const MainPageStyle = styled.main`
 	position: absolute;
 	width: 100%;
 
-	& > nav {
-		align-items: center;
-		background-color: #222;
+	& > section {
 		display: flex;
-		flex-direction: column;
-		gap: 7px;
-		padding: 7px;
+		flex-direction: row;
 
-		& > a {
-			border-radius: var(--border-radius);
-			color: #fff4;
+		.options {
+			--button-size: 42px;
+
+			align-items: center;
+			background-color: #222;
 			display: flex;
-			flex-direction: row;
-			gap: 7px;
-			height: 48px;
-			justify-content: center;
-			padding-block-start: 4px;
+			flex-direction: column;
+			gap: 14px;
+			padding: 14px;
 			transition: all 0.25s;
-			width: 48px;
+			z-index: 2;
 
-			&:hover {
+			& > a {
 				background-color: #fff1;
-				color: #fff;
-			}
+				border-radius: var(--border-radius);
+				color: #fff4;
+				display: flex;
+				flex-direction: row;
+				gap: 7px;
+				height: var(--button-size);
+				justify-content: center;
+				padding-block-start: 4px;
+				transition: all 0.25s;
+				width: var(--button-size);
 
-			&::before {
-				align-self: center;
-				color: inherit;
-				content: attr(data-icon);
-				font-size: 1.2em;
-				font-family: 'Material Symbols Outlined';
-				font-weight: normal;
-				transform: translateY(-2px);
-			}
+				&:hover {
+					background-color: #fff3;
+					color: #fff;
+				}
 
-			&.active {
-				background-color: var(--active-color);
-				color: #fff;
+				&::before {
+					align-self: center;
+					color: inherit;
+					content: attr(data-icon);
+					font-size: 1.2em;
+					font-family: 'Material Symbols Outlined';
+					font-weight: normal;
+					transform: translateY(-2px);
+				}
+
+				&.active {
+					background-color: var(--active-color);
+					color: #fff;
+				}
 			}
 		}
 
-		&.subOptions {
+		.subOptions {
 			align-items: flex-start;
 			background-color: #323232;
 			color: #fff;
 			display: flex;
 			flex-direction: column;
 			gap: 14px;
+			min-width: var(--sub-menu-width);
+			overflow-y: scroll;
 			padding: 14px;
 			text-align: left;
-			width: 250px;
+			transition: all 0.25s;
+			width: var(--sub-menu-width);
+			z-index: 1;
+
+			&::-webkit-scrollbar {
+				width: 0;
+			}
 
 			header {
 				display: flex;
 				flex-direction: column;
 				gap: 4px;
+				margin-block-end: 14px;
 
 				h2 {
 					padding-block-start: 4px;
@@ -76,8 +97,40 @@ export const MainPageStyle = styled.main`
 			}
 
 			button {
-				justify-content: center;
-				width: 100%;
+				color: #fff;
+			}
+
+			label {
+				color: #fffc;
+				margin-block-start: 7px;
+			}
+		}
+	}
+
+	&[data-hide-menu='true'] {
+		& > section {
+			.options {
+				background-color: #eee;
+
+				& > a {
+					background-color: #2221;
+					color: #666;
+
+					&:hover {
+						background-color: #2223;
+						color: #666;
+					}
+
+					&.active {
+						background-color: #222;
+						color: #fff;
+					}
+				}
+			}
+
+			.subOptions {
+				margin-inline-start: calc(var(--sub-menu-width) * -1);
+				opacity: 0;
 			}
 		}
 	}
@@ -89,6 +142,7 @@ export const MainPageStyle = styled.main`
 		gap: 7px;
 		overflow-y: auto;
 		position: relative;
+		transition: alll 0.25s;
 
 		&::-webkit-scrollbar {
 			width: 0;
@@ -98,11 +152,27 @@ export const MainPageStyle = styled.main`
 			display: flex;
 			flex-direction: column;
 			gap: 14px;
-			padding: 14px;
+			transition: alll 0.25s;
 			z-index: 100;
+
+			header {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				padding: 14px 14px 0;
+
+				h2 {
+					padding-block-start: 4px;
+				}
+
+				small {
+					color: #999;
+				}
+			}
 
 			& > * {
 				animation: fadeOut 0.5s linear;
+				transition: alll 0.25s;
 			}
 		}
 	}

@@ -1,5 +1,5 @@
-import React from 'react'
-import { ButtonStyle } from './Button.style'
+import React, { CSSProperties } from 'react'
+import style from './Button.module.scss'
 import { ButtonType } from './Button.type'
 
 export const Button = ({
@@ -7,17 +7,28 @@ export const Button = ({
 	rightIcon,
 	loading,
 	variation = 'primary',
+	progress,
 	...props
 }: ButtonType) => {
 	return (
-		<ButtonStyle
+		<button
 			{...props}
+			className={`${style.button} ${props.className}`}
 			data-left-icon={leftIcon}
 			data-right-icon={rightIcon}
 			data-loading={loading}
 			data-variation={variation}
 		>
 			<span>{props.children}</span>
-		</ButtonStyle>
+			{(progress || loading) && (
+				<div
+					style={
+						{
+							'--progress': `${progress}%`,
+						} as CSSProperties
+					}
+				/>
+			)}
+		</button>
 	)
 }

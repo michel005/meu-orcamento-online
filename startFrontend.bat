@@ -1,2 +1,2 @@
-cd C:\Desenvolvimento\restaurante-facil\frontend
-npm start
+cd frontend
+yarn start

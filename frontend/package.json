@@ -1,7 +1,7 @@
 {
-	"name": "meu_bazar",
+	"name": "meu-orcamento-online",
 	"version": "1.0.0",
-	"description": "Meu Bazar - Gestão de Bazar",
+	"description": "Meu Orçamento Online",
 	"main": "prettier.config.js",
 	"scripts": {
 		"start": "webpack serve"

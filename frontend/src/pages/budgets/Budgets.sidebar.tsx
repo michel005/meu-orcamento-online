@@ -8,17 +8,36 @@ import { useData } from '../../hooks/useData'
 import { BudgetFilterType } from './BudgetsPage'
 import { useNavigate } from 'react-router-dom'
 import { DateUtils } from '../../utils/DateUtils'
+import { useForm } from '../../hooks/useForm'
+import { SortUtils } from '../../utils/SortUtils'
+import { DivColumn } from '../../components/DivColumn'
 
 export const BudgetsSidebar = () => {
 	const formData = useData<Budget>('budgetForm')
 	const customerDatabase = useDatabase<Customer>('customer')
 	const filterData = useData<BudgetFilterType>('budgetFilter', {})
+	const { fields: form } = useForm<BudgetFilterType>({
+		definition: {
+			date: {
+				label: 'Filtro por Data',
+				type: 'date',
+			},
+			quickSearch: {
+				label: 'Filtro Rápido',
+				placeholder: 'Produto, título ou qualquer parte do orçamento',
+				type: 'text',
+			},
+		},
+		value: filterData.data,
+		onChange: filterData.setData,
+	})
 
 	const customerFilterCollection = useMemo(() => {
 		let result: any[] = []
 		result.push(
 			<Button
 				leftIcon="group"
+				style={{ width: '100%' }}
 				onClick={() => {
 					filterData.setDataProp('customerId', null)
 				}}
@@ -27,20 +46,25 @@ export const BudgetsSidebar = () => {
 				Todos os Clientes
 			</Button>
 		)
-		customerDatabase.data.forEach((customer) => {
-			result.push(
-				<Button
-					key={customer.id}
-					leftIcon="person"
-					onClick={() => {
-						filterData.setDataProp('customerId', customer.id)
-					}}
-					variation={filterData.data.customerId === customer.id ? 'primary' : 'sidebar'}
-				>
-					{customer.name}
-				</Button>
-			)
-		})
+		customerDatabase.data
+			.sort((x, y) => SortUtils.sort(x, y, 'name'))
+			.forEach((customer) => {
+				result.push(
+					<Button
+						key={customer.id}
+						leftIcon="person"
+						style={{ width: '100%' }}
+						onClick={() => {
+							filterData.setDataProp('customerId', customer.id)
+						}}
+						variation={
+							filterData.data.customerId === customer.id ? 'primary' : 'sidebar'
+						}
+					>
+						{customer.name}
+					</Button>
+				)
+			})
 		return result
 	}, [customerDatabase.data, filterData.data])
 	const navigate = useNavigate()
@@ -53,14 +77,17 @@ export const BudgetsSidebar = () => {
 				onClick={() => {
 					formData.setData({
 						date: DateUtils.dateToString(new Date()),
-						title: 'Novo Orçamento',
 						status: 'pending',
 					})
-					navigate('/budgets/form')
+					navigate('/budgets/newForm')
 				}}
 			>
 				Novo Orçamento
 			</Button>
+			<DivColumn style={{ width: '100%' }}>
+				{form.quickSearch}
+				{form.date}
+			</DivColumn>
 			<ShowMore
 				label="Filtro por Cliente"
 				options={customerFilterCollection}

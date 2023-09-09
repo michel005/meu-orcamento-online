@@ -1,14 +1,29 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import style from './CustomerFormPage.module.scss'
 import { useData } from '../../../hooks/useData'
 import { Address, Customer } from '../../../types/Entities.type'
 import { useForm } from '../../../hooks/useForm'
 import { InputGroup } from '../../../components/input/InputGroup'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useDatabase } from '../../../hooks/useDatabase'
+import { ConfigContext } from '../../../contexts/ConfigContext'
+import { Button } from '../../../components/button/Button'
+import { DivColumn } from '../../../components/DivColumn'
+import { DivRow } from '../../../components/DivRow'
+import { useMessage } from '../../../hooks/useMessage'
+import { StickyButtonGroup } from '../../../components/button/StickyButtonGroup'
 
 export const CustomerFormPage = () => {
-	const formData = useData<Customer | null>('customerForm', null)
-	const fields = useForm<Customer>({
+	const { status } = useContext(ConfigContext)
+	const { showQuestion } = useMessage()
+	const { customerId } = useParams()
+	const customerDatabase = useDatabase<Customer>('customer')
+	const [loaded, setLoaded] = useState<boolean>(false)
+	const formData = useData<Customer>('customerForm', {
+		name: 'Novo Cliente',
+		active: true,
+	})
+	const { fields, validate } = useForm<Customer>({
 		definition: {
 			picture: {
 				type: 'file',
@@ -49,22 +64,35 @@ export const CustomerFormPage = () => {
 				label: 'Número do Documento',
 				type: 'text',
 			},
-			created: {
-				label: 'Cadastrado',
-				type: 'text',
-				disabled: true,
-			},
-			updated: {
-				label: 'Alterado',
-				type: 'text',
-				disabled: true,
-			},
 		},
 		value: formData.data,
 		onChange: formData.setData,
+		validate: (value, errors) => {
+			if (!value) {
+				value = {}
+			}
+			if (!value.name) {
+				errors.set('name', 'Nome não informado')
+			}
+			if (!value.email) {
+				errors.set('email', 'E-mail não informado')
+			}
+			if (!value.phone) {
+				errors.set('phone', 'Telefone não informado')
+			}
+			if (!value.personType) {
+				errors.set('personType', 'Tipo de pessoa não informado')
+			}
+			if (!value.documentType) {
+				errors.set('documentType', 'Tipo de documento não informado')
+			}
+			if (!value.documentNumber) {
+				errors.set('documentNumber', 'Número do documento não informado')
+			}
+		},
 	})
 
-	const addressFields = useForm<Address>({
+	const { fields: addressFields, validate: validateAddress } = useForm<Address>({
 		definition: {
 			streetName: {
 				label: 'Nome da Rua',
@@ -97,24 +125,49 @@ export const CustomerFormPage = () => {
 		},
 		value: (formData.data?.address || {}) as any | null,
 		onChange: (value) => formData.setDataProp('address', value),
+		validate: (value, errors) => {
+			if (!value) {
+				value = {}
+			}
+			if (!value.streetName) {
+				errors.set('streetName', 'Nome da rua não informado')
+			}
+			if (!value.streetNumber) {
+				errors.set('streetNumber', 'Número da rua não informado')
+			}
+			if (!value.streetName) {
+				errors.set('streetName', 'Nome da rua não informado')
+			}
+			if (!value.zipCode) {
+				errors.set('zipCode', 'CEP não informado')
+			}
+		},
 	})
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (!formData.data) {
-			navigate('/customers')
+		if (!loaded && status.database) {
+			setLoaded(true)
+			if (customerId) {
+				const find = customerDatabase.findById(parseFloat('0.' + customerId))
+				if (find) {
+					formData.setData(find)
+				}
+			}
 		}
-	}, [formData.data])
+	}, [loaded, status])
 
 	return (
 		<div className={style.customerFormPage}>
 			<InputGroup
+				icon="photo"
 				title="Foto do Cliente"
 				subTitle="Foto para ajudar a identificar este cliente na hora de criar um orçamento ou emitir um relatório."
 			>
 				{fields.picture}
 			</InputGroup>
 			<InputGroup
+				icon="person"
 				title="Dados Principais"
 				subTitle="Estas são as informações principais na hora de identificar seu cliente e também importantes para enviar propostas e se comunicar com ele."
 			>
@@ -125,6 +178,7 @@ export const CustomerFormPage = () => {
 				</div>
 			</InputGroup>
 			<InputGroup
+				icon="description"
 				title="Documento"
 				subTitle="Informe o documento do cliente, necessário para comprovar que este é de fato o cliente cadastrado."
 			>
@@ -135,6 +189,7 @@ export const CustomerFormPage = () => {
 				</div>
 			</InputGroup>
 			<InputGroup
+				icon="map"
 				title="Endereço"
 				subTitle="Coloque aqui onde este cliente esta localizado. Assim você sabe para qual endereço pode enviar encomendas ou usar para a geração de nota fiscal."
 			>
@@ -152,15 +207,57 @@ export const CustomerFormPage = () => {
 					{addressFields.country}
 				</div>
 			</InputGroup>
-			<InputGroup
-				title="Informações Complementares"
-				subTitle="Estas são informações registradas pelo sistema."
-			>
-				<div className={'row'}>
-					{fields.created}
-					{fields.updated}
-				</div>
-			</InputGroup>
+			<StickyButtonGroup>
+				<Button
+					leftIcon="save"
+					variation="primary"
+					onClick={() => {
+						const validate1 = validate(formData.data)
+						const validate2 = validateAddress(formData.data.address || null)
+						if (!validate1 || !validate2) {
+							return
+						}
+						if (!formData.data?.id) {
+							customerDatabase.create(formData.data)
+						} else {
+							customerDatabase.update(formData.data?.id, formData.data)
+						}
+						formData.setData(null)
+						navigate('/customers')
+					}}
+				>
+					Salvar
+				</Button>
+				{formData.data?.id && (
+					<Button
+						leftIcon="delete"
+						variation="secondary"
+						onClick={() => {
+							showQuestion(
+								'Deseja realmente excluir este cliente?',
+								'Esta operação não podera ser revertida.',
+								() => {
+									customerDatabase.remove(formData.data?.id as number)
+									formData.setData(null)
+									navigate('/customers')
+								}
+							)
+						}}
+					>
+						Excluir
+					</Button>
+				)}
+				<Button
+					leftIcon="keyboard_return"
+					variation="secondary"
+					onClick={() => {
+						formData.setData(null)
+						navigate('/customers')
+					}}
+				>
+					Voltar
+				</Button>
+			</StickyButtonGroup>
 		</div>
 	)
 }

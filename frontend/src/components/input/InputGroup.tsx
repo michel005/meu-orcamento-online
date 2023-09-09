@@ -1,15 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { InputGroupStyle } from './InputGroup.style'
 import { InputGroupType } from './InputGroup.type'
+import { Icon } from '../Icon'
 
-export const InputGroup = ({ title, subTitle, children }: InputGroupType) => {
+export const InputGroup = ({ icon, title, subTitle, showDefault, children }: InputGroupType) => {
+	const [show, setShow] = useState<boolean>(showDefault || true)
+
 	return (
-		<InputGroupStyle>
+		<InputGroupStyle data-show={show}>
 			<header>
-				<h3>{title}</h3>
-				{subTitle && <p>{subTitle}</p>}
+				<a
+					onClick={() => {
+						setShow((x) => !x)
+					}}
+				>
+					<h3>
+						{icon && <Icon icon={icon} />} {title}
+					</h3>
+				</a>
+				{subTitle && <div className="subTitle">{subTitle}</div>}
 			</header>
-			<section className="content">{children}</section>
+			{show && <section className="content">{children}</section>}
 		</InputGroupStyle>
 	)
 }

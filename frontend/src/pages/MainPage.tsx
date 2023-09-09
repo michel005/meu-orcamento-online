@@ -1,35 +1,41 @@
-import React, { useContext, useEffect, useMemo } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { MainPageStyle } from './MainPage.style'
 import { NavbarItems } from '../constants/NavbarItems'
-import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import { NavLink, Route, Routes } from 'react-router-dom'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { Message } from '../components/Message'
 import { useData } from '../hooks/useData'
 import { useMessage } from '../hooks/useMessage'
+import { NavbarItemsType } from '../constants/NavbarItems.type'
+
+const FakeElement = ({ item }: { item: NavbarItemsType }) => {
+	const { setSidebar } = useContext(ConfigContext)
+	const Element = item?.element
+	const Sidebar = item?.sidebar
+
+	useEffect(() => {
+		if (item?.sidebar) {
+			setSidebar(<Sidebar />)
+		} else {
+			setSidebar(null)
+		}
+		return () => {
+			setSidebar(null)
+		}
+	}, [item])
+
+	return <Element />
+}
 
 export const MainPage = () => {
 	const mainData = useData('main', {
 		expand: true,
 	})
-	const { message, modal } = useContext(ConfigContext)
-	const location = useLocation()
+	const configContext = useContext(ConfigContext)
 	const { showQuestion } = useMessage()
 
-	const currentRoute = useMemo(
-		() => NavbarItems.find((x) => x.link === location.pathname),
-		[location]
-	)
-
-	useEffect(() => {
-		if (currentRoute && currentRoute?.title) {
-			document.title = currentRoute.title
-		} else {
-			document.title = 'Meu Bazar Online'
-		}
-	}, [currentRoute])
-
 	return (
-		<MainPageStyle data-hide-menu={!currentRoute?.sidebar || !mainData.data?.expand}>
+		<MainPageStyle data-hide-menu={!configContext.sidebar || !mainData.data?.expand}>
 			<section>
 				<nav className="options">
 					{NavbarItems.filter((item) => item.context.includes('navbar')).map(
@@ -51,29 +57,17 @@ export const MainPage = () => {
 						}}
 					/>
 				</nav>
-				<nav className="subOptions">
-					<header>
-						<h2>{currentRoute?.title}</h2>
-						{currentRoute?.subTitle && <small>{currentRoute?.subTitle}</small>}
-					</header>
-					{currentRoute?.sidebar}
-				</nav>
+				<nav className="subOptions">{configContext.sidebar}</nav>
 			</section>
 			<main>
 				<section>
-					{(!currentRoute?.sidebar || !mainData.data?.expand) && (
-						<header>
-							<h2>{currentRoute?.title}</h2>
-							{currentRoute?.subTitle && <small>{currentRoute?.subTitle}</small>}
-						</header>
-					)}
 					<Routes>
 						{NavbarItems.map((item, itemKey) => {
 							return (
 								<Route
 									key={itemKey}
 									path={item.link}
-									element={item?.element || <></>}
+									element={<FakeElement item={item} />}
 								/>
 							)
 						})}
@@ -81,7 +75,7 @@ export const MainPage = () => {
 					</Routes>
 				</section>
 			</main>
-			{message.map((messageContent, messageContentIndex) => (
+			{configContext.message.map((messageContent, messageContentIndex) => (
 				<Message
 					key={messageContentIndex}
 					index={messageContentIndex}

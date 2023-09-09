@@ -6,11 +6,12 @@ import { Customer } from '../../types/Entities.type'
 import { useForm } from '../../hooks/useForm'
 import { CustomerFilterType } from './CustomersPage'
 import { ShowMore } from '../../components/ShowMore'
+import { DivColumn } from '../../components/DivColumn'
 
 export const CustomersSidebar = () => {
 	const formData = useData<Customer>('customerForm')
 	const filterData = useData<CustomerFilterType>('customerFilter', {})
-	const fields = useForm<CustomerFilterType>({
+	const { fields } = useForm<CustomerFilterType>({
 		definition: {
 			quickSearch: {
 				label: 'Filtro Rápido',
@@ -24,6 +25,7 @@ export const CustomersSidebar = () => {
 					['PF', 'Pessoa Física'],
 					['PJ', 'Pessoa Jurídica'],
 				],
+				nullableLabel: 'Todos',
 				idModifier: (row) => row[0],
 				labelModifier: (row) => row[1],
 				valueModifier: (row) => row[0],
@@ -44,12 +46,15 @@ export const CustomersSidebar = () => {
 						name: 'Novo Cliente',
 						active: true,
 					})
-					navigate('/customers/form')
+					navigate('/customers/newForm')
 				}}
 			>
 				Novo Cliente
 			</Button>
-			<div style={{ width: '100%' }}>{fields.quickSearch}</div>
+			<DivColumn style={{ width: '100%' }}>
+				{fields.quickSearch}
+				{fields.personType}
+			</DivColumn>
 			<ShowMore
 				label="Filtro por Tipo de Pessoa"
 				options={[

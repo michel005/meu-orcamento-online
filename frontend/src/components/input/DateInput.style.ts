@@ -34,6 +34,10 @@ export const DateInputStyle = styled.div`
 				cursor: not-allowed;
 			}
 
+			&::placeholder {
+				color: #ccc;
+			}
+
 			&::-webkit-calendar-picker-indicator {
 				display: none;
 			}
@@ -46,7 +50,7 @@ export const DateInputStyle = styled.div`
 			border: none;
 			border-inline-start: 1px solid #aaa;
 			border-radius: 0 var(--border-radius) var(--border-radius) 0;
-			color: #999;
+			color: #999 !important;
 			cursor: pointer;
 			display: flex;
 			flex-direction: row;

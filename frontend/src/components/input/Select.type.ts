@@ -1,5 +1,7 @@
 export type SelectType = {
 	error?: string | undefined
+	nullable?: boolean | undefined
+	nullableLabel?: string | undefined
 	label?: string | undefined
 	value: any | null
 	onChange: (v: any | null) => void

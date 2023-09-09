@@ -32,6 +32,8 @@ export type ConfigContextType = {
 			[key: string]: any
 		}>
 	>
+	sidebar: any | null
+	setSidebar: Dispatch<SetStateAction<any | null>>
 	message: any[]
 	setMessage: Dispatch<SetStateAction<any[]>>
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavbarItemsType } from './NavbarItems.type'
+import { NavbarItemsType, NavbarItemsTypeList } from './NavbarItems.type'
 import { BudgetsPage } from '../pages/budgets/BudgetsPage'
 import { BudgetsSidebar } from '../pages/budgets/Budgets.sidebar'
 import { CustomersPage } from '../pages/customers/CustomersPage'
@@ -11,14 +11,14 @@ import { CustomerFormPageSidebar } from '../pages/customers/form/CustomerFormPag
 import { BudgetFormPage } from '../pages/budgets/form/BudgetFormPage'
 import { BudgetFormPageSidebar } from '../pages/budgets/form/BudgetFormPage.sidebar'
 
-export const NavbarItems: NavbarItemsType = [
+export const NavbarItems: NavbarItemsTypeList = [
 	{
 		title: 'Dashboard',
 		icon: 'dashboard',
 		subTitle: 'Visão geral e estatísticas',
 		link: '/',
-		element: <DashboardPage />,
-		sidebar: <DashboardSidebar />,
+		element: DashboardPage,
+		sidebar: DashboardSidebar,
 		context: ['navbar'],
 	},
 	{
@@ -26,16 +26,24 @@ export const NavbarItems: NavbarItemsType = [
 		icon: 'person',
 		subTitle: 'Gerencie seus clientes',
 		link: '/customers',
-		element: <CustomersPage />,
-		sidebar: <CustomersSidebar />,
+		element: CustomersPage,
+		sidebar: CustomersSidebar,
 		context: ['navbar'],
 	},
 	{
-		title: 'Formulário de Cliente',
+		title: 'Cadastro de Cliente',
 		icon: 'person_add',
-		link: '/customers/form',
-		element: <CustomerFormPage />,
-		sidebar: <CustomerFormPageSidebar />,
+		link: '/customers/newForm',
+		element: CustomerFormPage,
+		sidebar: CustomerFormPageSidebar,
+		context: [],
+	},
+	{
+		title: 'Alteração de Cliente',
+		icon: 'person_check',
+		link: '/customers/form/:customerId',
+		element: CustomerFormPage,
+		sidebar: CustomerFormPageSidebar,
 		context: [],
 	},
 	{
@@ -43,16 +51,24 @@ export const NavbarItems: NavbarItemsType = [
 		icon: 'description',
 		subTitle: 'Gerencie seus orçamentos',
 		link: '/budgets',
-		element: <BudgetsPage />,
-		sidebar: <BudgetsSidebar />,
+		element: BudgetsPage,
+		sidebar: BudgetsSidebar,
 		context: ['navbar'],
 	},
 	{
-		title: 'Formulário de Orçamento',
+		title: 'Cadastro de Orçamento',
 		icon: 'description',
-		link: '/budgets/form',
-		element: <BudgetFormPage />,
-		sidebar: <BudgetFormPageSidebar />,
+		link: '/budgets/newForm',
+		element: BudgetFormPage,
+		sidebar: BudgetFormPageSidebar,
+		context: [],
+	},
+	{
+		title: 'Alteração de Orçamento',
+		icon: 'description',
+		link: '/budgets/form/:budgetId',
+		element: BudgetFormPage,
+		sidebar: BudgetFormPageSidebar,
 		context: [],
 	},
 	{
@@ -66,7 +82,7 @@ export const NavbarItems: NavbarItemsType = [
 	},
 	{
 		title: 'Relatórios',
-		icon: 'insert_chart_outlined',
+		icon: 'insert_chart',
 		subTitle: 'Emita relatórios de desempenho',
 		link: '/reports',
 		element: <></>,
@@ -84,7 +100,7 @@ export const NavbarItems: NavbarItemsType = [
 	},
 	{
 		title: 'Ajuda e Suporte',
-		icon: 'help_outline',
+		icon: 'help',
 		subTitle: 'Recursos de suporte',
 		link: '/help',
 		element: <></>,

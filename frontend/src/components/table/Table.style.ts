@@ -1,101 +1,141 @@
 import styled from 'styled-components'
 
-export const TableStyle = styled.table`
-	border-collapse: collapse;
-	width: 100%;
+export const TableStyle = styled.div`
+	background-color: #fff;
+	box-shadow: #ccc 0 0 4px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 14px;
 
-	thead {
-		border-bottom: 1px solid #ccc;
+	table {
+		border-collapse: collapse;
+		margin-block-end: auto;
+		width: 100%;
 
-		tr {
-			th {
-				font-size: 18px;
-				font-weight: bolder;
-				padding: 10px 14px;
-				text-align: left;
+		thead {
+			background-color: #222;
+			border-radius: var(--border-radius) var(--border-radius) 0 0;
+			inset-block-start: 0;
+			position: sticky;
+			z-index: 10;
 
-				&[data-alignment='left'] {
-					text-align: left;
+			tr {
+				border-bottom: 1px solid #ccc;
 
-					div {
-						justify-content: flex-start;
+				th {
+					color: #fff;
+					font-size: 16px;
+					font-weight: bolder;
+					padding: 14px 21px;
+
+					a {
+						color: #fff;
+						font-size: 16px;
 					}
-				}
 
-				&[data-alignment='center'] {
-					text-align: center;
+					&[data-alignment='left'] {
+						text-align: left;
 
-					div {
-						justify-content: center;
+						div {
+							justify-content: flex-start;
+						}
 					}
-				}
 
-				&[data-alignment='right'] {
-					text-align: right;
+					&[data-alignment='center'] {
+						text-align: center;
 
-					div {
-						justify-content: flex-end;
+						div {
+							justify-content: center;
+						}
 					}
-				}
 
-				a {
-					color: #333;
+					&[data-alignment='right'] {
+						text-align: right;
+
+						div {
+							justify-content: flex-end;
+						}
+					}
 				}
 			}
 		}
-	}
 
-	tbody {
-		tr {
-			transition: all 0.25s;
-			user-select: none;
+		tbody {
+			position: relative;
+			height: 100%;
 
-			td {
-				color: #333;
-				font-size: 18px;
-				padding: 10px 14px;
-				text-align: left;
+			tr {
+				transition: all 0.25s;
+				user-select: none;
 
-				img {
-					align-self: center;
-					border-radius: var(--border-radius);
-					box-shadow: #ccc 0 0 4px;
-					height: 42px;
-					margin-inline-start: -4px;
-					object-fit: cover;
-					width: 42px;
-				}
-
-				&[data-alignment='left'] {
+				td {
+					color: #333;
+					font-size: 16px;
+					padding: 14px 21px;
 					text-align: left;
+
+					img {
+						align-self: center;
+						border-radius: var(--border-radius);
+						box-shadow: #ccc 0 0 4px;
+						height: 42px;
+						margin-inline-start: -4px;
+						object-fit: cover;
+						width: 42px;
+					}
+
+					&[data-alignment='left'] {
+						text-align: left;
+					}
+
+					&[data-alignment='center'] {
+						text-align: center;
+					}
+
+					&[data-alignment='right'] {
+						text-align: right;
+					}
 				}
 
-				&[data-alignment='center'] {
-					text-align: center;
-				}
-
-				&[data-alignment='right'] {
-					text-align: right;
-				}
-			}
-
-			&:hover {
-				background-color: #f4f4f4;
-			}
-
-			&[data-not-found='true'] {
 				&:hover {
-					background-color: transparent;
+					background-color: #f4f4f4;
+
+					&:nth-child(even) {
+						background-color: #f4f4f4;
+					}
+				}
+
+				&:nth-child(even) {
+					background-color: #f8f8f8;
+				}
+
+				&[data-not-found='true'] {
+					&:hover {
+						background-color: transparent;
+					}
 				}
 			}
 		}
 	}
 
 	.pagination {
-		padding-block-start: 21px;
+		align-self: stretch;
+		background-color: #fff;
+		display: flex;
+		flex-direction: row;
+		inset-block-end: 0;
+		justify-content: flex-end;
+		padding-block: 14px;
+		position: sticky;
+		width: 100%;
+		z-index: 10;
 
-		div {
-			margin-inline: auto;
+		> span {
+			align-self: center;
+			color: #888;
+			flex-grow: 1;
+			margin-inline-start: 14px;
 		}
 	}
 `

@@ -2,11 +2,9 @@ import React from 'react'
 import style from './BudgetsPage.module.scss'
 import budgetStatus from '../../copyDeck/BudgetStatus.json'
 import { Table } from '../../components/table/Table'
-import { useForm } from '../../hooks/useForm'
 import { Budget, Customer } from '../../types/Entities.type'
 import { useData } from '../../hooks/useData'
 import { useDatabase } from '../../hooks/useDatabase'
-import { DateUtils } from '../../utils/DateUtils'
 import { useNavigate } from 'react-router-dom'
 
 export type BudgetFilterType = {
@@ -18,31 +16,11 @@ export type BudgetFilterType = {
 export const BudgetsPage = () => {
 	const databaseBudget = useDatabase<Budget>('budget')
 	const databaseCustomer = useDatabase<Customer>('customer')
-	const formData = useData<Budget>('budgetForm')
-	const filterData = useData<BudgetFilterType>('budgetFilter', {})
-	const form = useForm<BudgetFilterType>({
-		definition: {
-			date: {
-				label: 'Filtro por Data',
-				type: 'date',
-			},
-			quickSearch: {
-				label: 'Filtro Rápido',
-				placeholder: 'Produto, título ou qualquer parte do orçamento',
-				type: 'text',
-			},
-		},
-		value: filterData.data,
-		onChange: filterData.setData,
-	})
+	const filterData = useData<BudgetFilterType>('budgetFilter')
 	const navigate = useNavigate()
 
 	return (
 		<div className={style.budgetsPage}>
-			<div className={style.filters}>
-				{form.date}
-				<div className={style.fullWidth}>{form.quickSearch}</div>
-			</div>
 			<Table
 				header={{
 					date: {
@@ -54,8 +32,7 @@ export const BudgetsPage = () => {
 						valueModifier: (row) => (
 							<a
 								onClick={() => {
-									formData.setData(row)
-									navigate('/budgets/form')
+									navigate(`/budgets/form/${row.id.toString().split('.')[1]}`)
 								}}
 							>
 								{row.title}
@@ -87,15 +64,15 @@ export const BudgetsPage = () => {
 				value={databaseBudget.data
 					.filter(
 						(budget) =>
-							!filterData.data.customerId ||
+							!filterData.data?.customerId ||
 							budget.customerId === filterData.data.customerId
 					)
 					.filter(
-						(budget) => !filterData.data.date || budget.date === filterData.data.date
+						(budget) => !filterData.data?.date || budget.date === filterData.data.date
 					)
 					.filter(
 						(budget) =>
-							!filterData.data.quickSearch ||
+							!filterData.data?.quickSearch ||
 							JSON.stringify(budget).indexOf(filterData.data.quickSearch) !== -1
 					)}
 			/>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import style from './BudgetFormPage.module.scss'
 import budgetStatus from '../../../copyDeck/BudgetStatus.json'
 import { useData } from '../../../hooks/useData'
@@ -6,22 +6,37 @@ import { Budget, Customer, Service } from '../../../types/Entities.type'
 import { useForm } from '../../../hooks/useForm'
 import { InputGroup } from '../../../components/input/InputGroup'
 import { useDatabase } from '../../../hooks/useDatabase'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { DivRow } from '../../../components/DivRow'
 import { DivColumn } from '../../../components/DivColumn'
 import { Table } from '../../../components/table/Table'
 import { BudgetFormServiceModal } from './BudgetFormServiceModal'
 import { Label } from '../../../components/Label.style'
+import { ButtonGroup } from '../../../components/button/ButtonGroup'
+import { Button } from '../../../components/button/Button'
+import { ConfigContext } from '../../../contexts/ConfigContext'
+import { DateUtils } from '../../../utils/DateUtils'
+import { StickyButtonGroup } from '../../../components/button/StickyButtonGroup'
+import { useMessage } from '../../../hooks/useMessage'
 
 export const BudgetFormPage = () => {
+	const { status } = useContext(ConfigContext)
+	const { showQuestion } = useMessage()
+	const { budgetId } = useParams()
+	const [loaded, setLoaded] = useState<boolean>(false)
 	const formModalData = useData<Service | null>('budgetServiceModal', null)
-	const formData = useData<Budget | null>('budgetForm', null)
+	const formData = useData<Budget>('budgetForm', {
+		date: DateUtils.dateToString(new Date()),
+		status: 'pending',
+	})
+	const databaseBudget = useDatabase<Budget>('budget')
 	const databaseCustomer = useDatabase<Customer>('customer')
-	const fields = useForm<Budget>({
+	const { fields, validate } = useForm<Budget>({
 		definition: {
 			customerId: {
 				type: 'select',
 				options: databaseCustomer.data,
+				nullableLabel: 'Nenhum cliente selecionado',
 				idModifier: (row) => row.id,
 				valueModifier: (row) => row.id,
 				labelModifier: (row) => row.name,
@@ -35,7 +50,7 @@ export const BudgetFormPage = () => {
 				type: 'text',
 			},
 			description: {
-				label: 'Título',
+				label: 'Descrição',
 				type: 'text',
 				textArea: true,
 			},
@@ -47,37 +62,51 @@ export const BudgetFormPage = () => {
 				valueModifier: (row) => row,
 				labelModifier: (row) => budgetStatus[row as keyof typeof budgetStatus],
 			},
-			created: {
-				label: 'Cadastrado',
-				type: 'text',
-				disabled: true,
-			},
-			updated: {
-				label: 'Alterado',
-				type: 'text',
-				disabled: true,
-			},
 		},
 		value: formData.data,
 		onChange: formData.setData,
+		validate: (value, errors) => {
+			if (!value) {
+				value = {}
+			}
+			if (!value.date) {
+				errors.set('date', 'Data não informada')
+			}
+			if (!value.title) {
+				errors.set('title', 'Título não informado')
+			}
+			if (!value.description) {
+				errors.set('description', 'Descrição não informada')
+			}
+		},
 	})
-	const navigate = useNavigate()
 	const customer = formData.data?.customerId
 		? databaseCustomer.findById(formData.data?.customerId)
 		: undefined
 	const address = Object.keys(customer?.address || {}).map(
 		(x) => (customer?.address as any)?.[x] || ''
 	)
+	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (!formData.data) {
-			navigate('/budgets')
+		if (!loaded && status.database) {
+			setLoaded(true)
+			if (budgetId) {
+				const find = databaseBudget.findById(parseFloat('0.' + budgetId))
+				if (find) {
+					formData.setData(find)
+				}
+			}
 		}
-	}, [formData.data])
+	}, [loaded, status])
 
 	return (
 		<div className={style.budgetFormPage}>
-			<InputGroup title="Cliente" subTitle="Pessoa no qual esse orçamento sera direcionado.">
+			<InputGroup
+				icon="person"
+				title="Cliente"
+				subTitle="Pessoa no qual esse orçamento sera direcionado."
+			>
 				{fields.customerId}
 				{customer && (
 					<DivRow className={style.customerInfo}>
@@ -98,6 +127,7 @@ export const BudgetFormPage = () => {
 				)}
 			</InputGroup>
 			<InputGroup
+				icon="description"
 				title="Dados Principais"
 				subTitle="Estas são as informações principais na hora de identificar seu orçamento."
 			>
@@ -107,8 +137,23 @@ export const BudgetFormPage = () => {
 				{fields.status}
 			</InputGroup>
 			<InputGroup
+				icon="list_alt"
 				title="Produtos e Serviços"
-				subTitle="Todos os produtos e serviços inclusos neste orçamento."
+				subTitle={
+					<DivColumn>
+						<span>Todos os produtos e serviços inclusos neste orçamento.</span>
+						<ButtonGroup>
+							<Button
+								leftIcon="add"
+								onClick={() => {
+									formModalData.setData({})
+								}}
+							>
+								Novo Produto / Serviço
+							</Button>
+						</ButtonGroup>
+					</DivColumn>
+				}
 			>
 				<Table
 					header={{
@@ -140,15 +185,52 @@ export const BudgetFormPage = () => {
 					value={formData.data?.services || []}
 				/>
 			</InputGroup>
-			<InputGroup
-				title="Informações Complementares"
-				subTitle="Estas são informações registradas pelo sistema."
-			>
-				<div className={'row'}>
-					{fields.created}
-					{fields.updated}
-				</div>
-			</InputGroup>
+			<StickyButtonGroup>
+				<Button
+					leftIcon="save"
+					variation="primary"
+					onClick={() => {
+						if (!formData.data?.id) {
+							databaseBudget.create(formData.data)
+						} else {
+							databaseBudget.update(formData.data?.id, formData.data)
+						}
+						formData.setData(null)
+						navigate('/budgets')
+					}}
+				>
+					Salvar
+				</Button>
+				{formData.data?.id && (
+					<Button
+						leftIcon="delete"
+						variation="secondary"
+						onClick={() => {
+							showQuestion(
+								'Deseja realmente excluir este orçamento?',
+								'Esta operação não podera ser revertida.',
+								() => {
+									databaseBudget.remove(formData.data?.id as number)
+									formData.setData(null)
+									navigate('/budgets')
+								}
+							)
+						}}
+					>
+						Excluir
+					</Button>
+				)}
+				<Button
+					leftIcon="keyboard_return"
+					variation="secondary"
+					onClick={() => {
+						formData.setData(null)
+						navigate('/budgets')
+					}}
+				>
+					Voltar
+				</Button>
+			</StickyButtonGroup>
 			{formModalData.data && <BudgetFormServiceModal />}
 		</div>
 	)

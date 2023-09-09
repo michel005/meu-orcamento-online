@@ -39,7 +39,9 @@ export const CustomersPage = () => {
 									<a
 										onClick={() => {
 											formData.setData(row)
-											navigate('/customers/form')
+											navigate(
+												`/customers/form/${row.id.toString().split('.')[1]}`
+											)
 										}}
 									>
 										{row.name || 'Sem nome'}
@@ -62,18 +64,6 @@ export const CustomersPage = () => {
 						valueModifier: (row) => (row.active ? 'Sim' : 'Não'),
 						width: '100px',
 					},
-					// address: {
-					// 	label: 'Endereço',
-					// 	valueModifier: (row: Customer) => {
-					// 		if (!row?.address) {
-					// 			return <></>
-					// 		}
-					// 		const address = Object.keys(row?.address || {}).map(
-					// 			(x) => (row?.address as any)?.[x] || ''
-					// 		)
-					// 		return <>{address.join(', ')}</>
-					// 	},
-					// },
 				}}
 				value={database.data
 					.filter(

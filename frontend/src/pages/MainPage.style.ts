@@ -151,27 +151,14 @@ export const MainPageStyle = styled.main`
 		& > section {
 			display: flex;
 			flex-direction: column;
+			flex-grow: 1;
 			gap: 14px;
 			transition: alll 0.25s;
 			z-index: 100;
 
-			header {
-				display: flex;
-				flex-direction: column;
-				gap: 4px;
-				padding: 14px 14px 0;
-
-				h2 {
-					padding-block-start: 4px;
-				}
-
-				small {
-					color: #999;
-				}
-			}
-
 			& > * {
 				animation: fadeOut 0.5s linear;
+				flex-grow: 1;
 				transition: alll 0.25s;
 			}
 		}

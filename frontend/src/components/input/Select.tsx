@@ -15,6 +15,8 @@ export const Select = ({
 	value,
 	disabled,
 	loading,
+	nullable,
+	nullableLabel,
 }: SelectType) => {
 	const randomId = Math.random().toString()
 
@@ -37,7 +39,7 @@ export const Select = ({
 					}}
 					placeholder={placeholder}
 				>
-					<option value={'null'}></option>
+					{nullable && <option value={'null'}>{nullableLabel}</option>}
 					{options.map((option, optionKey) => {
 						return (
 							<option key={optionKey} value={idModifier(option)}>

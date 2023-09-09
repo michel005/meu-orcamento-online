@@ -12,9 +12,12 @@ export const ConfigContext = createContext<ConfigContextType>({
 	setMessage: () => {},
 	database: {},
 	setDatabase: () => {},
+	sidebar: null,
+	setSidebar: () => {},
 })
 
 export const ConfigProvider = ({ children }: { children: any }) => {
+	const [sidebar, setSidebar] = useState<any | null>(null)
 	const [data, setData] = useState<{
 		[key: string]: any
 	}>({})
@@ -81,6 +84,8 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 				setDatabase,
 				message,
 				setMessage,
+				sidebar,
+				setSidebar,
 			}}
 		>
 			{children}

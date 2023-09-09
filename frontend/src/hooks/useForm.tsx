@@ -9,6 +9,7 @@ import { Label } from '../components/Label.style'
 import { FileInput } from '../components/input/FileInput'
 import { Select } from '../components/input/Select'
 import { Number } from '../components/input/Number'
+import { useValidation } from './useValidation'
 
 export const useForm = <T,>({
 	definition,
@@ -16,8 +17,9 @@ export const useForm = <T,>({
 	value,
 	loading,
 	disabled,
-	errors,
+	validate,
 }: UseFormType<T>) => {
+	const { errors, validate: executeValidation } = useValidation<T>(validate || (() => {}))
 	const fields = useMemo(() => {
 		const allFields: keyof T = {} as any
 		Object.keys(definition).forEach((field) => {
@@ -72,6 +74,8 @@ export const useForm = <T,>({
 						labelModifier={fieldDefinition.labelModifier}
 						valueModifier={fieldDefinition.valueModifier}
 						placeholder={fieldDefinition.placeholder}
+						nullable={fieldDefinition.nullable || true}
+						nullableLabel={fieldDefinition.nullableLabel}
 						value={value?.[field as keyof typeof value] as string}
 						onChange={(innerValue) => {
 							if (value) {
@@ -192,5 +196,8 @@ export const useForm = <T,>({
 		})
 		return allFields as T
 	}, [definition, onChange, value])
-	return fields as T
+	return { fields, validate: executeValidation } as {
+		fields: T
+		validate: (value: T | null) => boolean
+	}
 }

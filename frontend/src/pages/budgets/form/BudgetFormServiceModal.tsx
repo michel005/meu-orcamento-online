@@ -9,7 +9,7 @@ import { Button } from '../../../components/button/Button'
 export const BudgetFormServiceModal = () => {
 	const formModalData = useData<Service | null>('budgetServiceModal', null)
 	const formData = useData<Budget | null>('budgetForm', null)
-	const form = useForm<Service>({
+	const { fields: form } = useForm<Service>({
 		definition: {
 			picture: {
 				label: 'Imagem',

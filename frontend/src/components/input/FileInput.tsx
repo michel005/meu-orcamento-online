@@ -1,8 +1,10 @@
 import React, { CSSProperties, useRef, useState } from 'react'
+import style from './FileInput.module.scss'
 import { Label } from '../Label.style'
 import { FileInputStyle } from './FileInput.style'
 import { FileUtils } from '../../utils/FileUtils'
 import { FileInputType } from './FileInput.type'
+import { Button } from '../button/Button'
 
 export const FileInput = ({
 	error,
@@ -36,35 +38,27 @@ export const FileInput = ({
 	}
 
 	return (
-		<FileInputStyle
+		<div
+			className={style.fileInput}
 			data-loading={loading}
 			data-error={!!error}
 			data-disabled={disabled}
-			style={
-				{
-					'--value': `url(${value})`,
-				} as CSSProperties
-			}
 		>
 			{label && <Label>{label}</Label>}
-			<section
-				onDrop={handleDrop}
-				onDragLeave={() => {
-					setShowDragHint(false)
-				}}
-				onDragOver={handleDragOver}
-			>
-				{showDragHint && (
-					<div>
-						<span>Solte o arquivo aqui</span>
-					</div>
-				)}
-				{!showDragHint && (
-					<div>
-						{image && value && value && <img src={value} />}
-						{!value && (
-							<span>
-								Nenhum arquivo selecionado.{' '}
+			{!value && (
+				<div
+					className={style.dropFileHere}
+					onDrop={handleDrop}
+					onDragLeave={() => {
+						setShowDragHint(false)
+					}}
+					onDragOver={handleDragOver}
+				>
+					{showDragHint && <span>Solte o arquivo aqui</span>}
+					{!showDragHint && (
+						<div>
+							<p>Nenhum arquivo selecionado.</p>
+							<p>
 								<a
 									onClick={() => {
 										ref.current.showPicker()
@@ -73,21 +67,31 @@ export const FileInput = ({
 									Selecione um arquivo
 								</a>{' '}
 								ou arraste ele até aqui
-							</span>
-						)}
-					</div>
-				)}
-				{value && (
-					<button
-						data-icon="close"
+							</p>
+						</div>
+					)}
+				</div>
+			)}
+			{value && (
+				<div
+					className={style.imageContent}
+					style={
+						{
+							'--value': `url(${value})`,
+						} as CSSProperties
+					}
+				>
+					<img src={value} />
+					<Button
+						leftIcon="close"
 						onClick={() => {
 							onChange(null)
 						}}
 					>
 						<span>Remover</span>
-					</button>
-				)}
-			</section>
+					</Button>
+				</div>
+			)}
 			{error && <span>{error}</span>}
 			<input
 				ref={ref}
@@ -104,6 +108,6 @@ export const FileInput = ({
 				}}
 				placeholder={placeholder}
 			/>
-		</FileInputStyle>
+		</div>
 	)
 }

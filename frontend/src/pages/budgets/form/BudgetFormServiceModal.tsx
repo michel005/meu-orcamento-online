@@ -5,11 +5,12 @@ import { Budget, Service } from '../../../types/Entities.type'
 import { useForm } from '../../../hooks/useForm'
 import { ButtonGroup } from '../../../components/button/ButtonGroup'
 import { Button } from '../../../components/button/Button'
+import { DivRow } from '../../../components/DivRow'
 
 export const BudgetFormServiceModal = () => {
 	const formModalData = useData<Service | null>('budgetServiceModal', null)
 	const formData = useData<Budget | null>('budgetForm', null)
-	const { fields: form } = useForm<Service>({
+	const { fields: form, validate } = useForm<Service>({
 		definition: {
 			picture: {
 				label: 'Imagem',
@@ -25,13 +26,18 @@ export const BudgetFormServiceModal = () => {
 				type: 'text',
 				textArea: true,
 			},
+			amount: {
+				label: 'Quantidade',
+				type: 'number',
+			},
 			price: {
 				label: 'Preço',
-				type: 'number',
+				type: 'currency',
 			},
 		},
 		value: formModalData.data,
 		onChange: formModalData.setData,
+		validate: (value, errors) => {},
 	})
 
 	return (
@@ -44,7 +50,10 @@ export const BudgetFormServiceModal = () => {
 			{form.picture}
 			{form.name}
 			{form.description}
-			{form.price}
+			<DivRow>
+				{form.amount}
+				{form.price}
+			</DivRow>
 			<ButtonGroup align="right">
 				{(formModalData.data as any).id !== undefined && (
 					<Button

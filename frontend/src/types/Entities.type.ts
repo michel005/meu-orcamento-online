@@ -27,6 +27,7 @@ export type Service = {
 	picture?: string
 	name?: string
 	description?: string
+	amount?: number
 	price?: number
 }
 

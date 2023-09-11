@@ -71,9 +71,14 @@ export const BudgetsSidebar = () => {
 
 	return (
 		<div className={style.budgetSidebar}>
+			<DivColumn style={{ gap: '4px' }}>
+				<h1>Orçamentos</h1>
+				<p>Gerencie seus orçamentos</p>
+			</DivColumn>
+			<hr />
 			<Button
 				leftIcon="add"
-				variation="sidebar"
+				style={{ width: '100%' }}
 				onClick={() => {
 					formData.setData({
 						date: DateUtils.dateToString(new Date()),
@@ -91,7 +96,7 @@ export const BudgetsSidebar = () => {
 			<ShowMore
 				label="Filtro por Cliente"
 				options={customerFilterCollection}
-				variation="ghost"
+				variation="sidebar"
 				visibleItems={3}
 			/>
 			{customerFilterCollection.length === 0 && (

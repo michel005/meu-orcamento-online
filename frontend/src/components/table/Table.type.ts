@@ -9,9 +9,5 @@ export type TableType = {
 			width?: string
 		}
 	}
-	page?: {
-		pageSize?: number
-		currentPage: number
-	}
 	value: any[]
 }

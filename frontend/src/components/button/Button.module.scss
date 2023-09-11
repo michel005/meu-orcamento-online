@@ -99,16 +99,16 @@
 	}
 
 	&[data-variation='sidebar'] {
-		background-color: rgba(255, 255, 255, 0.2);
-		color: #fffc;
+		background-color: rgba(0, 0, 0, 0.1);
+		color: #111;
 		width: 100%;
 
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.3);
+			background-color: rgba(0, 0, 0, 0.15);
 		}
 
 		&:active {
-			background-color: rgba(255, 255, 255, 0.2);
+			background-color: rgba(0, 0, 0, 0.1);
 		}
 	}
 }

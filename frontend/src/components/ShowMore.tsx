@@ -22,6 +22,7 @@ export const ShowMore = ({
 				})}
 			{options.length > visibleItems && (
 				<Button
+					className="showMoreLessButton"
 					leftIcon={showMore ? 'expand_less' : 'expand_more'}
 					variation={variation}
 					onClick={() => {

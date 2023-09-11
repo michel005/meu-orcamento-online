@@ -3,7 +3,7 @@ import { TextStyle } from './Text.style'
 import { Label } from '../Label.style'
 import { NumberType } from './Number.type'
 
-export const Number = ({
+export const CurrencyInput = ({
 	error,
 	label,
 	onChange,
@@ -11,7 +11,6 @@ export const Number = ({
 	value,
 	disabled,
 	loading,
-	step,
 }: NumberType) => {
 	const randomId = Math.random().toString()
 
@@ -25,11 +24,11 @@ export const Number = ({
 				disabled={disabled}
 				id={randomId}
 				type="number"
-				step={step || 1}
-				value={value || ''}
+				step={0.01}
+				value={value ? value / 100 : ''}
 				onChange={(e) => {
 					try {
-						onChange(parseFloat(e.target.value))
+						onChange(parseFloat(e.target.value) * 100)
 					} catch (_) {
 						onChange(null)
 					}

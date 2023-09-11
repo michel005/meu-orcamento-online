@@ -23,8 +23,9 @@ export const BudgetsPage = () => {
 		<div className={style.budgetsPage}>
 			<Table
 				header={{
-					date: {
+					created: {
 						label: 'Data',
+						valueModifier: (row) => row.created.replace(',', '').split(' ')[0],
 						width: '150px',
 					},
 					title: {
@@ -49,7 +50,7 @@ export const BudgetsPage = () => {
 						type: 'currency',
 						valueModifier: (row) =>
 							(row.services || [])
-								.map((x: any) => x.price)
+								.map((x: any) => x.amount * x.price)
 								.reduce((x: number, y: number) => x + y, 0),
 						width: '200px',
 					},
@@ -68,7 +69,8 @@ export const BudgetsPage = () => {
 							budget.customerId === filterData.data.customerId
 					)
 					.filter(
-						(budget) => !filterData.data?.date || budget.date === filterData.data.date
+						(budget) =>
+							!filterData.data?.date || budget.created === filterData.data.date
 					)
 					.filter(
 						(budget) =>

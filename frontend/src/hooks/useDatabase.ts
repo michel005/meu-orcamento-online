@@ -18,21 +18,23 @@ export const useDatabase = <T>(key: string) => {
 				prevState[key].push({
 					id: Math.random(),
 					...value,
-					created: DateUtils.dateTimeToString(new Date()),
+					created: DateUtils.dateToString(new Date()),
 				})
 				return structuredClone(prevState)
 			})
 		},
 		update: (id: number, value: T) => {
+			console.log(value)
 			setDatabase((prevState) => {
 				const index = prevState[key].findIndex((x: any) => x.id === id)
+				console.log(prevState[key][index])
 				prevState[key][index] = {
 					id: Math.random(),
 					...value,
-					updated: DateUtils.dateTimeToString(new Date()),
+					updated: DateUtils.dateToString(new Date()),
 				}
 				if (!prevState[key][index]?.created) {
-					prevState[key][index].created = DateUtils.dateTimeToString(new Date())
+					prevState[key][index].created = DateUtils.dateToString(new Date())
 				}
 				return structuredClone(prevState)
 			})

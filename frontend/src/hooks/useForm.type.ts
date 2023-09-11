@@ -2,6 +2,7 @@ export type UseFormType<T> = {
 	definition: {
 		[key: string]: {
 			label?: string
+			step?: number
 			options?: any
 			placeholder?: string
 			idModifier?: (value: any) => any
@@ -12,7 +13,16 @@ export type UseFormType<T> = {
 			textArea?: boolean | undefined
 			nullable?: boolean | undefined
 			nullableLabel?: string | undefined
-			type: 'text' | 'password' | 'date' | 'toggle' | 'radio' | 'file' | 'select' | 'number'
+			type:
+				| 'text'
+				| 'password'
+				| 'date'
+				| 'toggle'
+				| 'radio'
+				| 'file'
+				| 'select'
+				| 'number'
+				| 'currency'
 		}
 	}
 	loading?: boolean

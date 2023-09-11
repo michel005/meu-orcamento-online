@@ -35,15 +35,13 @@ export const BudgetFormPage = () => {
 		definition: {
 			customerId: {
 				type: 'select',
-				options: databaseCustomer.data,
-				nullableLabel: 'Nenhum cliente selecionado',
+				options: [
+					{ id: null, name: 'Nenhum cliente selecionado' },
+					...databaseCustomer.data,
+				],
 				idModifier: (row) => row.id,
 				valueModifier: (row) => row.id,
 				labelModifier: (row) => row.name,
-			},
-			date: {
-				label: 'Data',
-				type: 'date',
 			},
 			title: {
 				label: 'Título',
@@ -68,9 +66,6 @@ export const BudgetFormPage = () => {
 		validate: (value, errors) => {
 			if (!value) {
 				value = {}
-			}
-			if (!value.date) {
-				errors.set('date', 'Data não informada')
 			}
 			if (!value.title) {
 				errors.set('title', 'Título não informado')
@@ -131,7 +126,6 @@ export const BudgetFormPage = () => {
 				title="Dados Principais"
 				subTitle="Estas são as informações principais na hora de identificar seu orçamento."
 			>
-				{fields.date}
 				{fields.title}
 				{fields.description}
 				{fields.status}
@@ -146,7 +140,9 @@ export const BudgetFormPage = () => {
 							<Button
 								leftIcon="add"
 								onClick={() => {
-									formModalData.setData({})
+									formModalData.setData({
+										amount: 1,
+									})
 								}}
 							>
 								Novo Produto / Serviço
@@ -155,35 +151,47 @@ export const BudgetFormPage = () => {
 					</DivColumn>
 				}
 			>
-				<Table
-					header={{
-						name: {
-							label: 'Nome',
-							valueModifier: (row, rowIndex) => (
-								<DivRow>
-									{row.picture && <img src={row.picture} />}
-									<a
-										style={{ alignSelf: 'center' }}
-										onClick={() => {
-											formModalData.setData({
-												...row,
-												id: rowIndex,
-											})
-										}}
-									>
-										{row.name}
-									</a>
-								</DivRow>
-							),
-						},
-						price: {
-							alignment: 'right',
-							label: 'Valor',
-							type: 'currency',
-						},
-					}}
-					value={formData.data?.services || []}
-				/>
+				<div className={style.tableWrapper}>
+					<Table
+						header={{
+							name: {
+								label: 'Nome',
+								valueModifier: (row, rowIndex) => (
+									<DivRow>
+										{row.picture && <img src={row.picture} />}
+										<a
+											style={{ alignSelf: 'center' }}
+											onClick={() => {
+												formModalData.setData({
+													...row,
+													id: rowIndex,
+												})
+											}}
+										>
+											{row.name}
+										</a>
+									</DivRow>
+								),
+							},
+							amount: {
+								alignment: 'center',
+								label: 'Quantidade',
+							},
+							price: {
+								alignment: 'right',
+								label: 'Valor',
+								type: 'currency',
+							},
+							sum: {
+								alignment: 'right',
+								label: 'Total',
+								type: 'currency',
+								valueModifier: (row) => row.amount * row.price,
+							},
+						}}
+						value={formData.data?.services || []}
+					/>
+				</div>
 			</InputGroup>
 			<StickyButtonGroup>
 				<Button

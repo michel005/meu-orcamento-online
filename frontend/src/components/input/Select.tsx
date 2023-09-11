@@ -15,8 +15,6 @@ export const Select = ({
 	value,
 	disabled,
 	loading,
-	nullable,
-	nullableLabel,
 }: SelectType) => {
 	const randomId = Math.random().toString()
 
@@ -31,15 +29,10 @@ export const Select = ({
 						value ? idModifier(options.find((x) => valueModifier(x) === value)) : 'null'
 					}
 					onChange={(e) => {
-						if (e.target.selectedIndex === 0) {
-							onChange(null)
-						} else {
-							onChange(valueModifier(options[e.target.selectedIndex - 1]))
-						}
+						onChange(valueModifier(options[e.target.selectedIndex]))
 					}}
 					placeholder={placeholder}
 				>
-					{nullable && <option value={'null'}>{nullableLabel}</option>}
 					{options.map((option, optionKey) => {
 						return (
 							<option key={optionKey} value={idModifier(option)}>

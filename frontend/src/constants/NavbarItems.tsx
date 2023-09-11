@@ -35,7 +35,6 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'person_add',
 		link: '/customers/newForm',
 		element: CustomerFormPage,
-		sidebar: CustomerFormPageSidebar,
 		context: [],
 	},
 	{
@@ -43,7 +42,6 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'person_check',
 		link: '/customers/form/:customerId',
 		element: CustomerFormPage,
-		sidebar: CustomerFormPageSidebar,
 		context: [],
 	},
 	{

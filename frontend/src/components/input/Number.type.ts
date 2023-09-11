@@ -6,4 +6,5 @@ export type NumberType = {
 	placeholder?: string | undefined
 	disabled?: boolean | undefined
 	loading?: boolean | undefined
+	step?: number | undefined
 }

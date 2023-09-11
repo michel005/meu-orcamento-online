@@ -6,10 +6,10 @@ import { Pagination } from './Pagination'
 import { Icon } from '../Icon'
 import { DivRow } from '../DivRow'
 
-export const Table = ({ header, value, page }: TableType) => {
+export const Table = ({ header, value }: TableType) => {
 	const [sort, setSort] = useState<[string, 'ASC' | 'DESC'] | null>(null)
 	const [currentPage, setCurrentPage] = useState<number>(0)
-	const [pageSize, setPageSize] = useState<number>(8)
+	const pageSize = 10
 
 	const valueModifier = (field: string, value: any) => {
 		const definition = header[field]

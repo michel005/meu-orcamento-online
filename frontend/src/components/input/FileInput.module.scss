@@ -1,0 +1,74 @@
+.fileInput {
+	--content-height: 200px;
+
+	display: flex;
+	flex-direction: column;
+	font-size: 16px;
+	gap: 4px;
+
+	input {
+		display: none;
+	}
+
+	.dropFileHere, .imageContent {
+		align-items: center;
+		border: 1px solid var(--input-border-color);
+		border-radius: var(--border-radius);
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		height: var(--content-height);
+		justify-content: center;
+		overflow: hidden;
+		padding: 14px;
+		text-align: center;
+		width: 100%;
+	}
+
+	.imageContent {
+		flex-direction: row;
+		position: relative;
+
+		&::before {
+			background-image: var(--value);
+			background-position: center;
+			background-size: 100% auto;
+			content: '';
+			filter: blur(10px);
+			inset-block-start: 0;
+			inset-inline-start: 0;
+			position: absolute;
+			height: 100%;
+			opacity: 0.7;
+			pointer-events: none;
+			width: 100%;
+		}
+
+		img {
+			border-radius: var(--border-radius);
+			height: calc(var(--content-height) - 28px);
+			object-fit: cover;
+			width: calc(var(--content-height) - 28px);
+			z-index: 100;
+		}
+
+		button {
+			border-radius: 0;
+			flex-direction: column;
+			gap: 4px;
+			height: 100%;
+			inset-inline-end: 0;
+			justify-content: center;
+			padding-block: 14px;
+			position: absolute;
+			writing-mode: vertical-rl;
+
+			& > span {
+				writing-mode: vertical-rl; /* Texto na vertical da direita para a esquerda */
+				transform: rotate(0); /* Inverte o texto para que fique legível */
+				white-space: nowrap; /* Evita quebras de linha automáticas */
+				text-orientation: mixed; /* Melhora a orientação dos caracteres */
+			}
+		}
+	}
+}

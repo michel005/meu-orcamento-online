@@ -6,7 +6,6 @@ export const TableStyle = styled.div`
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	gap: 14px;
 
 	table {
 		border-collapse: collapse;
@@ -26,12 +25,15 @@ export const TableStyle = styled.div`
 				th {
 					color: #fff;
 					font-size: 16px;
-					font-weight: bolder;
-					padding: 14px 21px;
+					padding: 21px 21px;
+					transition: all 0.25s;
 
 					a {
 						color: #fff;
-						font-size: 16px;
+					}
+
+					&:hover {
+						background-color: #fff2;
 					}
 
 					&[data-alignment='left'] {
@@ -63,7 +65,6 @@ export const TableStyle = styled.div`
 
 		tbody {
 			position: relative;
-			height: 100%;
 
 			tr {
 				transition: all 0.25s;
@@ -72,7 +73,7 @@ export const TableStyle = styled.div`
 				td {
 					color: #333;
 					font-size: 16px;
-					padding: 14px 21px;
+					padding: 21px;
 					text-align: left;
 
 					img {
@@ -122,6 +123,7 @@ export const TableStyle = styled.div`
 	.pagination {
 		align-self: stretch;
 		background-color: #fff;
+		border-block-start: 1px solid #ccc;
 		display: flex;
 		flex-direction: row;
 		inset-block-end: 0;

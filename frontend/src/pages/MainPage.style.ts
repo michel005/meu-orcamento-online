@@ -64,8 +64,9 @@ export const MainPageStyle = styled.main`
 
 		.subOptions {
 			align-items: flex-start;
-			background-color: #323232;
-			color: #fff;
+			background-color: #f4f4f4;
+			border-inline-end: 1px solid #ccc;
+			color: #333;
 			display: flex;
 			flex-direction: column;
 			gap: 14px;
@@ -81,27 +82,8 @@ export const MainPageStyle = styled.main`
 				width: 0;
 			}
 
-			header {
-				display: flex;
-				flex-direction: column;
-				gap: 4px;
-				margin-block-end: 14px;
-
-				h2 {
-					padding-block-start: 4px;
-				}
-
-				small {
-					color: #fff6;
-				}
-			}
-
-			button {
-				color: #fff;
-			}
-
 			label {
-				color: #fffc;
+				color: #333;
 				margin-block-start: 7px;
 			}
 		}
@@ -110,7 +92,8 @@ export const MainPageStyle = styled.main`
 	&[data-hide-menu='true'] {
 		& > section {
 			.options {
-				background-color: #eee;
+				background-color: #f4f4f4;
+				border-inline-end: 1px solid #ccc;
 
 				& > a {
 					background-color: #2221;

@@ -10,6 +10,7 @@ import { FileInput } from '../components/input/FileInput'
 import { Select } from '../components/input/Select'
 import { Number } from '../components/input/Number'
 import { useValidation } from './useValidation'
+import { CurrencyInput } from '../components/input/CurrencyInput'
 
 export const useForm = <T,>({
 	definition,
@@ -48,6 +49,25 @@ export const useForm = <T,>({
 				;(allFields[field as keyof typeof allFields] as any) = (
 					<Number
 						key={field}
+						step={fieldDefinition.step}
+						loading={loading}
+						disabled={disabled || fieldDefinition?.disabled}
+						label={fieldDefinition.label}
+						placeholder={fieldDefinition.placeholder}
+						value={value?.[field as keyof typeof value] as number}
+						onChange={(innerValue) => {
+							if (value) {
+								;(value[field as keyof typeof value] as number | null) = innerValue
+							}
+							onChange(structuredClone(value) as T)
+						}}
+						error={error}
+					/>
+				)
+			} else if (fieldDefinition.type === 'currency') {
+				;(allFields[field as keyof typeof allFields] as any) = (
+					<CurrencyInput
+						key={field}
 						loading={loading}
 						disabled={disabled || fieldDefinition?.disabled}
 						label={fieldDefinition.label}
@@ -74,8 +94,6 @@ export const useForm = <T,>({
 						labelModifier={fieldDefinition.labelModifier}
 						valueModifier={fieldDefinition.valueModifier}
 						placeholder={fieldDefinition.placeholder}
-						nullable={fieldDefinition.nullable || true}
-						nullableLabel={fieldDefinition.nullableLabel}
 						value={value?.[field as keyof typeof value] as string}
 						onChange={(innerValue) => {
 							if (value) {

@@ -54,6 +54,7 @@ export const InputGroupStyle = styled.div`
 	&[data-show='false'] {
 		header {
 			max-width: none;
+
 			> .subTitle {
 				button {
 					display: none;

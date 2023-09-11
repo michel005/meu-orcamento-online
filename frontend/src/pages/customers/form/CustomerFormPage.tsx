@@ -45,6 +45,7 @@ export const CustomerFormPage = () => {
 				label: 'Tipo de Pessoa',
 				type: 'select',
 				options: [
+					[null, 'Não selecionado'],
 					['PF', 'Pessoa Física'],
 					['PJ', 'Pessoa Jurídica'],
 				],
@@ -55,7 +56,7 @@ export const CustomerFormPage = () => {
 			documentType: {
 				label: 'Tipo de Documento',
 				type: 'select',
-				options: ['RG', 'CPF', 'CNPJ'],
+				options: [null, 'RG', 'CPF', 'CNPJ'],
 				idModifier: (row) => row,
 				labelModifier: (row) => row,
 				valueModifier: (row) => row,
@@ -63,6 +64,10 @@ export const CustomerFormPage = () => {
 			documentNumber: {
 				label: 'Número do Documento',
 				type: 'text',
+			},
+			active: {
+				label: 'Ativo',
+				type: 'toggle',
 			},
 		},
 		value: formData.data,
@@ -207,15 +212,24 @@ export const CustomerFormPage = () => {
 					{addressFields.country}
 				</div>
 			</InputGroup>
+			<InputGroup
+				icon="checklist"
+				title="Indicadores"
+				subTitle="Flags usadas para indicar a situação deste cliente"
+			>
+				{fields.active}
+			</InputGroup>
 			<StickyButtonGroup>
 				<Button
 					leftIcon="save"
 					variation="primary"
 					onClick={() => {
-						const validate1 = validate(formData.data)
-						const validate2 = validateAddress(formData.data.address || null)
-						if (!validate1 || !validate2) {
-							return
+						if (formData.data.active === true) {
+							const validate1 = validate(formData.data)
+							const validate2 = validateAddress(formData.data.address || null)
+							if (!validate1 || !validate2) {
+								return
+							}
 						}
 						if (!formData.data?.id) {
 							customerDatabase.create(formData.data)

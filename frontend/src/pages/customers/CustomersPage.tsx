@@ -12,7 +12,7 @@ import { DivRow } from '../../components/DivRow'
 export type CustomerFilterType = {
 	quickSearch?: string
 	personType?: string | null
-	status?: boolean | null
+	status?: string | null
 }
 
 export const CustomersPage = () => {
@@ -70,12 +70,6 @@ export const CustomersPage = () => {
 						(customer) =>
 							!filterData.data.personType ||
 							filterData.data.personType === customer.personType
-					)
-					.filter(
-						(customer) =>
-							filterData.data.status === null ||
-							filterData.data.status === undefined ||
-							filterData.data.status === customer.active
 					)
 					.filter(
 						(customer) =>

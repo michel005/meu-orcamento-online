@@ -1,6 +1,6 @@
 import React from 'react'
+import style from '../Page.module.scss'
 import personType from '../../copyDeck/PersonType.json'
-import style from './CustomersPage.module.scss'
 import { Table } from '../../components/table/Table'
 import { useData } from '../../hooks/useData'
 import { Customer } from '../../types/Entities.type'
@@ -8,6 +8,9 @@ import { useDatabase } from '../../hooks/useDatabase'
 import { useNavigate } from 'react-router-dom'
 import { DivColumn } from '../../components/DivColumn'
 import { DivRow } from '../../components/DivRow'
+import { Text } from '../../components/input/Text'
+import { Button } from '../../components/button/Button'
+import { ButtonOptions } from '../../components/ButtonOptions'
 
 export type CustomerFilterType = {
 	quickSearch?: string
@@ -16,29 +19,63 @@ export type CustomerFilterType = {
 }
 
 export const CustomersPage = () => {
-	const database = useDatabase<Customer>('customer')
-	const filterData = useData<CustomerFilterType>('customerFilter', {})
-	const formData = useData<Customer>('customerForm')
+	const customerData = useData<Customer>('customerForm')
+	const customerDatabase = useDatabase<Customer>('customer')
+	const filterCustomerData = useData<CustomerFilterType>('customerFilter', {})
 	const navigate = useNavigate()
 
 	return (
-		<div className={style.customersPage}>
-			<Table
+		<div className={style.page}>
+			<DivRow>
+				<Text
+					rightSpace={<Button leftIcon="search" variation="ghost" />}
+					value={filterCustomerData.data?.quickSearch || null}
+					onChange={(value) => {
+						filterCustomerData.setDataProp('quickSearch', value)
+					}}
+					placeholder="Busque por campos do cliente..."
+				/>
+				<ButtonOptions
+					options={{
+						ALL: 'Todos',
+						PF: 'Pessoa Física',
+						PJ: 'Pessoa Jurídica',
+					}}
+					variation="secondary"
+					value={filterCustomerData.data.personType || 'ALL'}
+					onChange={(value) => {
+						if (value === 'ALL') {
+							filterCustomerData.setDataProp('personType', null)
+						} else {
+							filterCustomerData.setDataProp('personType', value)
+						}
+					}}
+				/>
+				<Button leftIcon="filter_alt" variation="secondary" />
+				<Button
+					leftIcon="add"
+					onClick={() => {
+						customerData.setData({
+							name: 'Novo Cliente',
+							active: true,
+						})
+						navigate('/customers/newForm')
+					}}
+				>
+					Novo Cliente
+				</Button>
+			</DivRow>
+			<Table<Customer>
 				header={{
 					name: {
 						label: 'Nome',
 						valueModifier: (row) => (
 							<DivRow>
-								<img
-									src={
-										row.picture ||
-										'https://i.pinimg.com/564x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg'
-									}
-								/>
+								<img src={row.picture} />
 								<DivColumn style={{ gap: '4px' }}>
 									<a
 										onClick={() => {
-											formData.setData(row)
+											customerData.setData(row)
 											navigate(
 												`/customers/form/${row.id.toString().split('.')[1]}`
 											)
@@ -58,6 +95,9 @@ export const CustomersPage = () => {
 								<span style={{ color: '#ddd' }}>Não Informado</span>
 							),
 					},
+					email: {
+						label: 'E-mail',
+					},
 					active: {
 						alignment: 'right',
 						label: 'Ativo',
@@ -65,21 +105,24 @@ export const CustomersPage = () => {
 						width: '100px',
 					},
 				}}
-				value={database.data
+				value={customerDatabase.data
 					.filter(
 						(customer) =>
-							!filterData.data.personType ||
-							filterData.data.personType === customer.personType
+							!filterCustomerData.data.personType ||
+							filterCustomerData.data.personType === customer.personType
 					)
 					.filter(
 						(customer) =>
 							customer.name
 								?.toUpperCase()
-								.indexOf(filterData.data?.quickSearch?.toUpperCase() || '') !==
-								-1 ||
+								.indexOf(
+									filterCustomerData.data?.quickSearch?.toUpperCase() || ''
+								) !== -1 ||
 							customer.email
 								?.toUpperCase()
-								.indexOf(filterData.data?.quickSearch?.toUpperCase() || '') !== -1
+								.indexOf(
+									filterCustomerData.data?.quickSearch?.toUpperCase() || ''
+								) !== -1
 					)}
 			/>
 		</div>

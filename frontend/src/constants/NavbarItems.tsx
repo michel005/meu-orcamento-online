@@ -1,15 +1,11 @@
 import React from 'react'
-import { NavbarItemsType, NavbarItemsTypeList } from './NavbarItems.type'
+import { NavbarItemsTypeList } from './NavbarItems.type'
 import { BudgetsPage } from '../pages/budgets/BudgetsPage'
-import { BudgetsSidebar } from '../pages/budgets/Budgets.sidebar'
 import { CustomersPage } from '../pages/customers/CustomersPage'
-import { CustomersSidebar } from '../pages/customers/Customers.sidebar'
 import { DashboardPage } from '../pages/dashboard/DashboardPage'
-import { DashboardSidebar } from '../pages/dashboard/Dashboard.sidebar'
 import { CustomerFormPage } from '../pages/customers/form/CustomerFormPage'
-import { CustomerFormPageSidebar } from '../pages/customers/form/CustomerFormPage.sidebar'
 import { BudgetFormPage } from '../pages/budgets/form/BudgetFormPage'
-import { BudgetFormPageSidebar } from '../pages/budgets/form/BudgetFormPage.sidebar'
+import { MaintenancePage } from '../pages/MaintenancePage'
 
 export const NavbarItems: NavbarItemsTypeList = [
 	{
@@ -18,7 +14,6 @@ export const NavbarItems: NavbarItemsTypeList = [
 		subTitle: 'Visão geral e estatísticas',
 		link: '/',
 		element: DashboardPage,
-		sidebar: DashboardSidebar,
 		context: ['navbar'],
 	},
 	{
@@ -27,7 +22,6 @@ export const NavbarItems: NavbarItemsTypeList = [
 		subTitle: 'Gerencie seus clientes',
 		link: '/customers',
 		element: CustomersPage,
-		sidebar: CustomersSidebar,
 		context: ['navbar'],
 	},
 	{
@@ -50,7 +44,6 @@ export const NavbarItems: NavbarItemsTypeList = [
 		subTitle: 'Gerencie seus orçamentos',
 		link: '/budgets',
 		element: BudgetsPage,
-		sidebar: BudgetsSidebar,
 		context: ['navbar'],
 	},
 	{
@@ -58,7 +51,6 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'description',
 		link: '/budgets/newForm',
 		element: BudgetFormPage,
-		sidebar: BudgetFormPageSidebar,
 		context: [],
 	},
 	{
@@ -66,7 +58,6 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'description',
 		link: '/budgets/form/:budgetId',
 		element: BudgetFormPage,
-		sidebar: BudgetFormPageSidebar,
 		context: [],
 	},
 	{
@@ -74,8 +65,7 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'shopping_cart',
 		subTitle: 'Crie e gerencie produtos',
 		link: '/products',
-		element: <></>,
-		sidebar: <></>,
+		element: MaintenancePage,
 		context: ['navbar'],
 	},
 	{
@@ -83,8 +73,7 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'insert_chart',
 		subTitle: 'Emita relatórios de desempenho',
 		link: '/reports',
-		element: <></>,
-		sidebar: <></>,
+		element: MaintenancePage,
 		context: ['navbar'],
 	},
 	{
@@ -92,8 +81,7 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'settings',
 		subTitle: 'Personalize suas configurações',
 		link: '/settings',
-		element: <></>,
-		sidebar: <></>,
+		element: MaintenancePage,
 		context: ['navbar'],
 	},
 	{
@@ -101,8 +89,7 @@ export const NavbarItems: NavbarItemsTypeList = [
 		icon: 'help',
 		subTitle: 'Recursos de suporte',
 		link: '/help',
-		element: <></>,
-		sidebar: <></>,
+		element: MaintenancePage,
 		context: ['navbar'],
 	},
 ]

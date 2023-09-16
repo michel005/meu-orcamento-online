@@ -1,11 +1,15 @@
 import React from 'react'
-import style from './BudgetsPage.module.scss'
+import style from '../Page.module.scss'
 import budgetStatus from '../../copyDeck/BudgetStatus.json'
 import { Table } from '../../components/table/Table'
 import { Budget, Customer } from '../../types/Entities.type'
 import { useData } from '../../hooks/useData'
 import { useDatabase } from '../../hooks/useDatabase'
 import { useNavigate } from 'react-router-dom'
+import { DivRow } from '../../components/DivRow'
+import { Button } from '../../components/button/Button'
+import { DateUtils } from '../../utils/DateUtils'
+import { useForm } from '../../hooks/useForm'
 
 export type BudgetFilterType = {
 	date?: string
@@ -14,14 +18,46 @@ export type BudgetFilterType = {
 }
 
 export const BudgetsPage = () => {
-	const databaseBudget = useDatabase<Budget>('budget')
-	const databaseCustomer = useDatabase<Customer>('customer')
-	const filterData = useData<BudgetFilterType>('budgetFilter')
+	const budgetFormData = useData<Budget>('budgetForm', {})
+	const budgetDatabase = useDatabase<Budget>('budget')
+	const customerDatabase = useDatabase<Customer>('customer')
+	const budgetFilterData = useData<BudgetFilterType>('budgetFilter')
+	const { fields: form } = useForm<BudgetFilterType>({
+		definition: {
+			quickSearch: {
+				rightSpace: <Button leftIcon="search" variation="ghost" />,
+				placeholder: 'Produto, título ou qualquer parte do orçamento',
+				type: 'text',
+			},
+			date: {
+				type: 'date',
+			},
+		},
+		value: budgetFilterData.data,
+		onChange: budgetFilterData.setData,
+	})
 	const navigate = useNavigate()
 
 	return (
-		<div className={style.budgetsPage}>
-			<Table
+		<div className={style.page}>
+			<DivRow>
+				{form.quickSearch}
+				<div style={{ maxWidth: '300px' }}>{form.date}</div>
+				<Button leftIcon="filter_alt" variation="secondary" />
+				<Button
+					leftIcon="add"
+					onClick={() => {
+						budgetFormData.setData({
+							date: DateUtils.dateToString(new Date()),
+							status: 'pending',
+						})
+						navigate('/budgets/newForm')
+					}}
+				>
+					Novo Orçamento
+				</Button>
+			</DivRow>
+			<Table<Budget>
 				header={{
 					created: {
 						label: 'Data',
@@ -42,7 +78,7 @@ export const BudgetsPage = () => {
 					},
 					customerId: {
 						label: 'Cliente',
-						valueModifier: (row) => databaseCustomer.findById(row.customerId)?.name,
+						valueModifier: (row) => customerDatabase.findById(row.customerId)?.name,
 					},
 					amount: {
 						alignment: 'right',
@@ -62,20 +98,21 @@ export const BudgetsPage = () => {
 						width: '150px',
 					},
 				}}
-				value={databaseBudget.data
+				value={budgetDatabase.data
 					.filter(
 						(budget) =>
-							!filterData.data?.customerId ||
-							budget.customerId === filterData.data.customerId
+							!budgetFilterData.data?.customerId ||
+							budget.customerId === budgetFilterData.data.customerId
 					)
 					.filter(
 						(budget) =>
-							!filterData.data?.date || budget.created === filterData.data.date
+							!budgetFilterData.data?.date ||
+							budget.created === budgetFilterData.data.date
 					)
 					.filter(
 						(budget) =>
-							!filterData.data?.quickSearch ||
-							JSON.stringify(budget).indexOf(filterData.data.quickSearch) !== -1
+							!budgetFilterData.data?.quickSearch ||
+							JSON.stringify(budget).indexOf(budgetFilterData.data.quickSearch) !== -1
 					)}
 			/>
 		</div>

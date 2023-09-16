@@ -1,4 +1,8 @@
+import { GoogleIcons } from '../../types/GoogleIcons'
+
 export type TextType = {
+	leftSpace?: any
+	rightSpace?: any
 	error?: string | undefined
 	label?: string | undefined
 	value: string | null

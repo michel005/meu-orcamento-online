@@ -1,5 +1,5 @@
-import React from 'react'
-import { TextStyle } from './Text.style'
+import React, { useState } from 'react'
+import style from './Field.module.scss'
 import { Label } from '../Label.style'
 import { NumberType } from './Number.type'
 
@@ -14,29 +14,43 @@ export const Number = ({
 	step,
 }: NumberType) => {
 	const randomId = Math.random().toString()
+	const [focused, setFocused] = useState(false)
 
 	return (
-		<TextStyle data-loading={loading} data-error={!!error}>
+		<div
+			className={style.field}
+			data-loading={loading}
+			data-error={!!error}
+			data-focus={focused}
+		>
 			{label && <Label htmlFor={randomId}>{label}</Label>}
-			<input
-				style={{
-					textAlign: 'right',
-				}}
-				disabled={disabled}
-				id={randomId}
-				type="number"
-				step={step || 1}
-				value={value || ''}
-				onChange={(e) => {
-					try {
-						onChange(parseFloat(e.target.value))
-					} catch (_) {
-						onChange(null)
-					}
-				}}
-				placeholder={placeholder}
-			/>
-			{error && <span>{error}</span>}
-		</TextStyle>
+			<div className={style.inputArea}>
+				<div className={style.emptyIcon} />
+				<div style={{ width: '100%' }}>
+					<input
+						style={{
+							textAlign: 'right',
+						}}
+						disabled={disabled}
+						id={randomId}
+						type="number"
+						step={step || 1}
+						value={value || ''}
+						onChange={(e) => {
+							try {
+								onChange(parseFloat(e.target.value))
+							} catch (_) {
+								onChange(null)
+							}
+						}}
+						onFocus={() => setFocused(true)}
+						onBlur={() => setFocused(false)}
+						placeholder={placeholder}
+					/>
+				</div>
+				<div className={style.emptyIcon} />
+			</div>
+			{error && <span className={style.error}>{error}</span>}
+		</div>
 	)
 }

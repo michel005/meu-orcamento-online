@@ -45,7 +45,9 @@
 		}
 
 		img {
+			background-color: #fff;
 			border-radius: var(--border-radius);
+			box-shadow: #ccc 0 0 7px;
 			height: calc(var(--content-height) - 28px);
 			object-fit: cover;
 			width: calc(var(--content-height) - 28px);

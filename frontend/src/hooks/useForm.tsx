@@ -24,7 +24,7 @@ export const useForm = <T,>({
 	const fields = useMemo(() => {
 		const allFields: keyof T = {} as any
 		Object.keys(definition).forEach((field) => {
-			const fieldDefinition = definition[field]
+			const fieldDefinition = (definition as any)[field]
 			const error = errors?.get(field)
 			if (fieldDefinition.type === 'text') {
 				;(allFields[field as keyof typeof allFields] as any) = (
@@ -34,13 +34,15 @@ export const useForm = <T,>({
 						disabled={disabled || fieldDefinition?.disabled}
 						textArea={fieldDefinition?.textArea}
 						label={fieldDefinition.label}
-						placeholder={fieldDefinition.placeholder}
+						placeholder={fieldDefinition?.placeholder}
+						leftSpace={fieldDefinition?.leftSpace}
+						rightSpace={fieldDefinition?.rightSpace}
 						value={value?.[field as keyof typeof value] as string}
 						onChange={(innerValue) => {
 							if (value) {
 								;(value[field as keyof typeof value] as string | null) = innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>
@@ -59,7 +61,7 @@ export const useForm = <T,>({
 							if (value) {
 								;(value[field as keyof typeof value] as number | null) = innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>
@@ -77,7 +79,7 @@ export const useForm = <T,>({
 							if (value) {
 								;(value[field as keyof typeof value] as number | null) = innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>
@@ -100,7 +102,7 @@ export const useForm = <T,>({
 								;(value[field as keyof typeof value] as string | undefined) =
 									innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>
@@ -118,7 +120,7 @@ export const useForm = <T,>({
 							if (value) {
 								;(value[field as keyof typeof value] as string | null) = innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>
@@ -136,7 +138,7 @@ export const useForm = <T,>({
 								;(value[field as keyof typeof value] as boolean | undefined) =
 									innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>
@@ -163,7 +165,7 @@ export const useForm = <T,>({
 												| null
 												| undefined) = innerValue
 										}
-										onChange(structuredClone(value) as T)
+										onChange({ ...value } as T)
 									}}
 									error={error}
 								/>
@@ -185,7 +187,7 @@ export const useForm = <T,>({
 								;(value[field as keyof typeof value] as string | null | undefined) =
 									innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>
@@ -205,7 +207,7 @@ export const useForm = <T,>({
 								;(value[field as keyof typeof value] as string | undefined | null) =
 									innerValue
 							}
-							onChange(structuredClone(value) as T)
+							onChange({ ...value } as T)
 						}}
 						error={error}
 					/>

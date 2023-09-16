@@ -9,16 +9,16 @@ export const useData = <T>(key: string, defaultValue?: T) => {
 		setData: (value: T | null) => {
 			setData((prevState) => {
 				prevState[key] = value
-				return structuredClone(prevState)
+				return { ...prevState }
 			})
 		},
 		setDataProp: (prop: string, value: any) => {
 			setData((prevState) => {
-				if (!prevState?.[key]) {
-					prevState[key] = structuredClone(defaultValue)
+				if (!prevState?.[key] && defaultValue) {
+					prevState[key] = { ...defaultValue }
 				}
 				prevState[key][prop] = value
-				return structuredClone(prevState)
+				return { ...prevState }
 			})
 		},
 	}

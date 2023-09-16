@@ -1,63 +1,71 @@
-import React, { useContext, useEffect } from 'react'
-import { MainPageStyle } from './MainPage.style'
+import React, { useContext } from 'react'
+import style from './MainPage.module.scss'
 import { NavbarItems } from '../constants/NavbarItems'
-import { NavLink, Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { matchPath } from 'react-router'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { Message } from '../components/Message'
-import { useData } from '../hooks/useData'
 import { useMessage } from '../hooks/useMessage'
 import { NavbarItemsType } from '../constants/NavbarItems.type'
+import { SelectCustomerModal } from './customers/modal/SelectCustomerModal'
+import { Button } from '../components/button/Button'
 
 const FakeElement = ({ item }: { item: NavbarItemsType }) => {
-	const { setSidebar } = useContext(ConfigContext)
 	const Element = item?.element
-	const Sidebar = item?.sidebar
-
-	useEffect(() => {
-		if (item?.sidebar) {
-			setSidebar(<Sidebar />)
-		} else {
-			setSidebar(null)
-		}
-		return () => {
-			setSidebar(null)
-		}
-	}, [item])
 
 	return <Element />
 }
 
 export const MainPage = () => {
-	const mainData = useData('main', {
-		expand: true,
-	})
 	const configContext = useContext(ConfigContext)
 	const { showQuestion } = useMessage()
+	const navigate = useNavigate()
+	const location = useLocation()
+
+	if (!configContext.status.database) {
+		return <h1>Carregando...</h1>
+	}
 
 	return (
-		<MainPageStyle data-hide-menu={!configContext.sidebar || !mainData.data?.expand}>
+		<div className={style.mainPage}>
 			<section>
-				<nav className="options">
-					{NavbarItems.filter((item) => item.context.includes('navbar')).map(
-						(item, itemKey) => {
-							return <NavLink key={item.link} to={item.link} data-icon={item.icon} />
-						}
-					)}
+				<nav className={style.options}>
+					{NavbarItems.filter((item) => item.context.includes('navbar')).map((item) => {
+						const isCurrentRoute =
+							(item.link === '/' && location.pathname === item.link) ||
+							(item.link !== '/' &&
+								matchPath(
+									{
+										path: item.link,
+										end: false,
+										caseSensitive: true,
+									},
+									location.pathname
+								))
+						return (
+							<Button
+								key={item.link}
+								onClick={() => {
+									navigate(item.link)
+								}}
+								leftIcon={item.icon}
+								variation={isCurrentRoute ? 'primary' : 'ghost'}
+							>
+								{item.title}
+							</Button>
+						)
+					})}
 					<div style={{ flexGrow: 1 }} />
-					<a
-						data-icon="logout"
+					<Button
+						leftIcon="logout"
+						variation="ghost"
 						onClick={() => {
 							showQuestion('Deseja realmente sair de sua conta?', '', () => {})
 						}}
-					/>
-					<a
-						data-icon={mainData.data?.expand ? 'menu_open' : 'menu'}
-						onClick={() => {
-							mainData.setDataProp('expand', !mainData.data?.expand)
-						}}
-					/>
+					>
+						Sair
+					</Button>
 				</nav>
-				<nav className="subOptions">{configContext.sidebar}</nav>
 			</section>
 			<main>
 				<section>
@@ -75,6 +83,7 @@ export const MainPage = () => {
 					</Routes>
 				</section>
 			</main>
+			{configContext.modal?.selectCustomer?.showModal && <SelectCustomerModal />}
 			{configContext.message.map((messageContent, messageContentIndex) => (
 				<Message
 					key={messageContentIndex}
@@ -82,6 +91,6 @@ export const MainPage = () => {
 					{...messageContent}
 				/>
 			))}
-		</MainPageStyle>
+		</div>
 	)
 }

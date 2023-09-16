@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const InputGroupStyle = styled.div`
-	border-top: 1px solid #eee;
+	//border-top: 1px solid #eee;
 	display: flex;
 	flex-direction: row;
 	padding-block-start: 14px;
@@ -38,7 +38,6 @@ export const InputGroupStyle = styled.div`
 		flex-direction: column;
 		flex-grow: 1;
 		gap: 10px;
-		width: 1000px;
 
 		.row {
 			display: flex;

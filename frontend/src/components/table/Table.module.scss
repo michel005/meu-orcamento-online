@@ -1,18 +1,23 @@
-import styled from 'styled-components'
-
-export const TableStyle = styled.div`
+.table {
 	background-color: #fff;
+	border-radius: var(--border-radius);
 	box-shadow: #ccc 0 0 4px;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
+	overflow: auto;
+
+	&::-webkit-scrollbar {
+		width: 0;
+	}
 
 	table {
 		border-collapse: collapse;
 		margin-block-end: auto;
 		width: 100%;
 
-		thead {
+		thead,
+		tfoot {
 			background-color: #222;
 			border-radius: var(--border-radius) var(--border-radius) 0 0;
 			inset-block-start: 0;
@@ -25,15 +30,11 @@ export const TableStyle = styled.div`
 				th {
 					color: #fff;
 					font-size: 16px;
-					padding: 21px 21px;
+					padding: 14px 21px;
 					transition: all 0.25s;
 
 					a {
 						color: #fff;
-					}
-
-					&:hover {
-						background-color: #fff2;
 					}
 
 					&[data-alignment='left'] {
@@ -63,6 +64,16 @@ export const TableStyle = styled.div`
 			}
 		}
 
+		tfoot {
+			background-color: #fff;
+
+			tr {
+				th {
+					color: #333;
+				}
+			}
+		}
+
 		tbody {
 			position: relative;
 
@@ -73,7 +84,7 @@ export const TableStyle = styled.div`
 				td {
 					color: #333;
 					font-size: 16px;
-					padding: 21px;
+					padding: 14px 21px;
 					text-align: left;
 
 					img {
@@ -140,4 +151,4 @@ export const TableStyle = styled.div`
 			margin-inline-start: 14px;
 		}
 	}
-`
+}

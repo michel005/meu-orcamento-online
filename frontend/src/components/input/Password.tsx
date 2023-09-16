@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
+import style from './Field.module.scss'
 import { TextType } from './Text.type'
-import { TextStyle } from './Text.style'
 import { Label } from '../Label.style'
 
 export const Password = ({
@@ -13,21 +13,30 @@ export const Password = ({
 	loading,
 }: TextType) => {
 	const randomId = Math.random().toString()
+	const [focused, setFocused] = useState(false)
 
 	return (
-		<TextStyle data-loading={loading}>
+		<div className={style.field} data-loading={loading} data-focus={focused}>
 			{label && <Label htmlFor={randomId}>{label}</Label>}
-			<input
-				disabled={disabled}
-				id={randomId}
-				type="password"
-				value={value || ''}
-				onChange={(e) => {
-					onChange(e.target.value)
-				}}
-				placeholder={placeholder}
-			/>
-			{error && <span>{error}</span>}
-		</TextStyle>
+			<div className={style.inputArea}>
+				<div className={style.emptyIcon} />
+				<div style={{ width: '100%' }}>
+					<input
+						disabled={disabled}
+						id={randomId}
+						type="password"
+						value={value || ''}
+						onChange={(e) => {
+							onChange(e.target.value)
+						}}
+						onFocus={() => setFocused(true)}
+						onBlur={() => setFocused(false)}
+						placeholder={placeholder}
+					/>
+				</div>
+				<div className={style.emptyIcon} />
+			</div>
+			{error && <span className={style.error}>{error}</span>}
+		</div>
 	)
 }

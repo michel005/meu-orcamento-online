@@ -1,16 +1,14 @@
 .stickyButtonGroup {
-	align-self: flex-end;
-	backdrop-filter: blur(4px);
-	background-color: #fff6;
-	border-radius: var(--border-radius) 0 0 var(--border-radius);
-	box-shadow: #ccc 0 0 4px;
+	align-self: center;
+	background-color: #ccc9;
+	border-radius: var(--border-radius) var(--border-radius) 0 0;
 	display: flex;
 	flex-direction: row;
-	gap: 14px;
-	inset-block-end: 0;
+	gap: 7px;
+	inset-block-end: -14px;
 	margin-block-end: -14px;
-	margin-inline-end: -14px;
-	padding: 14px;
+	margin-inline-start: 0;
+	padding: 7px;
 	pointer-events: none;
 	position: sticky;
 	z-index: 100;

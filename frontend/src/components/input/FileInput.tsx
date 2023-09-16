@@ -1,7 +1,6 @@
 import React, { CSSProperties, useRef, useState } from 'react'
 import style from './FileInput.module.scss'
 import { Label } from '../Label.style'
-import { FileInputStyle } from './FileInput.style'
 import { FileUtils } from '../../utils/FileUtils'
 import { FileInputType } from './FileInput.type'
 import { Button } from '../button/Button'

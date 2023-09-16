@@ -54,24 +54,6 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 		}
 	}, [status, database])
 
-	useEffect(() => {
-		if (!status.modal) {
-			if (localStorage.getItem('modal')) {
-				setModal(JSON.parse(localStorage.getItem('modal') || '{}'))
-			}
-			setStatus((x) => {
-				x.modal = true
-				return { ...x }
-			})
-		}
-	}, [status])
-
-	useEffect(() => {
-		if (status.modal) {
-			localStorage.setItem('modal', JSON.stringify(modal))
-		}
-	}, [status, modal])
-
 	return (
 		<ConfigContext.Provider
 			value={{

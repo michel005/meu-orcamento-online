@@ -8,6 +8,5 @@ export type NavbarItemsType = {
 	icon?: GoogleIcons
 	link: string
 	element?: any
-	sidebar?: any
 	context: ('navbar' | 'sidebar')[]
 }

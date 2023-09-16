@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import style from './CustomerFormPage.module.scss'
+import style from '../../Page.module.scss'
 import { useData } from '../../../hooks/useData'
 import { Address, Customer } from '../../../types/Entities.type'
 import { useForm } from '../../../hooks/useForm'
@@ -8,10 +8,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDatabase } from '../../../hooks/useDatabase'
 import { ConfigContext } from '../../../contexts/ConfigContext'
 import { Button } from '../../../components/button/Button'
-import { DivColumn } from '../../../components/DivColumn'
-import { DivRow } from '../../../components/DivRow'
 import { useMessage } from '../../../hooks/useMessage'
 import { StickyButtonGroup } from '../../../components/button/StickyButtonGroup'
+import { DivRow } from '../../../components/DivRow'
 
 export const CustomerFormPage = () => {
 	const { status } = useContext(ConfigContext)
@@ -96,7 +95,6 @@ export const CustomerFormPage = () => {
 			}
 		},
 	})
-
 	const { fields: addressFields, validate: validateAddress } = useForm<Address>({
 		definition: {
 			streetName: {
@@ -157,13 +155,25 @@ export const CustomerFormPage = () => {
 				const find = customerDatabase.findById(parseFloat('0.' + customerId))
 				if (find) {
 					formData.setData(find)
+				} else {
+					navigate('/customers')
 				}
 			}
 		}
 	}, [loaded, status])
 
 	return (
-		<div className={style.customerFormPage}>
+		<div className={style.page}>
+			<DivRow style={{ alignItems: 'center' }}>
+				<Button
+					leftIcon="arrow_back"
+					onClick={() => {
+						navigate('/customers')
+					}}
+					variation="secondary"
+				/>
+				<h1>Formulário de Cliente</h1>
+			</DivRow>
 			<InputGroup
 				icon="photo"
 				title="Foto do Cliente"
@@ -261,16 +271,17 @@ export const CustomerFormPage = () => {
 						Excluir
 					</Button>
 				)}
-				<Button
-					leftIcon="keyboard_return"
-					variation="secondary"
-					onClick={() => {
-						formData.setData(null)
-						navigate('/customers')
-					}}
-				>
-					Voltar
-				</Button>
+				{!formData.data?.id && (
+					<Button
+						leftIcon="close"
+						onClick={() => {
+							navigate('/customers')
+						}}
+						variation="secondary"
+					>
+						Cancelar
+					</Button>
+				)}
 			</StickyButtonGroup>
 		</div>
 	)

@@ -1,0 +1,40 @@
+.page {
+	background-color: #fff;
+	box-shadow: #ccc 0 0 4px;
+	display: flex;
+	flex-direction: column;
+	font-size: 1.2em;
+	gap: 28px;
+	height: calc(297px * 5);
+	padding: 50px 28px;
+	width: calc(210px * 5);
+
+	header {
+		> p {
+			color: #999;
+			max-width: 50%;
+		}
+	}
+}
+
+.customerInfo {
+	gap: 4px !important;
+
+	img {
+		background-color: #fff;
+		border-radius: var(--border-radius);
+		box-shadow: #ccc 0 0 4px;
+		height: 150px;
+		object-fit: cover;
+		width: 150px;
+	}
+
+	.userInfoColumns {
+		gap: 21px !important;
+
+		> div {
+			flex-grow: 1;
+			width: 40%;
+		}
+	}
+}

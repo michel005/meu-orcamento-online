@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { TableType } from './Table.type'
-import { TableStyle } from './Table.style'
+import style from './Table.module.scss'
 import { NumberUtils } from '../../utils/NumberUtils'
 import { Pagination } from './Pagination'
 import { Icon } from '../Icon'
 import { DivRow } from '../DivRow'
 
-export const Table = ({ header, value }: TableType) => {
+export const Table = <T,>({ header, value, footer, pagination = true }: TableType<T>) => {
 	const [sort, setSort] = useState<[string, 'ASC' | 'DESC'] | null>(null)
 	const [currentPage, setCurrentPage] = useState<number>(0)
 	const pageSize = 10
 
 	const valueModifier = (field: string, value: any) => {
-		const definition = header[field]
-		if (definition.type === 'currency') {
+		const definition = header?.[field as keyof typeof header]
+		if (definition && definition.type === 'currency') {
 			return NumberUtils.numberToCurrency(value)
 		}
 		return value
@@ -23,36 +23,42 @@ export const Table = ({ header, value }: TableType) => {
 		if (!sort) {
 			return 0
 		}
-		const valueX = x?.[sort?.[0]] || ''
-		const valueY = y?.[sort?.[0]] || ''
+		const valueX = (x as any)?.[sort?.[0]] || ''
+		const valueY = (y as any)?.[sort?.[0]] || ''
 
 		if (valueX > valueY) return sort[1] === 'ASC' ? 1 : -1
 		if (valueX < valueY) return sort[1] === 'ASC' ? -1 : 1
 		return 0
 	})
 
-	const sliceOfValue = [...sortedValue].splice(currentPage * pageSize, pageSize)
+	const sliceOfValue = pagination
+		? [...sortedValue].splice(currentPage * pageSize, pageSize)
+		: sortedValue
 
 	useEffect(() => {
 		setSort([Object.keys(header)[0], 'ASC'])
 	}, [])
 
 	return (
-		<TableStyle>
+		<div className={style.table}>
 			<table>
 				<thead>
 					<tr>
 						{Object.keys(header)
-							.filter((field) => header[field]?.show !== false)
+							.filter((field) => header[field as keyof typeof header]?.show !== false)
 							.map((field, fieldKey) => {
 								return (
 									<th
 										key={fieldKey}
-										data-alignment={header[field]?.alignment || 'left'}
+										data-alignment={
+											header[field as keyof typeof header]?.alignment ||
+											'left'
+										}
 										style={
-											header[field]?.width
+											header[field as keyof typeof header]?.width
 												? {
-														width: header[field]?.width,
+														width: header[field as keyof typeof header]
+															?.width,
 												  }
 												: {}
 										}
@@ -68,7 +74,7 @@ export const Table = ({ header, value }: TableType) => {
 													})
 												}}
 											>
-												{header[field].label}
+												{header[field as keyof typeof header]?.label}
 											</a>
 											{sort?.[0] === field && (
 												<Icon
@@ -91,23 +97,27 @@ export const Table = ({ header, value }: TableType) => {
 							return (
 								<tr key={rowKey}>
 									{Object.keys(header)
-										.filter((field) => header[field]?.show !== false)
+										.filter(
+											(field) =>
+												header[field as keyof typeof header]?.show !== false
+										)
 										.map((field, fieldKey) => {
 											return (
 												<td
 													key={fieldKey}
 													data-alignment={
-														header[field]?.alignment || 'left'
+														header[field as keyof typeof header]
+															?.alignment || 'left'
 													}
 												>
 													{valueModifier(
 														field,
-														!header[field]?.valueModifier
-															? row[field]
-															: header[field]?.valueModifier?.(
-																	row,
-																	rowKey
-															  )
+														!header[field as keyof typeof header]
+															?.valueModifier
+															? row[field as keyof typeof header]
+															: header[
+																	field as keyof typeof header
+															  ]?.valueModifier?.(row, rowKey)
 													)}
 												</td>
 											)
@@ -121,18 +131,21 @@ export const Table = ({ header, value }: TableType) => {
 						</tr>
 					)}
 				</tbody>
+				{footer && <tfoot>{footer}</tfoot>}
 			</table>
-			<div className="pagination">
-				<span>{value?.length || 0} registro(s)</span>
-				{(value?.length || 0) > 0 && (
-					<Pagination
-						currentPage={currentPage}
-						onChange={setCurrentPage}
-						numberOfRows={value?.length || 0}
-						pageSize={pageSize}
-					/>
-				)}
-			</div>
-		</TableStyle>
+			{pagination && (
+				<div className={style.pagination}>
+					<span>{value?.length || 0} registro(s)</span>
+					{(value?.length || 0) > 0 && (
+						<Pagination
+							currentPage={currentPage}
+							onChange={setCurrentPage}
+							numberOfRows={value?.length || 0}
+							pageSize={pageSize}
+						/>
+					)}
+				</div>
+			)}
+		</div>
 	)
 }

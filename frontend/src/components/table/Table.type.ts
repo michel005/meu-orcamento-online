@@ -1,6 +1,10 @@
-export type TableType = {
+type KeysOfType<T, U> = {
+	[K in keyof T]: T[K] extends U ? K : any
+}
+
+export type TableType<T> = {
 	header: {
-		[key: string]: {
+		[key in KeysOfType<T, any>[keyof T]]?: {
 			alignment?: 'left' | 'center' | 'right'
 			label: string
 			show?: boolean
@@ -9,5 +13,7 @@ export type TableType = {
 			width?: string
 		}
 	}
-	value: any[]
+	footer?: any
+	pagination?: boolean
+	value: T[]
 }

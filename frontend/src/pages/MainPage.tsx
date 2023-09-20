@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import style from './MainPage.module.scss'
 import { NavbarItems } from '../constants/NavbarItems'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { useMessage } from '../hooks/useMessage'
 import { NavbarItemsType } from '../constants/NavbarItems.type'
 import { SelectCustomerModal } from './customers/modal/SelectCustomerModal'
 import { Button } from '../components/button/Button'
+import { DivRow } from '../components/DivRow'
 
 const FakeElement = ({ item }: { item: NavbarItemsType }) => {
 	const Element = item?.element
@@ -17,6 +18,7 @@ const FakeElement = ({ item }: { item: NavbarItemsType }) => {
 }
 
 export const MainPage = () => {
+	const [reduced, setReduced] = useState(false)
 	const configContext = useContext(ConfigContext)
 	const { showQuestion } = useMessage()
 	const navigate = useNavigate()
@@ -27,7 +29,7 @@ export const MainPage = () => {
 	}
 
 	return (
-		<div className={style.mainPage}>
+		<div className={style.mainPage} data-reduced={reduced}>
 			<section>
 				<nav className={style.options}>
 					{NavbarItems.filter((item) => item.context.includes('navbar')).map((item) => {
@@ -51,20 +53,28 @@ export const MainPage = () => {
 								leftIcon={item.icon}
 								variation={isCurrentRoute ? 'primary' : 'ghost'}
 							>
-								{item.title}
+								{!reduced && item.title}
 							</Button>
 						)
 					})}
 					<div style={{ flexGrow: 1 }} />
-					<Button
-						leftIcon="logout"
-						variation="ghost"
-						onClick={() => {
-							showQuestion('Deseja realmente sair de sua conta?', '', () => {})
-						}}
-					>
-						Sair
-					</Button>
+					<DivRow className={style.otherOptions}>
+						<Button
+							leftIcon="logout"
+							variation="ghost"
+							onClick={() => {
+								showQuestion('Deseja realmente sair de sua conta?', '', () => {})
+							}}
+						/>
+						<div style={{ flexGrow: 1 }} />
+						<Button
+							leftIcon="menu"
+							variation="ghost"
+							onClick={() => {
+								setReduced((x) => !x)
+							}}
+						/>
+					</DivRow>
 				</nav>
 			</section>
 			<main>

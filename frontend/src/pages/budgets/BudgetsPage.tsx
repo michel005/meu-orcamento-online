@@ -72,7 +72,7 @@ export const BudgetsPage = () => {
 									navigate(`/budgets/form/${row.id.toString().split('.')[1]}`)
 								}}
 							>
-								{row.title}
+								{row.title || 'Orçamento sem título'}
 							</a>
 						),
 					},

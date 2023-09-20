@@ -38,3 +38,10 @@
 		}
 	}
 }
+
+@media print {
+	.page {
+		box-shadow: none;
+		padding: 0;
+	}
+}

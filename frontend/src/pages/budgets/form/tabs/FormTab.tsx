@@ -88,10 +88,27 @@ export const FormTab = () => {
 							'https://i.pinimg.com/564x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg'
 						}
 					/>
-					<DivColumn className={style.customerInfoDetails} style={{ gap: '4px' }}>
-						<h1>{customer?.name}</h1>
-						{customer?.email && <p>{customer?.email}</p>}
-						{customer?.phone && <p>{customer?.phone}</p>}
+					{customer && (
+						<DivColumn className={style.customerInfoDetails} style={{ gap: '4px' }}>
+							<h1>{customer?.name}</h1>
+							{customer?.email && <p>{customer?.email}</p>}
+							{customer?.phone && <p>{customer?.phone}</p>}
+							<a
+								onClick={() => {
+									showModal({
+										showModal: true,
+										quickSearch: '',
+										whenSelectionChange: (selectedCustomer) => {
+											formData.setDataProp('customerId', selectedCustomer.id)
+										},
+									})
+								}}
+							>
+								Alterar Cliente
+							</a>
+						</DivColumn>
+					)}
+					{!customer && (
 						<a
 							onClick={() => {
 								showModal({
@@ -103,9 +120,9 @@ export const FormTab = () => {
 								})
 							}}
 						>
-							Alterar Cliente
+							Selecionar Cliente
 						</a>
-					</DivColumn>
+					)}
 				</DivRow>
 			</InputGroup>
 			<InputGroup
@@ -177,6 +194,7 @@ export const FormTab = () => {
 							</th>
 						</tr>
 					}
+					pagination={false}
 					value={formData.data?.services || []}
 				/>
 			</InputGroup>

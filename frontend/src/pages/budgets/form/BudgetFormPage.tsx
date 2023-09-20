@@ -45,7 +45,7 @@ export const BudgetFormPage = () => {
 
 	return (
 		<div className={style.page}>
-			<DivRow style={{ alignItems: 'center' }}>
+			<DivRow className="no-print" style={{ alignItems: 'center' }}>
 				<Button
 					leftIcon="arrow_back"
 					onClick={() => {

@@ -10,7 +10,7 @@ import { DivColumn } from '../../components/DivColumn'
 import { DivRow } from '../../components/DivRow'
 import { Text } from '../../components/input/Text'
 import { Button } from '../../components/button/Button'
-import { ButtonOptions } from '../../components/ButtonOptions'
+import { ButtonOptions } from '../../components/button/ButtonOptions'
 
 export type CustomerFilterType = {
 	quickSearch?: string

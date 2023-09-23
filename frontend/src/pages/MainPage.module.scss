@@ -1,114 +1,155 @@
 .mainPage {
-	--sub-menu-width: 300px;
+  --sub-menu-width: 300px;
 
-	background-color: #fff;
-	display: flex;
-	flex-direction: row;
-	height: 100%;
-	max-height: 100%;
-	min-height: 100%;
-	inset: 0;
-	position: absolute;
-	width: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  height: 100%;
+  max-height: 100%;
+  min-height: 100%;
+  inset: 0;
+  position: absolute;
+  width: 100%;
 
-	& > section {
-		background-color: #222;
-		display: flex;
-		flex-direction: row;
-		transition: all 0.25s;
-		width: 260px;
-	}
+  .options {
+    background-color: #222;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: var(--sub-menu-width);
+    padding: 14px;
+    position: relative;
+    transition: all 0.25s;
+    width: var(--sub-menu-width);
+    z-index: 2;
 
-	.options {
-		align-items: center;
-		display: flex;
-		flex-direction: column;
-		gap: 7px;
-		padding: 14px;
-		transition: all 0.25s;
-		width: 100%;
-		z-index: 2;
+    button {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      height: 46px;
+      padding-inline: 17px;
+      white-space: nowrap;
+      width: 100%;
 
-		button {
-			align-items: center;
-			display: flex;
-			flex-direction: row;
-			gap: 10px;
-			height: 46px;
-			padding-inline: 17px;
-			transition: all 0.25s;
-			width: 100%;
+      &[data-variation=ghost] {
+        color: #fffc;
 
-			&.active {
-				background-color: var(--active-color);
-				color: #fff;
-			}
+        &:hover {
+          background-color: #fff2;
+        }
+      }
 
-			&[data-variation=ghost] {
-				color: #fffc;
+      &[data-variation=primary] {
+        background-color: var(--active-color);
+        color: #fff;
 
-				&:hover {
-					background-color: #fff2 !important;
-				}
-			}
-		}
+        &:hover {
+          background-color: var(--active-color) !important;
+        }
+      }
+    }
 
-		.otherOptions {
-			width: 100%;
+    .userInfo {
+      background-color: #333;
+      border-radius: var(--border-radius);
+      gap: 14px;
+      overflow: hidden;
 
-			> * {
-				width: auto;
-			}
-		}
-	}
+      img {
+        height: calc(78px - 28px);
+        width: calc(78px - 28px);
+      }
 
-	& > main {
-		display: flex;
-		flex-direction: column;
-		flex-grow: 1;
-		gap: 7px;
-		position: relative;
-		transition: alll 0.25s;
+      .userDetails {
+        color: #fff;
+        gap: 2px;
+        justify-content: center;
 
-		&::-webkit-scrollbar {
-			width: 0;
-		}
+        h3 {
+          font-size: 18px;
+          white-space: nowrap;
+        }
 
-		& > section {
-			display: flex;
-			flex-direction: column;
-			flex-grow: 1;
-			gap: 14px;
-			height: 100%;
-			max-height: 100%;
-			min-height: 100%;
-			transition: alll 0.25s;
+        p {
+          color: #fff;
+          font-size: 12px;
+        }
+      }
+    }
 
-			& > * {
-				animation: fadeOut 0.5s linear;
-				height: 100%;
-				max-height: 100%;
-				min-height: 100%;
-				transition: alll 0.25s;
-			}
-		}
-	}
+    .reduceButton {
+      background-color: #333;
+      border-radius: 50%;
+      font-size: 12px;
+      height: 24px;
+      inset-block-end: 24px;
+      inset-inline-end: -12px;
+      justify-content: center;
+      padding: 4px;
+      position: absolute;
+      width: 24px !important;
 
-	&[data-reduced=true] {
-		& > section {
-			width: auto;
-		}
-		.options {
-			width: auto;
-			.otherOptions {
-				flex-direction: column;
-			}
-		}
-	}
+      &:hover {
+        background-color: #444 !important;
+      }
+    }
+  }
+
+  & > main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 7px;
+    position: relative;
+    transition: alll 0.25s;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    & > section {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 14px;
+      height: 100%;
+      max-height: 100%;
+      min-height: 100%;
+      transition: alll 0.25s;
+
+      & > * {
+        animation: fadeOut 0.5s linear;
+        height: 100%;
+        max-height: 100%;
+        min-height: 100%;
+        transition: alll 0.25s;
+      }
+    }
+  }
+
+  &[data-reduced=true] {
+    --sub-menu-width: 78px;
+
+    .options {
+
+      .userInfo {
+        img {
+          width: calc(var(--sub-menu-width) - 28px);
+        }
+      }
+
+      .reduceButton {
+        rotate: 180deg;
+      }
+    }
+  }
 }
 
 @media print {
-	.options, .options * {
-		display: none !important;
-	}
+  .options, .options * {
+    display: none !important;
+  }
 }

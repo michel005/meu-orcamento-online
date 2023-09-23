@@ -10,6 +10,9 @@ import { NavbarItemsType } from '../constants/NavbarItems.type'
 import { SelectCustomerModal } from './customers/modal/SelectCustomerModal'
 import { Button } from '../components/button/Button'
 import { DivRow } from '../components/DivRow'
+import { useDatabase } from '../hooks/useDatabase'
+import { Customer } from '../types/Entities.type'
+import { DivColumn } from '../components/DivColumn'
 
 const FakeElement = ({ item }: { item: NavbarItemsType }) => {
 	const Element = item?.element
@@ -18,6 +21,7 @@ const FakeElement = ({ item }: { item: NavbarItemsType }) => {
 }
 
 export const MainPage = () => {
+	const { data } = useDatabase<Customer>('customer')
 	const [reduced, setReduced] = useState(false)
 	const configContext = useContext(ConfigContext)
 	const { showQuestion } = useMessage()
@@ -28,55 +32,65 @@ export const MainPage = () => {
 		return <h1>Carregando...</h1>
 	}
 
+	const myUser = data.find((x) => x.email === 'mdgrigoli@hotmail.com.br')
+
 	return (
 		<div className={style.mainPage} data-reduced={reduced}>
-			<section>
-				<nav className={style.options}>
-					{NavbarItems.filter((item) => item.context.includes('navbar')).map((item) => {
-						const isCurrentRoute =
-							(item.link === '/' && location.pathname === item.link) ||
-							(item.link !== '/' &&
-								matchPath(
-									{
-										path: item.link,
-										end: false,
-										caseSensitive: true,
-									},
-									location.pathname
-								))
-						return (
-							<Button
-								key={item.link}
-								onClick={() => {
-									navigate(item.link)
-								}}
-								leftIcon={item.icon}
-								variation={isCurrentRoute ? 'primary' : 'ghost'}
-							>
-								{!reduced && item.title}
-							</Button>
-						)
-					})}
-					<div style={{ flexGrow: 1 }} />
-					<DivRow className={style.otherOptions}>
+			<nav className={style.options}>
+				{NavbarItems.filter((item) => item.context.includes('navbar')).map((item) => {
+					const isCurrentRoute =
+						(item.link === '/' && location.pathname === item.link) ||
+						(item.link !== '/' &&
+							matchPath(
+								{
+									path: item.link,
+									end: false,
+									caseSensitive: true,
+								},
+								location.pathname
+							))
+					return (
 						<Button
-							leftIcon="logout"
-							variation="ghost"
+							key={item.link}
 							onClick={() => {
-								showQuestion('Deseja realmente sair de sua conta?', '', () => {})
+								navigate(item.link)
 							}}
-						/>
-						<div style={{ flexGrow: 1 }} />
-						<Button
-							leftIcon="menu"
-							variation="ghost"
-							onClick={() => {
-								setReduced((x) => !x)
-							}}
-						/>
+							leftIcon={item.icon}
+							variation={isCurrentRoute ? 'primary' : 'ghost'}
+						>
+							{!reduced && item.title}
+						</Button>
+					)
+				})}
+				<div style={{ flexGrow: 1 }} />
+				{myUser && (
+					<DivRow className={style.userInfo}>
+						<img src={myUser.picture} />
+						<DivColumn className={style.userDetails}>
+							<h3>{myUser.name}</h3>
+							<p>{myUser.email}</p>
+						</DivColumn>
 					</DivRow>
-				</nav>
-			</section>
+				)}
+				<Button
+					leftIcon="logout"
+					variation="ghost"
+					onClick={() => {
+						showQuestion('Deseja realmente sair de sua conta?', '', () => {})
+					}}
+				>
+					{!reduced && 'Logoff'}
+				</Button>
+				<Button
+					className={style.reduceButton}
+					leftIcon="keyboard_arrow_left"
+					variation="ghost"
+					onClick={() => {
+						setReduced((x) => !x)
+					}}
+					style={{ alignSelf: 'flex-end', width: 'auto' }}
+				/>
+			</nav>
 			<main>
 				<section>
 					<Routes>

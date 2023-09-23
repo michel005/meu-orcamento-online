@@ -11,6 +11,9 @@ import { Button } from '../../../components/button/Button'
 import { useMessage } from '../../../hooks/useMessage'
 import { StickyButtonGroup } from '../../../components/button/StickyButtonGroup'
 import { DivRow } from '../../../components/DivRow'
+import { DivColumn } from '../../../components/DivColumn'
+import { Label } from '../../../components/Label.style'
+import { ButtonOptions } from '../../../components/button/ButtonOptions'
 
 export const CustomerFormPage = () => {
 	const { status } = useContext(ConfigContext)
@@ -197,9 +200,36 @@ export const CustomerFormPage = () => {
 				title="Documento"
 				subTitle="Informe o documento do cliente, necessário para comprovar que este é de fato o cliente cadastrado."
 			>
-				{fields.personType}
 				<div className={'row'}>
-					{fields.documentType}
+					<DivColumn style={{ flexGrow: 0, gap: '4px', width: 'auto' }}>
+						<Label>Tipo de Pessoa</Label>
+						<ButtonOptions
+							options={{
+								PF: 'Pessoa Física',
+								PJ: 'Pessoa Jurídica',
+							}}
+							value={formData.data.personType || 'PF'}
+							variation="secondary"
+							onChange={(value) => {
+								formData.setDataProp('personType', value)
+							}}
+						/>
+					</DivColumn>
+					<DivColumn style={{ flexGrow: 0, gap: '4px', width: 'auto' }}>
+						<Label>Tipo de Documento</Label>
+						<ButtonOptions
+							options={{
+								RG: 'RG',
+								CPF: 'CPF',
+								CNPJ: 'CNPJ',
+							}}
+							value={formData.data.documentType || 'CPF'}
+							variation="secondary"
+							onChange={(value) => {
+								formData.setDataProp('documentType', value)
+							}}
+						/>
+					</DivColumn>
 					{fields.documentNumber}
 				</div>
 			</InputGroup>

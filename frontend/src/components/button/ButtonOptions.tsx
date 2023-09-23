@@ -1,7 +1,7 @@
 import style from './ButtonOptions.module.scss'
 import { ButtonOptionsType } from './ButtonOptions.type'
 import React from 'react'
-import { Button } from './button/Button'
+import { Button } from './Button'
 
 export const ButtonOptions = ({
 	options,

@@ -89,7 +89,7 @@ export const PreviewTab = () => {
 								alignment: 'right',
 								label: 'Total',
 								type: 'currency',
-								valueModifier: (row) => row.amount * row.price,
+								valueModifier: (row) => (row.amount || 0) * (row.price || 0),
 							},
 						}}
 						footer={

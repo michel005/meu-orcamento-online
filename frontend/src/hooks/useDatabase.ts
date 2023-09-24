@@ -27,9 +27,7 @@ export const useDatabase = <T>(key: string) => {
 			console.log(value)
 			setDatabase((prevState) => {
 				const index = prevState[key].findIndex((x: any) => x.id === id)
-				console.log(prevState[key][index])
 				prevState[key][index] = {
-					id: Math.random(),
 					...value,
 					updated: DateUtils.dateToString(new Date()),
 				}

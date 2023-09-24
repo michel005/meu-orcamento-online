@@ -1,155 +1,217 @@
 .mainPage {
-  --sub-menu-width: 300px;
+	--sub-menu-width: 300px;
+	--logo-size: 50px;
 
-  background-color: #fff;
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  height: 100%;
-  max-height: 100%;
-  min-height: 100%;
-  inset: 0;
-  position: absolute;
-  width: 100%;
+	background-color: #fff;
+	display: flex;
+	flex-direction: row;
+	gap: 2px;
+	height: 100%;
+	max-height: 100%;
+	min-height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
 
-  .options {
-    background-color: #222;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    min-width: var(--sub-menu-width);
-    padding: 14px;
-    position: relative;
-    transition: all 0.25s;
-    width: var(--sub-menu-width);
-    z-index: 2;
+	.options {
+		background-color: #222;
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+		min-width: var(--sub-menu-width);
+		padding: 14px;
+		position: relative;
+		transition: all 0.25s;
+		width: var(--sub-menu-width);
+		z-index: 2;
 
-    button {
-      align-items: center;
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      height: 46px;
-      padding-inline: 17px;
-      white-space: nowrap;
-      width: 100%;
+		.logo {
+			color: #fff;
+			gap: 14px;
+			margin-block-end: 21px;
+			white-space: nowrap;
 
-      &[data-variation=ghost] {
-        color: #fffc;
+			.logoFile {
+				background-color: #fff;
+				border-bottom: 4px solid var(--active-color);
+				border-radius: calc(var(--logo-size) / 2) 0;
+				border-top: 4px solid var(--active-color);
+				display: flex;
+				flex-direction: column;
+				height: var(--logo-size);
+				justify-content: center;
+				max-height: var(--logo-size);
+				max-width: var(--logo-size);
+				min-height: var(--logo-size);
+				min-width: var(--logo-size);
+				width: var(--logo-size);
 
-        &:hover {
-          background-color: #fff2;
-        }
-      }
+				div {
+					align-self: center;
+					color: #333;
+					font-size: calc(var(--logo-size) * 0.6);
+				}
+			}
 
-      &[data-variation=primary] {
-        background-color: var(--active-color);
-        color: #fff;
+			.logoDetails {
+				align-self: center;
+				gap: 0px;
 
-        &:hover {
-          background-color: var(--active-color) !important;
-        }
-      }
-    }
+				p {
+					color: var(--active-color);
+					font-weight: bold;
+				}
+			}
+		}
 
-    .userInfo {
-      background-color: #333;
-      border-radius: var(--border-radius);
-      gap: 14px;
-      overflow: hidden;
+		button {
+			align-items: center;
+			display: flex;
+			flex-direction: row;
+			gap: 10px;
+			height: 46px;
+			padding-inline: 17px;
+			white-space: nowrap;
+			width: 100%;
 
-      img {
-        height: calc(78px - 28px);
-        width: calc(78px - 28px);
-      }
+			&[data-variation='ghost'] {
+				color: #fffc;
 
-      .userDetails {
-        color: #fff;
-        gap: 2px;
-        justify-content: center;
+				&:hover {
+					background-color: #fff2;
+				}
+			}
 
-        h3 {
-          font-size: 18px;
-          white-space: nowrap;
-        }
+			&[data-variation='primary'] {
+				background-color: var(--active-color);
+				color: #fff;
 
-        p {
-          color: #fff;
-          font-size: 12px;
-        }
-      }
-    }
+				&:hover {
+					background-color: var(--active-color) !important;
+				}
+			}
+		}
 
-    .reduceButton {
-      background-color: #333;
-      border-radius: 50%;
-      font-size: 12px;
-      height: 24px;
-      inset-block-end: 24px;
-      inset-inline-end: -12px;
-      justify-content: center;
-      padding: 4px;
-      position: absolute;
-      width: 24px !important;
+		.userInfo {
+			gap: 14px;
+			overflow: hidden;
 
-      &:hover {
-        background-color: #444 !important;
-      }
-    }
-  }
+			img {
+				border-radius: 50%;
+				height: 50px;
+				width: 50px;
+			}
 
-  & > main {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    gap: 7px;
-    position: relative;
-    transition: alll 0.25s;
+			p {
+				align-self: center;
+				color: #fff;
+				font-size: 18px;
+				white-space: nowrap;
+			}
+		}
 
-    &::-webkit-scrollbar {
-      width: 0;
-    }
+		.reduceButton {
+			background-color: #333;
+			border-radius: 50%;
+			font-size: 12px;
+			height: 24px;
+			inset-block-end: 24px;
+			inset-inline-end: -12px;
+			justify-content: center;
+			padding: 4px;
+			position: absolute;
+			width: 24px !important;
 
-    & > section {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      gap: 14px;
-      height: 100%;
-      max-height: 100%;
-      min-height: 100%;
-      transition: alll 0.25s;
+			&:hover {
+				background-color: #444 !important;
+			}
+		}
+	}
 
-      & > * {
-        animation: fadeOut 0.5s linear;
-        height: 100%;
-        max-height: 100%;
-        min-height: 100%;
-        transition: alll 0.25s;
-      }
-    }
-  }
+	& > main {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		gap: 7px;
+		position: relative;
+		transition: alll 0.25s;
 
-  &[data-reduced=true] {
-    --sub-menu-width: 78px;
+		&::-webkit-scrollbar {
+			width: 0;
+		}
 
-    .options {
+		& > section {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			gap: 14px;
+			height: 100%;
+			max-height: 100%;
+			min-height: 100%;
+			transition: alll 0.25s;
 
-      .userInfo {
-        img {
-          width: calc(var(--sub-menu-width) - 28px);
-        }
-      }
+			& > * {
+				animation: fadeOut 0.5s linear;
+				height: 100%;
+				max-height: 100%;
+				min-height: 100%;
+				transition: alll 0.25s;
+			}
+		}
+	}
 
-      .reduceButton {
-        rotate: 180deg;
-      }
-    }
-  }
+	&[data-reduced='true'] {
+		--sub-menu-width: 78px;
+
+		.options {
+			.logoDetails {
+				display: none;
+			}
+
+			.userInfo {
+				img {
+					width: calc(var(--sub-menu-width) - 28px);
+				}
+			}
+
+			.reduceButton {
+				rotate: 180deg;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1000px) {
+	.mainPage {
+		--sub-menu-width: 78px;
+
+		.options {
+			> button {
+				span {
+					display: none;
+				}
+			}
+
+			.logoDetails {
+				display: none;
+			}
+
+			.userInfo {
+				img {
+					width: calc(var(--sub-menu-width) - 28px);
+				}
+			}
+
+			.reduceButton {
+				display: none;
+			}
+		}
+	}
 }
 
 @media print {
-  .options, .options * {
-    display: none !important;
-  }
+	.options,
+	.options * {
+		display: none !important;
+	}
 }

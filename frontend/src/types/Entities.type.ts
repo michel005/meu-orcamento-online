@@ -24,6 +24,7 @@ export type Customer = {
 }
 
 export type Service = {
+	id?: number
 	picture?: string
 	name?: string
 	description?: string

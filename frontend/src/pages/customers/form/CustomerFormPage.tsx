@@ -21,10 +21,7 @@ export const CustomerFormPage = () => {
 	const { customerId } = useParams()
 	const customerDatabase = useDatabase<Customer>('customer')
 	const [loaded, setLoaded] = useState<boolean>(false)
-	const formData = useData<Customer>('customerForm', {
-		name: 'Novo Cliente',
-		active: true,
-	})
+	const formData = useData<Customer>('customerForm', {})
 	const { fields, validate } = useForm<Customer>({
 		definition: {
 			picture: {
@@ -161,6 +158,11 @@ export const CustomerFormPage = () => {
 				} else {
 					navigate('/customers')
 				}
+			} else {
+				formData.setData({
+					name: 'Novo Cliente',
+					active: true,
+				})
 			}
 		}
 	}, [loaded, status])

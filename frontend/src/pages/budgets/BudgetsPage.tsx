@@ -43,7 +43,6 @@ export const BudgetsPage = () => {
 			<DivRow>
 				{form.quickSearch}
 				<div style={{ maxWidth: '300px' }}>{form.date}</div>
-				<Button leftIcon="filter_alt" variation="secondary" />
 				<Button
 					leftIcon="add"
 					onClick={() => {
@@ -61,7 +60,8 @@ export const BudgetsPage = () => {
 				header={{
 					created: {
 						label: 'Data',
-						valueModifier: (row) => row.created.replace(',', '').split(' ')[0],
+						valueModifier: (row) =>
+							row.created && row.created.replace(',', '').split(' ')[0],
 						width: '150px',
 					},
 					title: {
@@ -69,7 +69,9 @@ export const BudgetsPage = () => {
 						valueModifier: (row) => (
 							<a
 								onClick={() => {
-									navigate(`/budgets/form/${row.id.toString().split('.')[1]}`)
+									if (row.id) {
+										navigate(`/budgets/form/${row.id.toString().split('.')[1]}`)
+									}
 								}}
 							>
 								{row.title || 'Orçamento sem título'}
@@ -78,7 +80,8 @@ export const BudgetsPage = () => {
 					},
 					customerId: {
 						label: 'Cliente',
-						valueModifier: (row) => customerDatabase.findById(row.customerId)?.name,
+						valueModifier: (row) =>
+							row.customerId && customerDatabase.findById(row.customerId)?.name,
 					},
 					amount: {
 						alignment: 'right',

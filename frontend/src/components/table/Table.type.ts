@@ -9,7 +9,7 @@ export type TableType<T> = {
 			label: string
 			show?: boolean
 			type?: 'text' | 'currency'
-			valueModifier?: (row: any, rowIndex: number) => any
+			valueModifier?: (row: T, rowIndex: number) => any
 			width?: string
 		}
 	}

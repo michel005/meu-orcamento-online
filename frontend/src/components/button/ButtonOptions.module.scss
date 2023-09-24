@@ -16,12 +16,21 @@
 		& > button {
 			border-radius: 0;
 
-			&[data-variation=ghost] {
+			&[data-variation='ghost'] {
 				background-color: #ddd !important;
 
 				&:hover {
 					background-color: #ccc !important;
 				}
+			}
+		}
+	}
+}
+@media screen and (max-width: 1000px) {
+	.tabs {
+		& > section {
+			& > button {
+				width: 100%;
 			}
 		}
 	}

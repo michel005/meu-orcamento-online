@@ -11,6 +11,7 @@ import { DivRow } from '../../components/DivRow'
 import { Text } from '../../components/input/Text'
 import { Button } from '../../components/button/Button'
 import { ButtonOptions } from '../../components/button/ButtonOptions'
+import { DateUtils } from '../../utils/DateUtils'
 
 export type CustomerFilterType = {
 	quickSearch?: string
@@ -19,7 +20,6 @@ export type CustomerFilterType = {
 }
 
 export const CustomersPage = () => {
-	const customerData = useData<Customer>('customerForm')
 	const customerDatabase = useDatabase<Customer>('customer')
 	const filterCustomerData = useData<CustomerFilterType>('customerFilter', {})
 	const navigate = useNavigate()
@@ -51,14 +51,9 @@ export const CustomersPage = () => {
 						}
 					}}
 				/>
-				<Button leftIcon="filter_alt" variation="secondary" />
 				<Button
 					leftIcon="add"
 					onClick={() => {
-						customerData.setData({
-							name: 'Novo Cliente',
-							active: true,
-						})
 						navigate('/customers/newForm')
 					}}
 				>
@@ -75,10 +70,13 @@ export const CustomersPage = () => {
 								<DivColumn style={{ gap: '4px' }}>
 									<a
 										onClick={() => {
-											customerData.setData(row)
-											navigate(
-												`/customers/form/${row.id.toString().split('.')[1]}`
-											)
+											if (row.id) {
+												navigate(
+													`/customers/form/${
+														row.id.toString().split('.')[1]
+													}`
+												)
+											}
 										}}
 									>
 										{row.name || 'Sem nome'}
@@ -88,15 +86,22 @@ export const CustomersPage = () => {
 							</DivRow>
 						),
 					},
+					created: {
+						label: 'Cliente a',
+						valueModifier: (row) =>
+							row.created
+								? `${DateUtils.daysBetween(
+										DateUtils.dateToString(new Date()),
+										row.created
+								  )} dia(s)`
+								: '',
+					},
 					personType: {
 						label: 'Tipo de Pessoa',
 						valueModifier: (row) =>
 							personType?.[row.personType as keyof typeof personType] || (
 								<span style={{ color: '#ddd' }}>Não Informado</span>
 							),
-					},
-					email: {
-						label: 'E-mail',
 					},
 					active: {
 						alignment: 'right',

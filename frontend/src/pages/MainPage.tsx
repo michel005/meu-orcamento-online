@@ -5,7 +5,6 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { matchPath } from 'react-router'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { Message } from '../components/Message'
-import { useMessage } from '../hooks/useMessage'
 import { NavbarItemsType } from '../constants/NavbarItems.type'
 import { SelectCustomerModal } from './customers/modal/SelectCustomerModal'
 import { Button } from '../components/button/Button'
@@ -13,6 +12,7 @@ import { DivRow } from '../components/DivRow'
 import { useDatabase } from '../hooks/useDatabase'
 import { Customer } from '../types/Entities.type'
 import { DivColumn } from '../components/DivColumn'
+import { Icon } from '../components/Icon'
 
 const FakeElement = ({ item }: { item: NavbarItemsType }) => {
 	const Element = item?.element
@@ -24,7 +24,6 @@ export const MainPage = () => {
 	const { data } = useDatabase<Customer>('customer')
 	const [reduced, setReduced] = useState(false)
 	const configContext = useContext(ConfigContext)
-	const { showQuestion } = useMessage()
 	const navigate = useNavigate()
 	const location = useLocation()
 
@@ -37,6 +36,15 @@ export const MainPage = () => {
 	return (
 		<div className={style.mainPage} data-reduced={reduced}>
 			<nav className={style.options}>
+				<DivRow className={style.logo}>
+					<div className={style.logoFile}>
+						<Icon icon="quick_reference_all" />
+					</div>
+					<DivColumn className={style.logoDetails}>
+						<h1>Meu Orçamento</h1>
+						<p>Online</p>
+					</DivColumn>
+				</DivRow>
 				{NavbarItems.filter((item) => item.context.includes('navbar')).map((item) => {
 					const isCurrentRoute =
 						(item.link === '/' && location.pathname === item.link) ||
@@ -66,21 +74,9 @@ export const MainPage = () => {
 				{myUser && (
 					<DivRow className={style.userInfo}>
 						<img src={myUser.picture} />
-						<DivColumn className={style.userDetails}>
-							<h3>{myUser.name}</h3>
-							<p>{myUser.email}</p>
-						</DivColumn>
+						<p>{myUser.name}</p>
 					</DivRow>
 				)}
-				<Button
-					leftIcon="logout"
-					variation="ghost"
-					onClick={() => {
-						showQuestion('Deseja realmente sair de sua conta?', '', () => {})
-					}}
-				>
-					{!reduced && 'Logoff'}
-				</Button>
 				<Button
 					className={style.reduceButton}
 					leftIcon="keyboard_arrow_left"

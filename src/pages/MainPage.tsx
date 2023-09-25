@@ -29,8 +29,6 @@ export const MainPage = () => {
 		return <h1>Carregando...</h1>
 	}
 
-	const myUser = data.find((x) => x.email === 'mdgrigoli@hotmail.com.br')
-
 	return (
 		<div className={style.mainPage} data-reduced={reduced}>
 			<nav className={style.navbar}>

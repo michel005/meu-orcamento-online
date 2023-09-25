@@ -169,16 +169,6 @@ export const CustomerFormPage = () => {
 
 	return (
 		<div className={style.page}>
-			<DivRow style={{ alignItems: 'center' }}>
-				<Button
-					leftIcon="arrow_back"
-					onClick={() => {
-						navigate('/customers')
-					}}
-					variation="secondary"
-				/>
-				<h1>Formulário de Cliente</h1>
-			</DivRow>
 			<InputGroup
 				icon="photo"
 				title="Foto do Cliente"

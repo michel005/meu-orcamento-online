@@ -45,16 +45,6 @@ export const BudgetFormPage = () => {
 
 	return (
 		<div className={style.page}>
-			<DivRow className="no-print" style={{ alignItems: 'center' }}>
-				<Button
-					leftIcon="arrow_back"
-					onClick={() => {
-						navigate('/budgets')
-					}}
-					variation="secondary"
-				/>
-				<h1>Formulário de Orçamento</h1>
-			</DivRow>
 			{formData?.data?.id && (
 				<DivRow>
 					<ButtonOptions

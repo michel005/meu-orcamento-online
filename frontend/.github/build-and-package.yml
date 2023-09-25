@@ -1,0 +1,30 @@
+name: Build and Package
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Setup Node.js
+                uses: actions/setup-node@v2
+                with:
+                    node-version: '14'
+
+            -   name: Install Dependencies and Build
+                run: |
+                    chmod +x ./build-and-package.sh
+                    ./build-and-package.sh
+
+            -   name: Upload .tgz to Releases
+                uses: actions/upload-artifact@v2
+                with:
+                    name: react-app
+                    path: ./build/meu-orcamento-online-*.tgz

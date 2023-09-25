@@ -1,7 +1,5 @@
 .table {
 	background-color: #fff;
-	border-radius: var(--border-radius);
-	box-shadow: #ccc 0 0 4px;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -18,8 +16,6 @@
 
 		thead,
 		tfoot {
-			background-color: #222;
-			border-radius: var(--border-radius) var(--border-radius) 0 0;
 			inset-block-start: 0;
 			position: sticky;
 			z-index: 10;
@@ -28,13 +24,14 @@
 				border-bottom: 1px solid #ccc;
 
 				th {
-					color: #fff;
+					color: #333;
 					font-size: 16px;
+					font-weight: normal;
 					padding: 14px 21px;
 					transition: all 0.25s;
 
 					a {
-						color: #fff;
+						color: #333;
 					}
 
 					&[data-alignment='left'] {
@@ -65,12 +62,9 @@
 		}
 
 		tfoot {
-			background-color: #fff;
-
 			tr {
-				th {
-					color: #333;
-				}
+				border-bottom: none;
+				border-top: 1px solid #ccc;
 			}
 		}
 
@@ -82,7 +76,7 @@
 				user-select: none;
 
 				td {
-					color: #333;
+					color: #777;
 					font-size: 16px;
 					padding: 14px 21px;
 					text-align: left;
@@ -95,6 +89,10 @@
 						margin-inline-start: -4px;
 						object-fit: cover;
 						width: 42px;
+					}
+
+					a {
+						font-weight: bold;
 					}
 
 					&[data-alignment='left'] {

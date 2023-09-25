@@ -63,7 +63,7 @@
 		display: none;
 	}
 
-	&[data-loading=true] {
+	&[data-loading='true'] {
 		@keyframes loading {
 			0% {
 				transform: translateX(-100%);
@@ -85,8 +85,9 @@
 	}
 
 	&[data-variation='secondary'] {
-		--active-color-value: 40, 40, 40;
+		--active-color-value: 220, 220, 220;
 		@include reloadActiveColor;
+		color: #333;
 
 		& > div {
 			background-color: rgb(51, 153, 255);

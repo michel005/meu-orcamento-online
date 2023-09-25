@@ -16,13 +16,19 @@ export const Pagination = ({
 			<Button
 				disabled={currentPage === 0}
 				variation="ghost"
-				leftIcon="chevron_left"
+				leftIcon="keyboard_double_arrow_left"
+				onClick={() => {
+					onChange(0)
+				}}
+			/>
+			<Button
+				disabled={currentPage === 0}
+				variation="ghost"
+				leftIcon="keyboard_arrow_left"
 				onClick={() => {
 					onChange(currentPage - 1)
 				}}
-			>
-				Anterior
-			</Button>
+			/>
 			<div className="pages">
 				{new Array(numberOfPages).fill(null).map((_, index) => {
 					return (
@@ -41,13 +47,19 @@ export const Pagination = ({
 			<Button
 				disabled={currentPage === numberOfPages - 1}
 				variation="ghost"
-				rightIcon="chevron_right"
+				rightIcon="keyboard_arrow_right"
 				onClick={() => {
 					onChange(currentPage + 1)
 				}}
-			>
-				Próximo
-			</Button>
+			/>
+			<Button
+				disabled={currentPage === numberOfPages - 1}
+				variation="ghost"
+				leftIcon="keyboard_double_arrow_right"
+				onClick={() => {
+					onChange(numberOfPages - 1)
+				}}
+			/>
 		</PaginationStyle>
 	)
 }

@@ -10,6 +10,16 @@ export const PaginationStyle = styled.div`
 		display: flex;
 		flex-direction: row;
 		gap: 7px;
+
+		button {
+			align-items: center;
+			border-radius: 50%;
+			font-size: 12px;
+			height: 24px;
+			justify-content: center;
+			padding: 0;
+			width: 24px;
+		}
 	}
 
 	button {

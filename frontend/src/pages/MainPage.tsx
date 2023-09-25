@@ -1,18 +1,16 @@
 import React, { useContext, useState } from 'react'
 import style from './MainPage.module.scss'
 import { NavbarItems } from '../constants/NavbarItems'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { matchPath } from 'react-router'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { Message } from '../components/Message'
 import { NavbarItemsType } from '../constants/NavbarItems.type'
 import { SelectCustomerModal } from './customers/modal/SelectCustomerModal'
 import { Button } from '../components/button/Button'
-import { DivRow } from '../components/DivRow'
 import { useDatabase } from '../hooks/useDatabase'
 import { Customer } from '../types/Entities.type'
-import { DivColumn } from '../components/DivColumn'
-import { Icon } from '../components/Icon'
+import { Label } from '../components/Label.style'
 
 const FakeElement = ({ item }: { item: NavbarItemsType }) => {
 	const Element = item?.element
@@ -35,60 +33,49 @@ export const MainPage = () => {
 
 	return (
 		<div className={style.mainPage} data-reduced={reduced}>
-			<nav className={style.options}>
-				<DivRow className={style.logo}>
-					<div className={style.logoFile}>
-						<Icon icon="quick_reference_all" />
-					</div>
-					<DivColumn className={style.logoDetails}>
-						<h1>Meu Orçamento</h1>
-						<p>Online</p>
-					</DivColumn>
-				</DivRow>
-				{NavbarItems.filter((item) => item.context.includes('navbar')).map((item) => {
-					const isCurrentRoute =
-						(item.link === '/' && location.pathname === item.link) ||
-						(item.link !== '/' &&
-							matchPath(
-								{
-									path: item.link,
-									end: false,
-									caseSensitive: true,
-								},
-								location.pathname
-							))
-					return (
-						<Button
-							key={item.link}
-							onClick={() => {
-								navigate(item.link)
-							}}
-							leftIcon={item.icon}
-							variation={isCurrentRoute ? 'primary' : 'ghost'}
-						>
-							{!reduced && item.title}
-						</Button>
-					)
-				})}
-				<div style={{ flexGrow: 1 }} />
-				{myUser && (
-					<DivRow className={style.userInfo}>
-						<img src={myUser.picture} />
-						<p>{myUser.name}</p>
-					</DivRow>
-				)}
-				<Button
-					className={style.reduceButton}
-					leftIcon="keyboard_arrow_left"
-					variation="ghost"
-					onClick={() => {
-						setReduced((x) => !x)
-					}}
-					style={{ alignSelf: 'flex-end', width: 'auto' }}
-				/>
+			<nav className={style.navbar}>
+				<NavLink to="/" className={style.logo}>
+					Meu Orçamento <span>Online</span>
+				</NavLink>
 			</nav>
-			<main>
-				<section>
+			<main className={style.container}>
+				<aside className={style.sidebar}>
+					<Button
+						className={style.reduceButton}
+						onClick={() => {
+							setReduced((x) => !x)
+						}}
+						leftIcon={reduced ? 'menu' : 'menu_open'}
+						variation="ghost"
+					/>
+					{NavbarItems.filter((item) => item.context.includes('navbar')).map((item) => {
+						const isCurrentRoute =
+							(item.link === '/' && location.pathname === item.link) ||
+							(item.link !== '/' &&
+								!!matchPath(
+									{
+										path: item.link,
+										end: false,
+										caseSensitive: true,
+									},
+									location.pathname
+								))
+						return (
+							<Button
+								key={item.link}
+								onClick={() => {
+									navigate(item.link)
+								}}
+								leftIcon={item.icon}
+								variation="ghost"
+								data-active={isCurrentRoute}
+							>
+								{item.title}
+							</Button>
+						)
+					})}
+				</aside>
+				<section className={style.content}>
 					<Routes>
 						{NavbarItems.map((item, itemKey) => {
 							return (

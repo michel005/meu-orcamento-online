@@ -80,8 +80,8 @@ export const Table = <T,>({ header, value, footer, pagination = true }: TableTyp
 												<Icon
 													icon={
 														sort?.[1] === 'ASC'
-															? 'arrow_downward_alt'
-															: 'arrow_upward_alt'
+															? 'keyboard_arrow_down'
+															: 'keyboard_arrow_up'
 													}
 												/>
 											)}

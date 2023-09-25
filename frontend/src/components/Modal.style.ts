@@ -21,7 +21,7 @@ export const ModalStyle = styled.div`
 	& > div {
 		border: none;
 		background-color: #fff;
-		border-radius: 10px;
+		border-radius: var(--border-radius);
 		box-shadow: #ccc 0 0 4px;
 		display: flex;
 		flex-direction: column;

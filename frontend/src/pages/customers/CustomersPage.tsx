@@ -28,7 +28,7 @@ export const CustomersPage = () => {
 		<div className={style.page}>
 			<DivRow>
 				<Text
-					rightSpace={<Button leftIcon="search" variation="ghost" />}
+					leftSpace={<Button leftIcon="search" variation="ghost" />}
 					value={filterCustomerData.data?.quickSearch || null}
 					onChange={(value) => {
 						filterCustomerData.setDataProp('quickSearch', value)

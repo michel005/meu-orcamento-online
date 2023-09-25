@@ -15,14 +15,6 @@
 
 		& > button {
 			border-radius: 0;
-
-			&[data-variation='ghost'] {
-				background-color: #ddd !important;
-
-				&:hover {
-					background-color: #ccc !important;
-				}
-			}
 		}
 	}
 }

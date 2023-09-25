@@ -25,7 +25,7 @@ export const BudgetsPage = () => {
 	const { fields: form } = useForm<BudgetFilterType>({
 		definition: {
 			quickSearch: {
-				rightSpace: <Button leftIcon="search" variation="ghost" />,
+				leftSpace: <Button leftIcon="search" variation="ghost" />,
 				placeholder: 'Produto, título ou qualquer parte do orçamento',
 				type: 'text',
 			},

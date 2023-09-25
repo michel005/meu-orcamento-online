@@ -1,11 +1,10 @@
 .mainPage {
-	--sub-menu-width: 300px;
-	--logo-size: 50px;
+	--navbar-size: 62px;
+	--sidebar-size: 280px;
 
 	background-color: #fff;
 	display: flex;
-	flex-direction: row;
-	gap: 2px;
+	flex-direction: column;
 	height: 100%;
 	max-height: 100%;
 	min-height: 100%;
@@ -13,205 +12,89 @@
 	position: absolute;
 	width: 100%;
 
-	.options {
+	.navbar {
 		background-color: #222;
 		display: flex;
-		flex-direction: column;
-		gap: 7px;
-		min-width: var(--sub-menu-width);
-		padding: 14px;
-		position: relative;
-		transition: all 0.25s;
-		width: var(--sub-menu-width);
-		z-index: 2;
+		flex-direction: row;
+		height: var(--navbar-size);
+		max-height: var(--navbar-size);
+		min-height: var(--navbar-size);
+		padding-inline: 21px;
+		width: 100%;
 
 		.logo {
+			align-self: center;
 			color: #fff;
-			gap: 14px;
-			margin-block-end: 21px;
-			white-space: nowrap;
+			font-size: 1.3em;
 
-			.logoFile {
-				background-color: #fff;
-				border-bottom: 4px solid var(--active-color);
-				border-radius: calc(var(--logo-size) / 2) 0;
-				border-top: 4px solid var(--active-color);
-				display: flex;
-				flex-direction: column;
-				height: var(--logo-size);
-				justify-content: center;
-				max-height: var(--logo-size);
-				max-width: var(--logo-size);
-				min-height: var(--logo-size);
-				min-width: var(--logo-size);
-				width: var(--logo-size);
-
-				div {
-					align-self: center;
-					color: #333;
-					font-size: calc(var(--logo-size) * 0.6);
-				}
-			}
-
-			.logoDetails {
-				align-self: center;
-				gap: 0px;
-
-				p {
-					color: var(--active-color);
-					font-weight: bold;
-				}
+			span {
+				color: var(--active-color);
 			}
 		}
+	}
+
+	.container {
+		display: flex;
+		flex-direction: row;
+		height: calc(100% - var(--navbar-size));
+	}
+
+	.sidebar {
+		background-color: #f9f9f9;
+		border-right: 1px solid #eee;
+		height: 100%;
+		transition: all 0.25s;
+		width: var(--sidebar-size);
 
 		button {
 			align-items: center;
-			display: flex;
-			flex-direction: row;
-			gap: 10px;
-			height: 46px;
-			padding-inline: 17px;
+			border-left: transparent solid 4px;
+			border-radius: 0;
+			font-size: 16px;
+			gap: 14px;
+			padding: 14px 21px;
 			white-space: nowrap;
 			width: 100%;
 
-			&[data-variation='ghost'] {
-				color: #fffc;
-
-				&:hover {
-					background-color: #fff2;
-				}
+			&:hover {
+				background-color: #eee;
 			}
 
-			&[data-variation='primary'] {
-				background-color: var(--active-color);
-				color: #fff;
-
-				&:hover {
-					background-color: var(--active-color) !important;
-				}
-			}
-		}
-
-		.userInfo {
-			gap: 14px;
-			overflow: hidden;
-
-			img {
-				border-radius: 50%;
-				height: 50px;
-				width: 50px;
+			&::before {
+				font-size: 1.2em;
+				font-weight: 500;
 			}
 
-			p {
-				align-self: center;
-				color: #fff;
-				font-size: 18px;
-				white-space: nowrap;
+			&[data-active='true'] {
+				background-color: #ccc;
+				border-left-color: #333;
 			}
 		}
 
 		.reduceButton {
-			background-color: #333;
-			border-radius: 50%;
-			font-size: 12px;
-			height: 24px;
-			inset-block-end: 24px;
-			inset-inline-end: -12px;
-			justify-content: center;
-			padding: 4px;
-			position: absolute;
-			width: 24px !important;
-
-			&:hover {
-				background-color: #444 !important;
-			}
+			border-left: none;
+			margin-left: auto;
+			width: auto;
 		}
 	}
 
-	& > main {
-		display: flex;
-		flex-direction: column;
+	.content {
+		height: 100%;
+		max-height: 100%;
+		min-height: 100%;
 		flex-grow: 1;
-		gap: 7px;
-		position: relative;
-		transition: alll 0.25s;
-
-		&::-webkit-scrollbar {
-			width: 0;
-		}
-
-		& > section {
-			display: flex;
-			flex-direction: column;
-			flex-grow: 1;
-			gap: 14px;
-			height: 100%;
-			max-height: 100%;
-			min-height: 100%;
-			transition: alll 0.25s;
-
-			& > * {
-				animation: fadeOut 0.5s linear;
-				height: 100%;
-				max-height: 100%;
-				min-height: 100%;
-				transition: alll 0.25s;
-			}
-		}
+		overflow: auto;
 	}
 
 	&[data-reduced='true'] {
-		--sub-menu-width: 78px;
+		--sidebar-size: 66px;
 
-		.options {
-			.logoDetails {
-				display: none;
-			}
-
-			.userInfo {
-				img {
-					width: calc(var(--sub-menu-width) - 28px);
-				}
-			}
-
-			.reduceButton {
-				rotate: 180deg;
-			}
-		}
-	}
-}
-
-@media screen and (max-width: 1000px) {
-	.mainPage {
-		--sub-menu-width: 78px;
-
-		.options {
-			> button {
+		.sidebar {
+			button {
 				span {
 					display: none;
 				}
 			}
-
-			.logoDetails {
-				display: none;
-			}
-
-			.userInfo {
-				img {
-					width: calc(var(--sub-menu-width) - 28px);
-				}
-			}
-
-			.reduceButton {
-				display: none;
-			}
 		}
-	}
-}
-
-@media print {
-	.options,
-	.options * {
-		display: none !important;
 	}
 }

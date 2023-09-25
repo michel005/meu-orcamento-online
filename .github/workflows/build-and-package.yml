@@ -27,4 +27,4 @@ jobs:
                 uses: actions/upload-artifact@v2
                 with:
                     name: react-app
-                    path: ./build/meu-orcamento-online-*.tgz
+                    path: ./meu-orcamento-online-*.tgz

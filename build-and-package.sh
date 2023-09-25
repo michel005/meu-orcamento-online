@@ -10,4 +10,4 @@ npm run build
 npm pack
 
 # Mova o arquivo .tgz para um local onde o GitHub possa acessá-lo
-mv meu-orcamento-online-*.tgz ./build
+# mv meu-orcamento-online-*.tgz ./build

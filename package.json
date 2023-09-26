@@ -3,9 +3,11 @@
 	"version": "1.0.0",
 	"description": "Meu Orçamento Online",
 	"main": "prettier.config.js",
+	"homepage": "https://michel005.github.io/meu-orcamento-online",
 	"scripts": {
 		"start": "webpack serve",
-		"build": "webpack --mode production"
+		"build": "webpack --mode production",
+		"deploy": "gh-pages -d dist"
 	},
 	"keywords": [],
 	"author": "",
@@ -30,6 +32,7 @@
 		"@types/react": "^18.2.6",
 		"@types/react-dom": "^18.2.4",
 		"@types/styled-components": "^5.1.26",
+		"gh-pages": "^6.0.0",
 		"html-webpack-plugin": "^5.5.1",
 		"jest": "^29.6.2",
 		"node-sass": "^8.0.0",

@@ -58,4 +58,10 @@ export const ModalStyle = styled.div`
 			gap: 14px;
 		}
 	}
+
+	@media screen and (max-width: 800px) {
+		& > div {
+			width: calc(100% - 28px);
+		}
+	}
 `

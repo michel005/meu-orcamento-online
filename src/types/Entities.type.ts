@@ -14,8 +14,8 @@ export type Customer = {
 	updated?: string
 	picture?: string
 	name?: string
-	personType?: 'PF' | 'PJ'
-	documentType?: 'RG' | 'CPF' | 'CNPJ'
+	personType?: 'PF' | 'PJ' | null
+	documentType?: 'RG' | 'CPF' | 'CNPJ' | null
 	documentNumber?: string
 	email?: string
 	phone?: string

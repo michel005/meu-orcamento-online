@@ -25,6 +25,8 @@ export const MainPage = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 
+	const myUser = data.find((x) => x.email === 'mdgrigoli@hotmail.com.br')
+
 	if (!configContext.status.database) {
 		return <h1>Carregando...</h1>
 	}
@@ -35,6 +37,10 @@ export const MainPage = () => {
 				<NavLink to="/" className={style.logo}>
 					Meu Orçamento <span>Online</span>
 				</NavLink>
+				<div className={style.userMenu}>
+					<img src={myUser?.picture} />
+					<Button leftIcon="keyboard_arrow_down" variation="ghost" />
+				</div>
 			</nav>
 			<main className={style.container}>
 				<aside className={style.sidebar}>

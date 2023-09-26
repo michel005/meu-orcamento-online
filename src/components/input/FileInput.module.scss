@@ -10,7 +10,8 @@
 		display: none;
 	}
 
-	.dropFileHere, .imageContent {
+	.dropFileHere,
+	.imageContent {
 		align-items: center;
 		border: 1px solid var(--input-border-color);
 		border-radius: var(--border-radius);
@@ -51,7 +52,7 @@
 			height: calc(var(--content-height) - 28px);
 			object-fit: cover;
 			width: calc(var(--content-height) - 28px);
-			z-index: 100;
+			z-index: 9;
 		}
 
 		button {

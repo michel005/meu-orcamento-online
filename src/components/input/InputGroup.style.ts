@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const InputGroupStyle = styled.div`
-	//border-top: 1px solid #eee;
+	border-top: 1px solid #eee;
 	display: flex;
 	flex-direction: row;
 	padding-block-start: 14px;
@@ -13,14 +13,19 @@ export const InputGroupStyle = styled.div`
 		flex-direction: column;
 		flex-grow: 1;
 		gap: 7px;
-		text-align: left;
 		max-width: 300px;
 		min-width: 300px;
+		text-align: left;
+		transition: all 0.25s;
 
 		a {
 			color: #333;
 			display: flex;
 			flex-direction: row;
+
+			h3 {
+				font-weight: normal;
+			}
 
 			.icon {
 				float: left;
@@ -58,6 +63,29 @@ export const InputGroupStyle = styled.div`
 				button {
 					display: none;
 				}
+			}
+		}
+	}
+
+	@media screen and (max-width: 1200px) {
+		header {
+			max-width: 200px;
+			min-width: 200px;
+		}
+	}
+
+	@media screen and (max-width: 1000px) {
+		flex-direction: column;
+		gap: 14px;
+
+		header {
+			max-width: none;
+			min-width: auto;
+		}
+
+		.content {
+			.row {
+				flex-direction: column;
 			}
 		}
 	}

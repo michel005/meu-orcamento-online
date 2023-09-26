@@ -9,11 +9,12 @@ import { useDatabase } from '../../../hooks/useDatabase'
 import { ConfigContext } from '../../../contexts/ConfigContext'
 import { Button } from '../../../components/button/Button'
 import { useMessage } from '../../../hooks/useMessage'
-import { StickyButtonGroup } from '../../../components/button/StickyButtonGroup'
-import { DivRow } from '../../../components/DivRow'
 import { DivColumn } from '../../../components/DivColumn'
 import { Label } from '../../../components/Label.style'
 import { ButtonOptions } from '../../../components/button/ButtonOptions'
+import { Field } from '../../../components/input/Field'
+import { DivRow } from '../../../components/DivRow'
+import { Icon } from '../../../components/Icon'
 
 export const CustomerFormPage = () => {
 	const { status } = useContext(ConfigContext)
@@ -22,7 +23,7 @@ export const CustomerFormPage = () => {
 	const customerDatabase = useDatabase<Customer>('customer')
 	const [loaded, setLoaded] = useState<boolean>(false)
 	const formData = useData<Customer>('customerForm', {})
-	const { fields, validate } = useForm<Customer>({
+	const { fields, validate, errors } = useForm<Customer>({
 		definition: {
 			picture: {
 				type: 'file',
@@ -85,10 +86,10 @@ export const CustomerFormPage = () => {
 				errors.set('phone', 'Telefone não informado')
 			}
 			if (!value.personType) {
-				errors.set('personType', 'Tipo de pessoa não informado')
+				errors.set('personType', 'Tipo de pessoa não selecionada')
 			}
 			if (!value.documentType) {
-				errors.set('documentType', 'Tipo de documento não informado')
+				errors.set('documentType', 'Tipo de documento não selecionado')
 			}
 			if (!value.documentNumber) {
 				errors.set('documentNumber', 'Número do documento não informado')
@@ -161,6 +162,8 @@ export const CustomerFormPage = () => {
 			} else {
 				formData.setData({
 					name: 'Novo Cliente',
+					personType: null,
+					documentType: null,
 					active: true,
 				})
 			}
@@ -168,90 +171,21 @@ export const CustomerFormPage = () => {
 	}, [loaded, status])
 
 	return (
-		<div className={style.page}>
-			<InputGroup
-				icon="photo"
-				title="Foto do Cliente"
-				subTitle="Foto para ajudar a identificar este cliente na hora de criar um orçamento ou emitir um relatório."
-			>
-				{fields.picture}
-			</InputGroup>
-			<InputGroup
-				icon="person"
-				title="Dados Principais"
-				subTitle="Estas são as informações principais na hora de identificar seu cliente e também importantes para enviar propostas e se comunicar com ele."
-			>
-				{fields.name}
-				<div className={'row'}>
-					{fields.email}
-					{fields.phone}
-				</div>
-			</InputGroup>
-			<InputGroup
-				icon="description"
-				title="Documento"
-				subTitle="Informe o documento do cliente, necessário para comprovar que este é de fato o cliente cadastrado."
-			>
-				<div className={'row'}>
-					<DivColumn style={{ flexGrow: 0, gap: '4px', width: 'auto' }}>
-						<Label>Tipo de Pessoa</Label>
-						<ButtonOptions
-							options={{
-								PF: 'Pessoa Física',
-								PJ: 'Pessoa Jurídica',
-							}}
-							value={formData.data.personType || 'PF'}
-							variation="secondary"
-							onChange={(value) => {
-								formData.setDataProp('personType', value)
-							}}
-						/>
-					</DivColumn>
-					<DivColumn style={{ flexGrow: 0, gap: '4px', width: 'auto' }}>
-						<Label>Tipo de Documento</Label>
-						<ButtonOptions
-							options={{
-								RG: 'RG',
-								CPF: 'CPF',
-								CNPJ: 'CNPJ',
-							}}
-							value={formData.data.documentType || 'CPF'}
-							variation="secondary"
-							onChange={(value) => {
-								formData.setDataProp('documentType', value)
-							}}
-						/>
-					</DivColumn>
-					{fields.documentNumber}
-				</div>
-			</InputGroup>
-			<InputGroup
-				icon="map"
-				title="Endereço"
-				subTitle="Coloque aqui onde este cliente esta localizado. Assim você sabe para qual endereço pode enviar encomendas ou usar para a geração de nota fiscal."
-			>
-				<div className={'row'}>
-					{addressFields.zipCode}
-					{addressFields.streetName}
-				</div>
-				<div className={'row'}>
-					{addressFields.streetNumber}
-					{addressFields.complement}
-				</div>
-				<div className={'row'}>
-					{addressFields.city}
-					{addressFields.state}
-					{addressFields.country}
-				</div>
-			</InputGroup>
-			<InputGroup
-				icon="checklist"
-				title="Indicadores"
-				subTitle="Flags usadas para indicar a situação deste cliente"
-			>
-				{fields.active}
-			</InputGroup>
-			<StickyButtonGroup>
+		<>
+			<div className={style.toolbar}>
+				<DivRow className={style.header}>
+					<a
+						onClick={() => {
+							navigate('/customers')
+						}}
+					>
+						<h3>Clientes</h3>
+					</a>
+					<h3>
+						<Icon icon="keyboard_arrow_right" />
+					</h3>
+					<h3>Formulário de Cliente</h3>
+				</DivRow>
 				<Button
 					leftIcon="save"
 					variation="primary"
@@ -259,6 +193,7 @@ export const CustomerFormPage = () => {
 						if (formData.data.active === true) {
 							const validate1 = validate(formData.data)
 							const validate2 = validateAddress(formData.data.address || null)
+							console.log(validate1, validate2)
 							if (!validate1 || !validate2) {
 								return
 							}
@@ -304,7 +239,89 @@ export const CustomerFormPage = () => {
 						Cancelar
 					</Button>
 				)}
-			</StickyButtonGroup>
-		</div>
+			</div>
+			<div className={style.page}>
+				<InputGroup
+					icon="photo"
+					title="Foto do Cliente"
+					subTitle="Foto para ajudar a identificar este cliente na hora de criar um orçamento ou emitir um relatório."
+				>
+					{fields.picture}
+				</InputGroup>
+				<InputGroup
+					icon="person"
+					title="Dados Principais"
+					subTitle="Estas são as informações principais na hora de identificar seu cliente e também importantes para enviar propostas e se comunicar com ele."
+				>
+					{fields.name}
+					<div className={'row'}>
+						{fields.email}
+						{fields.phone}
+					</div>
+				</InputGroup>
+				<InputGroup
+					icon="description"
+					title="Documento"
+					subTitle="Informe o documento do cliente, necessário para comprovar que este é de fato o cliente cadastrado."
+				>
+					<div className={'row'}>
+						<Field label="Tipo de Pessoa" error={errors.get('personType')}>
+							<ButtonOptions
+								options={{
+									PF: 'Pessoa Física',
+									PJ: 'Pessoa Jurídica',
+								}}
+								value={formData.data.personType || undefined}
+								variation="secondary"
+								onChange={(value) => {
+									formData.setDataProp('personType', value)
+								}}
+							/>
+						</Field>
+						<Field label="Tipo de Documento" error={errors.get('documentType')}>
+							<ButtonOptions
+								options={{
+									RG: 'RG',
+									CPF: 'CPF',
+									CNPJ: 'CNPJ',
+								}}
+								value={formData.data.documentType || undefined}
+								variation="secondary"
+								onChange={(value) => {
+									formData.setDataProp('documentType', value)
+								}}
+							/>
+						</Field>
+						{fields.documentNumber}
+					</div>
+				</InputGroup>
+				<InputGroup
+					icon="map"
+					title="Endereço"
+					subTitle="Coloque aqui onde este cliente esta localizado. Assim você sabe para qual endereço pode enviar encomendas ou usar para a geração de nota fiscal."
+				>
+					<div className={'row'}>
+						{addressFields.zipCode}
+						{addressFields.streetName}
+					</div>
+					<div className={'row'}>
+						{addressFields.streetNumber}
+						{addressFields.complement}
+					</div>
+					<div className={'row'}>
+						{addressFields.city}
+						{addressFields.state}
+						{addressFields.country}
+					</div>
+				</InputGroup>
+				<InputGroup
+					icon="checklist"
+					title="Indicadores"
+					subTitle="Flags usadas para indicar a situação deste cliente"
+				>
+					{fields.active}
+				</InputGroup>
+			</div>
+		</>
 	)
 }

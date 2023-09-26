@@ -1,8 +1,51 @@
+@keyframes showPage {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
 .page {
+	animation: showPage 0.5s linear;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
 	gap: 14px;
 	padding: 14px;
 	overflow: auto;
+}
+
+.toolbar {
+	align-items: center;
+	background-color: #f9f9f9;
+	border-bottom: 1px solid #eee;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	inset-block-start: 0;
+	justify-content: flex-end;
+	padding: 14px;
+	position: sticky;
+	width: 100%;
+	z-index: 100;
+
+	.header {
+		flex-grow: 1;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.toolbar {
+		.header {
+			display: none;
+		}
+
+		button {
+			span {
+				display: none;
+			}
+		}
+	}
 }

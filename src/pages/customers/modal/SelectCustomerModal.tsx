@@ -42,7 +42,12 @@ export const SelectCustomerModal = () => {
 					return (
 						<DivRow style={{ gap: '7px' }}>
 							{customer.picture ? (
-								<img width={50} height={50} src={customer.picture} />
+								<img
+									width={50}
+									height={50}
+									style={{ borderRadius: 'var(--border-radius)' }}
+									src={customer.picture}
+								/>
 							) : (
 								<div
 									style={{

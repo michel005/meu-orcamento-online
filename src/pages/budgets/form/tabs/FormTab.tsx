@@ -198,64 +198,6 @@ export const FormTab = () => {
 					value={formData.data?.services || []}
 				/>
 			</InputGroup>
-			<StickyButtonGroup>
-				<Button
-					leftIcon="save"
-					variation="primary"
-					onClick={() => {
-						if (!formData.data?.id) {
-							databaseBudget.create(formData.data)
-						} else {
-							databaseBudget.update(formData.data?.id, formData.data)
-						}
-						formData.setData(null)
-						navigate('/budgets')
-					}}
-				>
-					Salvar
-				</Button>
-				<Button
-					leftIcon="add"
-					variation="secondary"
-					onClick={() => {
-						formModalData.setData({
-							amount: 1,
-						})
-					}}
-				>
-					Novo Produto / Serviço
-				</Button>
-				{formData.data?.id && (
-					<Button
-						leftIcon="delete"
-						variation="secondary"
-						onClick={() => {
-							showQuestion(
-								'Deseja realmente excluir este orçamento?',
-								'Esta operação não podera ser revertida.',
-								() => {
-									databaseBudget.remove(formData.data?.id as number)
-									formData.setData(null)
-									navigate('/budgets')
-								}
-							)
-						}}
-					>
-						Excluir
-					</Button>
-				)}
-				{!formData.data?.id && (
-					<Button
-						leftIcon="close"
-						onClick={() => {
-							navigate('/budgets')
-						}}
-						variation="secondary"
-					>
-						Cancelar
-					</Button>
-				)}
-			</StickyButtonGroup>
 		</>
 	)
 }

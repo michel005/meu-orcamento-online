@@ -35,7 +35,7 @@ export const ButtonOptions = ({
 						return (
 							<Button
 								key={opt}
-								variation={whatsTheVariation(value === opt)}
+								variation={whatsTheVariation(!!value && value === opt)}
 								onClick={() => {
 									onChange?.(opt)
 								}}

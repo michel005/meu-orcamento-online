@@ -11,10 +11,11 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		overflow: hidden;
-		z-index: 100;
 
 		& > button {
 			border-radius: 0;
+			flex-grow: 1;
+			justify-content: center;
 		}
 	}
 }

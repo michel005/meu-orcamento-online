@@ -25,10 +25,29 @@
 		.logo {
 			align-self: center;
 			color: #fff;
+			flex-grow: 1;
 			font-size: 1.3em;
 
 			span {
 				color: var(--active-color);
+			}
+		}
+
+		.userMenu {
+			align-items: center;
+			display: flex;
+			flex-direction: row;
+			gap: 10px;
+
+			img {
+				border-radius: 50%;
+				height: calc(var(--navbar-size) - 28px);
+				width: calc(var(--navbar-size) - 28px);
+			}
+
+			button {
+				color: #fff;
+				padding: 0;
 			}
 		}
 	}
@@ -87,6 +106,20 @@
 	}
 
 	&[data-reduced='true'] {
+		--sidebar-size: 66px;
+
+		.sidebar {
+			button {
+				span {
+					display: none;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.mainPage {
 		--sidebar-size: 66px;
 
 		.sidebar {

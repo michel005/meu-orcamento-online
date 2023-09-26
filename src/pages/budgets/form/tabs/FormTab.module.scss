@@ -16,8 +16,9 @@
 	width: 100%;
 
 	.customerInfoDetails {
-		> * {
+		align-items: flex-start;
 
+		> * {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;

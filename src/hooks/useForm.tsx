@@ -216,8 +216,9 @@ export const useForm = <T,>({
 		})
 		return allFields as T
 	}, [definition, onChange, value])
-	return { fields, validate: executeValidation } as {
+	return { fields, validate: executeValidation, errors } as {
 		fields: T
 		validate: (value: T | null) => boolean
+		errors: Map<string, string>
 	}
 }

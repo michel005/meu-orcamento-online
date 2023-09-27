@@ -1,7 +1,7 @@
-.dashboardPage {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	gap: 21px;
-	padding: 21px;
+.header {
+	gap: 4px !important;
+
+	p {
+		color: #999;
+	}
 }

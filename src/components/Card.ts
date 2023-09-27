@@ -1,21 +1,25 @@
 import styled from 'styled-components'
 
 export const Card = styled.div`
-	//border: 1px solid #ddd;
-	box-shadow: #ddd 0 0 7px;
+	background-color: #fff;
+	box-shadow: #ccc 0 0 7px;
 	border-radius: var(--border-radius);
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 	gap: 14px;
+	padding: 14px;
 	width: 100%;
 
-	img {
-		height: 100px;
-		object-fit: cover;
-		width: 100%;
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		font-weight: normal;
 	}
 
 	p {
-		flex-grow: 1;
+		color: #aaa;
 	}
 `

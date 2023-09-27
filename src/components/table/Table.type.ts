@@ -8,7 +8,7 @@ export type TableType<T> = {
 			alignment?: 'left' | 'center' | 'right'
 			label: string
 			show?: boolean
-			type?: 'text' | 'currency'
+			type?: 'text' | 'currency' | 'date'
 			valueModifier?: (row: T, rowIndex: number) => any
 			width?: string
 		}

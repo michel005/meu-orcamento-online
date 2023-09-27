@@ -5,6 +5,7 @@ import { NumberUtils } from '../../utils/NumberUtils'
 import { Pagination } from './Pagination'
 import { Icon } from '../Icon'
 import { DivRow } from '../DivRow'
+import { SortUtils } from '../../utils/SortUtils'
 
 export const Table = <T,>({ header, value, footer, pagination = true }: TableType<T>) => {
 	const [sort, setSort] = useState<[string, 'ASC' | 'DESC'] | null>(null)
@@ -23,12 +24,11 @@ export const Table = <T,>({ header, value, footer, pagination = true }: TableTyp
 		if (!sort) {
 			return 0
 		}
-		const valueX = (x as any)?.[sort?.[0]] || ''
-		const valueY = (y as any)?.[sort?.[0]] || ''
-
-		if (valueX > valueY) return sort[1] === 'ASC' ? 1 : -1
-		if (valueX < valueY) return sort[1] === 'ASC' ? -1 : 1
-		return 0
+		const definition = header?.[sort?.[0] as keyof typeof header]
+		if (definition && definition.type === 'date') {
+			return SortUtils.sortDate(x, y, sort?.[0], sort[1])
+		}
+		return SortUtils.sort(x, y, sort?.[0], sort[1])
 	})
 
 	const sliceOfValue = pagination

@@ -38,6 +38,7 @@ export type Budget = {
 	id?: number
 	created?: string
 	updated?: string
+	estimatedDate?: string
 	title?: string
 	customerId?: number
 	services?: Service[]
@@ -45,4 +46,8 @@ export type Budget = {
 	amount?: number
 	description?: string
 	status?: BudgetStatus
+	history?: {
+		date: string
+		value: Omit<Omit<Omit<Budget, 'created'>, 'updated'>, 'history'>
+	}[]
 }

@@ -27,8 +27,29 @@ export const CustomersPage = () => {
 	return (
 		<div className={style.page}>
 			<DivRow>
+				<Button
+					leftIcon="add"
+					onClick={() => {
+						navigate('/customers/newForm')
+					}}
+				>
+					Novo Cliente
+				</Button>
 				<Text
 					leftSpace={<Button leftIcon="search" variation="ghost" />}
+					rightSpace={
+						(filterCustomerData.data?.quickSearch || '').length > 0 ? (
+							<Button
+								leftIcon="close"
+								onClick={() => {
+									filterCustomerData.setDataProp('quickSearch', '')
+								}}
+								variation="ghost"
+							/>
+						) : (
+							<></>
+						)
+					}
 					value={filterCustomerData.data?.quickSearch || null}
 					onChange={(value) => {
 						filterCustomerData.setDataProp('quickSearch', value)
@@ -51,14 +72,6 @@ export const CustomersPage = () => {
 						}
 					}}
 				/>
-				<Button
-					leftIcon="add"
-					onClick={() => {
-						navigate('/customers/newForm')
-					}}
-				>
-					Novo Cliente
-				</Button>
 			</DivRow>
 			<Table<Customer>
 				header={{

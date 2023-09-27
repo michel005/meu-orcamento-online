@@ -26,6 +26,18 @@ export const BudgetsPage = () => {
 		definition: {
 			quickSearch: {
 				leftSpace: <Button leftIcon="search" variation="ghost" />,
+				rightSpace:
+					(budgetFilterData.data?.quickSearch || '').length > 0 ? (
+						<Button
+							leftIcon="close"
+							onClick={() => {
+								budgetFilterData.setDataProp('quickSearch', '')
+							}}
+							variation="ghost"
+						/>
+					) : (
+						<></>
+					),
 				placeholder: 'Produto, título ou qualquer parte do orçamento',
 				type: 'text',
 			},
@@ -41,8 +53,6 @@ export const BudgetsPage = () => {
 	return (
 		<div className={style.page}>
 			<DivRow>
-				{form.quickSearch}
-				<div style={{ maxWidth: '300px' }}>{form.date}</div>
 				<Button
 					leftIcon="add"
 					onClick={() => {
@@ -55,6 +65,8 @@ export const BudgetsPage = () => {
 				>
 					Novo Orçamento
 				</Button>
+				<div style={{ maxWidth: '250px' }}>{form.date}</div>
+				{form.quickSearch}
 			</DivRow>
 			<Table<Budget>
 				header={{
@@ -99,6 +111,10 @@ export const BudgetsPage = () => {
 						valueModifier: (row) =>
 							budgetStatus[row.status as keyof typeof budgetStatus],
 						width: '150px',
+					},
+					estimatedDate: {
+						alignment: 'right',
+						label: 'Prazo de Entrega',
 					},
 				}}
 				value={budgetDatabase.data

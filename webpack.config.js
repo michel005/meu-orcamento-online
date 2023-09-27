@@ -5,7 +5,7 @@ module.exports = {
 	entry: './src/index.tsx',
 	mode: 'development',
 	output: {
-		publicPath: '/',
+		publicPath: '/meu-orcamento-online/',
 	},
 	devServer: {
 		static: path.join(__dirname, 'dist'),

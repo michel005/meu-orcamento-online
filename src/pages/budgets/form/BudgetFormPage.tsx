@@ -10,14 +10,15 @@ import { ButtonOptions } from '../../../components/button/ButtonOptions'
 import { FormTab } from './tabs/FormTab'
 import { PreviewTab } from './tabs/PreviewTab'
 import { DivRow } from '../../../components/DivRow'
-import { StickyButtonGroup } from '../../../components/button/StickyButtonGroup'
 import { Button } from '../../../components/button/Button'
 import { useMessage } from '../../../hooks/useMessage'
 import { Icon } from '../../../components/Icon'
+import { HistoryTab } from './tabs/HistoryTab'
 
 const FormOptions: { [key: string]: any } = {
 	form: <FormTab />,
 	preview: <PreviewTab />,
+	history: <HistoryTab />,
 }
 
 export const BudgetFormPage = () => {
@@ -70,6 +71,13 @@ export const BudgetFormPage = () => {
 						if (!formData.data?.id) {
 							databaseBudget.create(formData.data)
 						} else {
+							if (!formData.data.history) {
+								formData.data.history = []
+							}
+							formData.data.history.push({
+								date: DateUtils.dateTimeToString(new Date()),
+								value: structuredClone(formData.data),
+							})
 							databaseBudget.update(formData.data?.id, formData.data)
 						}
 						formData.setData(null)

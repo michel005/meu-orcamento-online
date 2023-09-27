@@ -50,6 +50,10 @@ export const FormTab = () => {
 				type: 'text',
 				textArea: true,
 			},
+			estimatedDate: {
+				label: 'Prazo de Entrega',
+				type: 'date',
+			},
 			status: {
 				label: 'Situação',
 				type: 'select',
@@ -132,7 +136,10 @@ export const FormTab = () => {
 			>
 				{fields.title}
 				{fields.description}
-				{fields.status}
+				<div className="row">
+					{fields.status}
+					{fields.estimatedDate}
+				</div>
 			</InputGroup>
 			<InputGroup
 				icon="list_alt"

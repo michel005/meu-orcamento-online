@@ -153,12 +153,13 @@ export const CustomerFormPage = () => {
 		if (!loaded && status.database) {
 			setLoaded(true)
 			if (customerId) {
-				const find = customerDatabase.findById(parseFloat('0.' + customerId))
-				if (find) {
-					formData.setData(find)
-				} else {
-					navigate('/customers')
-				}
+				customerDatabase.findById(customerId).then((response) => {
+					if (response) {
+						formData.setData(response)
+					} else {
+						navigate('/customers')
+					}
+				})
 			} else {
 				formData.setData({
 					name: 'Novo Cliente',
@@ -198,10 +199,10 @@ export const CustomerFormPage = () => {
 								return
 							}
 						}
-						if (!formData.data?.id) {
+						if (!formData.data?._id) {
 							customerDatabase.create(formData.data)
 						} else {
-							customerDatabase.update(formData.data?.id, formData.data)
+							customerDatabase.update(formData.data?._id, formData.data)
 						}
 						formData.setData(null)
 						navigate('/customers')
@@ -209,7 +210,7 @@ export const CustomerFormPage = () => {
 				>
 					Salvar
 				</Button>
-				{formData.data?.id && (
+				{formData.data?._id && (
 					<Button
 						leftIcon="delete"
 						variation="secondary"
@@ -218,7 +219,7 @@ export const CustomerFormPage = () => {
 								'Deseja realmente excluir este cliente?',
 								'Esta operação não podera ser revertida.',
 								() => {
-									customerDatabase.remove(formData.data?.id as number)
+									customerDatabase.remove(formData.data?._id as string)
 									formData.setData(null)
 									navigate('/customers')
 								}
@@ -228,7 +229,7 @@ export const CustomerFormPage = () => {
 						Excluir
 					</Button>
 				)}
-				{!formData.data?.id && (
+				{!formData.data?._id && (
 					<Button
 						leftIcon="close"
 						onClick={() => {

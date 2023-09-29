@@ -20,9 +20,9 @@ export type CustomerFilterType = {
 }
 
 export const CustomersPage = () => {
-	const customerDatabase = useDatabase<Customer>('customer')
 	const filterCustomerData = useData<CustomerFilterType>('customerFilter', {})
 	const navigate = useNavigate()
+	const { data } = useDatabase<Customer>('customer')
 
 	return (
 		<div className={style.page}>
@@ -83,12 +83,8 @@ export const CustomersPage = () => {
 								<DivColumn style={{ gap: '4px' }}>
 									<a
 										onClick={() => {
-											if (row.id) {
-												navigate(
-													`/customers/form/${
-														row.id.toString().split('.')[1]
-													}`
-												)
+											if (row._id) {
+												navigate(`/customers/form/${row._id}`)
 											}
 										}}
 									>
@@ -123,7 +119,7 @@ export const CustomersPage = () => {
 						width: '100px',
 					},
 				}}
-				value={customerDatabase.data
+				value={data
 					.filter(
 						(customer) =>
 							!filterCustomerData.data.personType ||

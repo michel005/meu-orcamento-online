@@ -9,7 +9,7 @@ export type Address = {
 }
 
 export type Customer = {
-	id?: number
+	_id?: string
 	created?: string
 	updated?: string
 	picture?: string
@@ -35,12 +35,12 @@ export type Service = {
 type BudgetStatus = 'pending' | 'accepted' | 'rejected' | 'completed'
 
 export type Budget = {
-	id?: number
+	_id?: string
 	created?: string
 	updated?: string
 	estimatedDate?: string
 	title?: string
-	customerId?: number
+	customerId?: string
 	services?: Service[]
 	date?: string
 	amount?: number

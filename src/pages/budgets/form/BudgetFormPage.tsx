@@ -38,12 +38,13 @@ export const BudgetFormPage = () => {
 		if (!loaded) {
 			setLoaded(true)
 			if (budgetId) {
-				const find = databaseBudget.findById(parseFloat('0.' + budgetId))
-				if (find) {
-					formData.setData(find)
-				} else {
-					navigate('/budgets')
-				}
+				databaseBudget.findById(budgetId).then((response) => {
+					if (response) {
+						formData.setData(response)
+					} else {
+						navigate('/budgets')
+					}
+				})
 			}
 		}
 	}, [loaded])
@@ -68,7 +69,7 @@ export const BudgetFormPage = () => {
 					leftIcon="save"
 					variation="primary"
 					onClick={() => {
-						if (!formData.data?.id) {
+						if (!formData.data?._id) {
 							databaseBudget.create(formData.data)
 						} else {
 							if (!formData.data.history) {
@@ -78,7 +79,7 @@ export const BudgetFormPage = () => {
 								date: DateUtils.dateTimeToString(new Date()),
 								value: structuredClone(formData.data),
 							})
-							databaseBudget.update(formData.data?.id, formData.data)
+							databaseBudget.update(formData.data?._id, formData.data)
 						}
 						formData.setData(null)
 						navigate('/budgets')
@@ -86,6 +87,23 @@ export const BudgetFormPage = () => {
 				>
 					Salvar
 				</Button>
+				{formData.data?._id && (
+					<Button
+						leftIcon="copy_all"
+						variation="secondary"
+						onClick={() => {
+							formData.data._id = undefined
+							formData.data.title = `${formData.data.title} (copia)`
+							formData.data.date = DateUtils.dateToString(new Date())
+							formData.data.history = []
+							formData.data.status = 'pending'
+							formData.setData(formData.data)
+							navigate('/budgets/newForm')
+						}}
+					>
+						Duplicar
+					</Button>
+				)}
 				<Button
 					leftIcon="add"
 					variation="secondary"
@@ -97,7 +115,7 @@ export const BudgetFormPage = () => {
 				>
 					Novo Produto / Serviço
 				</Button>
-				{formData.data?.id && (
+				{formData.data?._id && (
 					<Button
 						leftIcon="delete"
 						variation="secondary"
@@ -106,7 +124,7 @@ export const BudgetFormPage = () => {
 								'Deseja realmente excluir este orçamento?',
 								'Esta operação não podera ser revertida.',
 								() => {
-									databaseBudget.remove(formData.data?.id as number)
+									databaseBudget.remove(formData.data?._id as string)
 									formData.setData(null)
 									navigate('/budgets')
 								}
@@ -116,7 +134,7 @@ export const BudgetFormPage = () => {
 						Excluir
 					</Button>
 				)}
-				{!formData.data?.id && (
+				{!formData.data?._id && (
 					<Button
 						leftIcon="close"
 						onClick={() => {
@@ -129,7 +147,7 @@ export const BudgetFormPage = () => {
 				)}
 			</div>
 			<div className={style.page}>
-				{formData?.data?.id && (
+				{formData?.data?._id && (
 					<DivRow>
 						<ButtonOptions
 							variation="secondary"
@@ -143,7 +161,7 @@ export const BudgetFormPage = () => {
 						/>
 					</DivRow>
 				)}
-				{formData?.data?.id ? FormOptions?.[currentTab] : FormOptions.form}
+				{formData?.data?._id ? FormOptions?.[currentTab] : FormOptions.form}
 				{formModalData.data && <BudgetFormServiceModal />}
 			</div>
 		</>

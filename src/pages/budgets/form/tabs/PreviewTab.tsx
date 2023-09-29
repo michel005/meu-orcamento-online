@@ -1,6 +1,5 @@
 import React from 'react'
 import style from './PreviewTab.module.scss'
-import budgetStatus from '../../../../copyDeck/BudgetStatus.json'
 import { useData } from '../../../../hooks/useData'
 import { Budget, Customer, Service } from '../../../../types/Entities.type'
 import { Label } from '../../../../components/Label.style'
@@ -14,7 +13,7 @@ export const PreviewTab = () => {
 	const formData = useData<Budget>('budgetForm')
 	const databaseCustomer = useDatabase<Customer>('customer')
 
-	const customer = databaseCustomer.findById(formData.data.customerId || 0)
+	const customer = databaseCustomer.data.find((x) => x._id == formData.data.customerId)
 	const address = Object.keys(customer?.address || {}).map(
 		(x) => (customer?.address as any)?.[x] || ''
 	)

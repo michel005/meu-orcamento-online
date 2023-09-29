@@ -77,10 +77,7 @@ export const FormTab = () => {
 			}
 		},
 	})
-	const customer = formData.data?.customerId
-		? databaseCustomer.findById(formData.data?.customerId)
-		: undefined
-	const navigate = useNavigate()
+	const customer = databaseCustomer.data.find((x) => x._id === formData.data?.customerId)
 
 	return (
 		<>
@@ -103,7 +100,7 @@ export const FormTab = () => {
 										showModal: true,
 										quickSearch: '',
 										whenSelectionChange: (selectedCustomer) => {
-											formData.setDataProp('customerId', selectedCustomer.id)
+											formData.setDataProp('customerId', selectedCustomer._id)
 										},
 									})
 								}}
@@ -119,7 +116,7 @@ export const FormTab = () => {
 									showModal: true,
 									quickSearch: '',
 									whenSelectionChange: (selectedCustomer) => {
-										formData.setDataProp('customerId', selectedCustomer.id)
+										formData.setDataProp('customerId', selectedCustomer._id)
 									},
 								})
 							}}

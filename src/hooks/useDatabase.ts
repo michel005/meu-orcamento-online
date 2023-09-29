@@ -1,48 +1,63 @@
-import { useContext } from 'react'
-import { ConfigContext } from '../contexts/ConfigContext'
 import { DateUtils } from '../utils/DateUtils'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export const useDatabase = <T>(key: string) => {
-	const { database, setDatabase } = useContext(ConfigContext)
+	const api = axios.create({
+		baseURL: `http://localhost:8080/${key}`,
+	})
+	const [data, setData] = useState<T[]>([])
+
+	const refresh = async () => {
+		const result = await api.get('/')
+		return setData((result.data || []) as T[])
+	}
+
+	useEffect(() => {
+		api.get('/').then((response) => {
+			setData(response.data)
+		})
+	}, [])
 
 	return {
-		data: (database?.[key] || []) as T[],
-		findById: (id: number) => {
-			return (database?.[key] as T[]).find((x: any) => x.id === id)
+		data,
+		refresh,
+		findById: async (id: string) => {
+			const result = await api.get('/' + id)
+			return result.data as T | null
 		},
-		create: (value: T) => {
-			setDatabase((prevState) => {
-				if (!prevState[key]) {
-					prevState[key] = []
-				}
-				prevState[key].push({
-					id: Math.random(),
+		create: async (value: T, after?: () => void) => {
+			try {
+				await api.post('/', {
 					...value,
 					created: DateUtils.dateToString(new Date()),
 				})
-				return structuredClone(prevState)
-			})
+				await refresh()
+				after?.()
+			} catch (err) {
+				throw err
+			}
 		},
-		update: (id: number, value: T) => {
-			console.log(value)
-			setDatabase((prevState) => {
-				const index = prevState[key].findIndex((x: any) => x.id === id)
-				prevState[key][index] = {
+		update: async (id: string, value: T, after?: () => void) => {
+			try {
+				await api.put('/' + id, {
 					...value,
 					updated: DateUtils.dateToString(new Date()),
-				}
-				if (!prevState[key][index]?.created) {
-					prevState[key][index].created = DateUtils.dateToString(new Date())
-				}
-				return structuredClone(prevState)
-			})
+				})
+				await refresh()
+				after?.()
+			} catch (err) {
+				throw err
+			}
 		},
-		remove: (id: number) => {
-			setDatabase((prevState) => {
-				const index = prevState[key].findIndex((x: any) => x.id === id)
-				prevState[key].splice(index)
-				return structuredClone(prevState)
-			})
+		remove: async (id: string, after?: () => void) => {
+			try {
+				await api.delete('/' + id)
+				await refresh()
+				after?.()
+			} catch (err) {
+				throw err
+			}
 		},
 	}
 }

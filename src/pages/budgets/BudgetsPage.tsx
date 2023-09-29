@@ -14,7 +14,7 @@ import { useForm } from '../../hooks/useForm'
 export type BudgetFilterType = {
 	date?: string
 	quickSearch?: string
-	customerId?: number
+	customerId?: string
 }
 
 export const BudgetsPage = () => {
@@ -81,8 +81,8 @@ export const BudgetsPage = () => {
 						valueModifier: (row) => (
 							<a
 								onClick={() => {
-									if (row.id) {
-										navigate(`/budgets/form/${row.id.toString().split('.')[1]}`)
+									if (row._id) {
+										navigate(`/budgets/form/${row._id}`)
 									}
 								}}
 							>
@@ -93,7 +93,8 @@ export const BudgetsPage = () => {
 					customerId: {
 						label: 'Cliente',
 						valueModifier: (row) =>
-							row.customerId && customerDatabase.findById(row.customerId)?.name,
+							row.customerId &&
+							customerDatabase.data.find((x) => x._id === row.customerId)?.name,
 					},
 					amount: {
 						alignment: 'right',

@@ -1,0 +1,51 @@
+import React, { useState } from 'react'
+import style from './Field.module.scss'
+
+export const Field = ({
+	label,
+	input,
+	leftSide,
+	rightSide,
+	info,
+	error,
+	isCheckbox = false,
+	disabled,
+}: {
+	label?: string
+	input: (setFocus: any, id: string, disabled: boolean) => any
+	leftSide?: any
+	rightSide?: any
+	info?: string
+	error?: string
+	isCheckbox?: boolean
+	disabled?: boolean
+}) => {
+	const randomId = Math.random().toString()
+	const [focus, setFocus] = useState<boolean>(false)
+
+	return (
+		<div
+			className={style.field}
+			data-checkbox={isCheckbox}
+			data-focus={focus}
+			data-disabled={disabled}
+		>
+			{label && <label htmlFor={randomId}>{label}</label>}
+			<div className={style.inputContent}>
+				{leftSide ? (
+					<div className={style.leftSide}>{leftSide}</div>
+				) : (
+					<div className={style.emptySpace} />
+				)}
+				<div className={style.input}>{input(setFocus, randomId, disabled)}</div>
+				{rightSide ? (
+					<div className={style.rightSide}>{rightSide}</div>
+				) : (
+					<div className={style.emptySpace} />
+				)}
+			</div>
+			{info && <small>{info}</small>}
+			{error && <small className={style.error}>{error}</small>}
+		</div>
+	)
+}

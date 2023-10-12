@@ -1,0 +1,40 @@
+.loginPage {
+	align-items: center;
+	background: url(https://finger.ind.br/wp-content/uploads/2023/05/post-thumbnail-f315b8669cb0f265f091659cabb7970e-1170x685.jpeg);
+	background-size: cover;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	inset-block-start: 0;
+	inset-inline-start: 0;
+	justify-content: center;
+	position: fixed;
+	width: 100%;
+}
+
+.loginForm {
+	background-color: #fff;
+	backdrop-filter: blur(4px);
+	display: flex;
+	flex-direction: column;
+	gap: 21px;
+	padding: 50px;
+	transition: all 0.25s;
+	width: 528px;
+	z-index: 100;
+}
+
+.error {
+	background-color: #ffdcdcaa;
+	color: #ff6666;
+	padding: 21px;
+}
+
+@media screen and (max-width: 600px) {
+	.loginForm {
+		height: 100%;
+		justify-content: center;
+		padding: 50px 25px;
+		width: 100%;
+	}
+}

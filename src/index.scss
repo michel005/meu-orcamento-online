@@ -38,5 +38,19 @@ hr {
 	background-color: #ccc;
 	border: none;
 	height: 1px;
+	position: relative;
+	overflow: visible;
 	width: 100%;
+
+	&::before {
+		color: #999;
+		content: attr(data-value);
+		background-color: #fff;
+		font-size: 14px;
+		inset-block-start: 50%;
+		inset-inline-start: 50%;
+		padding-inline: 7px;
+		position: absolute;
+		transform: translateX(-50%) translateY(-50%);
+	}
 }

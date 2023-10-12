@@ -4,9 +4,6 @@ const path = require('path')
 module.exports = {
 	entry: './src/index.tsx',
 	mode: 'development',
-	output: {
-		publicPath: '/meu-orcamento-online/',
-	},
 	devServer: {
 		static: path.join(__dirname, 'dist'),
 		compress: true,

@@ -5,6 +5,8 @@ import { useFormLayout } from '../../hooks/useFormLayout'
 import { LoginFormDefinition } from '../../definitions/LoginFormDefinition'
 import axios from 'axios'
 import { SessionContext } from '../../contexts/SessionContext'
+import { useNavigate } from 'react-router-dom'
+import { ErrorUtils } from '../../utils/ErrorUtils'
 
 export const LoginPage = () => {
 	const { setCurrentUser } = useContext(SessionContext)
@@ -14,14 +16,15 @@ export const LoginPage = () => {
 		password: '',
 		remember_me: localStorage?.saved_user,
 	})
-	const { fields } = useFormLayout({
+	const { fields, setErrors } = useFormLayout({
 		definition: LoginFormDefinition(),
 		value: value,
 		onChange: setValue,
 	})
+	const navigate = useNavigate()
 
 	const login = () => {
-		setError(null)
+		setErrors(null)
 		axios
 			.post('user/login', {
 				user_name: value.user_name,
@@ -30,10 +33,10 @@ export const LoginPage = () => {
 			.then((response) => {
 				setCurrentUser(response.data)
 				localStorage.setItem('auth_token', response.data.token)
-				localStorage.setItem('saved_user', response.data.user_name)
+				localStorage.setItem('saved_user', value.user_name)
 			})
 			.catch((errors) => {
-				setError(errors.response.data.message)
+				setErrors(ErrorUtils.convertErrors(errors.response.data))
 			})
 	}
 
@@ -44,12 +47,19 @@ export const LoginPage = () => {
 				{fields.user_name}
 				{fields.password}
 				{fields.remember_me}
-				{error && <div className={style.error}>{error}</div>}
+				{fields.error}
 				<Button leftIcon="login" onClick={login}>
 					Entrar
 				</Button>
 				<hr data-value="OU" />
-				<ButtonGhost leftIcon="person_add">Cadastrar-se</ButtonGhost>
+				<ButtonGhost
+					leftIcon="person_add"
+					onClick={() => {
+						navigate('/createUser')
+					}}
+				>
+					Cadastrar-se
+				</ButtonGhost>
 			</div>
 		</div>
 	)

@@ -5,13 +5,14 @@ import React from 'react'
 export const LoginFormDefinition = (): useFormLayoutDefinitionType => {
 	return {
 		user_name: {
-			label: 'Nome de Usuário',
-			rightSide: <ButtonGhost leftIcon="verified_user" disabled={true} />,
+			label: 'Usuário / E-mail',
+			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,
 		},
 		password: {
 			label: 'Senha de Acesso',
 			type: 'password',
-			rightSide: <ButtonGhost leftIcon="password">Recuperar</ButtonGhost>,
+			leftSide: <ButtonGhost leftIcon="password" />,
+			rightSide: <ButtonGhost>Recuperar</ButtonGhost>,
 		},
 		remember_me: {
 			label: 'Lembrar meu acesso',

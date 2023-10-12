@@ -22,15 +22,11 @@ export const SessionProvider = ({ children }: { children: any }) => {
 			setStatus('loading')
 			if (localStorage.getItem('auth_token')) {
 				axios
-					.post(
-						'user/me',
-						{},
-						{
-							headers: {
-								auth_token: localStorage.getItem('auth_token'),
-							},
-						}
-					)
+					.post('user/me', null, {
+						headers: {
+							auth_token: localStorage.getItem('auth_token'),
+						},
+					})
 					.then((response) => {
 						setCurrentUser(response.data)
 					})

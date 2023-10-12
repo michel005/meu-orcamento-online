@@ -38,14 +38,22 @@
 		}
 
 		.leftSide {
+			color: inherit;
+
 			button {
 				border-radius: var(--border-radius) 0 0 var(--border-radius);
+				color: inherit;
+				font-size: inherit;
 			}
 		}
 
 		.rightSide {
+			color: inherit;
+
 			button {
 				border-radius: 0 var(--border-radius) var(--border-radius) 0;
+				color: inherit;
+				font-size: inherit;
 			}
 		}
 
@@ -54,6 +62,7 @@
 			flex-direction: row;
 			flex-grow: 1;
 			max-width: 100%;
+			overflow: auto;
 
 			input,
 			select {
@@ -105,10 +114,16 @@
 		}
 	}
 
-	&[data-disabled='true'] {
-		background-color: red;
+	&[data-error='true'] {
 		.inputContent {
-			background-color: #ccc;
+			border-color: #ffc3c3;
+			color: red;
+		}
+
+		&[data-focus='true'] {
+			.inputContent {
+				border-color: red;
+			}
 		}
 	}
 }

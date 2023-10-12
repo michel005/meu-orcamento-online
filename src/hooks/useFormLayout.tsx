@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Field } from '../components/fields/Field'
+import { Error } from '../components/Error'
 
 export type useFormLayoutDefinitionType = {
 	[key: string]: {
@@ -45,7 +46,8 @@ export const useFormLayout = <Entity,>({
 							value={(value?.[field as keyof typeof value] as string) || ''}
 							onChange={(event) => {
 								onChange((previousValue: any) => {
-									previousValue[field] = event.target.value
+									previousValue[field] =
+										event.target.value === '' ? null : event.target.value
 									return { ...previousValue }
 								})
 							}}
@@ -54,7 +56,7 @@ export const useFormLayout = <Entity,>({
 							onBlur={() => setFocus(false)}
 						/>
 					)}
-					error={errors?.[field]}
+					error={errors?.[field]?.message}
 				/>
 			)
 		} else if (['checkbox'].includes(fieldDefinition.type as string)) {
@@ -65,7 +67,7 @@ export const useFormLayout = <Entity,>({
 					input={(setFocus) => (
 						<input
 							id={id}
-							type={fieldDefinition.type || 'text'}
+							type="checkbox"
 							checked={value?.[field as keyof typeof value] as boolean}
 							onChange={(event) => {
 								onChange((previousValue: any) => {
@@ -79,7 +81,7 @@ export const useFormLayout = <Entity,>({
 						/>
 					)}
 					isCheckbox={true}
-					error={errors?.[field]}
+					error={errors?.[field]?.message}
 				/>
 			)
 		} else {
@@ -95,7 +97,8 @@ export const useFormLayout = <Entity,>({
 							value={(value?.[field as keyof typeof value] as string) || ''}
 							onChange={(event) => {
 								onChange((previousValue: any) => {
-									previousValue[field] = event.target.value
+									previousValue[field] =
+										event.target.value === '' ? null : event.target.value
 									return { ...previousValue }
 								})
 							}}
@@ -104,13 +107,18 @@ export const useFormLayout = <Entity,>({
 							onBlur={() => setFocus(false)}
 						/>
 					)}
-					error={errors?.[field]}
+					error={errors?.[field]?.message}
 				/>
 			)
 		}
 	})
 	return {
-		fields: fields as any,
+		fields: {
+			...fields,
+			error: errors?.['error'] && (
+				<Error message={errors?.['error']?.message} code={errors?.['error']?.code} />
+			),
+		} as any,
 		setErrors,
 	}
 }

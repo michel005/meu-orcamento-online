@@ -12,7 +12,7 @@ export const Field = ({
 	disabled,
 }: {
 	label?: string
-	input: (setFocus: any, id: string, disabled: boolean) => any
+	input?: (setFocus: any, id: string) => any
 	leftSide?: any
 	rightSide?: any
 	info?: string
@@ -29,21 +29,24 @@ export const Field = ({
 			data-checkbox={isCheckbox}
 			data-focus={focus}
 			data-disabled={disabled}
+			data-error={!!error}
 		>
 			{label && <label htmlFor={randomId}>{label}</label>}
-			<div className={style.inputContent}>
-				{leftSide ? (
-					<div className={style.leftSide}>{leftSide}</div>
-				) : (
-					<div className={style.emptySpace} />
-				)}
-				<div className={style.input}>{input(setFocus, randomId, disabled)}</div>
-				{rightSide ? (
-					<div className={style.rightSide}>{rightSide}</div>
-				) : (
-					<div className={style.emptySpace} />
-				)}
-			</div>
+			{input && (
+				<div className={style.inputContent}>
+					{leftSide ? (
+						<div className={style.leftSide}>{leftSide}</div>
+					) : (
+						<div className={style.emptySpace} />
+					)}
+					<div className={style.input}>{input?.(setFocus, randomId)}</div>
+					{rightSide ? (
+						<div className={style.rightSide}>{rightSide}</div>
+					) : (
+						<div className={style.emptySpace} />
+					)}
+				</div>
+			)}
 			{info && <small>{info}</small>}
 			{error && <small className={style.error}>{error}</small>}
 		</div>

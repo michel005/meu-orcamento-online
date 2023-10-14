@@ -1,11 +1,14 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { Field } from '../components/fields/Field'
 import { Error } from '../components/Error'
+import { FileUtils } from '../utils/FileUtils'
+import { ButtonGhost, ButtonWhite } from '../components/Button'
 
 export type useFormLayoutDefinitionType = {
 	[key: string]: {
 		label: string
-		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox'
+		placeholder?: string
+		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox' | 'file'
 		leftSide?: any
 		rightSide?: any
 		disabled?: boolean
@@ -52,6 +55,7 @@ export const useFormLayout = <Entity,>({
 								})
 							}}
 							disabled={fieldDefinition.disabled}
+							placeholder={fieldDefinition.placeholder}
 							onFocus={() => setFocus(true)}
 							onBlur={() => setFocus(false)}
 						/>
@@ -76,6 +80,7 @@ export const useFormLayout = <Entity,>({
 								})
 							}}
 							disabled={fieldDefinition.disabled}
+							placeholder={fieldDefinition.placeholder}
 							onFocus={() => setFocus(true)}
 							onBlur={() => setFocus(false)}
 						/>
@@ -83,6 +88,84 @@ export const useFormLayout = <Entity,>({
 					isCheckbox={true}
 					error={errors?.[field]?.message}
 				/>
+			)
+		} else if (['file'].includes(fieldDefinition.type as string)) {
+			const id = Math.random().toString()
+			const ref = useRef(null)
+			fields[field] = (
+				<>
+					<Field
+						label={fieldDefinition.label}
+						leftSide={
+							value?.[field] ? (
+								<>
+									<img src={value?.[field]} />
+								</>
+							) : (
+								<ButtonWhite
+									leftIcon="folder_open"
+									onClick={() => {
+										ref.current.click()
+									}}
+								>
+									Clique em procurar para achar uma imagem...
+								</ButtonWhite>
+							)
+						}
+						rightSide={
+							value?.[field] ? (
+								<div style={{ display: 'flex', flexDirection: 'row' }}>
+									<ButtonGhost
+										leftIcon="clear_all"
+										onClick={() => {
+											onChange((previousValue: any) => {
+												previousValue[field] = null
+												return { ...previousValue }
+											})
+										}}
+									>
+										Limpar
+									</ButtonGhost>
+									<ButtonGhost
+										leftIcon="folder_open"
+										onClick={() => {
+											ref.current.click()
+										}}
+									>
+										Procurar
+									</ButtonGhost>
+								</div>
+							) : (
+								<ButtonGhost
+									leftIcon="file_open"
+									onClick={() => {
+										ref.current.click()
+									}}
+								>
+									Procurar
+								</ButtonGhost>
+							)
+						}
+						input={() => <></>}
+						error={errors?.[field]?.message}
+					/>
+					<input
+						ref={ref}
+						style={{ display: 'none' }}
+						id={id}
+						type={fieldDefinition.type}
+						onChange={(event) => {
+							FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
+								onChange((previousValue: any) => {
+									previousValue[field] = base64 === '' ? null : base64
+									return { ...previousValue }
+								})
+							})
+						}}
+						disabled={fieldDefinition.disabled}
+						placeholder={fieldDefinition.placeholder}
+					/>
+				</>
 			)
 		} else {
 			fields[field] = (
@@ -103,6 +186,7 @@ export const useFormLayout = <Entity,>({
 								})
 							}}
 							disabled={fieldDefinition.disabled}
+							placeholder={fieldDefinition.placeholder}
 							onFocus={() => setFocus(true)}
 							onBlur={() => setFocus(false)}
 						/>

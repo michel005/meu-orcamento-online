@@ -1,4 +1,4 @@
-export type GoogleIcons =
+export type GoogleIconType =
 	| '10k'
 	| '10mp'
 	| '11mp'

@@ -1,0 +1,122 @@
+@import '../keyframe';
+
+:root {
+	--private-navbar-height: 80px;
+	--private-sidebar-width: 300px;
+}
+
+.privatePage {
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	inset-block-start: 0;
+	inset-inline-start: 0;
+	position: fixed;
+	width: 100%;
+}
+
+.navbar {
+	align-items: center;
+	background-color: #111;
+	display: flex;
+	flex-direction: row;
+	gap: 21px;
+	height: var(--private-navbar-height);
+	padding: 21px;
+	position: relative;
+	width: 100%;
+	z-index: 100;
+}
+
+.appInfo {
+	align-items: center;
+	color: #fff;
+	display: flex;
+	flex-direction: row;
+	font-size: 21px;
+	gap: 7px;
+
+	> a {
+		color: #fff;
+	}
+
+	> span {
+		color: var(--active-color);
+	}
+}
+
+.navbarOptions {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+	gap: 21px;
+	justify-content: center;
+
+	> a {
+		align-items: center;
+		color: #fff5;
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+		padding-inline: 7px;
+		transition: all 0.25s;
+
+		&:hover {
+			color: #fff7;
+		}
+
+		&.active {
+			color: #fff;
+		}
+	}
+}
+
+.userInfo {
+	align-items: center;
+	color: #fff;
+	display: flex;
+	flex-direction: row;
+	font-size: 21px;
+	gap: 14px;
+
+	> img {
+		border-radius: 50%;
+		height: var(--input-height);
+		object-fit: cover;
+		width: var(--input-height);
+	}
+
+	> span {
+		color: var(--active-color);
+	}
+}
+
+.userInfoOptions {
+	animation: fadeOut 0.15s linear, topToBottom 0.15s linear;
+	background-color: #111;
+	border-radius: 0 0 14px 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	inset-block-start: 100%;
+	inset-inline-end: 7px;
+	padding: 0 14px 14px;
+	position: absolute;
+	z-index: 1;
+
+	> button {
+		align-self: flex-end;
+		justify-content: flex-end;
+	}
+}
+
+.mainContent {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	height: calc(100% - var(--private-navbar-height));
+	overflow: auto;
+	width: 100%;
+}

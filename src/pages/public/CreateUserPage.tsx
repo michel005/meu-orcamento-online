@@ -1,5 +1,5 @@
 import style from './LoginPage.module.scss'
-import { Button } from '../../components/Button'
+import { Button, ButtonGhost } from '../../components/Button'
 import React, { useState } from 'react'
 import { useFormLayout } from '../../hooks/useFormLayout'
 import axios from 'axios'
@@ -53,11 +53,21 @@ export const CreateUserPage = () => {
 				{fields.user_name}
 				{fields.email}
 				{fields.password}
-				{fields.agree_terms}
+				<div style={{ alignSelf: 'flex-end' }}>{fields.agree_terms}</div>
 				{fields.error}
-				<Button leftIcon="save" onClick={createUser}>
-					Cadastrar
-				</Button>
+				<div className={style.buttons}>
+					<Button leftIcon="save" onClick={createUser}>
+						Cadastrar
+					</Button>
+					<ButtonGhost
+						leftIcon="keyboard_arrow_left"
+						onClick={() => {
+							navigate('/')
+						}}
+					>
+						Voltar
+					</ButtonGhost>
+				</div>
 			</div>
 		</div>
 	)

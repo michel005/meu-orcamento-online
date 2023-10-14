@@ -35,12 +35,28 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
+
+			> img {
+				border-radius: var(--border-radius) 0 0 var(--border-radius);
+				height: var(--input-height);
+				object-fit: cover;
+				width: var(--input-height);
+			}
+
+			> span {
+				color: #ccc;
+				margin-inline-start: 14px;
+			}
 		}
 
 		.leftSide {
 			color: inherit;
 
 			button {
+				border-radius: 0;
+			}
+
+			button:first-child {
 				border-radius: var(--border-radius) 0 0 var(--border-radius);
 				color: inherit;
 				font-size: inherit;
@@ -51,6 +67,10 @@
 			color: inherit;
 
 			button {
+				border-radius: 0;
+			}
+
+			button:last-child {
 				border-radius: 0 var(--border-radius) var(--border-radius) 0;
 				color: inherit;
 				font-size: inherit;

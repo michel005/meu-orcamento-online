@@ -1,0 +1,17 @@
+.myUserPage {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 14px;
+
+	> header {
+		border-bottom: 1px solid #ccc;
+		display: flex;
+		flex-direction: row;
+		padding-bottom: 7px;
+
+		h1 {
+			flex-grow: 1;
+		}
+	}
+}

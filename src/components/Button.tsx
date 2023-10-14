@@ -1,12 +1,11 @@
 import React, { ButtonHTMLAttributes, DetailedHTMLProps, HTMLProps } from 'react'
 import style from './Button.module.scss'
-import { GoogleIcons } from '../types/GoogleIcons'
+import { GoogleIconType } from '../types/GoogleIconType'
 
-export interface ButtonType
-	extends DetailedHTMLProps<any, ButtonHTMLAttributes<HTMLButtonElement>> {
-	leftIcon?: GoogleIcons
-	rightIcon?: GoogleIcons
-	variation?: 'primary' | 'secondary' | 'ghost'
+export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement> {
+	leftIcon?: GoogleIconType
+	rightIcon?: GoogleIconType
+	variation?: 'primary' | 'secondary' | 'ghost' | 'white'
 }
 
 export const Button = ({ ...props }: ButtonType) => {
@@ -19,6 +18,10 @@ export const ButtonSecondary = ({ ...props }: ButtonType) => {
 
 export const ButtonGhost = ({ ...props }: ButtonType) => {
 	return <GenericButton {...props} variation="ghost" />
+}
+
+export const ButtonWhite = ({ ...props }: ButtonType) => {
+	return <GenericButton {...props} variation="white" />
 }
 
 const GenericButton = ({ leftIcon, rightIcon, variation, ...props }: ButtonType) => {

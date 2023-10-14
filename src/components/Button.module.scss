@@ -46,6 +46,19 @@
 		}
 	}
 
+	&[data-variation='white'] {
+		background-color: #fff2;
+		color: #fff;
+
+		&:hover {
+			background-color: #fff4;
+		}
+
+		&:active {
+			background-color: #fff3;
+		}
+	}
+
 	&[data-variation='ghost'] {
 		background-color: transparent;
 		color: #333;

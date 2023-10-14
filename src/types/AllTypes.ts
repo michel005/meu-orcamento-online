@@ -5,3 +5,11 @@ export type CreateUser = {
 	password: string
 	agree_terms: boolean
 }
+
+export type UserType = {
+	picture: string
+	full_name: string
+	user_name: string
+	email: string
+	password: string
+}

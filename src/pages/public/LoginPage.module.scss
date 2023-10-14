@@ -1,9 +1,13 @@
+@import '../../keyframe';
+
 .loginPage {
 	align-items: center;
-	background: url(https://finger.ind.br/wp-content/uploads/2023/05/post-thumbnail-f315b8669cb0f265f091659cabb7970e-1170x685.jpeg);
+	background-color: #fff;
+	background-image: url(https://finger.ind.br/wp-content/uploads/2023/05/post-thumbnail-f315b8669cb0f265f091659cabb7970e-1170x685.jpeg);
 	background-size: cover;
 	display: flex;
 	flex-direction: column;
+	gap: 21px;
 	height: 100%;
 	inset-block-start: 0;
 	inset-inline-start: 0;
@@ -13,7 +17,8 @@
 }
 
 .loginForm {
-	background-color: #fff;
+	animation: fadeOut 0.35s linear;
+	background-color: #fffe;
 	backdrop-filter: blur(4px);
 	display: flex;
 	flex-direction: column;
@@ -22,6 +27,19 @@
 	transition: all 0.25s;
 	width: 528px;
 	z-index: 100;
+}
+
+.socialMedias {
+	display: flex;
+	flex-direction: row;
+	gap: 21px;
+	justify-content: center;
+
+	img {
+		background-color: #fff !important;
+		border-radius: 50%;
+		height: 28px;
+	}
 }
 
 .buttons {

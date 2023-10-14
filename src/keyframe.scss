@@ -7,6 +7,15 @@
 	}
 }
 
+@keyframes topToBottom {
+	from {
+		transform: translateY(-50%);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
 @keyframes rotate {
 	to {
 		transform: rotate(180deg);

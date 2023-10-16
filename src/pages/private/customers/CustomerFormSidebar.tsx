@@ -10,6 +10,7 @@ import { useForm } from '../../../hooks/useForm'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
 
 export const CustomerFormSidebar = () => {
+	const { setMessage } = useContext(ConfigContext)
 	const { create, update, remove } = useApi('customer')
 	const { form, edit, close } = useForm<CustomerType>('customer')
 	const { setLoading } = useContext(ConfigContext)
@@ -55,11 +56,18 @@ export const CustomerFormSidebar = () => {
 				<ButtonGhost
 					leftIcon="save"
 					onClick={() => {
-						setLoading(true)
-						remove({
-							id: form?._id,
-							onSuccess,
-							onError,
+						setMessage({
+							header: 'Deseja realmente excluir este cliente?',
+							content: 'Esta operação não pode ser desfaita.',
+							type: 'question',
+							confirm: () => {
+								setLoading(true)
+								remove({
+									id: form?._id,
+									onSuccess,
+									onError,
+								})
+							},
 						})
 					}}
 				>
@@ -75,7 +83,15 @@ export const CustomerFormSidebar = () => {
 					Fechar
 				</ButtonGhost>
 			</div>
-			{fields.picture}
+			<div className={style.userCard}>
+				{fields.picture}
+				<div className={style.userCardInfo}>
+					<h2>{form.name}</h2>
+					<p>{form.email}</p>
+					<p>{form.phone}</p>
+					<p>{form.birthday}</p>
+				</div>
+			</div>
 			{fields.name}
 			{fields.email}
 			{fields.phone}

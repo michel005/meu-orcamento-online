@@ -1,5 +1,9 @@
-import { ButtonGhost } from '../components/Button'
-import React from 'react'
+export type MessageType = {
+	header: string
+	content?: any
+	type?: 'confirm' | 'question'
+	confirm?: () => void
+}
 
 export interface CreateUser extends UserType {
 	agree_terms?: boolean

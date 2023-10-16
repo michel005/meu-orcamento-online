@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
+import { MessageType } from '../types/AllTypes'
 
 export type ConfigContextType = {
-	message: {
-		header: string
-		content: any
-		type: 'yes' | 'no'
-		confirm: () => void
-	} | null
-	setMessage: any
+	message: MessageType | null
+	setMessage: (message: MessageType | null) => void
 	loading: boolean
 	setLoading: any
 	form: any

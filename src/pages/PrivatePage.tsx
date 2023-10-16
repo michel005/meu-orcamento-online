@@ -6,8 +6,11 @@ import { ButtonWhite } from '../components/Button'
 import { SessionContext } from '../contexts/SessionContext'
 import { RoutesMap } from '../constants/RoutesMap'
 import { UserPicture } from '../components/UserPicture'
+import { LoadingPage } from './LoadingPage'
+import { ConfigContext } from '../contexts/ConfigContext'
 
 export const PrivatePage = () => {
+	const { loading, setMessage } = useContext(ConfigContext)
 	const { currentUser, setCurrentUser } = useContext(SessionContext)
 	const [showUserMenu, setShowUserMenu] = useState(false)
 	const navigate = useNavigate()
@@ -64,9 +67,16 @@ export const PrivatePage = () => {
 							<ButtonWhite
 								leftIcon="logout"
 								onClick={() => {
-									navigate('/')
-									setCurrentUser(null)
-									setShowUserMenu(false)
+									setMessage({
+										header: 'Deseja realmente sair?',
+										content: 'O dados não salvos poderão ser perdidos.',
+										type: 'question',
+										confirm: () => {
+											navigate('/')
+											setCurrentUser(null)
+											setShowUserMenu(false)
+										},
+									})
 								}}
 							>
 								Sair
@@ -88,6 +98,7 @@ export const PrivatePage = () => {
 						)
 					})}
 				</Routes>
+				{loading && <LoadingPage />}
 			</main>
 		</div>
 	)

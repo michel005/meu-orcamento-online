@@ -1,5 +1,8 @@
+@import '../../../keyframe';
+
 .customerCard {
 	align-self: flex-start;
+	animation: fadeOut 0.25s linear;
 	background-color: #fff;
 	border-radius: 14px;
 	box-shadow: #ccc 0 0 4px;

@@ -34,3 +34,11 @@
 		color: var(--active-color) !important;
 	}
 }
+
+.buttons {
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	justify-content: flex-end;
+	padding-block-start: 14px;
+}

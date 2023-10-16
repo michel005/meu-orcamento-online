@@ -1,4 +1,7 @@
+@import '../../../keyframe';
+
 .customerFormSidebar {
+	animation: rightToLeft 0.25s linear;
 	border-left: 1px solid #ccc;
 	display: flex;
 	flex-direction: column;
@@ -10,6 +13,7 @@
 	width: 600px;
 
 	&::before {
+		animation: fadeOut 0.25s linear;
 		background-color: #1111;
 		backdrop-filter: blur(4px);
 		content: '';
@@ -19,6 +23,23 @@
 		position: fixed;
 		width: 100%;
 		z-index: 200;
+	}
+}
+
+.userCard {
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+}
+
+.userCardInfo {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin-block-start: 21px;
+
+	p {
+		color: #aaa;
 	}
 }
 

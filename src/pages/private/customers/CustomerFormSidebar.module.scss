@@ -1,0 +1,40 @@
+.customerFormSidebar {
+	border-left: 1px solid #ccc;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	height: 100%;
+	overflow: auto;
+	padding: 14px;
+	position: relative;
+	width: 600px;
+
+	&::before {
+		background-color: #1111;
+		backdrop-filter: blur(4px);
+		content: '';
+		height: 100%;
+		inset-block-start: var(--private-navbar-height);
+		inset-inline-end: 600px;
+		position: fixed;
+		width: 100%;
+		z-index: 200;
+	}
+}
+
+.options {
+	background-color: #eee;
+	border-radius: 14px;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	padding: 14px 17px;
+	width: 100%;
+	overflow: auto;
+
+	button {
+		align-items: center;
+		border-radius: 7px;
+		padding: 14px;
+	}
+}

@@ -1,9 +1,8 @@
-export type CreateUser = {
-	full_name: string
-	user_name: string
-	email: string
-	password: string
-	agree_terms: boolean
+import { ButtonGhost } from '../components/Button'
+import React from 'react'
+
+export interface CreateUser extends UserType {
+	agree_terms?: boolean
 }
 
 export type UserType = {
@@ -11,5 +10,28 @@ export type UserType = {
 	full_name: string
 	user_name: string
 	email: string
+	birthday?: string
+	phone?: string
 	password: string
+}
+
+export type ChangePasswordType = {
+	old_password: string
+	new_password: string
+	new_password_confirm: string
+}
+
+export type CustomerType = {
+	_id?: string
+	created?: string
+	updated?: string
+	picture?: string
+	name?: string
+	email?: string
+	birthday?: string
+	phone?: string
+	person_type?: 'PF' | 'PJ'
+	document_type?: 'CPF' | 'CNPJ' | 'RG'
+	document_number?: string
+	active?: boolean
 }

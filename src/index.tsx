@@ -5,14 +5,17 @@ import { MainPage } from './pages/MainPage'
 import './index.scss'
 import axios from 'axios'
 import { SessionProvider } from './contexts/SessionContext'
+import { ConfigProvider } from './contexts/ConfigContext'
 
 axios.defaults.baseURL = 'http://localhost:8080/api'
 
 const container = document.getElementById('root')
 createRoot(container!).render(
 	<BrowserRouter>
-		<SessionProvider>
-			<MainPage />
-		</SessionProvider>
+		<ConfigProvider>
+			<SessionProvider>
+				<MainPage />
+			</SessionProvider>
+		</ConfigProvider>
 	</BrowserRouter>
 )

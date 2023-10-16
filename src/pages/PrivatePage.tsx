@@ -1,40 +1,47 @@
 import React, { useContext, useState } from 'react'
 import style from './PrivatePage.module.scss'
 import { Icon } from '../components/Icon'
-import { NavLink, Route, Routes } from 'react-router-dom'
+import { NavLink, Route, Routes, useNavigate } from 'react-router-dom'
 import { ButtonWhite } from '../components/Button'
 import { SessionContext } from '../contexts/SessionContext'
 import { RoutesMap } from '../constants/RoutesMap'
+import { UserPicture } from '../components/UserPicture'
 
 export const PrivatePage = () => {
-	const { currentUser } = useContext(SessionContext)
+	const { currentUser, setCurrentUser } = useContext(SessionContext)
 	const [showUserMenu, setShowUserMenu] = useState(false)
-	const [reducedSidebar, setReducedSidebar] = useState(false)
+	const navigate = useNavigate()
 
 	return (
 		<div className={style.privatePage}>
 			<nav className={style.navbar}>
 				<div className={style.appInfo}>
 					<Icon icon="description" />
-					<NavLink to="/">Meu Orçamento Online</NavLink>
+					<NavLink to="/">Meu Bazar Online</NavLink>
 				</div>
 				<div className={style.navbarOptions}>
-					{Object.keys(RoutesMap.private).map((routeKey) => {
-						const routeDetails = RoutesMap.private[routeKey]
-						return (
-							<NavLink
-								key={routeKey}
-								to={routeDetails.route}
-								className={({ isActive }) => (isActive ? style.active : '')}
-							>
-								<Icon icon={routeDetails?.icon} className={style.icon} />
-								<span>{routeDetails.name}</span>
-							</NavLink>
-						)
-					})}
+					{Object.keys(RoutesMap.private)
+						.filter((routeKey) => !RoutesMap.private[routeKey].hide)
+						.map((routeKey) => {
+							const routeDetails = RoutesMap.private[routeKey]
+							return (
+								<NavLink
+									key={routeKey}
+									to={routeDetails.route}
+									className={({ isActive }) => (isActive ? style.active : '')}
+								>
+									<Icon icon={routeDetails?.icon} className={style.icon} />
+									<span>{routeDetails.name}</span>
+								</NavLink>
+							)
+						})}
 				</div>
 				<div className={style.userInfo}>
-					{currentUser?.picture && <img src={currentUser.picture} />}
+					<UserPicture
+						picture={currentUser?.picture}
+						name={currentUser.full_name}
+						size="var(--input-height)"
+					/>
 					<ButtonWhite
 						rightIcon={showUserMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
 						onClick={() => {
@@ -45,8 +52,25 @@ export const PrivatePage = () => {
 					</ButtonWhite>
 					{showUserMenu && (
 						<div className={style.userInfoOptions}>
-							<ButtonWhite leftIcon="edit">Alterar meus dados</ButtonWhite>
-							<ButtonWhite leftIcon="logout">Sair</ButtonWhite>
+							<ButtonWhite
+								leftIcon="edit"
+								onClick={() => {
+									navigate('/my-user')
+									setShowUserMenu(false)
+								}}
+							>
+								Alterar meus dados
+							</ButtonWhite>
+							<ButtonWhite
+								leftIcon="logout"
+								onClick={() => {
+									navigate('/')
+									setCurrentUser(null)
+									setShowUserMenu(false)
+								}}
+							>
+								Sair
+							</ButtonWhite>
 						</div>
 					)}
 				</div>

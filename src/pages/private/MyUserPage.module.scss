@@ -1,17 +1,73 @@
 .myUserPage {
 	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+.userInfoSidebar {
+	background-color: #222;
+	display: flex;
+	flex-direction: column;
+	width: 270px;
+	min-width: 270px;
+
+	.sidebarInfo {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 21px;
+		height: 100%;
+	}
+
+	h3 {
+		color: #fff;
+		font-size: 1.2em;
+	}
+
+	p {
+		align-items: center;
+		color: #fffa;
+		display: flex;
+		font-size: 0.9em;
+		gap: 7px;
+	}
+}
+
+.userForm {
+	display: flex;
 	flex-direction: column;
 	gap: 14px;
 	padding: 14px;
+	overflow: auto;
+	width: 100%;
 
-	> header {
-		border-bottom: 1px solid #ccc;
-		display: flex;
-		flex-direction: row;
-		padding-bottom: 7px;
+	&::-webkit-scrollbar {
+		width: 0;
+	}
 
-		h1 {
-			flex-grow: 1;
-		}
+	button {
+		align-self: flex-start;
+	}
+}
+
+.formContent {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	width: 600px;
+}
+
+.header {
+	border-bottom: 1px solid #ccc;
+	display: flex;
+	flex-direction: row;
+	padding-bottom: 7px;
+
+	h1 {
+		flex-grow: 1;
+	}
+
+	h3 {
+		margin-block-start: 14px;
 	}
 }

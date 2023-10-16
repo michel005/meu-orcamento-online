@@ -8,15 +8,17 @@ import { SessionContext } from '../../contexts/SessionContext'
 import { useNavigate } from 'react-router-dom'
 import { ErrorUtils } from '../../utils/ErrorUtils'
 import { Icon } from '../../components/Icon'
+import { ConfigContext } from '../../contexts/ConfigContext'
 
 export const LoginPage = () => {
+	const { setLoading } = useContext(ConfigContext)
 	const { setCurrentUser } = useContext(SessionContext)
 	const [value, setValue] = useState({
 		user_name: localStorage.getItem('saved_user'),
 		password: '',
 		remember_me: !!localStorage?.saved_user,
 	})
-	const { fields, setErrors } = useFormLayout({
+	const { fields, setErrors } = useFormLayout<any>({
 		definition: LoginFormDefinition(),
 		value: value,
 		onChange: setValue,
@@ -25,6 +27,7 @@ export const LoginPage = () => {
 
 	const login = () => {
 		setErrors(null)
+		setLoading(true)
 		axios
 			.post('user/login', {
 				user_name: value.user_name,
@@ -41,6 +44,9 @@ export const LoginPage = () => {
 			})
 			.catch((errors) => {
 				setErrors(ErrorUtils.convertErrors(errors.response.data))
+			})
+			.finally(() => {
+				setLoading(false)
 			})
 	}
 

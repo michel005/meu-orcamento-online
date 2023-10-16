@@ -1,5 +1,8 @@
 @import '../utils';
 
 .icon {
+	align-self: center;
+	display: inline;
+	font-style: normal;
 	@include useGoogleFonts();
 }

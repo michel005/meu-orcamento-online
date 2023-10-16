@@ -1,0 +1,35 @@
+.userPicture {
+	align-self: center;
+	display: flex;
+	z-index: 100;
+
+	&[data-format='circle'] {
+		img {
+			border-radius: 50%;
+		}
+
+		.initialLetters {
+			border-radius: 50%;
+		}
+	}
+}
+
+img {
+	height: var(--size);
+	object-fit: cover;
+	width: var(--size);
+	z-index: 200;
+}
+
+.initialLetters {
+	align-items: center;
+	background-color: #ddd;
+	color: #666;
+	display: flex;
+	font-size: calc(var(--size) / 3);
+	flex-direction: row;
+	height: var(--size);
+	justify-content: center;
+	width: var(--size);
+	z-index: 200;
+}

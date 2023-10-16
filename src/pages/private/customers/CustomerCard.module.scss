@@ -1,0 +1,100 @@
+.customerCard {
+	align-self: flex-start;
+	background-color: #fff;
+	border-radius: 14px;
+	box-shadow: #ccc 0 0 4px;
+	display: flex;
+	flex-direction: column;
+	width: 270px;
+
+	&:hover {
+		.customerPicture {
+			&::before {
+				background-color: #fffa;
+			}
+
+			> div {
+				scale: 1.1;
+
+				> img {
+					box-shadow: #fff3 0 0 35px;
+				}
+			}
+		}
+	}
+
+	&[data-person-type='PF'] {
+		.customerPicture {
+			span {
+				background-color: #39f;
+				color: #fff;
+			}
+		}
+	}
+
+	&[data-person-type='PJ'] {
+		.customerPicture {
+			span {
+				background-color: #f93;
+				color: #fff;
+			}
+		}
+	}
+}
+
+.customerPicture {
+	align-items: center;
+	background-color: #eee;
+	background-position: center;
+	background-size: cover;
+	border-radius: 14px 14px 0 0;
+	border-bottom: 4px solid var(--border-color);
+	display: flex;
+	flex-direction: column;
+	height: 200px;
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+	transition: all 0.25s;
+	width: 100%;
+
+	&::before {
+		background-color: #fff7;
+		backdrop-filter: blur(10px);
+		border-radius: 14px 14px 0 0;
+		content: '';
+		height: 100%;
+		inset: 0;
+		overflow: hidden;
+		position: absolute;
+		transition: all 0.25s;
+		width: 100%;
+	}
+
+	> div {
+		transition: all 0.25s;
+	}
+
+	span {
+		background-color: #39f;
+		border-radius: 7px;
+		color: #fff;
+		font-size: 10px;
+		padding: 7px;
+		position: absolute;
+		inset-block-end: 7px;
+		inset-inline-end: 7px;
+		transition: all 0.25s;
+	}
+}
+
+.customerInfo {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 14px;
+
+	p {
+		color: #aaa;
+	}
+}

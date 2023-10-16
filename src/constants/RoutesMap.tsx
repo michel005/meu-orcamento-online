@@ -2,6 +2,7 @@ import React from 'react'
 import { GoogleIconType } from '../types/GoogleIconType'
 import { DashboardPage } from '../pages/private/DashboardPage'
 import { MyUserPage } from '../pages/private/MyUserPage'
+import { CustomerPage } from '../pages/private/CustomerPage'
 
 type RouteType = {
 	[key: string]: {
@@ -9,6 +10,7 @@ type RouteType = {
 		name: string
 		route: string
 		component?: any
+		hide?: boolean
 	}
 }
 
@@ -30,12 +32,24 @@ export const RoutesMap: RoutesType = {
 			icon: 'group',
 			name: 'Clientes',
 			route: '/customers',
+			component: <CustomerPage />,
+		},
+		budgets: {
+			icon: 'shopping_bag',
+			name: 'Produtos',
+			route: '/products',
+		},
+		sells: {
+			icon: 'sell',
+			name: 'Vendas',
+			route: '/sells',
 		},
 		myUser: {
 			icon: 'person',
 			name: 'Meu Usuário',
 			route: '/my-user',
 			component: <MyUserPage />,
+			hide: true,
 		},
 	},
 }

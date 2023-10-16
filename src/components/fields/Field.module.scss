@@ -86,11 +86,11 @@
 
 			input,
 			select {
-				background-color: transparent;
 				border: none;
 				flex-grow: 1;
 				font-size: inherit;
 				outline: transparent;
+				z-index: 100;
 			}
 		}
 	}

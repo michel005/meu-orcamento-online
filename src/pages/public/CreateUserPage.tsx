@@ -1,18 +1,22 @@
 import style from './LoginPage.module.scss'
 import { Button, ButtonGhost } from '../../components/Button'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useFormLayout } from '../../hooks/useFormLayout'
 import axios from 'axios'
 import { CreateUserDefinition } from '../../definitions/CreateUserDefinition'
 import { useNavigate } from 'react-router-dom'
 import { ErrorUtils } from '../../utils/ErrorUtils'
 import { CreateUser } from '../../types/AllTypes'
+import { ConfigContext } from '../../contexts/ConfigContext'
 
 export const CreateUserPage = () => {
+	const { setLoading } = useContext(ConfigContext)
 	const [value, setValue] = useState<CreateUser>({
+		picture: null,
 		full_name: null,
 		user_name: null,
 		email: null,
+		phone: null,
 		password: null,
 		agree_terms: false,
 	})
@@ -29,6 +33,7 @@ export const CreateUserPage = () => {
 			setErrors(ErrorUtils.singleError('error', 'Aceite os termos de uso'))
 			return
 		}
+		setLoading(true)
 		axios
 			.post('user', {
 				full_name: value.full_name,
@@ -43,6 +48,9 @@ export const CreateUserPage = () => {
 			.catch((errors) => {
 				setErrors(ErrorUtils.convertErrors(errors.response.data))
 			})
+			.finally(() => {
+				setLoading(false)
+			})
 	}
 
 	return (
@@ -52,6 +60,8 @@ export const CreateUserPage = () => {
 				{fields.full_name}
 				{fields.user_name}
 				{fields.email}
+				{fields.birthday}
+				{fields.phone}
 				{fields.password}
 				<div style={{ alignSelf: 'flex-end' }}>{fields.agree_terms}</div>
 				{fields.error}

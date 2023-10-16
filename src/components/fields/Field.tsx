@@ -10,22 +10,24 @@ export const Field = ({
 	error,
 	isCheckbox = false,
 	disabled,
+	className,
 }: {
 	label?: string
 	input?: (setFocus: any, id: string) => any
 	leftSide?: any
 	rightSide?: any
 	info?: string
-	error?: string
+	error?: any
 	isCheckbox?: boolean
 	disabled?: boolean
+	className?: string
 }) => {
 	const randomId = Math.random().toString()
 	const [focus, setFocus] = useState<boolean>(false)
 
 	return (
 		<div
-			className={style.field}
+			className={`${style.field} ${className}`}
 			data-checkbox={isCheckbox}
 			data-focus={focus}
 			data-disabled={disabled}

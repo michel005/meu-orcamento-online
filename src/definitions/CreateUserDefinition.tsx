@@ -16,6 +16,15 @@ export const CreateUserDefinition = (): useFormLayoutDefinitionType => {
 			label: 'E-mail',
 			leftSide: <ButtonGhost leftIcon="mail" disabled={true} />,
 		},
+		birthday: {
+			label: 'Data de Nascimento',
+			type: 'date',
+			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
+		},
+		phone: {
+			label: 'Telefone',
+			leftSide: <ButtonGhost leftIcon="phonelink_ring" disabled={true} />,
+		},
 		password: {
 			label: 'Senha de Acesso',
 			type: 'password',

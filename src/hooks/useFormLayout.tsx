@@ -1,16 +1,21 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react'
 import { Field } from '../components/fields/Field'
 import { Error } from '../components/Error'
 import { FileUtils } from '../utils/FileUtils'
-import { ButtonGhost, ButtonWhite } from '../components/Button'
+import { Button, ButtonGhost } from '../components/Button'
+import { Modal } from '../components/Modal'
+import style from './useFormLayout.module.scss'
+import { DateUtils } from '../utils/DateUtils'
 
 export type useFormLayoutDefinitionType = {
 	[key: string]: {
 		label: string
 		placeholder?: string
-		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox' | 'file'
+		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox' | 'file' | 'select'
+		options?: string[][]
 		leftSide?: any
 		rightSide?: any
+		info?: any
 		disabled?: boolean
 	}
 }
@@ -18,7 +23,7 @@ export type useFormLayoutDefinitionType = {
 export type useFormLayoutType<Entity> = {
 	definition: useFormLayoutDefinitionType
 	value: Entity
-	onChange: Dispatch<SetStateAction<Entity>>
+	onChange: (value: Entity) => void
 }
 
 export const useFormLayout = <Entity,>({
@@ -42,17 +47,31 @@ export const useFormLayout = <Entity,>({
 					label={fieldDefinition.label}
 					leftSide={fieldDefinition.leftSide}
 					rightSide={fieldDefinition.rightSide}
+					info={fieldDefinition.info}
 					input={(setFocus, id) => (
 						<input
 							id={id}
 							type={fieldDefinition.type}
-							value={(value?.[field as keyof typeof value] as string) || ''}
+							value={
+								fieldDefinition.type === 'date'
+									? (value?.[field as keyof typeof value] as string)
+										? DateUtils.stringToInputDate(
+												value?.[field as keyof typeof value] as string
+										  )
+										: ''
+									: (value?.[field as keyof typeof value] as string)
+							}
 							onChange={(event) => {
-								onChange((previousValue: any) => {
-									previousValue[field] =
+								if (fieldDefinition.type === 'date') {
+									value[field] =
+										event.target.value === ''
+											? null
+											: DateUtils.inputDateToString(event.target.value)
+								} else {
+									value[field] =
 										event.target.value === '' ? null : event.target.value
-									return { ...previousValue }
-								})
+								}
+								onChange({ ...value })
 							}}
 							disabled={fieldDefinition.disabled}
 							placeholder={fieldDefinition.placeholder}
@@ -63,21 +82,53 @@ export const useFormLayout = <Entity,>({
 					error={errors?.[field]?.message}
 				/>
 			)
+		} else if (['select'].includes(fieldDefinition.type as string)) {
+			const id = Math.random().toString()
+			fields[field] = (
+				<Field
+					label={fieldDefinition.label}
+					leftSide={fieldDefinition.leftSide}
+					info={fieldDefinition.info}
+					input={(setFocus) => (
+						<select
+							id={id}
+							value={value?.[field as keyof typeof value] as string}
+							onChange={(event) => {
+								value[field] = event.target.value
+								onChange({ ...value })
+							}}
+							disabled={fieldDefinition.disabled}
+							placeholder={fieldDefinition.placeholder}
+							onFocus={() => setFocus(true)}
+							onBlur={() => setFocus(false)}
+						>
+							<option></option>
+							{(fieldDefinition.options || []).map((option: any) => {
+								return (
+									<option key={option[0]} value={option[0]}>
+										{option[1]}
+									</option>
+								)
+							})}
+						</select>
+					)}
+					error={errors?.[field]?.message}
+				/>
+			)
 		} else if (['checkbox'].includes(fieldDefinition.type as string)) {
 			const id = Math.random().toString()
 			fields[field] = (
 				<Field
 					leftSide={<label htmlFor={id}>{fieldDefinition.label}</label>}
+					info={fieldDefinition.info}
 					input={(setFocus) => (
 						<input
 							id={id}
 							type="checkbox"
 							checked={value?.[field as keyof typeof value] as boolean}
 							onChange={(event) => {
-								onChange((previousValue: any) => {
-									previousValue[field] = event.target.checked
-									return { ...previousValue }
-								})
+								value[field] = event.target.checked
+								onChange({ ...value })
 							}}
 							disabled={fieldDefinition.disabled}
 							placeholder={fieldDefinition.placeholder}
@@ -92,63 +143,100 @@ export const useFormLayout = <Entity,>({
 		} else if (['file'].includes(fieldDefinition.type as string)) {
 			const id = Math.random().toString()
 			const ref = useRef(null)
+			const [showModal, setShowModal] = useState(false)
+			const [temporaryFile, setTemporaryFile] = useState(null)
 			fields[field] = (
 				<>
-					<Field
-						label={fieldDefinition.label}
-						leftSide={
-							value?.[field] ? (
-								<>
-									<img src={value?.[field]} />
-								</>
+					{showModal && (
+						<Modal onClose={() => setShowModal(false)}>
+							<h1>Selecione uma imagem</h1>
+							{temporaryFile ? (
+								<div
+									className={style.modalImageDisplayPicture}
+									style={{ backgroundImage: `url(${temporaryFile})` }}
+								>
+									<img src={temporaryFile} />
+								</div>
 							) : (
-								<ButtonWhite
+								<ButtonGhost
 									leftIcon="folder_open"
 									onClick={() => {
 										ref.current.click()
 									}}
 								>
-									Clique em procurar para achar uma imagem...
-								</ButtonWhite>
-							)
-						}
-						rightSide={
-							value?.[field] ? (
-								<div style={{ display: 'flex', flexDirection: 'row' }}>
-									<ButtonGhost
-										leftIcon="clear_all"
-										onClick={() => {
-											onChange((previousValue: any) => {
-												previousValue[field] = null
-												return { ...previousValue }
-											})
-										}}
-									>
-										Limpar
-									</ButtonGhost>
+									Procurar...
+								</ButtonGhost>
+							)}
+							{temporaryFile && (
+								<div className={style.pictureOptions}>
 									<ButtonGhost
 										leftIcon="folder_open"
 										onClick={() => {
 											ref.current.click()
 										}}
 									>
-										Procurar
+										Procurar...
 									</ButtonGhost>
+									<ButtonGhost
+										leftIcon="close"
+										onClick={() => {
+											setShowModal(false)
+											value[field] = null
+											onChange({ ...value })
+										}}
+									>
+										Remover
+									</ButtonGhost>
+									<Button
+										leftIcon="check"
+										onClick={() => {
+											setShowModal(false)
+											value[field] = temporaryFile
+											onChange({ ...value })
+										}}
+									>
+										Usar imagem
+									</Button>
 								</div>
-							) : (
+							)}
+						</Modal>
+					)}
+					{value?.[field] ? (
+						<Field
+							className={style.fileField}
+							label={fieldDefinition.label}
+							info={fieldDefinition.info}
+							error={
+								<div className={style.picturePreview}>
+									<img
+										onClick={() => {
+											setShowModal((x) => !x)
+											setTemporaryFile(value?.[field])
+										}}
+										src={value?.[field]}
+									/>
+								</div>
+							}
+						/>
+					) : (
+						<Field
+							label={fieldDefinition.label}
+							info={fieldDefinition.info}
+							leftSide={
 								<ButtonGhost
-									leftIcon="file_open"
+									leftIcon="photo"
 									onClick={() => {
-										ref.current.click()
+										setShowModal((x) => !x)
+										setTemporaryFile(value?.[field])
 									}}
 								>
-									Procurar
+									Procurar imagem...
 								</ButtonGhost>
-							)
-						}
-						input={() => <></>}
-						error={errors?.[field]?.message}
-					/>
+							}
+							input={() => <></>}
+							error={errors?.[field]?.message}
+						/>
+					)}
 					<input
 						ref={ref}
 						style={{ display: 'none' }}
@@ -156,10 +244,7 @@ export const useFormLayout = <Entity,>({
 						type={fieldDefinition.type}
 						onChange={(event) => {
 							FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
-								onChange((previousValue: any) => {
-									previousValue[field] = base64 === '' ? null : base64
-									return { ...previousValue }
-								})
+								setTemporaryFile(base64 === '' ? null : base64)
 							})
 						}}
 						disabled={fieldDefinition.disabled}
@@ -173,17 +258,15 @@ export const useFormLayout = <Entity,>({
 					label={fieldDefinition.label}
 					leftSide={fieldDefinition.leftSide}
 					rightSide={fieldDefinition.rightSide}
+					info={fieldDefinition.info}
 					input={(setFocus, id) => (
 						<input
 							id={id}
 							type="text"
 							value={(value?.[field as keyof typeof value] as string) || ''}
 							onChange={(event) => {
-								onChange((previousValue: any) => {
-									previousValue[field] =
-										event.target.value === '' ? null : event.target.value
-									return { ...previousValue }
-								})
+								value[field] = event.target.value === '' ? null : event.target.value
+								onChange({ ...value })
 							}}
 							disabled={fieldDefinition.disabled}
 							placeholder={fieldDefinition.placeholder}
@@ -196,13 +279,18 @@ export const useFormLayout = <Entity,>({
 			)
 		}
 	})
-	return {
-		fields: {
-			...fields,
-			error: errors?.['error'] && (
+	fields.error = (
+		<>
+			{errors?.['error'] && (
 				<Error message={errors?.['error']?.message} code={errors?.['error']?.code} />
-			),
-		} as any,
+			)}
+		</>
+	)
+
+	return {
+		fields: fields as Entity & {
+			error: any
+		},
 		setErrors,
 	}
 }

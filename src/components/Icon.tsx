@@ -13,8 +13,8 @@ export const Icon = ({
 	size?: SizeType
 }) => {
 	return (
-		<div className={`${style.icon} ${className}`} style={{ fontSize: size || 'inherit' }}>
+		<i className={`${style.icon} ${className}`} style={{ fontSize: size || 'inherit' }}>
 			{icon}
-		</div>
+		</i>
 	)
 }

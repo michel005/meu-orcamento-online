@@ -1,0 +1,52 @@
+.customerPage {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+.customerPageContent {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	padding: 14px;
+}
+
+.pageHeader {
+	background-color: #222;
+	border-radius: 14px;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	padding: 14px 17px;
+	width: 100%;
+	overflow: auto;
+
+	button {
+		align-items: center;
+		border-radius: 7px;
+		padding: 14px;
+	}
+
+	label {
+		align-self: center;
+		color: #fff;
+
+		&.faded {
+			color: #fff6;
+		}
+	}
+
+	hr {
+		background-color: #fff2;
+		height: 100%;
+		margin-block: 0;
+		width: 2px;
+	}
+}
+
+.pageContent {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 21px;
+}

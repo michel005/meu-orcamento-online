@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
+import { ConfigContext } from './ConfigContext'
 
 export type SessionContextType = {
 	currentUser: any
@@ -14,12 +15,14 @@ export const SessionContext = React.createContext<SessionContextType>({
 })
 
 export const SessionProvider = ({ children }: { children: any }) => {
+	const { setLoading } = useContext(ConfigContext)
 	const [currentUser, setCurrentUser] = useState(null)
 	const [status, setStatus] = useState<'idle' | 'loading' | 'loaded'>('idle')
 
 	useEffect(() => {
 		if (status === 'idle') {
 			setStatus('loading')
+			setLoading(true)
 			if (localStorage.getItem('auth_token')) {
 				axios
 					.post('user/me', null, {
@@ -35,6 +38,7 @@ export const SessionProvider = ({ children }: { children: any }) => {
 					})
 					.finally(() => {
 						setStatus('loaded')
+						setLoading(false)
 					})
 			} else {
 				setStatus('loaded')

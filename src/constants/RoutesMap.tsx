@@ -3,6 +3,7 @@ import { GoogleIconType } from '../types/GoogleIconType'
 import { DashboardPage } from '../pages/private/DashboardPage'
 import { MyUserPage } from '../pages/private/MyUserPage'
 import { CustomerPage } from '../pages/private/CustomerPage'
+import { ProductPage } from '../pages/private/ProductPage'
 
 type RouteType = {
 	[key: string]: {
@@ -38,6 +39,7 @@ export const RoutesMap: RoutesType = {
 			icon: 'shopping_bag',
 			name: 'Produtos',
 			route: '/products',
+			component: <ProductPage />,
 		},
 		sells: {
 			icon: 'sell',

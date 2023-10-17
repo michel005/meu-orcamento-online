@@ -8,9 +8,8 @@ import { useForm } from '../../hooks/useForm'
 import { CustomerFormSidebar } from './customers/CustomerFormSidebar'
 
 export const CustomerPage = () => {
-	const { originalValue, show } = useForm<CustomerType>('customer')
+	const { originalValue, show, close } = useForm<CustomerType>('customer')
 	const { getAll, data } = useApi('customer')
-	const [viewOption, setViewOption] = useState('table')
 	const [personType, setPersonType] = useState(null)
 
 	const refreshPage = () => {
@@ -26,6 +25,10 @@ export const CustomerPage = () => {
 	useEffect(() => {
 		refreshPage()
 	}, [personType])
+
+	useEffect(() => {
+		close()
+	}, [])
 
 	return (
 		<div className={style.customerPage}>
@@ -79,44 +82,8 @@ export const CustomerPage = () => {
 						</ButtonWhite>
 					)}
 					<hr />
-					{viewOption === 'cards' ? (
-						<Button
-							leftIcon="cards"
-							onClick={() => {
-								setViewOption('cards')
-							}}
-							title="Mostrar clientes em formato de cartão"
-						/>
-					) : (
-						<ButtonWhite
-							leftIcon="cards"
-							onClick={() => {
-								setViewOption('cards')
-							}}
-							title="Mostrar clientes em formato de cartão"
-						/>
-					)}
-					{viewOption === 'table' ? (
-						<Button
-							leftIcon="table_view"
-							onClick={() => {
-								setViewOption('table')
-							}}
-							title="Mostrar clientes em formato de tabela"
-						/>
-					) : (
-						<ButtonWhite
-							leftIcon="table_view"
-							onClick={() => {
-								setViewOption('table')
-							}}
-							title="Mostrar clientes em formato de tabela"
-						/>
-					)}
-					<hr />
 					<Button leftIcon="refresh" onClick={refreshPage} />
 				</div>
-				<hr />
 				<div className={style.pageContent}>
 					{data.map((customer) => {
 						return (

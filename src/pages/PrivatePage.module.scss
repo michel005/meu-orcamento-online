@@ -53,6 +53,7 @@
 	flex-grow: 1;
 	gap: 21px;
 	justify-content: center;
+	z-index: 300;
 
 	> a {
 		align-items: center;
@@ -101,7 +102,6 @@
 	inset-inline-end: 7px;
 	padding: 0 14px 14px;
 	position: absolute;
-	z-index: 1;
 
 	> button {
 		justify-content: flex-end;

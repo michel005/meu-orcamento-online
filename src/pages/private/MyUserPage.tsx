@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { SessionContext } from '../../contexts/SessionContext'
 import style from './MyUserPage.module.scss'
 import { useFormLayout } from '../../hooks/useFormLayout'
-import { ChangePasswordType, UserType } from '../../types/AllTypes'
+import { AddressType, ChangePasswordType, UserType } from '../../types/AllTypes'
 import { ChangeUserDefinition } from '../../definitions/ChangeUserDefinition'
 import { Button, ButtonWhite } from '../../components/Button'
 import axios from 'axios'
@@ -11,6 +11,7 @@ import { ChangePasswordDefinition } from '../../definitions/ChangePasswordDefini
 import { Icon } from '../../components/Icon'
 import { ConfigContext } from '../../contexts/ConfigContext'
 import { UserPicture } from '../../components/UserPicture'
+import { AddressDefinition } from '../../definitions/AddressDefinition'
 
 export const MyUserPage = () => {
 	const { setLoading, setMessage } = useContext(ConfigContext)
@@ -25,6 +26,16 @@ export const MyUserPage = () => {
 		definition: ChangeUserDefinition(),
 		value: user,
 		onChange: setUser,
+	})
+	const { fields: addressFields, setErrors: setAddressErrors } = useFormLayout<AddressType>({
+		definition: AddressDefinition(),
+		value: user?.address || {},
+		onChange: (value) => {
+			setUser((x) => {
+				x.address = value
+				return { ...x }
+			})
+		},
 	})
 	const { fields: fieldsChangePassword, setErrors: setErrorsChangePassword } =
 		useFormLayout<ChangePasswordType>({
@@ -53,13 +64,20 @@ export const MyUserPage = () => {
 						<Icon icon="calendar_month" />
 						{currentUser?.birthday}
 					</p>
-					<div style={{ flexGrow: 1 }} />
+					<div className={style.separator} style={{ flexGrow: 1 }} />
 					<ButtonWhite
 						onClick={() => {
 							document.location.hash = '#myData'
 						}}
 					>
 						Meus Dados
+					</ButtonWhite>
+					<ButtonWhite
+						onClick={() => {
+							document.location.hash = '#address'
+						}}
+					>
+						Endereço
 					</ButtonWhite>
 					<ButtonWhite
 						onClick={() => {
@@ -82,10 +100,24 @@ export const MyUserPage = () => {
 					{fields.phone}
 					{fields.error}
 				</div>
+				<header className={style.header}>
+					<h3 id="address">Endereço</h3>
+				</header>
+				<div className={style.formContent}>
+					{addressFields.zip_code}
+					{addressFields.street_name}
+					{addressFields.street_number}
+					{addressFields.complement}
+					{addressFields.city}
+					{addressFields.state}
+					{addressFields.country}
+					{addressFields.error}
+				</div>
 				<Button
 					leftIcon="save"
 					onClick={() => {
 						setErrors(null)
+						setAddressErrors(null)
 						setLoading(true)
 						axios
 							.put('user', user, {
@@ -104,6 +136,9 @@ export const MyUserPage = () => {
 							})
 							.catch((error) => {
 								setErrors(ErrorUtils.convertErrors(error.response.data))
+								setAddressErrors(
+									ErrorUtils.convertErrors(error.response.data?.address)
+								)
 							})
 							.finally(() => {
 								setLoading(false)

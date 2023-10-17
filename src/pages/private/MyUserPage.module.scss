@@ -8,8 +8,9 @@
 	background-color: #222;
 	display: flex;
 	flex-direction: column;
-	width: 270px;
 	min-width: 270px;
+	overflow-y: auto;
+	width: 270px;
 
 	.sidebarInfo {
 		display: flex;
@@ -33,6 +34,10 @@
 	}
 }
 
+.separator {
+	height: 14px;
+}
+
 .userForm {
 	display: flex;
 	flex-direction: column;
@@ -40,10 +45,6 @@
 	padding: 14px;
 	overflow: auto;
 	width: 100%;
-
-	&::-webkit-scrollbar {
-		width: 0;
-	}
 
 	button {
 		align-self: flex-start;

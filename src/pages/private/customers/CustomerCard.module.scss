@@ -5,12 +5,15 @@
 	animation: fadeOut 0.25s linear;
 	background-color: #fff;
 	border-radius: 14px;
-	box-shadow: #ccc 0 0 4px;
+	box-shadow: #ccc 0 0 7px;
 	display: flex;
 	flex-direction: column;
+	transition: all 0.25s;
 	width: 270px;
 
 	&:hover {
+		box-shadow: #aaa 0 0 7px;
+
 		.customerPicture {
 			&::before {
 				background-color: #fffa;
@@ -60,6 +63,7 @@
 	position: relative;
 	transition: all 0.25s;
 	width: 100%;
+	z-index: 10;
 
 	&::before {
 		background-color: #fff7;

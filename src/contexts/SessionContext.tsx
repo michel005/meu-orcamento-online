@@ -21,9 +21,9 @@ export const SessionProvider = ({ children }: { children: any }) => {
 
 	useEffect(() => {
 		if (status === 'idle') {
-			setStatus('loading')
-			setLoading(true)
 			if (localStorage.getItem('auth_token')) {
+				setStatus('loading')
+				setLoading(true)
 				axios
 					.post('user/me', null, {
 						headers: {
@@ -31,13 +31,13 @@ export const SessionProvider = ({ children }: { children: any }) => {
 						},
 					})
 					.then((response) => {
+						setStatus('loaded')
 						setCurrentUser(response.data)
+						setLoading(false)
 					})
 					.catch((response) => {
-						localStorage.removeItem('auth_token')
-					})
-					.finally(() => {
 						setStatus('loaded')
+						localStorage.removeItem('auth_token')
 						setLoading(false)
 					})
 			} else {

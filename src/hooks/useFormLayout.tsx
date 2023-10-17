@@ -233,6 +233,7 @@ export const useFormLayout = <Entity,>({
 									Procurar imagem...
 								</ButtonGhost>
 							}
+							rightSide={<></>}
 							input={() => <></>}
 							error={errors?.[field]?.message}
 						/>

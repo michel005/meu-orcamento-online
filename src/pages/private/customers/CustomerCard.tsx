@@ -1,9 +1,6 @@
-import React, { CSSProperties, useContext } from 'react'
+import React from 'react'
 import style from './CustomerCard.module.scss'
-import { ButtonGhost, ButtonWhite } from '../../../components/Button'
-import { StringUtils } from '../../../utils/StringUtils'
 import { UserPicture } from '../../../components/UserPicture'
-import { ConfigContext } from '../../../contexts/ConfigContext'
 import { useForm } from '../../../hooks/useForm'
 import { CustomerType } from '../../../types/AllTypes'
 

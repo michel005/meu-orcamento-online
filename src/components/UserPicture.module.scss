@@ -1,6 +1,7 @@
 .userPicture {
 	align-self: center;
 	display: flex;
+	transition: all 0.25s;
 	z-index: 100;
 
 	&[data-format='circle'] {
@@ -12,24 +13,45 @@
 			border-radius: 50%;
 		}
 	}
+
+	&[data-have-onclick='true'] {
+		border: 2px solid #666;
+		border-radius: 50%;
+
+		&:hover {
+			cursor: pointer;
+
+			.initialLetters {
+				background-color: #ddd;
+			}
+		}
+	}
 }
 
 img {
 	height: var(--size);
 	object-fit: cover;
+	pointer-events: none;
 	width: var(--size);
 	z-index: 200;
 }
 
 .initialLetters {
 	align-items: center;
-	background-color: #ddd;
+	background-color: #eee;
 	color: #666;
 	display: flex;
 	font-size: calc(var(--size) / 3);
 	flex-direction: row;
 	height: var(--size);
 	justify-content: center;
+	pointer-events: none;
+	transition: all 0.25s;
 	width: var(--size);
 	z-index: 200;
+}
+
+.placeholder {
+	font-size: calc(var(--size) / 7);
+	text-align: center;
 }

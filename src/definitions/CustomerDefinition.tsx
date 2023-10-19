@@ -1,17 +1,33 @@
 import { useFormLayoutDefinitionType } from '../hooks/useFormLayout'
 import { ButtonGhost } from '../components/Button'
 import React from 'react'
+import { CustomerType } from '../types/AllTypes'
+import { StringUtils } from '../utils/StringUtils'
 
-export const CustomerDefinition = (): useFormLayoutDefinitionType => {
+export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinitionType => {
 	return {
 		picture: {
 			label: 'Imagem do Cliente',
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			type: 'file',
+			placeholder: value?.name
+				? StringUtils.initialLetters(value.name || '', 2).toUpperCase()
+				: '',
+			size: '200px',
 		},
 		name: {
 			label: 'Nome Completo',
 			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,
+		},
+		created: {
+			label: 'Cadastrado',
+			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
+			disabled: true,
+		},
+		updated: {
+			label: 'Ultima Alteração',
+			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
+			disabled: true,
 		},
 		email: {
 			label: 'E-mail',

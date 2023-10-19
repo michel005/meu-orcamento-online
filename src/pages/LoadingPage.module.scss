@@ -9,4 +9,26 @@
 	position: fixed;
 	width: 100%;
 	z-index: 200;
+
+	@keyframes spinner {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+}
+
+.spinner {
+	display: flex;
+	position: relative;
+
+	&:before {
+		animation: spinner 1s linear infinite;
+		border: 4px solid #ccc;
+		border-radius: 50%;
+		border-top-color: #39f;
+		content: '';
+		display: flex;
+		height: 50px;
+		width: 50px;
+	}
 }

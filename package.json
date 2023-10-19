@@ -17,13 +17,15 @@
 		"css-loader": "^6.7.3",
 		"html-loader": "^4.2.0",
 		"prettier": "^2.8.8",
+		"qrcode": "^1.5.3",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.11.1",
 		"sass": "^1.62.1",
 		"style-loader": "^3.3.2",
 		"styled-components": "^5.3.10",
-		"svg-url-loader": "^8.0.0"
+		"svg-url-loader": "^8.0.0",
+		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
 		"@svgr/webpack": "^7.0.0",

@@ -8,6 +8,7 @@ export const ChangeUserDefinition = (): useFormLayoutDefinitionType => {
 			label: 'Imagem de Usuário',
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			type: 'file',
+			size: '200px',
 		},
 		full_name: {
 			label: 'Nome Completo',

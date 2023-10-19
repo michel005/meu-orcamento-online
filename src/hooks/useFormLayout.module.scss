@@ -1,63 +1,26 @@
-.modalImageDisplayPicture {
-	align-items: center;
-	background-position: center;
-	background-size: cover;
-	border-radius: var(--border-radius);
+.pictureField {
 	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	height: 200px;
+	flex-direction: column;
+	gap: 14px;
 	position: relative;
-
-	&::before {
-		background-color: #fffc;
-		backdrop-filter: blur(10px);
-		border-radius: var(--border-radius);
-		content: '';
-		height: 100%;
-		inset: 0;
-		position: absolute;
-		width: 100%;
-	}
-
-	> img {
-		border-radius: var(--border-radius);
-		box-shadow: #333 0 0 4px;
-		height: 170px;
-		object-fit: cover;
-		width: 170px;
-		z-index: 100;
-	}
 }
 
 .pictureOptions {
 	display: flex;
 	flex-direction: row;
 	gap: 14px;
+	inset-block-end: 10px;
+	inset-inline-end: 10px;
 	justify-content: center;
-}
+	position: absolute;
+	z-index: 100;
 
-.fileField {
-	align-self: flex-start;
-}
+	button {
+		background-color: #333;
+		border-radius: 50%;
 
-.picturePreview {
-	align-self: flex-start;
-	border: 1px solid #ccc;
-	border-radius: var(--border-radius);
-	padding: 7px;
-	transition: all 0.25s;
-
-	&:hover {
-		border-color: var(--active-color);
-	}
-
-	> img {
-		border-radius: var(--border-radius);
-		cursor: pointer;
-		height: 170px;
-		object-fit: cover;
-		transition: all 0.25s;
-		width: 170px;
+		&:hover {
+			background-color: #222;
+		}
 	}
 }

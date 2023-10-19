@@ -14,7 +14,7 @@
 
 	.inputContent {
 		backdrop-filter: blur(4px);
-		background-color: transparent;
+		background-color: #fff;
 		border-radius: var(--border-radius);
 		border: 1px solid var(--input-border-color);
 		display: flex;
@@ -91,6 +91,10 @@
 				font-size: inherit;
 				outline: transparent;
 				z-index: 100;
+
+				&::placeholder {
+					color: #ccc;
+				}
 			}
 		}
 	}
@@ -102,7 +106,7 @@
 
 	&[data-focus='true'] {
 		.inputContent {
-			background-color: #fff6;
+			background-color: #fff;
 			border-color: var(--active-color);
 		}
 	}

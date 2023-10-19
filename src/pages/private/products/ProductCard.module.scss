@@ -1,6 +1,6 @@
 @import '../../../keyframe';
 
-.customerCard {
+.productCard {
 	align-self: flex-start;
 	animation: fadeOut 0.25s linear;
 	background-color: #fff;
@@ -16,7 +16,7 @@
 	&:hover {
 		box-shadow: #aaa 0 0 7px;
 
-		.customerPicture {
+		.productPicture {
 			&::before {
 				background-color: #fffa;
 			}
@@ -28,7 +28,7 @@
 	}
 
 	&[data-person-type='PF'] {
-		.customerPicture {
+		.productPicture {
 			> span {
 				background-color: #39f;
 				color: #fff;
@@ -37,7 +37,7 @@
 	}
 
 	&[data-person-type='PJ'] {
-		.customerPicture {
+		.productPicture {
 			> span {
 				background-color: #f93;
 				color: #fff;
@@ -86,7 +86,7 @@
 	z-index: 400;
 }
 
-.customerPicture {
+.productPicture {
 	align-items: center;
 	background-color: #eee;
 	background-position: center;
@@ -118,21 +118,26 @@
 	> div {
 		transition: all 0.25s;
 	}
+}
 
-	> span {
+.categories {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 7px;
+	margin-block-start: 7px;
+
+	span {
 		background-color: #39f;
 		border-radius: 7px;
 		color: #fff;
-		font-size: 10px;
+		font-size: 12px;
 		padding: 7px;
-		position: absolute;
-		inset-block-end: 7px;
-		inset-inline-end: 7px;
 		transition: all 0.25s;
 	}
 }
 
-.customerInfo {
+.productInfo {
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
@@ -141,4 +146,27 @@
 	p {
 		color: #aaa;
 	}
+
+	h2 {
+		color: #333;
+		font-size: 40px;
+		font-weight: normal;
+		margin-block-start: 14px;
+		text-align: right;
+
+		span {
+			color: #aaa;
+			font-size: 0.6em;
+		}
+	}
+}
+
+.footer {
+	display: flex;
+	flex-direction: row;
+	gap: 7px;
+}
+
+.footerPicture {
+	align-self: flex-end;
 }

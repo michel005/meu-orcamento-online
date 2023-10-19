@@ -51,3 +51,18 @@ export type CustomerType = {
 	address?: AddressType | null
 	active?: boolean
 }
+
+export type ProductType = {
+	_id?: string
+	customer_id?: string
+	created?: string
+	updated?: string
+	picture?: string
+	code?: string
+	qrcode?: string
+	name?: string
+	description?: string
+	categories?: string[]
+	hashtags?: string
+	price?: number
+}

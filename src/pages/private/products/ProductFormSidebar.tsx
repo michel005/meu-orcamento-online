@@ -1,31 +1,22 @@
 import React, { useContext } from 'react'
-import style from './CustomerFormSidebar.module.scss'
+import style from './ProductFormSidebar.module.scss'
 import { useFormLayout } from '../../../hooks/useFormLayout'
-import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
-import { AddressType, CustomerType } from '../../../types/AllTypes'
+import { ProductType } from '../../../types/AllTypes'
 import { Button, ButtonWhite } from '../../../components/Button'
 import { useApi } from '../../../hooks/useApi'
 import { ConfigContext } from '../../../contexts/ConfigContext'
 import { useForm } from '../../../hooks/useForm'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
-import { AddressDefinition } from '../../../definitions/AddressDefinition'
+import { ProductDefinition } from '../../../definitions/ProductDefinition'
 
-export const CustomerFormSidebar = () => {
+export const ProductFormSidebar = ({ customerData }) => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
-	const { create, update, remove } = useApi('customer')
-	const { form, edit, close } = useForm<CustomerType>('customer')
-	const { fields, setErrors } = useFormLayout<CustomerType>({
-		definition: CustomerDefinition(form),
+	const { create, update, remove } = useApi('product')
+	const { form, edit, close } = useForm<ProductType>('product')
+	const { fields, setErrors } = useFormLayout<ProductType>({
+		definition: ProductDefinition(form, setMessage, edit, customerData),
 		value: form,
 		onChange: edit,
-	})
-	const { fields: addressFields, setErrors: setAddressErrors } = useFormLayout<AddressType>({
-		definition: AddressDefinition(),
-		value: form?.address || {},
-		onChange: (value) => {
-			form.address = value
-			edit(form)
-		},
 	})
 
 	const onSuccess = () => {
@@ -34,7 +25,6 @@ export const CustomerFormSidebar = () => {
 
 	const onError = (errors: any) => {
 		setErrors(ErrorUtils.convertErrors(errors.response.data))
-		setAddressErrors(ErrorUtils.convertErrors(errors.response.data?.address))
 	}
 
 	return (
@@ -48,23 +38,14 @@ export const CustomerFormSidebar = () => {
 				</div>
 			</div>
 			<div className={style.content}>
+				{fields.customer_id}
 				{fields.name}
-				{fields.email}
-				{fields.phone}
-				{fields.birthday}
-				{fields.person_type}
-				{fields.document_type}
-				{fields.document_number}
+				{fields.description}
+				{fields.code}
+				{fields.categories}
+				{fields.hashtags}
+				{fields.price}
 				{fields.error}
-				<h3>Endereço</h3>
-				{addressFields.zip_code}
-				{addressFields.street_name}
-				{addressFields.street_number}
-				{addressFields.complement}
-				{addressFields.city}
-				{addressFields.state}
-				{addressFields.country}
-				{addressFields.error}
 			</div>
 			<div className={style.options}>
 				<Button
@@ -94,7 +75,7 @@ export const CustomerFormSidebar = () => {
 							leftIcon="save"
 							onClick={() => {
 								setMessage({
-									header: 'Deseja realmente excluir este cliente?',
+									header: 'Deseja realmente excluir este produto?',
 									content: 'Esta operação não pode ser desfaita.',
 									type: 'question',
 									confirm: () => {

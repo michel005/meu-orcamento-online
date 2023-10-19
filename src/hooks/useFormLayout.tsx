@@ -6,10 +6,12 @@ import { Button, ButtonGhost } from '../components/Button'
 import { Modal } from '../components/Modal'
 import style from './useFormLayout.module.scss'
 import { DateUtils } from '../utils/DateUtils'
+import { UserPicture } from '../components/UserPicture'
+import { NumberUtils } from '../utils/NumberUtils'
 
 export type useFormLayoutDefinitionType = {
 	[key: string]: {
-		label: string
+		label?: string
 		placeholder?: string
 		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox' | 'file' | 'select'
 		options?: string[][]
@@ -17,6 +19,7 @@ export type useFormLayoutDefinitionType = {
 		rightSide?: any
 		info?: any
 		disabled?: boolean
+		size?: string
 	}
 }
 
@@ -37,11 +40,7 @@ export const useFormLayout = <Entity,>({
 	const fields = {} as any
 	allFields.forEach((field) => {
 		const fieldDefinition = definition[field as keyof typeof definition]
-		if (
-			['text', 'date', 'password', 'number', 'currency'].includes(
-				fieldDefinition.type as string
-			)
-		) {
+		if (['text', 'date', 'password', 'number'].includes(fieldDefinition.type as string)) {
 			fields[field] = (
 				<Field
 					label={fieldDefinition.label}
@@ -71,6 +70,34 @@ export const useFormLayout = <Entity,>({
 									value[field] =
 										event.target.value === '' ? null : event.target.value
 								}
+								onChange({ ...value })
+							}}
+							disabled={fieldDefinition.disabled}
+							placeholder={fieldDefinition.placeholder}
+							onFocus={() => setFocus(true)}
+							onBlur={() => setFocus(false)}
+						/>
+					)}
+					error={errors?.[field]?.message}
+				/>
+			)
+		} else if (fieldDefinition.type === 'currency') {
+			fields[field] = (
+				<Field
+					label={fieldDefinition.label}
+					leftSide={fieldDefinition.leftSide}
+					rightSide={fieldDefinition.rightSide}
+					info={fieldDefinition.info}
+					input={(setFocus, id) => (
+						<input
+							id={id}
+							type="number"
+							value={parseFloat(value?.[field as keyof typeof value] as string) / 100}
+							onChange={(event) => {
+								value[field] =
+									event.target.value === ''
+										? null
+										: parseFloat(event.target.value) * 100
 								onChange({ ...value })
 							}}
 							disabled={fieldDefinition.disabled}
@@ -141,117 +168,52 @@ export const useFormLayout = <Entity,>({
 				/>
 			)
 		} else if (['file'].includes(fieldDefinition.type as string)) {
-			const id = Math.random().toString()
 			const ref = useRef(null)
-			const [showModal, setShowModal] = useState(false)
-			const [temporaryFile, setTemporaryFile] = useState(null)
 			fields[field] = (
-				<>
-					{showModal && (
-						<Modal onClose={() => setShowModal(false)}>
-							<h1>Selecione uma imagem</h1>
-							{temporaryFile ? (
-								<div
-									className={style.modalImageDisplayPicture}
-									style={{ backgroundImage: `url(${temporaryFile})` }}
-								>
-									<img src={temporaryFile} />
-								</div>
-							) : (
-								<ButtonGhost
-									leftIcon="folder_open"
-									onClick={() => {
-										ref.current.click()
-									}}
-								>
-									Procurar...
-								</ButtonGhost>
-							)}
-							{temporaryFile && (
-								<div className={style.pictureOptions}>
-									<ButtonGhost
-										leftIcon="folder_open"
-										onClick={() => {
-											ref.current.click()
-										}}
-									>
-										Procurar...
-									</ButtonGhost>
-									<ButtonGhost
-										leftIcon="close"
-										onClick={() => {
-											setShowModal(false)
-											value[field] = null
-											onChange({ ...value })
-										}}
-									>
-										Remover
-									</ButtonGhost>
-									<Button
-										leftIcon="check"
-										onClick={() => {
-											setShowModal(false)
-											value[field] = temporaryFile
-											onChange({ ...value })
-										}}
-									>
-										Usar imagem
-									</Button>
-								</div>
-							)}
-						</Modal>
-					)}
-					{value?.[field] ? (
-						<Field
-							className={style.fileField}
-							label={fieldDefinition.label}
-							info={fieldDefinition.info}
-							error={
-								<div className={style.picturePreview}>
-									<img
-										onClick={() => {
-											setShowModal((x) => !x)
-											setTemporaryFile(value?.[field])
-										}}
-										src={value?.[field]}
-									/>
-								</div>
-							}
-						/>
-					) : (
-						<Field
-							label={fieldDefinition.label}
-							info={fieldDefinition.info}
-							leftSide={
-								<ButtonGhost
-									leftIcon="photo"
-									onClick={() => {
-										setShowModal((x) => !x)
-										setTemporaryFile(value?.[field])
-									}}
-								>
-									Procurar imagem...
-								</ButtonGhost>
-							}
-							rightSide={<></>}
-							input={() => <></>}
-							error={errors?.[field]?.message}
-						/>
-					)}
+				<div
+					className={style.pictureField}
+					style={{ width: fieldDefinition.size || '150px' }}
+				>
+					<UserPicture
+						onClick={() => {
+							ref.current.click()
+						}}
+						picture={value?.[field]}
+						placeholder={!value[field] && 'Sem Imagem Selecionada'}
+						size={fieldDefinition.size || '150px'}
+					/>
+					<div className={style.pictureOptions}>
+						{value[field] ? (
+							<Button
+								leftIcon="close"
+								onClick={() => {
+									value[field] = null
+									onChange({ ...value })
+								}}
+							/>
+						) : (
+							<Button
+								leftIcon="search"
+								onClick={() => {
+									ref.current.click()
+								}}
+							/>
+						)}
+					</div>
 					<input
 						ref={ref}
 						style={{ display: 'none' }}
-						id={id}
 						type={fieldDefinition.type}
 						onChange={(event) => {
 							FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
-								setTemporaryFile(base64 === '' ? null : base64)
+								value[field] = base64
+								onChange({ ...value })
 							})
 						}}
 						disabled={fieldDefinition.disabled}
 						placeholder={fieldDefinition.placeholder}
 					/>
-				</>
+				</div>
 			)
 		} else {
 			fields[field] = (

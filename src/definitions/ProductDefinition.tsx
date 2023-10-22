@@ -19,7 +19,8 @@ export const ProductDefinition = (
 			placeholder: value?.name
 				? StringUtils.initialLetters(value.name || '', 2).toUpperCase()
 				: '',
-			size: '200px',
+			pictureType: 'square',
+			size: '220px',
 		},
 		created: {
 			label: 'Cadastrado',

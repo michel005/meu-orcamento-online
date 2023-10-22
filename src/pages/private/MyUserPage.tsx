@@ -22,12 +22,12 @@ export const MyUserPage = () => {
 		new_password: '',
 		new_password_confirm: '',
 	})
-	const { fields, setErrors } = useFormLayout<UserType>({
+	const { getField: getUserField, setErrors } = useFormLayout<UserType>({
 		definition: ChangeUserDefinition(),
 		value: user,
 		onChange: setUser,
 	})
-	const { fields: addressFields, setErrors: setAddressErrors } = useFormLayout<AddressType>({
+	const { getField: getAddressField, setErrors: setAddressErrors } = useFormLayout<AddressType>({
 		definition: AddressDefinition(),
 		value: user?.address || {},
 		onChange: (value) => {
@@ -37,7 +37,7 @@ export const MyUserPage = () => {
 			})
 		},
 	})
-	const { fields: fieldsChangePassword, setErrors: setErrorsChangePassword } =
+	const { getField: getChangePasswordField, setErrors: setErrorsChangePassword } =
 		useFormLayout<ChangePasswordType>({
 			definition: ChangePasswordDefinition(),
 			value: changePassword,
@@ -93,25 +93,25 @@ export const MyUserPage = () => {
 					<h1 id="myData">Meus dados</h1>
 				</header>
 				<div className={style.formContent}>
-					{fields.picture}
-					{fields.full_name}
-					{fields.email}
-					{fields.birthday}
-					{fields.phone}
-					{fields.error}
+					{getUserField('picture')}
+					{getUserField('full_name')}
+					{getUserField('email')}
+					{getUserField('birthday')}
+					{getUserField('phone')}
+					{getUserField('error')}
 				</div>
 				<header className={style.header}>
 					<h3 id="address">Endereço</h3>
 				</header>
 				<div className={style.formContent}>
-					{addressFields.zip_code}
-					{addressFields.street_name}
-					{addressFields.street_number}
-					{addressFields.complement}
-					{addressFields.city}
-					{addressFields.state}
-					{addressFields.country}
-					{addressFields.error}
+					{getAddressField('zip_code')}
+					{getAddressField('street_name')}
+					{getAddressField('street_number')}
+					{getAddressField('complement')}
+					{getAddressField('city')}
+					{getAddressField('state')}
+					{getAddressField('country')}
+					{getAddressField('error')}
 				</div>
 				<Button
 					leftIcon="save"
@@ -151,10 +151,10 @@ export const MyUserPage = () => {
 					<h3 id="changePassword">Alteração de Senha</h3>
 				</header>
 				<div className={style.formContent}>
-					{fieldsChangePassword.old_password}
-					{fieldsChangePassword.new_password}
-					{fieldsChangePassword.new_password_confirm}
-					{fieldsChangePassword.error}
+					{getChangePasswordField('old_password')}
+					{getChangePasswordField('new_password')}
+					{getChangePasswordField('new_password_confirm')}
+					{getChangePasswordField('error')}
 				</div>
 				<Button
 					leftIcon="save"

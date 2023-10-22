@@ -14,12 +14,12 @@ export const CustomerFormSidebar = () => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
 	const { create, update, remove } = useApi('customer')
 	const { form, edit, close } = useForm<CustomerType>('customer')
-	const { fields, setErrors } = useFormLayout<CustomerType>({
+	const { getField, setErrors } = useFormLayout<CustomerType>({
 		definition: CustomerDefinition(form),
 		value: form,
 		onChange: edit,
 	})
-	const { fields: addressFields, setErrors: setAddressErrors } = useFormLayout<AddressType>({
+	const { getField: getAddressField, setErrors: setAddressErrors } = useFormLayout<AddressType>({
 		definition: AddressDefinition(),
 		value: form?.address || {},
 		onChange: (value) => {
@@ -44,27 +44,27 @@ export const CustomerFormSidebar = () => {
 					className={style.userImage}
 					style={{ backgroundImage: `url(${form.picture})` }}
 				>
-					{fields.picture}
+					{getField('picture')}
 				</div>
 			</div>
 			<div className={style.content}>
-				{fields.name}
-				{fields.email}
-				{fields.phone}
-				{fields.birthday}
-				{fields.person_type}
-				{fields.document_type}
-				{fields.document_number}
-				{fields.error}
+				{getField('name')}
+				{getField('email')}
+				{getField('phone')}
+				{getField('birthday')}
+				{getField('person_type')}
+				{getField('document_type')}
+				{getField('document_number')}
+				{getField('error')}
 				<h3>Endereço</h3>
-				{addressFields.zip_code}
-				{addressFields.street_name}
-				{addressFields.street_number}
-				{addressFields.complement}
-				{addressFields.city}
-				{addressFields.state}
-				{addressFields.country}
-				{addressFields.error}
+				{getAddressField('zip_code')}
+				{getAddressField('street_name')}
+				{getAddressField('street_number')}
+				{getAddressField('complement')}
+				{getAddressField('city')}
+				{getAddressField('state')}
+				{getAddressField('country')}
+				{getAddressField('error')}
 			</div>
 			<div className={style.options}>
 				<Button

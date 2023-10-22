@@ -1,6 +1,8 @@
 @import '../../../keyframe';
 
 .productCard {
+	--card-height: 300px;
+
 	align-self: flex-start;
 	animation: fadeOut 0.25s linear;
 	background-color: #fff;
@@ -9,44 +11,33 @@
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	transition: all 0.25s;
-	width: 270px;
 	max-width: 350px;
+	overflow: hidden;
+	position: relative;
+	transition: all 0.25s;
+	width: 350px;
 
 	&:hover {
 		box-shadow: #aaa 0 0 7px;
-
-		.productPicture {
-			&::before {
-				background-color: #fffa;
-			}
-		}
 
 		.buttons {
 			opacity: 1;
 		}
 	}
+}
 
-	&[data-person-type='PF'] {
-		.productPicture {
-			> span {
-				background-color: #39f;
-				color: #fff;
-			}
-		}
-	}
-
-	&[data-person-type='PJ'] {
-		.productPicture {
-			> span {
-				background-color: #f93;
-				color: #fff;
-			}
-		}
-	}
+.productPicture {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: auto 100%;
+	display: flex;
+	height: 200px;
+	margin: 21px;
+	width: calc(100% - 42px);
 }
 
 .buttons {
+	border-radius: var(--border-radius);
 	inset-block-start: 0;
 	inset-inline-start: 0;
 	opacity: 0;
@@ -55,13 +46,11 @@
 	> button {
 		background-color: #1111;
 		backdrop-filter: blur(4px);
-		border-radius: 14px 0 14px 0;
-		font-size: 18px;
 	}
 
 	&[data-show-more-options='true'] {
 		> button {
-			border-radius: 14px 0 0 0;
+			border-radius: var(--border-radius) var(--border-radius) 0 0;
 			background-color: #1118;
 			color: #fff;
 
@@ -84,40 +73,6 @@
 	padding: 14px;
 	position: absolute;
 	z-index: 400;
-}
-
-.productPicture {
-	align-items: center;
-	background-color: #eee;
-	background-position: center;
-	background-size: cover;
-	border-radius: 14px 14px 0 0;
-	border-bottom: 4px solid var(--border-color);
-	display: flex;
-	flex-direction: column;
-	height: 200px;
-	justify-content: center;
-	position: relative;
-	transition: all 0.25s;
-	width: 100%;
-	z-index: 10;
-
-	&::before {
-		background-color: #fff7;
-		backdrop-filter: blur(10px);
-		border-radius: 14px 14px 0 0;
-		content: '';
-		height: 100%;
-		inset: 0;
-		overflow: hidden;
-		position: absolute;
-		transition: all 0.25s;
-		width: 100%;
-	}
-
-	> div {
-		transition: all 0.25s;
-	}
 }
 
 .categories {
@@ -145,6 +100,14 @@
 
 	p {
 		color: #aaa;
+		display: -webkit-box;
+		height: 40px;
+		line-clamp: 2;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
 	}
 
 	h2 {

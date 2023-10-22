@@ -18,7 +18,7 @@ export const LoginPage = () => {
 		password: '',
 		remember_me: !!localStorage?.saved_user,
 	})
-	const { fields, setErrors } = useFormLayout<any>({
+	const { getField, setErrors } = useFormLayout<any>({
 		definition: LoginFormDefinition(),
 		value: value,
 		onChange: setValue,
@@ -54,10 +54,10 @@ export const LoginPage = () => {
 		<div className={style.loginPage}>
 			<div className={style.loginForm}>
 				<h1>Acesse sua conta</h1>
-				{fields.user_name}
-				{fields.password}
-				<div style={{ alignSelf: 'flex-end' }}>{fields.remember_me}</div>
-				{fields.error}
+				{getField('user_name')}
+				{getField('password')}
+				<div style={{ alignSelf: 'flex-end' }}>{getField('remember_me')}</div>
+				{getField('error')}
 				<div className={style.buttons}>
 					<Button leftIcon="login" onClick={login}>
 						Entrar

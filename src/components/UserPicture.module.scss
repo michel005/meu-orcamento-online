@@ -5,6 +5,7 @@
 	z-index: 100;
 
 	&[data-format='circle'] {
+		border-radius: 50%;
 		img {
 			border-radius: 50%;
 		}
@@ -14,9 +15,18 @@
 		}
 	}
 
+	&[data-format='square'] {
+		img {
+			border-radius: 0;
+		}
+
+		.initialLetters {
+			border-radius: 0;
+		}
+	}
+
 	&[data-have-onclick='true'] {
 		border: 2px solid #666;
-		border-radius: 50%;
 
 		&:hover {
 			cursor: pointer;

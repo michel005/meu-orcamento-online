@@ -36,30 +36,14 @@
 }
 
 .userImage {
-	align-items: center;
-	background-color: #eee;
-	background-position: center;
-	background-size: cover;
 	border-bottom: 4px solid var(--border-color);
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-direction: row;
+	justify-content: flex-start;
 	gap: 14px;
-	padding-block: 14px;
+	padding: 14px;
 	width: 100%;
 	z-index: 1;
-
-	&::before {
-		background-color: #fff7;
-		backdrop-filter: blur(10px);
-		content: '';
-		inset: 0;
-		overflow: hidden;
-		position: absolute;
-		transition: all 0.25s;
-		width: 100%;
-		z-index: 2;
-	}
 }
 
 .options {

@@ -10,22 +10,22 @@ import { NumberUtils } from '../../../utils/NumberUtils'
 
 export const ProductCard = ({ product, onClose }) => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
-	const { remove } = useApi('product')
 	const { getById } = useApi('customer')
+	const { remove } = useApi('product')
 	const { show } = useForm<ProductType>('product')
 	const [showMoreOptions, setShowMoreOptions] = useState(false)
 	const [customer, setCustomer] = useState(null)
 
 	useEffect(() => {
-		if (!customer && product.customer_id) {
+		if (!customer && product?.customer_id) {
 			getById({
-				id: product.customer_id,
-				onSuccess: (response) => {
-					setCustomer(response.data)
+				id: product?.customer_id,
+				onSuccess: (x) => {
+					setCustomer(x.data)
 				},
 			})
 		}
-	}, [customer, product.customer_id])
+	}, [customer, product?.customer_id])
 
 	return (
 		<div
@@ -37,40 +37,38 @@ export const ProductCard = ({ product, onClose }) => {
 			<div
 				className={style.productPicture}
 				style={{ backgroundImage: `url(${product.picture})` }}
-			>
-				<UserPicture picture={product.picture} name={product.name} size="170px" />
-				<div className={style.buttons} data-show-more-options={showMoreOptions}>
-					<ButtonGhost
-						leftIcon="more_horiz"
-						onClick={() => {
-							setShowMoreOptions((x) => !x)
-						}}
-					/>
-					{showMoreOptions && (
-						<div className={style.moreOptions}>
-							<ButtonWhite
-								leftIcon="delete"
-								onClick={() => {
-									setShowMoreOptions(false)
-									setMessage({
-										header: 'Deseja realmente excluir este produto?',
-										content: 'Esta operação não pode ser desfaita.',
-										type: 'question',
-										confirm: () => {
-											setLoading(true)
-											remove({
-												id: product._id,
-												onSuccess: () => {
-													onClose?.()
-												},
-											})
-										},
-									})
-								}}
-							/>
-						</div>
-					)}
-				</div>
+			/>
+			<div className={style.buttons} data-show-more-options={showMoreOptions}>
+				<ButtonGhost
+					leftIcon="more_horiz"
+					onClick={() => {
+						setShowMoreOptions((x) => !x)
+					}}
+				/>
+				{showMoreOptions && (
+					<div className={style.moreOptions}>
+						<ButtonWhite
+							leftIcon="delete"
+							onClick={() => {
+								setShowMoreOptions(false)
+								setMessage({
+									header: 'Deseja realmente excluir este produto?',
+									content: 'Esta operação não pode ser desfaita.',
+									type: 'question',
+									confirm: () => {
+										setLoading(true)
+										remove({
+											id: product._id,
+											onSuccess: () => {
+												onClose?.()
+											},
+										})
+									},
+								})
+							}}
+						/>
+					</div>
+				)}
 			</div>
 			<div className={style.productInfo}>
 				<a

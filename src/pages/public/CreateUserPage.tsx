@@ -20,7 +20,7 @@ export const CreateUserPage = () => {
 		password: null,
 		agree_terms: false,
 	})
-	const { fields, setErrors } = useFormLayout<CreateUser>({
+	const { getField, setErrors } = useFormLayout<CreateUser>({
 		definition: CreateUserDefinition(),
 		value: value,
 		onChange: setValue,
@@ -57,14 +57,14 @@ export const CreateUserPage = () => {
 		<div className={style.loginPage}>
 			<div className={style.loginForm}>
 				<h1>Crie um novo usuário</h1>
-				{fields.full_name}
-				{fields.user_name}
-				{fields.email}
-				{fields.birthday}
-				{fields.phone}
-				{fields.password}
-				<div style={{ alignSelf: 'flex-end' }}>{fields.agree_terms}</div>
-				{fields.error}
+				{getField('full_name')}
+				{getField('user_name')}
+				{getField('email')}
+				{getField('birthday')}
+				{getField('phone')}
+				{getField('password')}
+				<div style={{ alignSelf: 'flex-end' }}>{getField('agree_terms')}</div>
+				{getField('error')}
 				<div className={style.buttons}>
 					<Button leftIcon="save" onClick={createUser}>
 						Cadastrar

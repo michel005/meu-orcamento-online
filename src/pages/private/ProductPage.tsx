@@ -20,7 +20,7 @@ export const ProductPage = () => {
 	const [filters, setFilters] = useState<{
 		search?: string
 	}>({})
-	const { fields } = useFormLayout<{
+	const { getField } = useFormLayout<{
 		search?: string
 	}>({
 		definition: {
@@ -84,7 +84,7 @@ export const ProductPage = () => {
 					<label className={style.faded}>{data.length} registro(s)</label>
 					<div style={{ flexGrow: 1 }} />
 					<label>Busca Geral</label>
-					<div style={{ width: '500px' }}>{fields.search}</div>
+					<div style={{ width: '500px' }}>{getField('search')}</div>
 					<hr />
 					<Button leftIcon="refresh" onClick={() => refreshPage()} />
 				</div>

@@ -13,7 +13,7 @@ export const ProductFormSidebar = ({ customerData }) => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
 	const { create, update, remove } = useApi('product')
 	const { form, edit, close } = useForm<ProductType>('product')
-	const { fields, setErrors } = useFormLayout<ProductType>({
+	const { getField, getError, setErrors } = useFormLayout<ProductType>({
 		definition: ProductDefinition(form, setMessage, edit, customerData),
 		value: form,
 		onChange: edit,
@@ -30,22 +30,17 @@ export const ProductFormSidebar = ({ customerData }) => {
 	return (
 		<div className={style.customerFormSidebar}>
 			<div className={style.userCard}>
-				<div
-					className={style.userImage}
-					style={{ backgroundImage: `url(${form.picture})` }}
-				>
-					{fields.picture}
-				</div>
+				<div className={style.userImage}>{getField('picture')}</div>
 			</div>
 			<div className={style.content}>
-				{fields.customer_id}
-				{fields.name}
-				{fields.description}
-				{fields.code}
-				{fields.categories}
-				{fields.hashtags}
-				{fields.price}
-				{fields.error}
+				{getField('customer_id')}
+				{getField('name')}
+				{getField('description')}
+				{getField('code')}
+				{getField('categories')}
+				{getField('hashtags')}
+				{getField('price')}
+				{getError()}
 			</div>
 			<div className={style.options}>
 				<Button

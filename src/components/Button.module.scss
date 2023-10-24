@@ -35,6 +35,18 @@
 		@include useGoogleFonts();
 	}
 
+	.bag {
+		align-items: center;
+		background-color: #fff3;
+		border-radius: 50%;
+		display: flex;
+		flex-direction: row;
+		font-size: 10px;
+		height: 22px;
+		justify-content: center;
+		width: 22px;
+	}
+
 	&[data-variation='secondary'] {
 		background-color: #1112;
 		color: #333;
@@ -71,6 +83,11 @@
 
 		&:active {
 			background-color: #1111;
+		}
+
+		.bag {
+			background-color: #3331;
+			color: #fff;
 		}
 	}
 }

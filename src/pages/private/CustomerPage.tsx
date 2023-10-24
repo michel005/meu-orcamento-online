@@ -10,23 +10,27 @@ import { CustomerFormSidebar } from './customers/CustomerFormSidebar'
 export const CustomerPage = () => {
 	const { originalValue, show, close } = useForm<CustomerType>('customer')
 	const { getAll, data } = useApi('customer')
-	const [personType, setPersonType] = useState(null)
+	const [filters, setFilters] = useState({
+		favorite: false,
+		active: true,
+		inactive: false,
+		pf: true,
+		pj: true,
+	})
+
+	const filteredData = data
+		.filter((x) => !filters.favorite || x.favorite)
+		.filter((x) => (x.active && filters.active) || (!x.active && filters.inactive))
+		.filter(
+			(x) => (x.person_type === 'PF' && filters.pf) || (x.person_type === 'PJ' && filters.pj)
+		)
 
 	const refreshPage = () => {
-		const query: any = {}
-		if (personType) {
-			query.person_type = personType
-		}
-		getAll({
-			query: query,
-		})
+		getAll()
 	}
 
 	useEffect(() => {
 		refreshPage()
-	}, [personType])
-
-	useEffect(() => {
 		close()
 	}, [])
 
@@ -48,47 +52,81 @@ export const CustomerPage = () => {
 						Novo Cliente
 					</Button>
 					<hr />
-					<label className={style.faded}>{data.length} registro(s)</label>
+					<label className={style.faded}>{filteredData.length} registro(s)</label>
 					<div style={{ flexGrow: 1 }} />
-					<label>Tipo de Pessoa</label>
-					{personType === 'PF' ? (
-						<Button
-							leftIcon="person"
-							onClick={() => setPersonType((x) => (!x || x === 'PJ' ? 'PF' : null))}
-						>
-							Física
-						</Button>
-					) : (
-						<ButtonWhite
-							leftIcon="person"
-							onClick={() => setPersonType((x) => (!x || x === 'PJ' ? 'PF' : null))}
-						>
-							Física
-						</ButtonWhite>
-					)}
-					{personType === 'PJ' ? (
-						<Button
-							leftIcon="group"
-							onClick={() => setPersonType((x) => (!x || x === 'PF' ? 'PJ' : null))}
-						>
-							Jurídica
-						</Button>
-					) : (
-						<ButtonWhite
-							leftIcon="group"
-							onClick={() => setPersonType((x) => (!x || x === 'PF' ? 'PJ' : null))}
-						>
-							Jurídica
-						</ButtonWhite>
-					)}
+					<ButtonWhite
+						leftIcon="person"
+						rightBag={data.filter((x) => x.person_type === 'PF').length}
+						variationOverride={filters.pf ? 'primary' : 'white'}
+						onClick={() => {
+							setFilters((x) => ({
+								...x,
+								pf: !x.pf,
+							}))
+						}}
+					>
+						Pessoa Física
+					</ButtonWhite>
+					<ButtonWhite
+						leftIcon="group"
+						rightBag={data.filter((x) => x.person_type === 'PJ').length}
+						variationOverride={filters.pj ? 'primary' : 'white'}
+						onClick={() => {
+							setFilters((x) => ({
+								...x,
+								pj: !x.pj,
+							}))
+						}}
+					>
+						Pessoa Jurídica
+					</ButtonWhite>
+					<ButtonWhite
+						leftIcon="person_check"
+						rightBag={data.filter((x) => x.active).length}
+						variationOverride={filters.active ? 'primary' : 'white'}
+						onClick={() => {
+							setFilters((x) => ({
+								...x,
+								active: !x.active,
+							}))
+						}}
+					>
+						Ativos
+					</ButtonWhite>
+					<ButtonWhite
+						leftIcon="person_cancel"
+						rightBag={data.filter((x) => !x.active).length}
+						variationOverride={filters.inactive ? 'primary' : 'white'}
+						onClick={() => {
+							setFilters((x) => ({
+								...x,
+								inactive: !x.inactive,
+							}))
+						}}
+					>
+						Inativos
+					</ButtonWhite>
+					<ButtonWhite
+						leftIcon="favorite"
+						rightBag={filteredData.filter((x) => x.favorite).length}
+						variationOverride={filters.favorite ? 'primary' : 'white'}
+						onClick={() => {
+							setFilters((x) => ({
+								...x,
+								favorite: !x.favorite,
+							}))
+						}}
+					>
+						Favoritos
+					</ButtonWhite>
 					<hr />
 					<Button leftIcon="refresh" onClick={refreshPage} />
 				</div>
 				<div className={style.pageContent}>
-					{data.map((customer) => {
+					{filteredData.map((customer) => {
 						return (
 							<CustomerCard
-								key={customer._id}
+								key={customer.id}
 								customer={customer}
 								onClose={refreshPage}
 							/>

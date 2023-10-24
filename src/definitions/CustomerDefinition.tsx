@@ -11,7 +11,7 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			type: 'file',
 			placeholder: value?.name
-				? StringUtils.initialLetters(value.name || '', 2).toUpperCase()
+				? StringUtils.initialLetters(value.name || '').toUpperCase()
 				: '',
 			size: '200px',
 		},

@@ -95,6 +95,11 @@
 				&::placeholder {
 					color: #ccc;
 				}
+
+				&:disabled {
+					opacity: 0.4;
+					pointer-events: none;
+				}
 			}
 		}
 	}
@@ -147,6 +152,15 @@
 		&[data-focus='true'] {
 			.inputContent {
 				border-color: red;
+			}
+		}
+	}
+
+	&[data-disabled='true'] {
+		.input {
+			input,
+			select {
+				opacity: 0.4;
 			}
 		}
 	}

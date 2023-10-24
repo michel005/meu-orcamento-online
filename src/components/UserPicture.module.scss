@@ -2,7 +2,6 @@
 	align-self: center;
 	display: flex;
 	transition: all 0.25s;
-	z-index: 100;
 
 	&[data-format='circle'] {
 		border-radius: 50%;

@@ -20,7 +20,7 @@ export const UserPicture = ({
 			data-have-onclick={!!onClick}
 		>
 			{picture ? (
-				<img src={picture} />
+				<img src={picture} loading="lazy" />
 			) : (
 				<>
 					{placeholder && (

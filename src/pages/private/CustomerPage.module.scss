@@ -2,29 +2,27 @@
 	display: flex;
 	flex-direction: row;
 	height: 100%;
+	width: 100%;
+	position: relative;
 }
 
 .customerPageContent {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	gap: 21px;
-	padding: 14px;
 	height: 100%;
 	overflow-y: auto;
 }
 
 .pageHeader {
 	background-color: #222;
-	border-radius: 14px;
 	display: flex;
 	flex-direction: row;
 	gap: 14px;
 	inset-block-start: 0;
 	padding: 14px 17px;
 	position: sticky;
-	width: 100%;
-	z-index: 50;
+	z-index: 2;
 
 	button {
 		align-items: center;
@@ -54,4 +52,6 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	gap: 21px;
+	justify-content: start;
+	padding: 14px;
 }

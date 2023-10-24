@@ -1,32 +1,47 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import style from './CustomerCard.module.scss'
 import { UserPicture } from '../../../components/UserPicture'
 import { useForm } from '../../../hooks/useForm'
 import { CustomerType } from '../../../types/AllTypes'
-import { ButtonGhost, ButtonWhite } from '../../../components/Button'
+import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
 import { ConfigContext } from '../../../contexts/ConfigContext'
 import { useApi } from '../../../hooks/useApi'
 
 export const CustomerCard = ({ customer, onClose }) => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
+	const ref = useRef(null)
 	const { remove } = useApi('customer')
-	const { show } = useForm<CustomerType>('customer')
+	const { show, form } = useForm<CustomerType>('customer')
 	const [showMoreOptions, setShowMoreOptions] = useState(false)
 
 	return (
 		<div
 			className={style.customerCard}
+			ref={ref}
 			data-person-type={customer.person_type}
+			data-current-person={form.id === customer.id}
+			data-showing-form={!!form?.id}
+			data-inactive={!customer.active}
 			onMouseLeave={() => {
 				setShowMoreOptions(false)
 			}}
 		>
-			<div
-				className={style.customerPicture}
-				style={{ backgroundImage: `url(${customer.picture})` }}
-			>
-				<UserPicture picture={customer.picture} name={customer.name} size="170px" />
-				<span>{customer.person_type === 'PF' ? 'Física' : 'Jurídica'}</span>
+			<div className={style.customerPicture}>
+				<UserPicture
+					className={style.userPicture}
+					picture={customer.picture}
+					name={customer.name}
+					size="170px"
+				/>
+				<span>{customer.person_type.toUpperCase()}</span>
+				{!customer.active && <div className={style.inactive}>INATIVO</div>}
+				<div className={style.favorite}>
+					<ButtonGhost
+						className={style.favoriteButton}
+						leftIcon="favorite"
+						data-favorite={customer.favorite}
+					/>
+				</div>
 				<div className={style.buttons} data-show-more-options={showMoreOptions}>
 					<ButtonGhost
 						leftIcon="more_horiz"
@@ -36,7 +51,10 @@ export const CustomerCard = ({ customer, onClose }) => {
 					/>
 					{showMoreOptions && (
 						<div className={style.moreOptions}>
-							<ButtonWhite
+							<ButtonGhost leftIcon="favorite">Favoritar</ButtonGhost>
+							<ButtonGhost leftIcon="person_cancel">Inativar</ButtonGhost>
+							<ButtonGhost leftIcon="shopping_bag">Produtos</ButtonGhost>
+							<ButtonGhost
 								leftIcon="delete"
 								onClick={() => {
 									setShowMoreOptions(false)
@@ -55,22 +73,33 @@ export const CustomerCard = ({ customer, onClose }) => {
 										},
 									})
 								}}
-							/>
+							>
+								Excluir
+							</ButtonGhost>
 						</div>
 					)}
 				</div>
 			</div>
 			<div className={style.customerInfo}>
-				<a
-					onClick={() => {
-						show(customer, onClose)
-					}}
-				>
-					<h3>{customer.name}</h3>
-				</a>
-				<p>{customer.email}</p>
-				<p>{customer.phone}</p>
+				<h3 title={customer.name}>{customer.name}</h3>
+				<small>{customer.email}</small>
+				{customer.address && (
+					<div className={style.address}>
+						{customer.address?.city && <span>{customer.address?.city}</span>}
+						{customer.address?.state && <span>{customer.address?.state}</span>}
+						{customer.address?.country && <span>{customer.address?.country}</span>}
+					</div>
+				)}
 			</div>
+			<hr />
+			<Button
+				className={style.showDetailsButton}
+				onClick={() => {
+					show({ ...customer, ref }, onClose)
+				}}
+			>
+				Mostrar Detalhes
+			</Button>
 		</div>
 	)
 }

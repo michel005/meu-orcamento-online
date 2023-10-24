@@ -28,7 +28,7 @@ export const ProductFormSidebar = ({ customerData }) => {
 	}
 
 	return (
-		<div className={style.customerFormSidebar}>
+		<div className={style.productFormSidebar}>
 			<div className={style.userCard}>
 				<div className={style.userImage}>{getField('picture')}</div>
 			</div>

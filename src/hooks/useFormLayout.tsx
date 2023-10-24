@@ -9,14 +9,19 @@ import { DateUtils } from '../utils/DateUtils'
 import { UserPicture } from '../components/UserPicture'
 import { NumberUtils } from '../utils/NumberUtils'
 
-const FileField = ({ field, fieldDefinition, value, onChange, errors }) => {
+const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 	const ref = useRef(null)
 	return (
 		<div className={style.pictureField} style={{ width: fieldDefinition.size || '150px' }}>
 			<UserPicture
-				onClick={() => {
-					ref.current.click()
-				}}
+				className={style.picture}
+				onClick={
+					!disableAll && !fieldDefinition.disabled
+						? () => {
+								ref.current.click()
+						  }
+						: undefined
+				}
 				picture={value?.[field]}
 				placeholder={!value[field] && 'Sem Imagem Selecionada'}
 				size={fieldDefinition.size || '150px'}
@@ -27,15 +32,19 @@ const FileField = ({ field, fieldDefinition, value, onChange, errors }) => {
 					<Button
 						leftIcon="close"
 						onClick={() => {
-							value[field] = null
-							onChange({ ...value })
+							if (!disableAll && !fieldDefinition.disabled) {
+								value[field] = null
+								onChange({ ...value })
+							}
 						}}
 					/>
 				) : (
 					<Button
 						leftIcon="search"
 						onClick={() => {
-							ref.current.click()
+							if (!disableAll && !fieldDefinition.disabled) {
+								ref.current.click()
+							}
 						}}
 					/>
 				)}
@@ -50,13 +59,11 @@ const FileField = ({ field, fieldDefinition, value, onChange, errors }) => {
 						onChange({ ...value })
 					})
 				}}
-				disabled={fieldDefinition.disabled}
-				placeholder={fieldDefinition.placeholder}
 			/>
 		</div>
 	)
 }
-const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors }) => {
+const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
 			leftSide={<label htmlFor={id}>{fieldDefinition.label}</label>}
@@ -70,19 +77,20 @@ const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors }) 
 						value[field] = event.target.checked
 						onChange({ ...value })
 					}}
-					disabled={fieldDefinition.disabled}
+					disabled={disableAll || fieldDefinition.disabled}
 					placeholder={fieldDefinition.placeholder}
 					onFocus={() => setFocus(true)}
 					onBlur={() => setFocus(false)}
 				/>
 			)}
+			disabled={disableAll || fieldDefinition.disabled}
 			isCheckbox={true}
 			error={errors?.[field]?.message}
 		/>
 	)
 }
 
-const SelectField = ({ id, field, fieldDefinition, value, onChange, errors }) => {
+const SelectField = ({ id, field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
 			label={fieldDefinition.label}
@@ -96,7 +104,7 @@ const SelectField = ({ id, field, fieldDefinition, value, onChange, errors }) =>
 						value[field] = event.target.value
 						onChange({ ...value })
 					}}
-					disabled={fieldDefinition.disabled}
+					disabled={disableAll || fieldDefinition.disabled}
 					placeholder={fieldDefinition.placeholder}
 					onFocus={() => setFocus(true)}
 					onBlur={() => setFocus(false)}
@@ -111,11 +119,12 @@ const SelectField = ({ id, field, fieldDefinition, value, onChange, errors }) =>
 					})}
 				</select>
 			)}
+			disabled={disableAll || fieldDefinition.disabled}
 			error={errors?.[field]?.message}
 		/>
 	)
 }
-const CurrencyField = ({ field, fieldDefinition, value, onChange, errors }) => {
+const CurrencyField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
 			label={fieldDefinition.label}
@@ -132,17 +141,18 @@ const CurrencyField = ({ field, fieldDefinition, value, onChange, errors }) => {
 							event.target.value === '' ? null : parseFloat(event.target.value) * 100
 						onChange({ ...value })
 					}}
-					disabled={fieldDefinition.disabled}
+					disabled={disableAll || fieldDefinition.disabled}
 					placeholder={fieldDefinition.placeholder}
 					onFocus={() => setFocus(true)}
 					onBlur={() => setFocus(false)}
 				/>
 			)}
+			disabled={disableAll || fieldDefinition.disabled}
 			error={errors?.[field]?.message}
 		/>
 	)
 }
-const GeneralField = ({ field, fieldDefinition, value, onChange, errors }) => {
+const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
 			label={fieldDefinition.label}
@@ -173,12 +183,13 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors }) => {
 						}
 						onChange({ ...value })
 					}}
-					disabled={fieldDefinition.disabled}
+					disabled={disableAll || fieldDefinition.disabled}
 					placeholder={fieldDefinition.placeholder}
 					onFocus={() => setFocus(true)}
 					onBlur={() => setFocus(false)}
 				/>
 			)}
+			disabled={disableAll || fieldDefinition.disabled}
 			error={errors?.[field]?.message}
 		/>
 	)
@@ -203,12 +214,14 @@ export type useFormLayoutType<Entity> = {
 	definition: useFormLayoutDefinitionType
 	value: Entity
 	onChange: (value: Entity) => void
+	disableAll?: boolean
 }
 
 export const useFormLayout = <Entity,>({
 	definition,
 	value,
 	onChange,
+	disableAll,
 }: useFormLayoutType<Entity>) => {
 	const [errors, setErrors] = useState({})
 
@@ -223,6 +236,18 @@ export const useFormLayout = <Entity,>({
 	}
 
 	const getField = (field: string) => {
+		if (field === 'error') {
+			return (
+				<>
+					{errors?.['error'] && (
+						<Error
+							message={errors?.['error']?.message}
+							code={errors?.['error']?.code}
+						/>
+					)}
+				</>
+			)
+		}
 		const fieldDefinition = definition[field] || {}
 		const id = Math.random().toString()
 		if (['text', 'date', 'password', 'number'].includes(fieldDefinition.type || 'text')) {
@@ -233,6 +258,7 @@ export const useFormLayout = <Entity,>({
 					value={value}
 					onChange={onChange}
 					errors={errors}
+					disableAll={disableAll}
 				/>
 			)
 		} else if (fieldDefinition.type === 'currency') {
@@ -243,6 +269,7 @@ export const useFormLayout = <Entity,>({
 					value={value}
 					onChange={onChange}
 					errors={errors}
+					disableAll={disableAll}
 				/>
 			)
 		} else if (['select'].includes(fieldDefinition.type)) {
@@ -254,6 +281,7 @@ export const useFormLayout = <Entity,>({
 					value={value}
 					onChange={onChange}
 					errors={errors}
+					disableAll={disableAll}
 				/>
 			)
 		} else if (['checkbox'].includes(fieldDefinition.type)) {
@@ -265,6 +293,7 @@ export const useFormLayout = <Entity,>({
 					value={value}
 					onChange={onChange}
 					errors={errors}
+					disableAll={disableAll}
 				/>
 			)
 		} else if (['file'].includes(fieldDefinition.type)) {
@@ -274,7 +303,7 @@ export const useFormLayout = <Entity,>({
 					fieldDefinition={fieldDefinition}
 					value={value}
 					onChange={onChange}
-					errors={errors}
+					disableAll={disableAll}
 				/>
 			)
 		} else {
@@ -285,6 +314,7 @@ export const useFormLayout = <Entity,>({
 					value={value}
 					onChange={onChange}
 					errors={errors}
+					disableAll={disableAll}
 				/>
 			)
 		}

@@ -37,7 +37,7 @@ export type AddressType = {
 }
 
 export type CustomerType = {
-	_id?: string
+	id?: string
 	created?: string
 	updated?: string
 	picture?: string
@@ -50,6 +50,7 @@ export type CustomerType = {
 	document_number?: string
 	address?: AddressType | null
 	active?: boolean
+	favorite?: boolean
 }
 
 export type ProductType = {

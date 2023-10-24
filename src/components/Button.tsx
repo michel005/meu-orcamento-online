@@ -5,7 +5,10 @@ import { GoogleIconType } from '../types/GoogleIconType'
 export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement> {
 	leftIcon?: GoogleIconType
 	rightIcon?: GoogleIconType
+	leftBag?: any
+	rightBag?: any
 	variation?: 'primary' | 'secondary' | 'ghost' | 'white'
+	variationOverride?: 'primary' | 'secondary' | 'ghost' | 'white'
 }
 
 export const Button = ({ ...props }: ButtonType) => {
@@ -24,16 +27,26 @@ export const ButtonWhite = ({ ...props }: ButtonType) => {
 	return <GenericButton {...props} variation="white" />
 }
 
-const GenericButton = ({ leftIcon, rightIcon, variation, ...props }: ButtonType) => {
+const GenericButton = ({
+	leftIcon,
+	rightIcon,
+	leftBag,
+	rightBag,
+	variation,
+	variationOverride,
+	...props
+}: ButtonType) => {
 	return (
 		<button
 			{...props}
 			className={`${props.className} ${style.button}`}
-			data-variation={variation}
+			data-variation={variationOverride || variation}
 		>
+			{leftBag !== undefined && <div className={style.bag}>{leftBag}</div>}
 			{leftIcon && <div className={style.icon}>{leftIcon}</div>}
 			{props.children && <span>{props.children}</span>}
 			{rightIcon && <div className={style.icon}>{rightIcon}</div>}
+			{rightBag !== undefined && <div className={style.bag}>{rightBag}</div>}
 		</button>
 	)
 }

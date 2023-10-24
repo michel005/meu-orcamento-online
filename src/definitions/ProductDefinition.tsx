@@ -17,7 +17,7 @@ export const ProductDefinition = (
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			type: 'file',
 			placeholder: value?.name
-				? StringUtils.initialLetters(value.name || '', 2).toUpperCase()
+				? StringUtils.initialLetters(value.name || '').toUpperCase()
 				: '',
 			pictureType: 'square',
 			size: '220px',

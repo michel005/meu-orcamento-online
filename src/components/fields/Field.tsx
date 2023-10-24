@@ -30,7 +30,7 @@ export const Field = ({
 			className={`${style.field} ${className}`}
 			data-checkbox={isCheckbox}
 			data-focus={focus}
-			data-disabled={disabled}
+			data-disabled={disabled ? 'true' : 'false'}
 			data-error={!!error}
 		>
 			{label && <label htmlFor={randomId}>{label}</label>}

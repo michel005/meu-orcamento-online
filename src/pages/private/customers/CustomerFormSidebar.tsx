@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import style from './CustomerFormSidebar.module.scss'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
@@ -9,6 +9,7 @@ import { ConfigContext } from '../../../contexts/ConfigContext'
 import { useForm } from '../../../hooks/useForm'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
 import { AddressDefinition } from '../../../definitions/AddressDefinition'
+import { Error } from '../../../components/Error'
 
 export const CustomerFormSidebar = () => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
@@ -18,6 +19,7 @@ export const CustomerFormSidebar = () => {
 		definition: CustomerDefinition(form),
 		value: form,
 		onChange: edit,
+		disableAll: !form.active,
 	})
 	const { getField: getAddressField, setErrors: setAddressErrors } = useFormLayout<AddressType>({
 		definition: AddressDefinition(),
@@ -26,6 +28,7 @@ export const CustomerFormSidebar = () => {
 			form.address = value
 			edit(form)
 		},
+		disableAll: !form.active,
 	})
 
 	const onSuccess = () => {
@@ -37,6 +40,10 @@ export const CustomerFormSidebar = () => {
 		setAddressErrors(ErrorUtils.convertErrors(errors.response.data?.address))
 	}
 
+	useEffect(() => {
+		;(form as any)?.ref?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+	}, [form])
+
 	return (
 		<div className={style.customerFormSidebar}>
 			<div className={style.userCard}>
@@ -47,6 +54,14 @@ export const CustomerFormSidebar = () => {
 					{getField('picture')}
 				</div>
 			</div>
+			{!form.active && (
+				<>
+					<Error message="Cliente inativo. Para realizar alterações, ative este usuário novamente." />
+					<Button style={{ borderRadius: 0 }} leftIcon="person_check">
+						Ativar
+					</Button>
+				</>
+			)}
 			<div className={style.content}>
 				{getField('name')}
 				{getField('email')}
@@ -69,17 +84,24 @@ export const CustomerFormSidebar = () => {
 			<div className={style.options}>
 				<Button
 					leftIcon="save"
+					disabled={!form.active}
 					onClick={() => {
-						if (form?._id) {
+						if (form?.id) {
 							update({
-								id: form?._id,
-								data: form,
+								id: form?.id,
+								data: {
+									...form,
+									ref: undefined,
+								},
 								onSuccess,
 								onError,
 							})
 						} else {
 							create({
-								data: form,
+								data: {
+									...form,
+									ref: undefined,
+								},
 								onSuccess,
 								onError,
 							})
@@ -88,19 +110,21 @@ export const CustomerFormSidebar = () => {
 				>
 					Salvar
 				</Button>
-				{form?._id && (
+				{form?.id && (
 					<>
 						<ButtonWhite
-							leftIcon="save"
+							disabled={!form.active}
+							leftIcon="delete"
 							onClick={() => {
 								setMessage({
 									header: 'Deseja realmente excluir este cliente?',
-									content: 'Esta operação não pode ser desfaita.',
+									content:
+										'Esta operação não pode ser desfeita. Esta operação não exclui as informações de faturamento deste cliente.',
 									type: 'question',
 									confirm: () => {
 										setLoading(true)
 										remove({
-											id: form?._id,
+											id: form?.id,
 											onSuccess,
 											onError,
 										})
@@ -110,7 +134,7 @@ export const CustomerFormSidebar = () => {
 						>
 							Excluir
 						</ButtonWhite>
-						<ButtonWhite leftIcon="more_horiz" />
+						<ButtonWhite leftIcon="more_horiz" disabled={!form.active} />
 					</>
 				)}
 				<div style={{ flexGrow: 1 }} />

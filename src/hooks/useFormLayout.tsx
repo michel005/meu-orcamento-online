@@ -16,16 +16,21 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 			<UserPicture
 				className={style.picture}
 				onClick={
-					!disableAll && !fieldDefinition.disabled
+					!disableAll || !fieldDefinition.disabled
 						? () => {
 								ref.current.click()
 						  }
 						: undefined
 				}
 				picture={value?.[field]}
-				placeholder={!value[field] && 'Sem Imagem Selecionada'}
+				placeholder={
+					!!fieldDefinition.pictureName
+						? undefined
+						: !value[field] && 'Sem Imagem Selecionada'
+				}
 				size={fieldDefinition.size || '150px'}
 				type={fieldDefinition.pictureType}
+				name={fieldDefinition.pictureName}
 			/>
 			<div className={style.pictureOptions}>
 				{value[field] ? (
@@ -91,34 +96,55 @@ const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors, di
 }
 
 const SelectField = ({ id, field, fieldDefinition, value, onChange, errors, disableAll }) => {
+	const ref = useRef(null)
+
 	return (
 		<Field
 			label={fieldDefinition.label}
 			leftSide={fieldDefinition.leftSide}
-			info={fieldDefinition.info}
-			input={(setFocus) => (
-				<select
-					id={id}
-					value={value?.[field as keyof typeof value] as string}
-					onChange={(event) => {
-						value[field] = event.target.value
-						onChange({ ...value })
+			rightSide={
+				<ButtonGhost
+					leftIcon="keyboard_arrow_down"
+					onClick={() => {
+						if (ref.current) {
+							ref.current.dispatchEvent(
+								new MouseEvent('mousedown', {
+									view: window,
+									bubbles: true,
+									cancelable: true,
+								})
+							)
+						}
 					}}
-					disabled={disableAll || fieldDefinition.disabled}
-					placeholder={fieldDefinition.placeholder}
-					onFocus={() => setFocus(true)}
-					onBlur={() => setFocus(false)}
-				>
-					<option></option>
-					{(fieldDefinition.options || []).map((option: any) => {
-						return (
-							<option key={option[0]} value={option[0]}>
-								{option[1]}
-							</option>
-						)
-					})}
-				</select>
-			)}
+				/>
+			}
+			info={fieldDefinition.info}
+			input={(setFocus) => {
+				return (
+					<select
+						id={id}
+						ref={ref}
+						value={value?.[field as keyof typeof value] as string}
+						onChange={(event) => {
+							value[field] = event.target.value
+							onChange({ ...value })
+						}}
+						disabled={disableAll || fieldDefinition.disabled}
+						placeholder={fieldDefinition.placeholder}
+						onFocus={() => setFocus(true)}
+						onBlur={() => setFocus(false)}
+					>
+						<option></option>
+						{(fieldDefinition.options || []).map((option: any) => {
+							return (
+								<option key={option[0]} value={option[0]}>
+									{option[1]}
+								</option>
+							)
+						})}
+					</select>
+				)
+			}}
 			disabled={disableAll || fieldDefinition.disabled}
 			error={errors?.[field]?.message}
 		/>
@@ -201,6 +227,7 @@ export type useFormLayoutDefinitionType = {
 		placeholder?: string
 		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox' | 'file' | 'select'
 		pictureType?: 'circle' | 'square'
+		pictureName?: string
 		options?: string[][]
 		leftSide?: any
 		rightSide?: any
@@ -235,7 +262,7 @@ export const useFormLayout = <Entity,>({
 		)
 	}
 
-	const getField = (field: string) => {
+	const getField = (field: string, overrideProps = {}) => {
 		if (field === 'error') {
 			return (
 				<>
@@ -248,7 +275,7 @@ export const useFormLayout = <Entity,>({
 				</>
 			)
 		}
-		const fieldDefinition = definition[field] || {}
+		const fieldDefinition = { ...(definition[field] || {}), ...overrideProps }
 		const id = Math.random().toString()
 		if (['text', 'date', 'password', 'number'].includes(fieldDefinition.type || 'text')) {
 			return (

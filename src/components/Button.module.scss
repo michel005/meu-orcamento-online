@@ -37,7 +37,7 @@
 
 	.bag {
 		align-items: center;
-		background-color: #fff3;
+		background-color: #1116;
 		border-radius: 50%;
 		display: flex;
 		flex-direction: row;
@@ -69,6 +69,10 @@
 		}
 
 		&:active {
+			background-color: #fff3;
+		}
+
+		.bag {
 			background-color: #fff3;
 		}
 	}

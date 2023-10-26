@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import style from './CustomerPage.module.scss'
 import { Button, ButtonWhite } from '../../components/Button'
 import { useApi } from '../../hooks/useApi'
@@ -17,6 +17,8 @@ export const CustomerPage = () => {
 		pf: true,
 		pj: true,
 	})
+	const [showFilters, setShowFilters] = useState(false)
+	const [scrollPosition, setScrollPosition] = useState(0)
 
 	const filteredData = data
 		.filter((x) => !filters.favorite || x.favorite)
@@ -35,11 +37,23 @@ export const CustomerPage = () => {
 	}, [])
 
 	return (
-		<div className={style.customerPage}>
-			<div className={style.customerPageContent}>
+		<div
+			className={style.customerPage}
+			data-show-form={!!originalValue}
+			data-show-filters={showFilters}
+			data-scroll-position={scrollPosition > 60}
+		>
+			{originalValue && <CustomerFormSidebar />}
+			<div
+				className={style.customerPageContent}
+				onScroll={(e) => {
+					setScrollPosition((e.currentTarget as any).scrollTop)
+				}}
+			>
 				<div className={style.pageHeader}>
 					<Button
-						leftIcon="person"
+						className={style.personAddButton}
+						leftIcon="person_add"
 						onClick={() => {
 							show(
 								{
@@ -54,71 +68,82 @@ export const CustomerPage = () => {
 					<hr />
 					<label className={style.faded}>{filteredData.length} registro(s)</label>
 					<div style={{ flexGrow: 1 }} />
-					<ButtonWhite
-						leftIcon="person"
-						rightBag={data.filter((x) => x.person_type === 'PF').length}
-						variationOverride={filters.pf ? 'primary' : 'white'}
+					<Button
+						className={style.showFiltersButton}
+						variationOverride={showFilters ? 'primary' : 'white'}
+						leftIcon="filter_alt"
+						rightBag={Object.keys(filters).filter((x) => filters[x]).length}
 						onClick={() => {
-							setFilters((x) => ({
-								...x,
-								pf: !x.pf,
-							}))
+							setShowFilters((x) => !x)
 						}}
-					>
-						Pessoa Física
-					</ButtonWhite>
-					<ButtonWhite
-						leftIcon="group"
-						rightBag={data.filter((x) => x.person_type === 'PJ').length}
-						variationOverride={filters.pj ? 'primary' : 'white'}
-						onClick={() => {
-							setFilters((x) => ({
-								...x,
-								pj: !x.pj,
-							}))
-						}}
-					>
-						Pessoa Jurídica
-					</ButtonWhite>
-					<ButtonWhite
-						leftIcon="person_check"
-						rightBag={data.filter((x) => x.active).length}
-						variationOverride={filters.active ? 'primary' : 'white'}
-						onClick={() => {
-							setFilters((x) => ({
-								...x,
-								active: !x.active,
-							}))
-						}}
-					>
-						Ativos
-					</ButtonWhite>
-					<ButtonWhite
-						leftIcon="person_cancel"
-						rightBag={data.filter((x) => !x.active).length}
-						variationOverride={filters.inactive ? 'primary' : 'white'}
-						onClick={() => {
-							setFilters((x) => ({
-								...x,
-								inactive: !x.inactive,
-							}))
-						}}
-					>
-						Inativos
-					</ButtonWhite>
-					<ButtonWhite
-						leftIcon="favorite"
-						rightBag={filteredData.filter((x) => x.favorite).length}
-						variationOverride={filters.favorite ? 'primary' : 'white'}
-						onClick={() => {
-							setFilters((x) => ({
-								...x,
-								favorite: !x.favorite,
-							}))
-						}}
-					>
-						Favoritos
-					</ButtonWhite>
+					/>
+					<div className={style.allFilters}>
+						<ButtonWhite
+							leftIcon="person"
+							rightBag={data.filter((x) => x.person_type === 'PF').length}
+							variationOverride={filters.pf ? 'primary' : 'white'}
+							onClick={() => {
+								setFilters((x) => ({
+									...x,
+									pf: !x.pf,
+								}))
+							}}
+						>
+							Pessoa Física
+						</ButtonWhite>
+						<ButtonWhite
+							leftIcon="group"
+							rightBag={data.filter((x) => x.person_type === 'PJ').length}
+							variationOverride={filters.pj ? 'primary' : 'white'}
+							onClick={() => {
+								setFilters((x) => ({
+									...x,
+									pj: !x.pj,
+								}))
+							}}
+						>
+							Pessoa Jurídica
+						</ButtonWhite>
+						<ButtonWhite
+							leftIcon="person_check"
+							rightBag={data.filter((x) => x.active).length}
+							variationOverride={filters.active ? 'primary' : 'white'}
+							onClick={() => {
+								setFilters((x) => ({
+									...x,
+									active: !x.active,
+								}))
+							}}
+						>
+							Ativos
+						</ButtonWhite>
+						<ButtonWhite
+							leftIcon="person_cancel"
+							rightBag={data.filter((x) => !x.active).length}
+							variationOverride={filters.inactive ? 'primary' : 'white'}
+							onClick={() => {
+								setFilters((x) => ({
+									...x,
+									inactive: !x.inactive,
+								}))
+							}}
+						>
+							Inativos
+						</ButtonWhite>
+						<ButtonWhite
+							leftIcon="favorite"
+							rightBag={filteredData.filter((x) => x.favorite).length}
+							variationOverride={filters.favorite ? 'primary' : 'white'}
+							onClick={() => {
+								setFilters((x) => ({
+									...x,
+									favorite: !x.favorite,
+								}))
+							}}
+						>
+							Favoritos
+						</ButtonWhite>
+					</div>
 					<hr />
 					<Button leftIcon="refresh" onClick={refreshPage} />
 				</div>
@@ -134,7 +159,6 @@ export const CustomerPage = () => {
 					})}
 				</div>
 			</div>
-			{originalValue && <CustomerFormSidebar />}
 		</div>
 	)
 }

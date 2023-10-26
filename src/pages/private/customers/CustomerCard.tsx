@@ -3,13 +3,12 @@ import style from './CustomerCard.module.scss'
 import { UserPicture } from '../../../components/UserPicture'
 import { useForm } from '../../../hooks/useForm'
 import { CustomerType } from '../../../types/AllTypes'
-import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
+import { Button, ButtonGhost } from '../../../components/Button'
 import { ConfigContext } from '../../../contexts/ConfigContext'
 import { useApi } from '../../../hooks/useApi'
 
 export const CustomerCard = ({ customer, onClose }) => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
-	const ref = useRef(null)
 	const { remove } = useApi('customer')
 	const { show, form } = useForm<CustomerType>('customer')
 	const [showMoreOptions, setShowMoreOptions] = useState(false)
@@ -17,10 +16,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 	return (
 		<div
 			className={style.customerCard}
-			ref={ref}
 			data-person-type={customer.person_type}
-			data-current-person={form.id === customer.id}
-			data-showing-form={!!form?.id}
 			data-inactive={!customer.active}
 			onMouseLeave={() => {
 				setShowMoreOptions(false)
@@ -33,7 +29,6 @@ export const CustomerCard = ({ customer, onClose }) => {
 					name={customer.name}
 					size="170px"
 				/>
-				<span>{customer.person_type.toUpperCase()}</span>
 				{!customer.active && <div className={style.inactive}>INATIVO</div>}
 				<div className={style.favorite}>
 					<ButtonGhost
@@ -95,7 +90,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 			<Button
 				className={style.showDetailsButton}
 				onClick={() => {
-					show({ ...customer, ref }, onClose)
+					show(customer, onClose)
 				}}
 			>
 				Mostrar Detalhes

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import style from './PrivatePage.module.scss'
 import { Icon } from '../components/Icon'
 import { NavLink, Route, Routes, useNavigate } from 'react-router-dom'
-import { ButtonWhite } from '../components/Button'
+import { Button, ButtonGhost, ButtonWhite } from '../components/Button'
 import { SessionContext } from '../contexts/SessionContext'
 import { RoutesMap } from '../constants/RoutesMap'
 import { UserPicture } from '../components/UserPicture'
@@ -13,14 +13,28 @@ export const PrivatePage = () => {
 	const { loading, setMessage } = useContext(ConfigContext)
 	const { currentUser, setCurrentUser } = useContext(SessionContext)
 	const [showUserMenu, setShowUserMenu] = useState(false)
+	const [showMenu, setShowMenu] = useState(false)
 	const navigate = useNavigate()
 
 	return (
-		<div className={style.privatePage}>
+		<div className={style.privatePage} data-show-menu={showMenu}>
 			<nav className={style.navbar}>
 				<div className={style.appInfo}>
-					<Icon icon="description" />
-					<NavLink to="/">Meu Bazar Online</NavLink>
+					<ButtonWhite
+						className={style.showMenuButton}
+						leftIcon="menu"
+						onClick={() => {
+							setShowMenu((x) => !x)
+						}}
+					/>
+					<ButtonWhite
+						leftIcon="description"
+						onClick={() => {
+							navigate('/')
+						}}
+					>
+						Meu Bazar Online
+					</ButtonWhite>
 				</div>
 				<div className={style.navbarOptions}>
 					{Object.keys(RoutesMap.private)
@@ -32,6 +46,9 @@ export const PrivatePage = () => {
 									key={routeKey}
 									to={routeDetails.route}
 									className={({ isActive }) => (isActive ? style.active : '')}
+									onClick={() => {
+										setShowMenu(false)
+									}}
 								>
 									<Icon icon={routeDetails?.icon} className={style.icon} />
 									<span>{routeDetails.name}</span>
@@ -41,24 +58,21 @@ export const PrivatePage = () => {
 				</div>
 				<div className={style.userInfo}>
 					<UserPicture
+						className={style.userInfoPicture}
 						picture={currentUser?.picture}
 						name={currentUser.full_name}
 						size="var(--input-height)"
-					/>
-					<ButtonWhite
-						rightIcon={showUserMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
 						onClick={() => {
 							setShowUserMenu((x) => !x)
 						}}
-					>
-						{currentUser.full_name}
-					</ButtonWhite>
+					/>
 					{showUserMenu && (
 						<div className={style.userInfoOptions}>
 							<ButtonWhite
 								leftIcon="edit"
 								onClick={() => {
 									navigate('/my-user')
+									setShowMenu(false)
 									setShowUserMenu(false)
 								}}
 							>
@@ -67,6 +81,8 @@ export const PrivatePage = () => {
 							<ButtonWhite
 								leftIcon="logout"
 								onClick={() => {
+									setShowUserMenu(false)
+									setShowMenu(false)
 									setMessage({
 										header: 'Deseja realmente sair?',
 										content: 'O dados não salvos poderão ser perdidos.',

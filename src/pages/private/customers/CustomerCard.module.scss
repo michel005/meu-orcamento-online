@@ -1,35 +1,36 @@
 @import '../../../keyframe';
 
 .customerCard {
-	align-self: flex-start;
 	animation: fadeOut 0.25s linear;
+	align-self: flex-start;
 	background-color: #fff;
 	border-radius: 0;
 	box-shadow: #ccc 0 0 7px;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	transition: all 0.25s;
-	width: 250px;
 	max-width: 250px;
+	width: 250px;
 
 	&:hover {
 		box-shadow: #aaa 0 0 7px;
-		scale: 1.05;
 		z-index: 1;
 
 		.buttons {
 			opacity: 1;
 		}
+
+		.showDetailsButton {
+			background-color: var(--active-color);
+			color: #fff;
+
+			&:hover {
+				background-color: var(--active-color-80);
+			}
+		}
 	}
 
 	&[data-person-type='PF'] {
-		.customerPicture {
-			> span {
-				background-color: #80f;
-			}
-		}
-
 		.userPicture {
 			border-right: 4px solid #80f;
 			border-bottom: 2px solid #80f;
@@ -37,43 +38,9 @@
 	}
 
 	&[data-person-type='PJ'] {
-		.customerPicture {
-			> span {
-				background-color: #f93;
-			}
-		}
-
 		.userPicture {
 			border-right: 4px solid #f93;
 			border-bottom: 2px solid #f93;
-		}
-	}
-
-	&[data-showing-form='true'] {
-		&[data-current-person='false'] {
-			filter: grayscale(1);
-			opacity: 0.4;
-
-			&:hover {
-				filter: grayscale(0);
-				opacity: 1;
-			}
-		}
-	}
-
-	&[data-current-person='true'] {
-		.buttons {
-			display: none;
-		}
-
-		&[data-showing-form='true'] {
-			scale: 1.1;
-			z-index: 1;
-
-			.showDetailsButton {
-				background-color: var(--active-color);
-				color: #fff;
-			}
 		}
 	}
 
@@ -105,7 +72,7 @@
 	> button {
 		background-color: transparent !important;
 		border-radius: 0;
-		font-size: 18px !important;
+		font-size: 24px !important;
 	}
 }
 
@@ -155,7 +122,6 @@
 	button[data-variation='ghost'] {
 		border-radius: 0;
 		font-size: 16px;
-		font-weight: bold;
 		height: auto;
 		justify-content: start;
 		min-height: auto;
@@ -179,17 +145,6 @@
 	position: relative;
 	transition: all 0.25s;
 	width: 100%;
-
-	> span {
-		border-radius: 50%;
-		color: #fff;
-		font-size: 14px;
-		padding: 7px;
-		position: absolute;
-		inset-block-end: 32px;
-		inset-inline-end: 46px;
-		transition: all 0.25s;
-	}
 }
 
 .userPicture {

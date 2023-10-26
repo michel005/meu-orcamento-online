@@ -86,10 +86,14 @@
 
 			input,
 			select {
+				appearance: none;
+				background-color: transparent;
 				border: none;
+				color: #333;
 				flex-grow: 1;
 				font-size: inherit;
 				outline: transparent;
+				text-align: left;
 				z-index: 100;
 
 				&::placeholder {

@@ -29,20 +29,21 @@
 	z-index: 100;
 }
 
+.showMenuButton {
+	display: none;
+}
+
 .appInfo {
 	align-items: center;
 	color: #fff;
 	display: flex;
 	flex-direction: row;
-	font-size: 21px;
-	gap: 7px;
+	gap: 14px;
 
-	> a {
-		color: #fff;
-	}
-
-	> span {
-		color: var(--active-color);
+	> button {
+		background-color: transparent !important;
+		font-size: 21px;
+		padding: 0;
 	}
 }
 
@@ -57,7 +58,7 @@
 
 	> a {
 		align-items: center;
-		color: #fff5;
+		color: #fff7;
 		display: flex;
 		flex-direction: row;
 		gap: 10px;
@@ -65,7 +66,7 @@
 		transition: all 0.25s;
 
 		&:hover {
-			color: #fff7;
+			color: #fffa;
 		}
 
 		&.active {
@@ -109,14 +110,84 @@
 }
 
 .mainContent {
+	background-color: #eee;
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
 	height: calc(100% - var(--private-navbar-height));
 	overflow: auto;
 	width: 100%;
+}
 
-	> * {
-		animation: fadeOut 0.25s linear;
+.userInfoPicture {
+	border: none !important;
+}
+
+@media (max-width: 1200px) {
+	.userInfoPicture {
+		border: none !important;
+	}
+}
+
+@media (max-width: 1199px) {
+	.showMenuButton {
+		display: flex;
+	}
+
+	.privatePage {
+		&[data-show-menu='true'] {
+			.navbarOptions {
+				transform: translateX(0);
+			}
+
+			&::before {
+				background-color: #1113;
+				backdrop-filter: blur(4px);
+				content: '';
+				height: 100%;
+				inset-block-start: 0;
+				inset-inline-start: 0;
+				position: fixed;
+				width: 100%;
+				z-index: 9;
+			}
+		}
+	}
+
+	.appInfo {
+		flex-grow: 1;
+	}
+
+	.navbarOptions {
+		align-items: flex-start;
+		background-color: #000e;
+		backdrop-filter: blur(4px);
+		flex-direction: column;
+		gap: 0;
+		height: calc(100% - var(--private-navbar-height));
+		inset-block-start: var(--private-navbar-height);
+		inset-inline-start: 0;
+		justify-content: flex-start;
+		padding: 0;
+		position: fixed;
+		transform: translateX(-100%);
+		transition: all 0.25s;
+		width: 300px;
+		z-index: 10;
+
+		> a {
+			font-weight: normal;
+			justify-content: flex-start;
+			padding: 21px;
+			width: 100%;
+
+			&:hover {
+				background-color: #fff1;
+			}
+
+			&.active {
+				background-color: #fff3;
+			}
+		}
 	}
 }

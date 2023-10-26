@@ -1,17 +1,52 @@
 @import '../../../keyframe';
 
 .customerFormSidebar {
-	border-left: 1px solid #ccc;
-	box-shadow: #ccc 0 0 14px;
+	--sidebar-width: 600px;
+
+	background-color: #fff;
+	border-right: 1px solid #ccc;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	min-width: var(--sidebar-width);
+	position: absolute;
+	width: var(--sidebar-width);
+
+	&[data-show='true'] {
+		z-index: 3;
+	}
+
+	&[data-scroll-position='false'] {
+		.userCardReduced {
+			display: none;
+		}
+
+		.userCard {
+			z-index: 5;
+		}
+	}
+
+	&[data-scroll-position='true'] {
+		.userCard {
+			inset-block-start: -100%;
+			z-index: 6;
+		}
+		.userCardReduced {
+			display: flex;
+		}
+	}
+}
+
+.formContent {
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
 	overflow: auto;
-	width: 600px;
-	min-width: 600px;
 }
 
 .content {
+	background-color: #fff;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -29,8 +64,28 @@
 	flex-direction: row;
 	justify-content: center;
 	gap: 14px;
-	position: relative;
+	inset-block-start: 0;
+	inset-inline-start: 0;
+	position: sticky;
 	width: 100%;
+}
+
+.userCardReduced {
+	align-items: center;
+	background-color: #222;
+	color: #fff;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	inset-block-start: 0;
+	inset-inline-start: 0;
+	padding: 14px;
+	position: sticky;
+	z-index: 10;
+
+	button {
+		display: none;
+	}
 }
 
 .userImage {
@@ -60,6 +115,10 @@
 	}
 }
 
+.error {
+	margin-block: -14px;
+}
+
 .options {
 	background-color: #222;
 	display: flex;
@@ -68,11 +127,26 @@
 	inset-block-end: 0;
 	inset-inline-end: 0;
 	padding: 14px 17px;
-	position: sticky;
 	width: 100%;
 
 	button {
 		align-items: center;
 		border-radius: 7px;
+	}
+}
+
+@media all and (max-width: 1700px) {
+	.options {
+		button {
+			span {
+				display: none;
+			}
+		}
+	}
+}
+
+@media (max-width: 600px) {
+	.customerFormSidebar {
+		--sidebar-width: 100%;
 	}
 }

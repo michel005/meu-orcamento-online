@@ -39,6 +39,7 @@ const GenericButton = ({
 	return (
 		<button
 			{...props}
+			title={props.title || (props.children as string)}
 			className={`${props.className} ${style.button}`}
 			data-variation={variationOverride || variation}
 		>

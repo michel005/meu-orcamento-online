@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import style from './CustomerFormSidebar.module.scss'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
@@ -10,11 +10,13 @@ import { useForm } from '../../../hooks/useForm'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
 import { AddressDefinition } from '../../../definitions/AddressDefinition'
 import { Error } from '../../../components/Error'
+import { StringUtils } from '../../../utils/StringUtils'
 
 export const CustomerFormSidebar = () => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
 	const { create, update, remove } = useApi('customer')
-	const { form, edit, close } = useForm<CustomerType>('customer')
+	const { originalValue, form, edit, close } = useForm<CustomerType>('customer')
+	const [scrollPosition, setScrollPosition] = useState(0)
 	const { getField, setErrors } = useFormLayout<CustomerType>({
 		definition: CustomerDefinition(form),
 		value: form,
@@ -40,80 +42,90 @@ export const CustomerFormSidebar = () => {
 		setAddressErrors(ErrorUtils.convertErrors(errors.response.data?.address))
 	}
 
-	useEffect(() => {
-		;(form as any)?.ref?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-	}, [form])
-
 	return (
-		<div className={style.customerFormSidebar}>
-			<div className={style.userCard}>
-				<div
-					className={style.userImage}
-					style={{ backgroundImage: `url(${form.picture})` }}
-				>
-					{getField('picture')}
+		<div
+			className={style.customerFormSidebar}
+			data-show={!!originalValue}
+			data-scroll-position={scrollPosition > 214}
+		>
+			<div
+				className={style.formContent}
+				onScroll={(e) => {
+					setScrollPosition((e.currentTarget as any).scrollTop)
+				}}
+			>
+				<div className={style.userCard}>
+					<div
+						className={style.userImage}
+						style={{ backgroundImage: `url(${form.picture})` }}
+					>
+						{getField('picture')}
+					</div>
+				</div>
+				<div className={style.userCardReduced}>
+					{getField('picture', {
+						size: '48px',
+						pictureName: StringUtils.initialLetters(form.name).toUpperCase(),
+					})}
+					<h2>{form.name}</h2>
+				</div>
+				{!form.active && (
+					<div className={style.error}>
+						<Error message="Cliente inativo. Para realizar alterações, ative este usuário novamente." />
+					</div>
+				)}
+				<div className={style.content}>
+					{getField('name')}
+					{getField('email')}
+					{getField('phone')}
+					{getField('birthday')}
+					{getField('person_type')}
+					{getField('document_type')}
+					{getField('document_number')}
+					{getField('error')}
+					<h3>Endereço</h3>
+					{getAddressField('zip_code')}
+					{getAddressField('street_name')}
+					{getAddressField('street_number')}
+					{getAddressField('complement')}
+					{getAddressField('city')}
+					{getAddressField('state')}
+					{getAddressField('country')}
+					{getAddressField('error')}
 				</div>
 			</div>
-			{!form.active && (
-				<>
-					<Error message="Cliente inativo. Para realizar alterações, ative este usuário novamente." />
-					<Button style={{ borderRadius: 0 }} leftIcon="person_check">
-						Ativar
-					</Button>
-				</>
-			)}
-			<div className={style.content}>
-				{getField('name')}
-				{getField('email')}
-				{getField('phone')}
-				{getField('birthday')}
-				{getField('person_type')}
-				{getField('document_type')}
-				{getField('document_number')}
-				{getField('error')}
-				<h3>Endereço</h3>
-				{getAddressField('zip_code')}
-				{getAddressField('street_name')}
-				{getAddressField('street_number')}
-				{getAddressField('complement')}
-				{getAddressField('city')}
-				{getAddressField('state')}
-				{getAddressField('country')}
-				{getAddressField('error')}
-			</div>
 			<div className={style.options}>
-				<Button
-					leftIcon="save"
-					disabled={!form.active}
-					onClick={() => {
-						if (form?.id) {
-							update({
-								id: form?.id,
-								data: {
-									...form,
-									ref: undefined,
-								},
-								onSuccess,
-								onError,
-							})
-						} else {
-							create({
-								data: {
-									...form,
-									ref: undefined,
-								},
-								onSuccess,
-								onError,
-							})
-						}
-					}}
-				>
-					Salvar
-				</Button>
+				{!form.active ? (
+					<Button leftIcon="person_check">Ativar</Button>
+				) : (
+					<>
+						<Button
+							leftIcon="save"
+							disabled={!form.active}
+							onClick={() => {
+								if (form?.id) {
+									update({
+										id: form?.id,
+										data: form,
+										onSuccess,
+										onError,
+									})
+								} else {
+									create({
+										data: form,
+										onSuccess,
+										onError,
+									})
+								}
+							}}
+						>
+							Salvar
+						</Button>
+					</>
+				)}
 				{form?.id && (
 					<>
 						<ButtonWhite
-							disabled={!form.active}
 							leftIcon="delete"
 							onClick={() => {
 								setMessage({
@@ -143,9 +155,7 @@ export const CustomerFormSidebar = () => {
 					onClick={() => {
 						close(false)
 					}}
-				>
-					Fechar
-				</ButtonWhite>
+				/>
 			</div>
 		</div>
 	)

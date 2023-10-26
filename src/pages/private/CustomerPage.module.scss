@@ -4,6 +4,31 @@
 	height: 100%;
 	width: 100%;
 	position: relative;
+
+	&[data-scroll-position='true'] {
+		.pageHeader {
+			background-color: #222d;
+			backdrop-filter: blur(4px);
+		}
+	}
+
+	&[data-show-form='true'] {
+		&::before {
+			background-color: #1113;
+			backdrop-filter: blur(4px);
+			content: '';
+			height: 100%;
+			position: absolute;
+			width: 100%;
+			z-index: 3;
+		}
+	}
+
+	&[data-show-filters='true'] {
+		.allFilters {
+			display: flex;
+		}
+	}
 }
 
 .customerPageContent {
@@ -20,8 +45,10 @@
 	flex-direction: row;
 	gap: 14px;
 	inset-block-start: 0;
+	inset-inline-start: 0;
 	padding: 14px 17px;
 	position: sticky;
+	transition: all 0.25s;
 	z-index: 2;
 
 	button {
@@ -47,11 +74,115 @@
 	}
 }
 
-.pageContent {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	gap: 21px;
-	justify-content: start;
+.allFilters {
+	align-items: flex-start;
+	background-color: #111c;
+	backdrop-filter: blur(4px);
+	border-radius: 14px;
+	display: none;
+	flex-direction: column;
+	gap: 14px;
+	inset-block-start: calc(100% + 10px);
+	inset-inline-end: 14px;
 	padding: 14px;
+	position: absolute;
+	z-index: 10;
+
+	&::before {
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-bottom: 10px solid #111e;
+		border-top: none;
+		content: '';
+		height: 0;
+		inset-block-end: 100%;
+		inset-inline-start: 50%;
+		position: absolute;
+		transform: translateX(-50%);
+		width: 0;
+	}
+
+	> button {
+		justify-content: flex-start;
+		padding-right: 50px;
+		position: relative;
+		width: 100%;
+
+		span {
+			display: initial;
+		}
+
+		div:nth-child(3) {
+			display: flex;
+			inset-inline-end: 14px;
+			position: absolute;
+		}
+	}
+}
+
+.pageContent {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+	gap: 21px;
+	justify-content: center;
+	padding: 14px;
+
+	> div {
+		max-width: 100%;
+		width: 100%;
+	}
+}
+
+@media all and (max-width: 1700px) {
+	.customerPage {
+		.pageContent {
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+		}
+	}
+}
+
+@media (max-width: 1500px) {
+	.customerPage {
+		.pageContent {
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+		}
+	}
+}
+
+@media (max-width: 1200px) {
+	.customerPage {
+		.pageContent {
+			grid-template-columns: 1fr 1fr 1fr;
+		}
+	}
+}
+
+@media (max-width: 800px) {
+	.customerPage {
+		.pageContent {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.showFiltersButton {
+		display: flex;
+	}
+}
+
+@media (max-width: 600px) {
+	.customerPage {
+		.pageContent {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.personAddButton {
+		span {
+			display: none;
+		}
+	}
+
+	.faded {
+		display: none;
+	}
 }

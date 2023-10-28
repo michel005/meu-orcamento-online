@@ -16,3 +16,39 @@
 	font-family: 'Material Symbols Outlined', sans-serif;
 	font-weight: inherit;
 }
+
+@mixin desktopFullHD {
+	@media screen and (max-width: 1920px) {
+		@content;
+	}
+}
+
+@mixin desktopMediumHD {
+	@media screen and (max-width: 1600px) {
+		@content;
+	}
+}
+
+@mixin desktopHD {
+	@media screen and (max-width: 1280px) {
+		@content;
+	}
+}
+
+@mixin desktopSmall {
+	@media screen and (max-width: 1024px) {
+		@content;
+	}
+}
+
+@mixin tablet {
+	@media screen and (max-width: 600px) {
+		@content;
+	}
+}
+
+@mixin mobile {
+	@media screen and (max-width: 375px) {
+		@content;
+	}
+}

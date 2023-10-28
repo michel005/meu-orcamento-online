@@ -1,4 +1,5 @@
 @import '../keyframe';
+@import '../utils';
 
 :root {
 	--private-navbar-height: 80px;
@@ -74,41 +75,6 @@
 	}
 }
 
-.userInfo {
-	align-items: center;
-	color: #fff;
-	display: flex;
-	flex-direction: row;
-	font-size: 21px;
-	gap: 14px;
-
-	> img {
-		align-self: center;
-	}
-
-	> span {
-		color: var(--active-color);
-	}
-}
-
-.userInfoOptions {
-	animation: fadeOut 0.15s linear, topToBottom 0.15s linear;
-	background-color: #111;
-	border-radius: 0 0 14px 14px;
-	display: flex;
-	flex-direction: column;
-	gap: 7px;
-	inset-block-start: 100%;
-	inset-inline-end: 7px;
-	padding: 0 14px 14px;
-	position: absolute;
-	z-index: 10;
-
-	> button {
-		justify-content: flex-end;
-	}
-}
-
 .mainContent {
 	background-color: #eee;
 	display: flex;
@@ -123,13 +89,7 @@
 	border: none !important;
 }
 
-@media (max-width: 1200px) {
-	.userInfoPicture {
-		border: none !important;
-	}
-}
-
-@media (max-width: 1199px) {
+@include desktopSmall {
 	.showMenuButton {
 		display: flex;
 	}
@@ -149,9 +109,13 @@
 				inset-inline-start: 0;
 				position: fixed;
 				width: 100%;
-				z-index: 9;
+				z-index: 5;
 			}
 		}
+	}
+
+	.navbar {
+		z-index: 6;
 	}
 
 	.appInfo {
@@ -173,7 +137,6 @@
 		transform: translateX(-100%);
 		transition: all 0.25s;
 		width: 300px;
-		z-index: 10;
 
 		> a {
 			font-weight: normal;

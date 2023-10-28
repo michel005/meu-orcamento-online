@@ -1,3 +1,5 @@
+@import '../utils';
+
 .modal {
 	align-items: center;
 	background-color: #1111;
@@ -20,7 +22,7 @@
 	gap: 14px;
 	padding: 28px;
 	position: relative;
-	max-width: 800px;
+	max-width: 600px;
 	min-width: 600px;
 }
 
@@ -42,4 +44,17 @@
 	gap: 14px;
 	justify-content: flex-end;
 	padding-block-start: 14px;
+}
+
+@include desktopSmall {
+	.modalContent {
+		max-width: calc(100% - 28px);
+		min-width: calc(100% - 28px);
+	}
+}
+
+@include mobile {
+	.buttons {
+		flex-direction: column;
+	}
 }

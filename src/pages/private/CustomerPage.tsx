@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import style from './CustomerPage.module.scss'
 import { Button, ButtonWhite } from '../../components/Button'
 import { useApi } from '../../hooks/useApi'
@@ -7,8 +7,11 @@ import { CustomerType } from '../../types/AllTypes'
 import { useForm } from '../../hooks/useForm'
 import { CustomerFormSidebar } from './customers/CustomerFormSidebar'
 import { Bag } from '../../components/Bag'
+import { Icon } from '../../components/Icon'
+import { ConfigContext } from '../../contexts/ConfigContext'
 
 export const CustomerPage = () => {
+	const { loading } = useContext(ConfigContext)
 	const { originalValue, show, close } = useForm<CustomerType>('customer')
 	const { getAll, data } = useApi('customer')
 	const [filters, setFilters] = useState({
@@ -19,6 +22,7 @@ export const CustomerPage = () => {
 		pj: true,
 	})
 	const [scrollPosition, setScrollPosition] = useState(0)
+	const ref = useRef(null)
 
 	const filteredData = data
 		.filter((x) => !filters.favorite || x.favorite)
@@ -29,6 +33,13 @@ export const CustomerPage = () => {
 
 	const refreshPage = () => {
 		getAll()
+		if (ref.current) {
+			ref.current.scroll({
+				top: 0,
+				left: 0,
+				behavior: 'smooth',
+			})
+		}
 	}
 
 	useEffect(() => {
@@ -45,6 +56,7 @@ export const CustomerPage = () => {
 			{originalValue && <CustomerFormSidebar />}
 			<div
 				className={style.customerPageContent}
+				ref={ref}
 				onScroll={(e) => {
 					setScrollPosition((e.currentTarget as any).scrollTop)
 				}}
@@ -150,6 +162,29 @@ export const CustomerPage = () => {
 					<hr />
 					<Button leftIcon="refresh" onClick={refreshPage} />
 				</div>
+				{!loading && filteredData.length === 0 && (
+					<div className={style.noDataFound}>
+						<div className={style.noDataFoundHeader}>
+							<Icon icon="person_search" />
+							<h1>Nenhum cliente encontrado</h1>
+						</div>
+						<p>Existem algumas razões para isso ocorrer:</p>
+						<ul>
+							<li>
+								<b>Você ainda não cadastrou clientes</b>
+								<br />
+								Cadastre um novo cliente clicando no botão "Novo Cliente"
+							</li>
+							<li>
+								<b>Os filtros selecionados não retornam resultados</b>
+								<br />
+								Selecione filtros diferentes. Observe os números a esquerda de cada
+								opção de filtro, eles mostram quantos registros existem para cada
+								opção.
+							</li>
+						</ul>
+					</div>
+				)}
 				<div className={style.pageContent}>
 					{filteredData.map((customer) => {
 						return (

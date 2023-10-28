@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import style from './UserPicture.module.scss'
 import { StringUtils } from '../utils/StringUtils'
 
@@ -11,6 +11,8 @@ export const UserPicture = ({
 	placeholder = undefined,
 	size = '50px',
 }) => {
+	const [fallbackImage, setFallbackImage] = useState(null)
+
 	return (
 		<div
 			onClick={onClick}
@@ -19,16 +21,21 @@ export const UserPicture = ({
 			data-format={type}
 			data-have-onclick={!!onClick}
 		>
-			{picture ? (
-				<img src={picture} loading="lazy" />
+			{picture && !fallbackImage ? (
+				<img
+					src={fallbackImage || picture}
+					onError={() => {
+						setFallbackImage(true)
+					}}
+					loading="lazy"
+				/>
 			) : (
 				<>
-					{placeholder && (
+					{placeholder ? (
 						<div className={`${style.initialLetters} ${style.placeholder}`}>
 							{placeholder}
 						</div>
-					)}
-					{!placeholder && (
+					) : (
 						<div className={style.initialLetters}>
 							{placeholder || StringUtils.initialLetters(name).toUpperCase()}
 						</div>

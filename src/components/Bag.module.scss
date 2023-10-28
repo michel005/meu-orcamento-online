@@ -5,6 +5,41 @@
 	flex-direction: column;
 	position: relative;
 
+	&[data-arrow-position='top-left'] {
+		.floatingBag {
+			inset-block-start: calc(100% + 14px);
+			inset-inline-start: 0;
+			transform: none;
+
+			&::before {
+				border-left: var(--arrow-size) solid transparent;
+				border-right: var(--arrow-size) solid transparent;
+				border-bottom: var(--arrow-size) solid #555;
+				inset-block-end: 100%;
+				inset-inline-start: 14px;
+				transform: none;
+			}
+		}
+	}
+
+	&[data-arrow-position='top-right'] {
+		.floatingBag {
+			inset-block-start: calc(100% + 14px);
+			inset-inline-start: auto;
+			inset-inline-end: 0;
+			transform: none;
+
+			&::before {
+				border-left: var(--arrow-size) solid transparent;
+				border-right: var(--arrow-size) solid transparent;
+				border-bottom: var(--arrow-size) solid #555;
+				inset-block-end: calc(100% - 2px);
+				inset-inline-start: calc(100% - 28px);
+				transform: none;
+			}
+		}
+	}
+
 	&[data-arrow-position='bottom'] {
 		.floatingBag {
 			inset-block-start: auto;
@@ -15,7 +50,24 @@
 				border-right: var(--arrow-size) solid transparent;
 				border-top: var(--arrow-size) solid #555;
 				border-bottom: none;
-				inset-block-end: -10px;
+				inset-block-end: -9px;
+			}
+		}
+	}
+
+	&[data-arrow-position='bottom-left'] {
+		.floatingBag {
+			inset-block-start: auto;
+			inset-block-end: calc(var(--input-height) + 14px);
+			transform: translateX(-28px);
+
+			&::before {
+				border-left: var(--arrow-size) solid transparent;
+				border-right: var(--arrow-size) solid transparent;
+				border-top: var(--arrow-size) solid #555;
+				border-bottom: none;
+				inset-block-end: -9px;
+				inset-inline-start: 28px;
 			}
 		}
 	}
@@ -26,7 +78,7 @@
 	inset: 0;
 	position: fixed;
 	width: 100%;
-	z-index: 19;
+	z-index: 50;
 }
 
 .floatingBag {
@@ -42,7 +94,7 @@
 	padding: 14px;
 	position: absolute;
 	transform: translateX(-50%);
-	z-index: 20;
+	z-index: 51;
 
 	&::before {
 		border-left: var(--arrow-size) solid transparent;
@@ -58,10 +110,16 @@
 		width: 0;
 	}
 
+	hr {
+		align-self: center;
+		background-color: #fff2;
+		margin-block: 7px;
+		width: calc(100% - 28px);
+	}
+
 	> button {
 		color: #fff !important;
 		justify-content: flex-start;
-		padding-right: 50px;
 		position: relative;
 		white-space: nowrap;
 		width: 100%;
@@ -74,6 +132,10 @@
 			display: flex;
 			inset-inline-end: 14px;
 			position: absolute;
+		}
+
+		&[data-have-bag='true'] {
+			padding-right: 50px;
 		}
 	}
 }

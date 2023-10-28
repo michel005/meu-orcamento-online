@@ -9,12 +9,12 @@ export const Bag = ({
 }: {
 	button?: (show: boolean, setShow: any) => any
 	children: any
-	arrowPosition?: 'top' | 'bottom'
+	arrowPosition?: 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right'
 }) => {
 	const [show, setShow] = useState(false)
 
 	return (
-		<div className={style.bag} data-arrow-position={arrowPosition}>
+		<>
 			{show && (
 				<div
 					className={style.background}
@@ -23,16 +23,24 @@ export const Bag = ({
 					}}
 				/>
 			)}
-			{show && <div className={style.floatingBag}>{children}</div>}
-			{button?.(show, setShow) || (
-				<Button
-					leftIcon="filter"
-					variationOverride={show ? 'primary' : 'white'}
-					onClick={() => {
-						setShow((x) => !x)
-					}}
-				/>
-			)}
-		</div>
+			<div className={style.bag} data-arrow-position={arrowPosition}>
+				{show && (
+					<div className={style.floatingBag}>
+						{typeof children === 'function' ? children(show, setShow) : children}
+					</div>
+				)}
+				{button ? (
+					button?.(show, setShow)
+				) : (
+					<Button
+						leftIcon="filter"
+						variationOverride={show ? 'primary' : 'white'}
+						onClick={() => {
+							setShow((x) => !x)
+						}}
+					/>
+				)}
+			</div>
+		</>
 	)
 }

@@ -42,6 +42,7 @@ const GenericButton = ({
 			title={props.title || (props.children as string)}
 			className={`${props.className} ${style.button}`}
 			data-variation={variationOverride || variation}
+			data-have-bag={!!leftBag || !!rightBag}
 		>
 			{leftBag !== undefined && <div className={style.bag}>{leftBag}</div>}
 			{leftIcon && <div className={style.icon}>{leftIcon}</div>}

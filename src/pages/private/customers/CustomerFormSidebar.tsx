@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import style from './CustomerFormSidebar.module.scss'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
@@ -128,30 +128,32 @@ export const CustomerFormSidebar = () => {
 				)}
 				{form?.id && (
 					<>
-						<ButtonWhite
-							leftIcon="delete"
-							onClick={() => {
-								setMessage({
-									header: 'Deseja realmente excluir este cliente?',
-									content:
-										'Esta operação não pode ser desfeita. Esta operação não exclui as informações de faturamento deste cliente.',
-									type: 'question',
-									confirm: () => {
-										setLoading(true)
-										remove({
-											id: form?.id,
-											onSuccess,
-											onError,
-										})
-									},
-								})
-							}}
-						>
-							Excluir
-						</ButtonWhite>
+						{form.active && (
+							<ButtonWhite
+								leftIcon="delete"
+								onClick={() => {
+									setMessage({
+										header: 'Deseja realmente excluir este cliente?',
+										content:
+											'Esta operação não pode ser desfeita. Esta operação não exclui as informações de faturamento deste cliente.',
+										type: 'question',
+										confirm: () => {
+											setLoading(true)
+											remove({
+												id: form?.id,
+												onSuccess,
+												onError,
+											})
+										},
+									})
+								}}
+							>
+								Excluir
+							</ButtonWhite>
+						)}
 						<Bag
 							button={(show, setShow) => (
-								<ButtonWhite
+								<Button
 									leftIcon="more_horiz"
 									variationOverride={show ? 'primary' : 'white'}
 									onClick={() => {
@@ -161,11 +163,104 @@ export const CustomerFormSidebar = () => {
 							)}
 							arrowPosition="bottom"
 						>
-							<ButtonGhost leftIcon="person_cancel">Inativar</ButtonGhost>
-							<ButtonGhost leftIcon="favorite">Favoritar</ButtonGhost>
-							<ButtonGhost leftIcon="shopping_bag">Produtos</ButtonGhost>
-							<ButtonGhost leftIcon="copy_all">Duplicar</ButtonGhost>
-							<ButtonGhost leftIcon="upload">Exportar</ButtonGhost>
+							{(show, setShow) => (
+								<>
+									{form.active && (
+										<ButtonGhost
+											leftIcon="person_cancel"
+											onClick={() => {
+												setShow(false)
+											}}
+										>
+											Inativar
+										</ButtonGhost>
+									)}
+									{!form.favorite ? (
+										<ButtonGhost
+											leftIcon="heart_plus"
+											onClick={() => {
+												setShow(false)
+											}}
+										>
+											Favoritar
+										</ButtonGhost>
+									) : (
+										<ButtonGhost
+											leftIcon="heart_minus"
+											onClick={() => {
+												setShow(false)
+											}}
+										>
+											Desfavoritar
+										</ButtonGhost>
+									)}
+									<ButtonGhost
+										leftIcon="shopping_bag"
+										onClick={() => {
+											setShow(false)
+										}}
+									>
+										Produtos
+									</ButtonGhost>
+									<ButtonGhost
+										leftIcon="copy_all"
+										onClick={() => {
+											setShow(false)
+										}}
+									>
+										Duplicar
+									</ButtonGhost>
+									<ButtonGhost
+										leftIcon="upload"
+										onClick={() => {
+											setShow(false)
+										}}
+									>
+										Exportar
+									</ButtonGhost>
+									<hr />
+									{form.address && (
+										<ButtonGhost
+											leftIcon="map"
+											onClick={() => {
+												setShow(false)
+												window.open(
+													`https://www.google.com/maps?q=${form.address.zip_code}+${form.address.street_name}+${form.address.street_number}+${form.address.city}+${form.address.state}`,
+													'_blank'
+												)
+											}}
+										>
+											Google Maps
+										</ButtonGhost>
+									)}
+									{form.email && (
+										<ButtonGhost
+											leftIcon="mail"
+											onClick={() => {
+												setShow(false)
+												window.location.href = `mailto:${form.email}`
+											}}
+										>
+											E-mail
+										</ButtonGhost>
+									)}
+									{form.phone && (
+										<ButtonGhost
+											leftIcon="phone_enabled"
+											onClick={() => {
+												window.location.href = `https://wa.me/${form.phone
+													.replaceAll('(', '')
+													.replaceAll(')', '')
+													.replaceAll('-', '')
+													.replaceAll(' ', '')}`
+												setShow(false)
+											}}
+										>
+											Whatsapp
+										</ButtonGhost>
+									)}
+								</>
+							)}
 						</Bag>
 					</>
 				)}

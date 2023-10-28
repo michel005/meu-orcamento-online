@@ -8,11 +8,11 @@ import { RoutesMap } from '../constants/RoutesMap'
 import { UserPicture } from '../components/UserPicture'
 import { LoadingPage } from './LoadingPage'
 import { ConfigContext } from '../contexts/ConfigContext'
+import { Bag } from '../components/Bag'
 
 export const PrivatePage = () => {
 	const { loading, setMessage } = useContext(ConfigContext)
 	const { currentUser, setCurrentUser } = useContext(SessionContext)
-	const [showUserMenu, setShowUserMenu] = useState(false)
 	const [showMenu, setShowMenu] = useState(false)
 	const navigate = useNavigate()
 
@@ -56,33 +56,37 @@ export const PrivatePage = () => {
 							)
 						})}
 				</div>
-				<div className={style.userInfo}>
-					<UserPicture
-						className={style.userInfoPicture}
-						picture={currentUser?.picture}
-						name={currentUser.full_name}
-						size="var(--input-height)"
-						onClick={() => {
-							setShowUserMenu((x) => !x)
-						}}
-					/>
-					{showUserMenu && (
-						<div className={style.userInfoOptions}>
-							<ButtonWhite
+				<Bag
+					button={(show, setShow) => (
+						<UserPicture
+							className={style.userInfoPicture}
+							picture={currentUser?.picture}
+							name={currentUser.full_name}
+							size="var(--input-height)"
+							onClick={() => {
+								setShow((x) => !x)
+							}}
+						/>
+					)}
+					arrowPosition="top-right"
+				>
+					{(show, setShow) => (
+						<>
+							<ButtonGhost
 								leftIcon="edit"
 								onClick={() => {
 									navigate('/my-user')
 									setShowMenu(false)
-									setShowUserMenu(false)
+									setShow(false)
 								}}
 							>
 								Alterar meus dados
-							</ButtonWhite>
-							<ButtonWhite
+							</ButtonGhost>
+							<ButtonGhost
 								leftIcon="logout"
 								onClick={() => {
-									setShowUserMenu(false)
 									setShowMenu(false)
+									setShow(false)
 									setMessage({
 										header: 'Deseja realmente sair?',
 										content: 'O dados não salvos poderão ser perdidos.',
@@ -90,16 +94,15 @@ export const PrivatePage = () => {
 										confirm: () => {
 											navigate('/')
 											setCurrentUser(null)
-											setShowUserMenu(false)
 										},
 									})
 								}}
 							>
 								Sair
-							</ButtonWhite>
-						</div>
+							</ButtonGhost>
+						</>
 					)}
-				</div>
+				</Bag>
 			</nav>
 			<main className={style.mainContent}>
 				<Routes>

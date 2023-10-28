@@ -1,26 +1,27 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext } from 'react'
 import style from './CustomerCard.module.scss'
 import { UserPicture } from '../../../components/UserPicture'
 import { useForm } from '../../../hooks/useForm'
 import { CustomerType } from '../../../types/AllTypes'
-import { Button, ButtonGhost } from '../../../components/Button'
+import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
+import { Bag } from '../../../components/Bag'
 import { ConfigContext } from '../../../contexts/ConfigContext'
 import { useApi } from '../../../hooks/useApi'
 
 export const CustomerCard = ({ customer, onClose }) => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
+	const { show } = useForm<CustomerType>('customer')
 	const { remove } = useApi('customer')
-	const { show, form } = useForm<CustomerType>('customer')
-	const [showMoreOptions, setShowMoreOptions] = useState(false)
+
+	const onSuccess = () => {
+		onClose()
+	}
 
 	return (
 		<div
 			className={style.customerCard}
 			data-person-type={customer.person_type}
 			data-inactive={!customer.active}
-			onMouseLeave={() => {
-				setShowMoreOptions(false)
-			}}
 		>
 			<div className={style.customerPicture}>
 				<UserPicture
@@ -37,42 +38,76 @@ export const CustomerCard = ({ customer, onClose }) => {
 						data-favorite={customer.favorite}
 					/>
 				</div>
-				<div className={style.buttons} data-show-more-options={showMoreOptions}>
-					<ButtonGhost
-						leftIcon="more_horiz"
-						onClick={() => {
-							setShowMoreOptions((x) => !x)
-						}}
-					/>
-					{showMoreOptions && (
-						<div className={style.moreOptions}>
-							<ButtonGhost leftIcon="favorite">Favoritar</ButtonGhost>
-							<ButtonGhost leftIcon="person_cancel">Inativar</ButtonGhost>
-							<ButtonGhost leftIcon="shopping_bag">Produtos</ButtonGhost>
+				<div className={style.buttons}>
+					<Bag
+						button={(show, setShow) => (
 							<ButtonGhost
-								leftIcon="delete"
+								leftIcon="more_horiz"
+								variationOverride={show ? 'primary' : 'ghost'}
 								onClick={() => {
-									setShowMoreOptions(false)
-									setMessage({
-										header: 'Deseja realmente excluir este cliente?',
-										content: 'Esta operação não pode ser desfaita.',
-										type: 'question',
-										confirm: () => {
-											setLoading(true)
-											remove({
-												id: customer._id,
-												onSuccess: () => {
-													onClose?.()
-												},
-											})
-										},
-									})
+									setShow((x) => !x)
 								}}
-							>
-								Excluir
-							</ButtonGhost>
-						</div>
-					)}
+							/>
+						)}
+						arrowPosition="top-left"
+					>
+						{(show, setShow) => (
+							<>
+								<ButtonGhost
+									leftIcon="shopping_bag"
+									onClick={() => {
+										setShow(false)
+									}}
+								>
+									Produtos
+								</ButtonGhost>
+								<hr />
+								{customer.address && (
+									<ButtonGhost
+										leftIcon="map"
+										onClick={() => {
+											setShow(false)
+											window.open(
+												`https://www.google.com/maps?q=${customer.address.zip_code}+${customer.address.street_name}+${customer.address.street_number}+${customer.address.city}+${customer.address.state}`,
+												'_blank'
+											)
+										}}
+									>
+										Google Maps
+									</ButtonGhost>
+								)}
+								{customer.email && (
+									<ButtonGhost
+										leftIcon="mail"
+										onClick={() => {
+											setShow(false)
+											window.open(`mailto:${customer.email}`)
+										}}
+									>
+										E-mail
+									</ButtonGhost>
+								)}
+								{customer.phone && (
+									<ButtonGhost
+										leftIcon="phone_enabled"
+										onClick={() => {
+											setShow(false)
+											window.open(
+												`https://wa.me/${customer.phone
+													.replaceAll('(', '')
+													.replaceAll(')', '')
+													.replaceAll('-', '')
+													.replaceAll(' ', '')}`,
+												'_blank'
+											)
+										}}
+									>
+										Whatsapp
+									</ButtonGhost>
+								)}
+							</>
+						)}
+					</Bag>
 				</div>
 			</div>
 			<div className={style.customerInfo}>

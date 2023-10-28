@@ -1,0 +1,79 @@
+.bag {
+	--arrow-size: 10px;
+
+	display: flex;
+	flex-direction: column;
+	position: relative;
+
+	&[data-arrow-position='bottom'] {
+		.floatingBag {
+			inset-block-start: auto;
+			inset-block-end: calc(var(--input-height) + 14px);
+
+			&::before {
+				border-left: var(--arrow-size) solid transparent;
+				border-right: var(--arrow-size) solid transparent;
+				border-top: var(--arrow-size) solid #555;
+				border-bottom: none;
+				inset-block-end: -10px;
+			}
+		}
+	}
+}
+
+.background {
+	height: 100%;
+	inset: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 19;
+}
+
+.floatingBag {
+	align-items: flex-start;
+	background-color: #555;
+	backdrop-filter: blur(4px);
+	border-radius: 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	inset-block-start: calc(100% + 14px);
+	inset-inline-start: 50%;
+	padding: 14px;
+	position: absolute;
+	transform: translateX(-50%);
+	z-index: 20;
+
+	&::before {
+		border-left: var(--arrow-size) solid transparent;
+		border-right: var(--arrow-size) solid transparent;
+		border-bottom: var(--arrow-size) solid #555;
+		border-top: none;
+		content: '';
+		height: 0;
+		inset-block-end: 100%;
+		inset-inline-start: 50%;
+		position: absolute;
+		transform: translateX(-50%);
+		width: 0;
+	}
+
+	> button {
+		color: #fff !important;
+		justify-content: flex-start;
+		padding-right: 50px;
+		position: relative;
+		white-space: nowrap;
+		width: 100%;
+
+		span {
+			display: initial;
+		}
+
+		div:nth-child(3) {
+			display: flex;
+			inset-inline-end: 14px;
+			position: absolute;
+		}
+	}
+}

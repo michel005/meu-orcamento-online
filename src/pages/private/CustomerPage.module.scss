@@ -74,52 +74,6 @@
 	}
 }
 
-.allFilters {
-	align-items: flex-start;
-	background-color: #111c;
-	backdrop-filter: blur(4px);
-	border-radius: 14px;
-	display: none;
-	flex-direction: column;
-	gap: 14px;
-	inset-block-start: calc(100% + 10px);
-	inset-inline-end: 14px;
-	padding: 14px;
-	position: absolute;
-	z-index: 10;
-
-	&::before {
-		border-left: 10px solid transparent;
-		border-right: 10px solid transparent;
-		border-bottom: 10px solid #111e;
-		border-top: none;
-		content: '';
-		height: 0;
-		inset-block-end: 100%;
-		inset-inline-start: 50%;
-		position: absolute;
-		transform: translateX(-50%);
-		width: 0;
-	}
-
-	> button {
-		justify-content: flex-start;
-		padding-right: 50px;
-		position: relative;
-		width: 100%;
-
-		span {
-			display: initial;
-		}
-
-		div:nth-child(3) {
-			display: flex;
-			inset-inline-end: 14px;
-			position: absolute;
-		}
-	}
-}
-
 .pageContent {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;

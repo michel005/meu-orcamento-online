@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react'
-import { Field } from '../components/fields/Field'
+import { Field } from '../components/Field'
 import { Error } from '../components/Error'
 import { FileUtils } from '../utils/FileUtils'
 import { Button, ButtonGhost } from '../components/Button'

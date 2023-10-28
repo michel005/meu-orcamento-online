@@ -3,7 +3,7 @@ import style from './CustomerFormSidebar.module.scss'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
 import { AddressType, CustomerType } from '../../../types/AllTypes'
-import { Button, ButtonWhite } from '../../../components/Button'
+import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
 import { useApi } from '../../../hooks/useApi'
 import { ConfigContext } from '../../../contexts/ConfigContext'
 import { useForm } from '../../../hooks/useForm'
@@ -11,6 +11,7 @@ import { ErrorUtils } from '../../../utils/ErrorUtils'
 import { AddressDefinition } from '../../../definitions/AddressDefinition'
 import { Error } from '../../../components/Error'
 import { StringUtils } from '../../../utils/StringUtils'
+import { Bag } from '../../../components/Bag'
 
 export const CustomerFormSidebar = () => {
 	const { setMessage, setLoading } = useContext(ConfigContext)
@@ -65,9 +66,11 @@ export const CustomerFormSidebar = () => {
 				<div className={style.userCardReduced}>
 					{getField('picture', {
 						size: '48px',
-						pictureName: StringUtils.initialLetters(form.name).toUpperCase(),
+						pictureName: form.id
+							? StringUtils.initialLetters(form.name || 'NF').toUpperCase()
+							: null,
 					})}
-					<h2>{form.name}</h2>
+					<h2>{form.name || 'Sem nome'}</h2>
 				</div>
 				{!form.active && (
 					<div className={style.error}>
@@ -146,7 +149,24 @@ export const CustomerFormSidebar = () => {
 						>
 							Excluir
 						</ButtonWhite>
-						<ButtonWhite leftIcon="more_horiz" disabled={!form.active} />
+						<Bag
+							button={(show, setShow) => (
+								<ButtonWhite
+									leftIcon="more_horiz"
+									variationOverride={show ? 'primary' : 'white'}
+									onClick={() => {
+										setShow((x) => !x)
+									}}
+								/>
+							)}
+							arrowPosition="bottom"
+						>
+							<ButtonGhost leftIcon="person_cancel">Inativar</ButtonGhost>
+							<ButtonGhost leftIcon="favorite">Favoritar</ButtonGhost>
+							<ButtonGhost leftIcon="shopping_bag">Produtos</ButtonGhost>
+							<ButtonGhost leftIcon="copy_all">Duplicar</ButtonGhost>
+							<ButtonGhost leftIcon="upload">Exportar</ButtonGhost>
+						</Bag>
 					</>
 				)}
 				<div style={{ flexGrow: 1 }} />

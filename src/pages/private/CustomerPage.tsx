@@ -6,6 +6,7 @@ import { CustomerCard } from './customers/CustomerCard'
 import { CustomerType } from '../../types/AllTypes'
 import { useForm } from '../../hooks/useForm'
 import { CustomerFormSidebar } from './customers/CustomerFormSidebar'
+import { Bag } from '../../components/Bag'
 
 export const CustomerPage = () => {
 	const { originalValue, show, close } = useForm<CustomerType>('customer')
@@ -17,7 +18,6 @@ export const CustomerPage = () => {
 		pf: true,
 		pj: true,
 	})
-	const [showFilters, setShowFilters] = useState(false)
 	const [scrollPosition, setScrollPosition] = useState(0)
 
 	const filteredData = data
@@ -40,7 +40,6 @@ export const CustomerPage = () => {
 		<div
 			className={style.customerPage}
 			data-show-form={!!originalValue}
-			data-show-filters={showFilters}
 			data-scroll-position={scrollPosition > 60}
 		>
 			{originalValue && <CustomerFormSidebar />}
@@ -65,19 +64,23 @@ export const CustomerPage = () => {
 					>
 						Novo Cliente
 					</Button>
+					<ButtonWhite leftIcon="download">Importar</ButtonWhite>
 					<hr />
 					<label className={style.faded}>{filteredData.length} registro(s)</label>
 					<div style={{ flexGrow: 1 }} />
-					<Button
-						className={style.showFiltersButton}
-						variationOverride={showFilters ? 'primary' : 'white'}
-						leftIcon="filter_alt"
-						rightBag={Object.keys(filters).filter((x) => filters[x]).length}
-						onClick={() => {
-							setShowFilters((x) => !x)
-						}}
-					/>
-					<div className={style.allFilters}>
+					<Bag
+						button={(show, setShow) => (
+							<Button
+								className={style.showFiltersButton}
+								variationOverride={show ? 'primary' : 'white'}
+								leftIcon="filter_alt"
+								rightBag={Object.keys(filters).filter((x) => filters[x]).length}
+								onClick={() => {
+									setShow((x) => !x)
+								}}
+							/>
+						)}
+					>
 						<ButtonWhite
 							leftIcon="person"
 							rightBag={data.filter((x) => x.person_type === 'PF').length}
@@ -143,7 +146,7 @@ export const CustomerPage = () => {
 						>
 							Favoritos
 						</ButtonWhite>
-					</div>
+					</Bag>
 					<hr />
 					<Button leftIcon="refresh" onClick={refreshPage} />
 				</div>

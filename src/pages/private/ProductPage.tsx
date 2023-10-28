@@ -7,7 +7,7 @@ import { ProductFormSidebar } from './products/ProductFormSidebar'
 import { useForm } from '../../hooks/useForm'
 import { CustomerType, ProductType } from '../../types/AllTypes'
 import { ProductCard } from './products/ProductCard'
-import { Field } from '../../components/fields/Field'
+import { Field } from '../../components/Field'
 import { useFormLayout } from '../../hooks/useFormLayout'
 
 export const ProductPage = () => {

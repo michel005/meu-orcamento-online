@@ -8,6 +8,7 @@ import style from './useFormLayout.module.scss'
 import { DateUtils } from '../utils/DateUtils'
 import { UserPicture } from '../components/UserPicture'
 import { NumberUtils } from '../utils/NumberUtils'
+import { SelectInput } from '../components/inputs/SelectInput'
 
 const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 	const ref = useRef(null)
@@ -94,59 +95,25 @@ const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors, di
 		/>
 	)
 }
-
 const SelectField = ({ id, field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	const ref = useRef(null)
 
 	return (
-		<Field
+		<SelectInput
 			label={fieldDefinition.label}
 			leftSide={fieldDefinition.leftSide}
-			rightSide={
-				<ButtonGhost
-					leftIcon="keyboard_arrow_down"
-					onClick={() => {
-						if (ref.current) {
-							ref.current.dispatchEvent(
-								new MouseEvent('mousedown', {
-									view: window,
-									bubbles: true,
-									cancelable: true,
-								})
-							)
-						}
-					}}
-				/>
-			}
 			info={fieldDefinition.info}
-			input={(setFocus) => {
-				return (
-					<select
-						id={id}
-						ref={ref}
-						value={value?.[field as keyof typeof value] as string}
-						onChange={(event) => {
-							value[field] = event.target.value
-							onChange({ ...value })
-						}}
-						disabled={disableAll || fieldDefinition.disabled}
-						placeholder={fieldDefinition.placeholder}
-						onFocus={() => setFocus(true)}
-						onBlur={() => setFocus(false)}
-					>
-						<option></option>
-						{(fieldDefinition.options || []).map((option: any) => {
-							return (
-								<option key={option[0]} value={option[0]}>
-									{option[1]}
-								</option>
-							)
-						})}
-					</select>
-				)
-			}}
 			disabled={disableAll || fieldDefinition.disabled}
 			error={errors?.[field]?.message}
+			value={value?.[field as keyof typeof value] as string}
+			onChange={(newValue) => {
+				value[field] = newValue
+				onChange({ ...value })
+			}}
+			options={fieldDefinition.options}
+			idModifier={fieldDefinition.idModifier || ((value) => value[0])}
+			valueRender={fieldDefinition.valueRender || ((value) => <>{value[1]}</>)}
+			optionValueRender={fieldDefinition.optionValueRender}
 		/>
 	)
 }
@@ -227,6 +194,9 @@ export type useFormLayoutDefinitionType = {
 		placeholder?: string
 		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox' | 'file' | 'select'
 		pictureType?: 'circle' | 'square'
+		idModifier?: any
+		valueRender?: any
+		optionValueRender?: any
 		pictureName?: string
 		options?: string[][]
 		leftSide?: any

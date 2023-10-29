@@ -93,10 +93,10 @@ export const CustomerPage = () => {
 							/>
 						)}
 					>
-						<ButtonWhite
+						<Button
 							leftIcon="person"
 							rightBag={data.filter((x) => x.person_type === 'PF').length}
-							variationOverride={filters.pf ? 'primary' : 'white'}
+							variationOverride={filters.pf ? 'primary' : 'ghost'}
 							onClick={() => {
 								setFilters((x) => ({
 									...x,
@@ -105,11 +105,11 @@ export const CustomerPage = () => {
 							}}
 						>
 							Pessoa Física
-						</ButtonWhite>
-						<ButtonWhite
+						</Button>
+						<Button
 							leftIcon="group"
 							rightBag={data.filter((x) => x.person_type === 'PJ').length}
-							variationOverride={filters.pj ? 'primary' : 'white'}
+							variationOverride={filters.pj ? 'primary' : 'ghost'}
 							onClick={() => {
 								setFilters((x) => ({
 									...x,
@@ -118,11 +118,11 @@ export const CustomerPage = () => {
 							}}
 						>
 							Pessoa Jurídica
-						</ButtonWhite>
-						<ButtonWhite
+						</Button>
+						<Button
 							leftIcon="person_check"
 							rightBag={data.filter((x) => x.active).length}
-							variationOverride={filters.active ? 'primary' : 'white'}
+							variationOverride={filters.active ? 'primary' : 'ghost'}
 							onClick={() => {
 								setFilters((x) => ({
 									...x,
@@ -131,11 +131,11 @@ export const CustomerPage = () => {
 							}}
 						>
 							Ativos
-						</ButtonWhite>
-						<ButtonWhite
+						</Button>
+						<Button
 							leftIcon="person_cancel"
 							rightBag={data.filter((x) => !x.active).length}
-							variationOverride={filters.inactive ? 'primary' : 'white'}
+							variationOverride={filters.inactive ? 'primary' : 'ghost'}
 							onClick={() => {
 								setFilters((x) => ({
 									...x,
@@ -144,11 +144,11 @@ export const CustomerPage = () => {
 							}}
 						>
 							Inativos
-						</ButtonWhite>
-						<ButtonWhite
+						</Button>
+						<Button
 							leftIcon="favorite"
 							rightBag={filteredData.filter((x) => x.favorite).length}
-							variationOverride={filters.favorite ? 'primary' : 'white'}
+							variationOverride={filters.favorite ? 'primary' : 'ghost'}
 							onClick={() => {
 								setFilters((x) => ({
 									...x,
@@ -157,7 +157,7 @@ export const CustomerPage = () => {
 							}}
 						>
 							Favoritos
-						</ButtonWhite>
+						</Button>
 					</Bag>
 					<hr />
 					<Button leftIcon="refresh" onClick={refreshPage} />

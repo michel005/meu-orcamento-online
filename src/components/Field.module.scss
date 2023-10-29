@@ -82,10 +82,10 @@
 			flex-direction: row;
 			flex-grow: 1;
 			max-width: 100%;
-			overflow: auto;
 
 			input,
-			select {
+			select,
+			.fieldInput {
 				appearance: none;
 				background-color: transparent;
 				border: none;
@@ -94,7 +94,6 @@
 				font-size: inherit;
 				outline: transparent;
 				text-align: left;
-				z-index: 100;
 
 				&::placeholder {
 					color: #ccc;

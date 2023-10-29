@@ -4,6 +4,7 @@ import React from 'react'
 import { ProductType } from '../types/AllTypes'
 import { StringUtils } from '../utils/StringUtils'
 import { v4 as uuid } from 'uuid'
+import { UserPicture } from '../components/UserPicture'
 
 export const ProductDefinition = (
 	value: ProductType,
@@ -43,7 +44,14 @@ export const ProductDefinition = (
 		customer_id: {
 			label: 'Cliente',
 			type: 'select',
-			options: customerData.map((customer) => [customer._id, customer.name]),
+			options: customerData,
+			idModifier: (value) => value.id,
+			valueRender: (value) => (
+				<>
+					<UserPicture picture={value?.picture} name={value?.name} size="28px" />
+					{value?.name}0 {!!value?.person_type && <>({value?.person_type})</>}
+				</>
+			),
 			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,
 		},
 		code: {

@@ -1,9 +1,19 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { LoginPage } from './public/LoginPage'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import { CreateUserPage } from './public/CreateUserPage'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { LoadingPage } from './LoadingPage'
+
+const RedirectToLogin = () => {
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		navigate('/login')
+	}, [])
+
+	return <></>
+}
 
 export const PublicPage = () => {
 	const { loading } = useContext(ConfigContext)
@@ -11,8 +21,9 @@ export const PublicPage = () => {
 	return (
 		<main>
 			<Routes>
-				<Route path="/" element={<LoginPage />} />
+				<Route path="/login" element={<LoginPage />} />
 				<Route path="/createUser" element={<CreateUserPage />} />
+				<Route path="*" element={<RedirectToLogin />} />
 			</Routes>
 			{loading && <LoadingPage />}
 		</main>

@@ -11,7 +11,7 @@ export const LoginFormDefinition = (): useFormLayoutDefinitionType => {
 		password: {
 			label: 'Senha de Acesso',
 			type: 'password',
-			leftSide: <ButtonGhost leftIcon="password" />,
+			leftSide: <ButtonGhost leftIcon="password" disabled={true} />,
 			rightSide: <ButtonGhost>Recuperar</ButtonGhost>,
 		},
 		remember_me: {

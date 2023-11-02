@@ -37,7 +37,7 @@ export type AddressType = {
 }
 
 export type CustomerType = {
-	id?: string
+	_id?: string
 	created?: string
 	updated?: string
 	picture?: string
@@ -66,4 +66,5 @@ export type ProductType = {
 	categories?: string[]
 	hashtags?: string
 	price?: number
+	status?: string
 }

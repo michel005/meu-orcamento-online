@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { Field } from '../components/Field'
 import { Error } from '../components/Error'
 import { FileUtils } from '../utils/FileUtils'
@@ -9,15 +9,20 @@ import { DateUtils } from '../utils/DateUtils'
 import { UserPicture } from '../components/UserPicture'
 import { NumberUtils } from '../utils/NumberUtils'
 import { SelectInput } from '../components/inputs/SelectInput'
+import { useForm } from './useForm'
 
 const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 	const ref = useRef(null)
 	return (
-		<div className={style.pictureField} style={{ width: fieldDefinition.size || '150px' }}>
+		<div
+			data-field={field}
+			className={style.pictureField}
+			style={{ width: fieldDefinition.size || '150px' }}
+		>
 			<UserPicture
 				className={style.picture}
 				onClick={
-					!disableAll || !fieldDefinition.disabled
+					!disableAll && !fieldDefinition.disabled
 						? () => {
 								ref.current.click()
 						  }
@@ -33,37 +38,42 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 				type={fieldDefinition.pictureType}
 				name={fieldDefinition.pictureName}
 			/>
-			<div className={style.pictureOptions}>
-				{value[field] ? (
-					<Button
-						leftIcon="close"
-						onClick={() => {
-							if (!disableAll && !fieldDefinition.disabled) {
-								value[field] = null
-								onChange({ ...value })
-							}
-						}}
-					/>
-				) : (
-					<Button
-						leftIcon="search"
-						onClick={() => {
-							if (!disableAll && !fieldDefinition.disabled) {
-								ref.current.click()
-							}
-						}}
-					/>
-				)}
-			</div>
+			{!disableAll && !fieldDefinition.disabled && (
+				<div className={style.pictureOptions}>
+					{value[field] ? (
+						<Button
+							leftIcon="close"
+							onClick={() => {
+								if (!disableAll && !fieldDefinition.disabled) {
+									value[field] = null
+									onChange({ ...value })
+								}
+							}}
+						/>
+					) : (
+						<Button
+							leftIcon="search"
+							onClick={() => {
+								if (!disableAll && !fieldDefinition.disabled) {
+									ref.current.click()
+								}
+							}}
+						/>
+					)}
+				</div>
+			)}
 			<input
 				ref={ref}
 				style={{ display: 'none' }}
-				type={fieldDefinition.type}
+				type="file"
+				accept="image/*"
 				onChange={(event) => {
-					FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
-						value[field] = base64
-						onChange({ ...value })
-					})
+					if (event.target.files?.[0]) {
+						FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
+							value[field] = base64
+							onChange({ ...value })
+						})
+					}
 				}}
 			/>
 		</div>
@@ -72,6 +82,7 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
+			field={field}
 			leftSide={<label htmlFor={id}>{fieldDefinition.label}</label>}
 			info={fieldDefinition.info}
 			input={(setFocus) => (
@@ -95,18 +106,17 @@ const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors, di
 		/>
 	)
 }
-const SelectField = ({ id, field, fieldDefinition, value, onChange, errors, disableAll }) => {
-	const ref = useRef(null)
-
+const SelectField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<SelectInput
+			field={field}
 			label={fieldDefinition.label}
 			leftSide={fieldDefinition.leftSide}
 			info={fieldDefinition.info}
 			disabled={disableAll || fieldDefinition.disabled}
 			error={errors?.[field]?.message}
 			value={value?.[field as keyof typeof value] as string}
-			onChange={(newValue) => {
+			onChange={(newValue: any) => {
 				value[field] = newValue
 				onChange({ ...value })
 			}}
@@ -114,12 +124,14 @@ const SelectField = ({ id, field, fieldDefinition, value, onChange, errors, disa
 			idModifier={fieldDefinition.idModifier || ((value) => value[0])}
 			valueRender={fieldDefinition.valueRender || ((value) => <>{value[1]}</>)}
 			optionValueRender={fieldDefinition.optionValueRender}
+			placeholder={fieldDefinition.placeholder}
 		/>
 	)
 }
 const CurrencyField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
+			field={field}
 			label={fieldDefinition.label}
 			leftSide={fieldDefinition.leftSide}
 			rightSide={fieldDefinition.rightSide}
@@ -128,7 +140,11 @@ const CurrencyField = ({ field, fieldDefinition, value, onChange, errors, disabl
 				<input
 					id={id}
 					type="number"
-					value={parseFloat(value?.[field as keyof typeof value] as string) / 100}
+					value={
+						value?.[field as keyof typeof value]
+							? parseFloat(value?.[field as keyof typeof value] as string) / 100
+							: 0
+					}
 					onChange={(event) => {
 						value[field] =
 							event.target.value === '' ? null : parseFloat(event.target.value) * 100
@@ -148,6 +164,7 @@ const CurrencyField = ({ field, fieldDefinition, value, onChange, errors, disabl
 const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
+			field={field}
 			label={fieldDefinition.label}
 			leftSide={fieldDefinition.leftSide}
 			rightSide={fieldDefinition.rightSide}
@@ -157,7 +174,9 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 					id={id}
 					type={fieldDefinition.type}
 					value={
-						fieldDefinition.type === 'date'
+						!value?.[field as keyof typeof value]
+							? ''
+							: fieldDefinition.type === 'date'
 							? (value?.[field as keyof typeof value] as string)
 								? DateUtils.stringToInputDate(
 										value?.[field as keyof typeof value] as string
@@ -188,51 +207,56 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 	)
 }
 
+export type useFormDefinitionType = {
+	label?: string
+	placeholder?: string
+	type?:
+		| 'text'
+		| 'date'
+		| 'password'
+		| 'number'
+		| 'currency'
+		| 'checkbox'
+		| 'file'
+		| 'select'
+		| 'subForm'
+	pictureType?: 'circle' | 'square'
+	idModifier?: any
+	valueRender?: any
+	optionValueRender?: any
+	pictureName?: string
+	options?: any
+	leftSide?: any
+	rightSide?: any
+	info?: any
+	disabled?: boolean
+	size?: string
+	subForm?: useFormLayoutDefinitionType
+}
+
 export type useFormLayoutDefinitionType = {
-	[key: string]: {
-		label?: string
-		placeholder?: string
-		type?: 'text' | 'date' | 'password' | 'number' | 'currency' | 'checkbox' | 'file' | 'select'
-		pictureType?: 'circle' | 'square'
-		idModifier?: any
-		valueRender?: any
-		optionValueRender?: any
-		pictureName?: string
-		options?: string[][]
-		leftSide?: any
-		rightSide?: any
-		info?: any
-		disabled?: boolean
-		size?: string
-	}
+	[key: string]: useFormDefinitionType
 }
 
 export type useFormLayoutType<Entity> = {
 	definition: useFormLayoutDefinitionType
 	value: Entity
 	onChange: (value: Entity) => void
-	disableAll?: boolean
+	disable?: boolean
+	injectErrors?: any
 }
 
 export const useFormLayout = <Entity,>({
 	definition,
 	value,
 	onChange,
-	disableAll,
+	disable,
+	injectErrors,
 }: useFormLayoutType<Entity>) => {
-	const [errors, setErrors] = useState({})
+	const [disableAll, setDisableAll] = useState(disable || false)
+	const [errors, setErrors] = useState(injectErrors || {})
 
-	const getError = () => {
-		return (
-			<>
-				{errors?.['error'] && (
-					<Error message={errors?.['error']?.message} code={errors?.['error']?.code} />
-				)}
-			</>
-		)
-	}
-
-	const getField = (field: string, overrideProps = {}) => {
+	const getField = (field: string, overrideProps = {}): any => {
 		if (field === 'error') {
 			return (
 				<>
@@ -272,7 +296,6 @@ export const useFormLayout = <Entity,>({
 		} else if (['select'].includes(fieldDefinition.type)) {
 			return (
 				<SelectField
-					id={id}
 					field={field}
 					fieldDefinition={fieldDefinition}
 					value={value}
@@ -303,6 +326,24 @@ export const useFormLayout = <Entity,>({
 					disableAll={disableAll}
 				/>
 			)
+		} else if (['subForm'].includes(fieldDefinition.type)) {
+			const { getField: getSubFormField, setDisableAll: setDisableAllSubForm } =
+				useFormLayout({
+					definition: fieldDefinition.subForm,
+					value: value?.[field],
+					onChange: (v) => {
+						value[field] = { ...v }
+						onChange({ ...value })
+					},
+					injectErrors: errors?.[field],
+					disable: disableAll,
+				})
+			useEffect(() => {
+				setDisableAllSubForm(disableAll)
+			}, [disableAll])
+			return {
+				getField: getSubFormField,
+			}
 		} else {
 			return (
 				<GeneralField
@@ -320,6 +361,6 @@ export const useFormLayout = <Entity,>({
 	return {
 		setErrors,
 		getField,
-		getError,
+		setDisableAll,
 	}
 }

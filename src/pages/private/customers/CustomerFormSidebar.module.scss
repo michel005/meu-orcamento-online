@@ -2,15 +2,15 @@
 @import '../../../utils';
 
 .customerFormSidebar {
-	--sidebar-width: 600px;
-
 	background-color: #fff;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	min-width: var(--sidebar-width);
+	inset-block-start: 0;
+	inset-inline-start: 0;
+	min-width: var(--private-sidebar-width);
 	position: absolute;
-	width: var(--sidebar-width);
+	width: var(--private-sidebar-width);
 	z-index: 3;
 
 	&::before {
@@ -139,7 +139,7 @@
 
 @include tablet {
 	.customerFormSidebar {
-		--sidebar-width: 100%;
+		--private-sidebar-width: 100%;
 	}
 
 	.options {

@@ -37,6 +37,7 @@ export const SessionProvider = ({ children }: { children: any }) => {
 					})
 					.catch((response) => {
 						setStatus('loaded')
+						setCurrentUser(null)
 						localStorage.removeItem('auth_token')
 						setLoading(false)
 					})

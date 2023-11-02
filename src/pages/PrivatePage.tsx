@@ -1,14 +1,24 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import style from './PrivatePage.module.scss'
 import { Icon } from '../components/Icon'
 import { NavLink, Route, Routes, useNavigate } from 'react-router-dom'
-import { Button, ButtonGhost, ButtonWhite } from '../components/Button'
+import { ButtonGhost, ButtonWhite } from '../components/Button'
 import { SessionContext } from '../contexts/SessionContext'
 import { RoutesMap } from '../constants/RoutesMap'
 import { UserPicture } from '../components/UserPicture'
 import { LoadingPage } from './LoadingPage'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { Bag } from '../components/Bag'
+
+const RedirectToDashboard = () => {
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		navigate('/')
+	}, [])
+
+	return <></>
+}
 
 export const PrivatePage = () => {
 	const { loading, setMessage } = useContext(ConfigContext)
@@ -116,6 +126,7 @@ export const PrivatePage = () => {
 							/>
 						)
 					})}
+					<Route path="*" element={<RedirectToDashboard />} />
 				</Routes>
 				{loading && <LoadingPage />}
 			</main>

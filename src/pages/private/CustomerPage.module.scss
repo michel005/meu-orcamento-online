@@ -1,5 +1,7 @@
 @import '../../utils';
 
+$templateWidth: 1fr;
+
 .customerPage {
 	--customer-card-width: 250px;
 
@@ -8,13 +10,6 @@
 	height: 100%;
 	width: 100%;
 	position: relative;
-
-	&[data-scroll-position='true'] {
-		.pageHeader {
-			background-color: #222d;
-			backdrop-filter: blur(4px);
-		}
-	}
 
 	&[data-show-filters='true'] {
 		.allFilters {
@@ -31,46 +26,6 @@
 	overflow-y: auto;
 }
 
-.noDataFound {
-	align-self: center;
-	color: #666;
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	height: 100%;
-	justify-content: center;
-	max-width: 600px;
-	padding: 21px;
-
-	h1 {
-		color: #333;
-		margin-bottom: 14px;
-	}
-
-	li {
-		margin-top: 10px;
-		margin-left: 17px;
-	}
-
-	b {
-		color: #333;
-	}
-}
-
-.noDataFoundHeader {
-	align-items: center;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	gap: 10px;
-
-	> i {
-		align-self: flex-start;
-		color: #333;
-		font-size: 34px !important;
-	}
-}
-
 .pageHeader {
 	background-color: #222;
 	display: flex;
@@ -82,12 +37,6 @@
 	position: sticky;
 	transition: all 0.25s;
 	z-index: 2;
-
-	button {
-		align-items: center;
-		border-radius: 7px;
-		padding: 14px;
-	}
 
 	label {
 		align-self: center;
@@ -106,23 +55,22 @@
 	}
 }
 
+.importJSONInput {
+	display: none;
+}
+
 .pageContent {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	gap: 21px;
+	grid-template-columns: repeat(7, $templateWidth);
 	justify-content: center;
 	padding: 14px;
-
-	> div {
-		max-width: 100%;
-		width: 100%;
-	}
 }
 
 @include desktopFullHD {
 	.customerPage {
 		.pageContent {
-			grid-template-columns: repeat(6, 1fr);
+			grid-template-columns: repeat(6, $templateWidth);
 		}
 	}
 }
@@ -130,7 +78,7 @@
 @include desktopMediumHD {
 	.customerPage {
 		.pageContent {
-			grid-template-columns: repeat(4, 1fr);
+			grid-template-columns: repeat(4, $templateWidth);
 		}
 	}
 }
@@ -138,7 +86,7 @@
 @include desktopHD {
 	.customerPage {
 		.pageContent {
-			grid-template-columns: repeat(3, 1fr);
+			grid-template-columns: repeat(3, $templateWidth);
 		}
 	}
 
@@ -154,7 +102,7 @@
 @include desktopSmall {
 	.customerPage {
 		.pageContent {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(2, $templateWidth);
 		}
 	}
 }
@@ -162,7 +110,7 @@
 @include tablet {
 	.customerPage {
 		.pageContent {
-			grid-template-columns: repeat(1, 1fr);
+			grid-template-columns: repeat(1, $templateWidth);
 		}
 	}
 

@@ -51,9 +51,9 @@ export const useApi = (entity: string) => {
 		setLoading(true)
 		axios
 			.post(`${entity}`, data, header)
-			.then((...x) => {
-				setData(x[0].data)
-				onSuccess(...x)
+			.then((response) => {
+				setData(response.data)
+				onSuccess(response.data)
 			})
 			.catch((...x) => {
 				onError(...x)
@@ -66,9 +66,9 @@ export const useApi = (entity: string) => {
 		setLoading(true)
 		axios
 			.put(`${entity}/${id}`, data, header)
-			.then((...x) => {
-				setData(x[0].data)
-				onSuccess(...x)
+			.then((response) => {
+				setData(response.data)
+				onSuccess(response.data)
 			})
 			.catch((...x) => {
 				onError(...x)

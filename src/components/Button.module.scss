@@ -38,13 +38,14 @@
 	.bag {
 		align-items: center;
 		background-color: #1116;
-		border-radius: 50%;
+		border-radius: 11px;
 		display: flex;
 		flex-direction: row;
 		font-size: 10px;
 		height: 22px;
 		justify-content: center;
-		width: 22px;
+		min-width: 22px;
+		padding-inline: 10px;
 	}
 
 	&[data-variation='secondary'] {

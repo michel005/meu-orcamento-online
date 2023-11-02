@@ -75,7 +75,8 @@
 
 .background {
 	height: 100%;
-	inset: 0;
+	top: 0;
+	left: 0;
 	position: fixed;
 	width: 100%;
 	z-index: 49;
@@ -110,11 +111,17 @@
 		width: 0;
 	}
 
+	p {
+		color: #fff;
+		padding: 7px;
+	}
+
 	hr {
 		align-self: center;
 		background-color: #fff2;
+		height: 1px !important;
 		margin-block: 7px;
-		width: calc(100% - 28px);
+		width: calc(100% - 28px) !important;
 	}
 
 	> button {
@@ -123,6 +130,11 @@
 		position: relative;
 		white-space: nowrap;
 		width: 100%;
+
+		&:disabled {
+			opacity: 0.4;
+			text-decoration: line-through !important;
+		}
 
 		span {
 			display: initial;

@@ -7,7 +7,6 @@ import axios from 'axios'
 import { SessionContext } from '../../contexts/SessionContext'
 import { useNavigate } from 'react-router-dom'
 import { ErrorUtils } from '../../utils/ErrorUtils'
-import { Icon } from '../../components/Icon'
 import { ConfigContext } from '../../contexts/ConfigContext'
 
 export const LoginPage = () => {
@@ -18,7 +17,7 @@ export const LoginPage = () => {
 		password: '',
 		remember_me: !!localStorage?.saved_user,
 	})
-	const { getField, getError, setErrors } = useFormLayout<any>({
+	const { getField, setErrors } = useFormLayout<any>({
 		definition: LoginFormDefinition(),
 		value: value,
 		onChange: setValue,
@@ -34,7 +33,10 @@ export const LoginPage = () => {
 				password: value.password,
 			})
 			.then((response) => {
-				setCurrentUser(response.data)
+				setCurrentUser({
+					...response.data,
+					token: undefined,
+				})
 				localStorage.setItem('auth_token', response.data.token)
 				if (value.remember_me) {
 					localStorage.setItem('saved_user', value.user_name)
@@ -56,8 +58,8 @@ export const LoginPage = () => {
 				<h1>Acesse sua conta</h1>
 				{getField('user_name')}
 				{getField('password')}
-				<div style={{ alignSelf: 'flex-end' }}>{getField('remember_me')}</div>
-				{getError()}
+				{getField('remember_me')}
+				{getField('error')}
 				<div className={style.buttons}>
 					<Button leftIcon="login" onClick={login}>
 						Entrar

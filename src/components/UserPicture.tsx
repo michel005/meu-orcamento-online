@@ -15,6 +15,7 @@ export const UserPicture = ({
 
 	return (
 		<div
+			title={name}
 			onClick={onClick}
 			className={`${style.userPicture} ${className}`}
 			style={{ '--size': size } as CSSProperties}

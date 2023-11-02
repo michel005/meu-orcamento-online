@@ -8,7 +8,11 @@ import { Button, ButtonGhost } from '../components/Button'
 
 export const MainPage = () => {
 	const { message, setMessage, loading } = useContext(ConfigContext)
-	const { currentUser } = useContext(SessionContext)
+	const { currentUser, status } = useContext(SessionContext)
+
+	if (status !== 'loaded') {
+		return <></>
+	}
 
 	return (
 		<div>

@@ -11,6 +11,7 @@ export const Field = ({
 	isCheckbox = false,
 	disabled,
 	className,
+	field,
 }: {
 	label?: string
 	input?: (setFocus: any, id: string) => any
@@ -21,12 +22,14 @@ export const Field = ({
 	isCheckbox?: boolean
 	disabled?: boolean
 	className?: string
+	field?: string
 }) => {
 	const randomId = Math.random().toString()
 	const [focus, setFocus] = useState<boolean>(false)
 
 	return (
 		<div
+			data-field={field}
 			className={`${style.field} ${className}`}
 			data-checkbox={isCheckbox}
 			data-focus={focus}

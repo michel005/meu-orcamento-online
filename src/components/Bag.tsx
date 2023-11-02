@@ -25,7 +25,7 @@ export const Bag = ({
 			)}
 			<div className={style.bag} data-arrow-position={arrowPosition}>
 				{show && (
-					<div className={style.floatingBag}>
+					<div className={style.floatingBag} data-context="bag">
 						{typeof children === 'function' ? children(show, setShow) : children}
 					</div>
 				)}

@@ -1,38 +1,90 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import style from './CustomerPage.module.scss'
 import { Button, ButtonWhite } from '../../components/Button'
-import { useApi } from '../../hooks/useApi'
 import { CustomerCard } from './customers/CustomerCard'
-import { CustomerType } from '../../types/AllTypes'
-import { useForm } from '../../hooks/useForm'
 import { CustomerFormSidebar } from './customers/CustomerFormSidebar'
 import { Bag } from '../../components/Bag'
-import { Icon } from '../../components/Icon'
-import { ConfigContext } from '../../contexts/ConfigContext'
+import { usePage } from '../../hooks/usePage'
+import { SortUtils } from '../../utils/SortUtils'
+import { useFormLayout } from '../../hooks/useFormLayout'
 
 export const CustomerPage = () => {
-	const { loading } = useContext(ConfigContext)
-	const { originalValue, show, close } = useForm<CustomerType>('customer')
-	const { getAll, data } = useApi('customer')
-	const [filters, setFilters] = useState({
-		favorite: false,
-		active: true,
-		inactive: false,
-		pf: true,
-		pj: true,
-	})
-	const [scrollPosition, setScrollPosition] = useState(0)
-	const ref = useRef(null)
+	const { form, api, pageData } = usePage('customer')
 
-	const filteredData = data
-		.filter((x) => !filters.favorite || x.favorite)
-		.filter((x) => (x.active && filters.active) || (!x.active && filters.inactive))
+	console.log(api.data)
+
+	const filteredData = api.data
+		.filter((x) => !pageData.data?.favorite || x.favorite)
 		.filter(
-			(x) => (x.person_type === 'PF' && filters.pf) || (x.person_type === 'PJ' && filters.pj)
+			(x) => (x.active && pageData.data?.active) || (!x.active && pageData.data?.inactive)
 		)
+		.filter(
+			(x) =>
+				(x.person_type === 'PF' && pageData.data?.pf) ||
+				(x.person_type === 'PJ' && pageData.data?.pj)
+		)
+		.filter((x) => !pageData.data?.city || pageData.data?.city === x.address?.city)
+		.filter((x) => !pageData.data?.state || pageData.data?.state === x.address?.state)
+		.filter((x) => !pageData.data?.country || pageData.data?.country === x.address?.country)
+		.sort((x, y) => SortUtils.sort(x, y, 'name'))
+
+	const formLayout = useFormLayout({
+		definition: {
+			country: {
+				label: 'País',
+				type: 'select',
+				options: Array.from(
+					new Map(
+						(api.data || [])
+							.filter((x) => x?.address?.country)
+							.map((x: any) => [x?.address?.country, null])
+					).keys()
+				),
+				idModifier: (x) => x,
+				valueRender: (x) => x,
+				placeholder: 'Selecione um país',
+			},
+			state: {
+				label: 'Estado',
+				type: 'select',
+				options: Array.from(
+					new Map(
+						(api.data || [])
+							.filter((x) => x?.address?.state)
+							.map((x: any) => [x?.address?.state, null])
+					).keys()
+				),
+				idModifier: (x) => x,
+				valueRender: (x) => x,
+				placeholder: 'Selecione um estado',
+			},
+			city: {
+				label: 'Cidade',
+				type: 'select',
+				options: Array.from(
+					new Map(
+						(api.data || [])
+							.filter((x) => x?.address?.city)
+							.map((x: any) => [x?.address?.city, null])
+					).keys()
+				),
+				idModifier: (x) => x,
+				valueRender: (x) => x,
+				placeholder: 'Selecione uma cidade',
+			},
+		},
+		value: pageData.data,
+		onChange: (v: any) => {
+			pageData.setProp('country', () => v?.country)
+			pageData.setProp('state', () => v?.state)
+			pageData.setProp('city', () => v?.city)
+		},
+	})
+	const ref = useRef(null)
+	const importRef = useRef(null)
 
 	const refreshPage = () => {
-		getAll()
+		api.getAll()
 		if (ref.current) {
 			ref.current.scroll({
 				top: 0,
@@ -44,31 +96,22 @@ export const CustomerPage = () => {
 
 	useEffect(() => {
 		refreshPage()
-		close()
+		form.close()
 	}, [])
 
 	return (
-		<div
-			className={style.customerPage}
-			data-show-form={!!originalValue}
-			data-scroll-position={scrollPosition > 60}
-		>
-			{originalValue && <CustomerFormSidebar />}
-			<div
-				className={style.customerPageContent}
-				ref={ref}
-				onScroll={(e) => {
-					setScrollPosition((e.currentTarget as any).scrollTop)
-				}}
-			>
+		<div className={style.customerPage} data-page="customer">
+			{form.originalValue && <CustomerFormSidebar />}
+			<div className={style.customerPageContent} ref={ref}>
 				<div className={style.pageHeader}>
 					<Button
 						className={style.personAddButton}
 						leftIcon="person_add"
 						onClick={() => {
-							show(
+							form.show(
 								{
 									active: true,
+									address: {},
 								},
 								refreshPage
 							)
@@ -76,7 +119,43 @@ export const CustomerPage = () => {
 					>
 						Novo Cliente
 					</Button>
-					<ButtonWhite leftIcon="download">Importar</ButtonWhite>
+					<ButtonWhite
+						leftIcon="download"
+						onClick={() => {
+							importRef.current.click()
+						}}
+					>
+						Importar
+					</ButtonWhite>
+					<input
+						className={style.importJSONInput}
+						type="file"
+						ref={importRef}
+						onChange={(event) => {
+							const file = event.target.files[0]
+
+							if (file) {
+								const reader = new FileReader()
+
+								reader.onload = (e) => {
+									const content = e.target.result
+									const jsonValue = JSON.parse(String(content))
+									form.show(
+										{
+											...jsonValue,
+											id: undefined,
+											picture: undefined,
+											favorite: undefined,
+											active: true,
+										},
+										refreshPage
+									)
+								}
+
+								reader.readAsText(file)
+							}
+						}}
+					/>
 					<hr />
 					<label className={style.faded}>{filteredData.length} registro(s)</label>
 					<div style={{ flexGrow: 1 }} />
@@ -86,61 +165,59 @@ export const CustomerPage = () => {
 								className={style.showFiltersButton}
 								variationOverride={show ? 'primary' : 'white'}
 								leftIcon="filter_alt"
-								rightBag={Object.keys(filters).filter((x) => filters[x]).length}
+								rightBag={
+									pageData.data
+										? Object.keys(pageData.data).filter(
+												(x) => pageData.data?.[x]
+										  ).length
+										: 0
+								}
 								onClick={() => {
 									setShow((x) => !x)
 								}}
 							/>
 						)}
 					>
+						{formLayout.getField('country')}
+						{formLayout.getField('state')}
+						{formLayout.getField('city')}
+						<hr />
 						<Button
 							leftIcon="person"
-							rightBag={data.filter((x) => x.person_type === 'PF').length}
-							variationOverride={filters.pf ? 'primary' : 'ghost'}
+							rightBag={api.data.filter((x) => x.person_type === 'PF').length}
+							variationOverride={pageData.data?.pf ? 'primary' : 'ghost'}
 							onClick={() => {
-								setFilters((x) => ({
-									...x,
-									pf: !x.pf,
-								}))
+								pageData.setProp('pf', (x) => !x)
 							}}
 						>
 							Pessoa Física
 						</Button>
 						<Button
 							leftIcon="group"
-							rightBag={data.filter((x) => x.person_type === 'PJ').length}
-							variationOverride={filters.pj ? 'primary' : 'ghost'}
+							rightBag={api.data.filter((x) => x.person_type === 'PJ').length}
+							variationOverride={pageData.data?.pj ? 'primary' : 'ghost'}
 							onClick={() => {
-								setFilters((x) => ({
-									...x,
-									pj: !x.pj,
-								}))
+								pageData.setProp('pj', (x) => !x)
 							}}
 						>
 							Pessoa Jurídica
 						</Button>
 						<Button
 							leftIcon="person_check"
-							rightBag={data.filter((x) => x.active).length}
-							variationOverride={filters.active ? 'primary' : 'ghost'}
+							rightBag={api.data.filter((x) => x.active).length}
+							variationOverride={pageData.data?.active ? 'primary' : 'ghost'}
 							onClick={() => {
-								setFilters((x) => ({
-									...x,
-									active: !x.active,
-								}))
+								pageData.setProp('active', (x) => !x)
 							}}
 						>
 							Ativos
 						</Button>
 						<Button
 							leftIcon="person_cancel"
-							rightBag={data.filter((x) => !x.active).length}
-							variationOverride={filters.inactive ? 'primary' : 'ghost'}
+							rightBag={api.data.filter((x) => !x.active).length}
+							variationOverride={pageData.data?.inactive ? 'primary' : 'ghost'}
 							onClick={() => {
-								setFilters((x) => ({
-									...x,
-									inactive: !x.inactive,
-								}))
+								pageData.setProp('inactive', (x) => !x)
 							}}
 						>
 							Inativos
@@ -148,12 +225,9 @@ export const CustomerPage = () => {
 						<Button
 							leftIcon="favorite"
 							rightBag={filteredData.filter((x) => x.favorite).length}
-							variationOverride={filters.favorite ? 'primary' : 'ghost'}
+							variationOverride={pageData.data?.favorite ? 'primary' : 'ghost'}
 							onClick={() => {
-								setFilters((x) => ({
-									...x,
-									favorite: !x.favorite,
-								}))
+								pageData.setProp('favorite', (x) => !x)
 							}}
 						>
 							Favoritos
@@ -162,29 +236,6 @@ export const CustomerPage = () => {
 					<hr />
 					<Button leftIcon="refresh" onClick={refreshPage} />
 				</div>
-				{!loading && filteredData.length === 0 && (
-					<div className={style.noDataFound}>
-						<div className={style.noDataFoundHeader}>
-							<Icon icon="person_search" />
-							<h1>Nenhum cliente encontrado</h1>
-						</div>
-						<p>Existem algumas razões para isso ocorrer:</p>
-						<ul>
-							<li>
-								<b>Você ainda não cadastrou clientes</b>
-								<br />
-								Cadastre um novo cliente clicando no botão "Novo Cliente"
-							</li>
-							<li>
-								<b>Os filtros selecionados não retornam resultados</b>
-								<br />
-								Selecione filtros diferentes. Observe os números a esquerda de cada
-								opção de filtro, eles mostram quantos registros existem para cada
-								opção.
-							</li>
-						</ul>
-					</div>
-				)}
 				<div className={style.pageContent}>
 					{filteredData.map((customer) => {
 						return (

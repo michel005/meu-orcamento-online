@@ -10,6 +10,8 @@ export type ConfigContextType = {
 	setForm: any
 	onCloseForm: any
 	setOnCloseForm: any
+	pageData: any
+	setPageData: any
 }
 
 export const ConfigContext = React.createContext<ConfigContextType>({
@@ -21,12 +23,26 @@ export const ConfigContext = React.createContext<ConfigContextType>({
 	setForm: () => {},
 	onCloseForm: null,
 	setOnCloseForm: () => {},
+	pageData: null,
+	setPageData: () => {},
 })
 
 export const ConfigProvider = ({ children }: { children: any }) => {
 	const [message, setMessage] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const [form, setForm] = useState({})
+	const [pageData, setPageData] = useState({
+		customer: {
+			favorite: false,
+			active: true,
+			inactive: false,
+			pf: true,
+			pj: true,
+		},
+		product: {
+			customer: null,
+		},
+	})
 	const [onCloseForm, setOnCloseForm] = useState({})
 
 	return (
@@ -40,6 +56,8 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 				setForm,
 				onCloseForm,
 				setOnCloseForm,
+				pageData,
+				setPageData,
 			}}
 		>
 			{children}

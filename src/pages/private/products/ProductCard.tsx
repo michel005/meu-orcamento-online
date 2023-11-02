@@ -1,108 +1,59 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React from 'react'
 import style from './ProductCard.module.scss'
 import { UserPicture } from '../../../components/UserPicture'
 import { useForm } from '../../../hooks/useForm'
 import { ProductType } from '../../../types/AllTypes'
-import { ButtonGhost, ButtonWhite } from '../../../components/Button'
-import { ConfigContext } from '../../../contexts/ConfigContext'
-import { useApi } from '../../../hooks/useApi'
+import { Button } from '../../../components/Button'
 import { NumberUtils } from '../../../utils/NumberUtils'
 
-export const ProductCard = ({ product, onClose }) => {
-	const { setMessage, setLoading } = useContext(ConfigContext)
-	const { getById } = useApi('customer')
-	const { remove } = useApi('product')
+export const ProductCard = ({ product, onClose, selected = false, onSelect = (x) => {} }) => {
 	const { show } = useForm<ProductType>('product')
-	const [showMoreOptions, setShowMoreOptions] = useState(false)
-	const [customer, setCustomer] = useState(null)
-
-	useEffect(() => {
-		if (!customer && product?.customer_id) {
-			getById({
-				id: product?.customer_id,
-				onSuccess: (x) => {
-					setCustomer(x.data)
-				},
-			})
-		}
-	}, [customer, product?.customer_id])
 
 	return (
-		<div
-			className={style.productCard}
-			onMouseLeave={() => {
-				setShowMoreOptions(false)
-			}}
-		>
-			<div
-				className={style.productPicture}
-				style={{ backgroundImage: `url(${product.picture})` }}
-			/>
-			<div className={style.buttons} data-show-more-options={showMoreOptions}>
-				<ButtonGhost
-					leftIcon="more_horiz"
-					onClick={() => {
-						setShowMoreOptions((x) => !x)
-					}}
+		<div className={style.productCard} data-selected={!!selected}>
+			<div className={style.productPicture}>
+				<UserPicture
+					className={style.userPicture}
+					picture={product.picture}
+					name={product.name}
+					size="170px"
+					type="square"
 				/>
-				{showMoreOptions && (
-					<div className={style.moreOptions}>
-						<ButtonWhite
-							leftIcon="delete"
-							onClick={() => {
-								setShowMoreOptions(false)
-								setMessage({
-									header: 'Deseja realmente excluir este produto?',
-									content: 'Esta operação não pode ser desfaita.',
-									type: 'question',
-									confirm: () => {
-										setLoading(true)
-										remove({
-											id: product._id,
-											onSuccess: () => {
-												onClose?.()
-											},
-										})
-									},
-								})
-							}}
-						/>
-					</div>
-				)}
-			</div>
-			<div className={style.productInfo}>
-				<a
-					onClick={() => {
-						show(product, onClose)
-					}}
-				>
-					<h3>{product.name}</h3>
-				</a>
-				<p>{product.description}</p>
-
-				{product.categories && (
-					<div className={style.categories}>
-						{product.categories.split(';').map((category: string) => {
-							return <span key={category}>{category}</span>
-						})}
-					</div>
-				)}
-				<div className={style.footer}>
-					{customer && (
-						<UserPicture
-							className={style.footerPicture}
-							size="48px"
-							picture={customer.picture}
-							name={customer.name}
-						/>
-					)}
-					<div style={{ flexGrow: 1 }} />
-					<h2>
-						<span>R$</span>
-						{NumberUtils.numberToCurrency(product.price).replace('R$', '')}
-					</h2>
+				<div className={style.selectCard}>
+					<input
+						type="checkbox"
+						checked={selected}
+						onChange={(event) => {
+							onSelect(event.target.checked)
+						}}
+					/>
 				</div>
 			</div>
+			<div className={style.productInfo}>
+				<h3 title={product.name}>{product.name}</h3>
+				<small>{product.description}</small>
+				<div className={style.customerAndPrice}>
+					{product.customer ? (
+						<UserPicture
+							size="36px"
+							picture={product?.customer?.picture}
+							name={product?.customer?.name}
+						/>
+					) : (
+						<div style={{ flexGrow: 1 }} />
+					)}
+					<h2 className={style.price}>{NumberUtils.numberToCurrency(product.price)}</h2>
+				</div>
+			</div>
+			<hr />
+			<Button
+				className={style.showDetailsButton}
+				onClick={() => {
+					show(product, onClose)
+				}}
+			>
+				Mostrar Detalhes
+			</Button>
 		</div>
 	)
 }

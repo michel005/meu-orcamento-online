@@ -1,10 +1,16 @@
+@import '../../utils';
+
 .productPage {
+	--product-card-width: 250px;
+
 	display: flex;
 	flex-direction: row;
 	height: 100%;
+	width: 100%;
+	position: relative;
 }
 
-.customerPageContent {
+.productPageContent {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -12,22 +18,29 @@
 	overflow-y: auto;
 }
 
+.customerSelect {
+	width: 500px;
+}
+
+.selectValueRender {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
 .pageHeader {
 	background-color: #222;
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	gap: 14px;
 	inset-block-start: 0;
+	inset-inline-start: 0;
 	padding: 14px 17px;
 	position: sticky;
-	width: 100%;
-	z-index: 1;
-
-	button {
-		align-items: center;
-		border-radius: 7px;
-		padding: 14px;
-	}
+	transition: all 0.25s;
+	z-index: 2;
 
 	label {
 		align-self: center;
@@ -40,16 +53,118 @@
 
 	hr {
 		background-color: #fff2;
-		height: 100%;
+		display: flex;
+		height: var(--input-height);
 		margin-block: 0;
 		width: 2px;
 	}
 }
 
-.pageContent {
+.statusHeader {
+	align-items: flex-end;
+	border-bottom: 1px solid #ccc;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
+	gap: 10px;
+	margin-block: 28px 7px;
+	margin-inline: 14px;
+	padding-bottom: 7px;
+
+	input {
+		align-self: center;
+		cursor: pointer;
+		height: 18px;
+		width: 18px;
+	}
+
+	h1 {
+		flex-grow: 1;
+	}
+
+	span {
+		color: #333;
+		font-size: 28px;
+
+		&::before {
+			content: 'R$';
+			font-size: 0.5em;
+		}
+	}
+}
+
+.pageContent {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	gap: 21px;
+	justify-content: center;
 	padding: 14px;
+}
+
+.selectCustomer {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	justify-content: center;
+	height: 100%;
+
+	h1 {
+		color: #999;
+		padding-inline: 21px;
+		text-align: center;
+	}
+}
+
+@include desktopFullHD {
+	.productPage {
+		.pageContent {
+			grid-template-columns: repeat(6, 1fr);
+		}
+	}
+}
+
+@include desktopMediumHD {
+	.productPage {
+		.pageContent {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+}
+
+@include desktopHD {
+	.productPage {
+		.pageContent {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+}
+
+@include desktopSmall {
+	.pageContent {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.pageHeader {
+		> button {
+			span {
+				display: none;
+			}
+		}
+	}
+
+	.customerSelect {
+		width: 100%;
+	}
+
+	.faded {
+		display: none;
+	}
+}
+
+@include tablet {
+	.productPage {
+		.pageContent {
+			grid-template-columns: repeat(1, 1fr);
+		}
+	}
 }

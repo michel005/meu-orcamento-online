@@ -7,8 +7,22 @@
 	}
 }
 
+.background {
+	height: 100%;
+	top: 0;
+	left: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 59;
+}
+
+.specialOptions {
+	display: flex;
+	flex-direction: row;
+}
+
 .showOptions {
-	z-index: 10;
+	z-index: 60;
 
 	.options {
 		z-index: 10;
@@ -30,6 +44,10 @@
 
 .quickSearch {
 	padding: 14px;
+
+	input {
+		width: 100px;
+	}
 }
 
 .optionRender,
@@ -42,13 +60,18 @@
 	height: var(--input-height);
 	padding: 10px 14px;
 	transition: all 0.25s;
+	white-space: nowrap;
 }
 
 .currentOption {
+	flex-grow: 1;
 	padding: 10px 0;
+	width: 100%;
 }
 
 .optionRender {
+	white-space: nowrap;
+
 	&:hover {
 		background-color: #ddd;
 	}
@@ -61,6 +84,9 @@
 
 .placeholder {
 	color: #ccc;
+	overflow: hidden;
+	user-select: none;
+	white-space: nowrap;
 }
 
 .clearButton {
@@ -81,4 +107,26 @@
 	position: absolute;
 	width: 100%;
 	z-index: 10;
+}
+
+[data-context='bag'] {
+	.currentOption {
+		color: #fff;
+	}
+
+	.clearButton {
+		color: #fff;
+	}
+
+	[data-field] {
+		> div {
+			background-color: #fff;
+			border-color: var(--input-border-color) !important;
+		}
+		&[data-focus='true'] {
+			> div {
+				border-color: var(--active-color) !important;
+			}
+		}
+	}
 }

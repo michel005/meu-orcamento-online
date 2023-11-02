@@ -43,7 +43,7 @@ export const CreateUserPage = () => {
 			})
 			.then((response) => {
 				localStorage.setItem('saved_user', response.data.user_name)
-				navigate('/')
+				navigate('/login')
 			})
 			.catch((errors) => {
 				setErrors(ErrorUtils.convertErrors(errors.response.data))
@@ -63,7 +63,7 @@ export const CreateUserPage = () => {
 				{getField('birthday')}
 				{getField('phone')}
 				{getField('password')}
-				<div style={{ alignSelf: 'flex-end' }}>{getField('agree_terms')}</div>
+				{getField('agree_terms')}
 				{getField('error')}
 				<div className={style.buttons}>
 					<Button leftIcon="save" onClick={createUser}>

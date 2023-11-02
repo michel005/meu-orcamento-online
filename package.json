@@ -6,8 +6,7 @@
 	"homepage": "https://michel005.github.io/meu-orcamento-online",
 	"scripts": {
 		"start": "webpack serve",
-		"build": "webpack --mode production",
-		"aws:publish": "node ./scripts/publish_aws.js"
+		"build": "webpack --mode production"
 	},
 	"keywords": [],
 	"author": "",

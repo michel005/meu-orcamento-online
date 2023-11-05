@@ -11,8 +11,6 @@ import { useFormLayout } from '../../hooks/useFormLayout'
 export const CustomerPage = () => {
 	const { form, api, pageData } = usePage('customer')
 
-	console.log(api.data)
-
 	const filteredData = api.data
 		.filter((x) => !pageData.data?.favorite || x.favorite)
 		.filter(
@@ -144,8 +142,9 @@ export const CustomerPage = () => {
 										{
 											...jsonValue,
 											id: undefined,
-											picture: undefined,
-											favorite: undefined,
+											picture: null,
+											favorite: false,
+											address_id: undefined,
 											active: true,
 										},
 										refreshPage

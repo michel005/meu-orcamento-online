@@ -66,6 +66,17 @@
 	}
 }
 
+.contentRow {
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+
+	> div {
+		flex-grow: 1;
+		width: 100%;
+	}
+}
+
 .userCard {
 	display: flex;
 	flex-direction: row;
@@ -140,6 +151,10 @@
 @include tablet {
 	.customerFormSidebar {
 		--private-sidebar-width: 100%;
+	}
+
+	.contentRow {
+		flex-direction: column;
 	}
 
 	.options {

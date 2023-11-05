@@ -70,8 +70,8 @@ export const PrivatePage = () => {
 					button={(show, setShow) => (
 						<UserPicture
 							className={style.userInfoPicture}
-							picture={currentUser?.picture}
-							name={currentUser.full_name}
+							picture={currentUser.user?.picture}
+							name={currentUser.user?.full_name}
 							size="var(--input-height)"
 							onClick={() => {
 								setShow((x) => !x)

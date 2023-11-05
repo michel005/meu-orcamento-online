@@ -27,7 +27,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 				<UserPicture
 					className={style.userPicture}
 					picture={customer.picture}
-					name={customer.name}
+					name={customer.full_name}
 					size="170px"
 				/>
 				{!customer.active && <div className={style.inactive}>INATIVO</div>}
@@ -38,10 +38,17 @@ export const CustomerCard = ({ customer, onClose }) => {
 						data-favorite={customer.favorite}
 						onClick={() => {
 							update({
-								id: customer._id,
-								data: { ...customer, favorite: !customer?.favorite },
+								data: {
+									customer: JSON.parse(
+										JSON.stringify({
+											...customer,
+											address: undefined,
+											favorite: !customer?.favorite,
+										})
+									),
+									address: customer.address,
+								},
 								onSuccess: (response) => {
-									console.log({ response })
 									onClose?.()
 								},
 							})
@@ -68,7 +75,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 										leftIcon="shopping_bag"
 										onClick={() => {
 											setShow(false)
-											setProp('customer', () => customer._id)
+											setProp('customer', () => customer.id)
 											navigate('/products')
 										}}
 									>
@@ -126,7 +133,9 @@ export const CustomerCard = ({ customer, onClose }) => {
 				</div>
 			</div>
 			<div className={style.customerInfo}>
-				<h3 title={customer.name}>{StringUtils.firstAndLastName(customer.name)}</h3>
+				<h3 title={customer.full_name}>
+					{StringUtils.firstAndLastName(customer.full_name)}
+				</h3>
 				<small>{customer.email}</small>
 				{(customer.address || customer.birthday) && (
 					<div className={style.address}>

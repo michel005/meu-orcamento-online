@@ -27,6 +27,7 @@ export type ChangePasswordType = {
 }
 
 export type AddressType = {
+	id?: string
 	zip_code?: string
 	street_number?: string
 	street_name?: string
@@ -37,11 +38,11 @@ export type AddressType = {
 }
 
 export type CustomerType = {
-	_id?: string
+	id?: string
 	created?: string
 	updated?: string
 	picture?: string
-	name?: string
+	full_name?: string
 	email?: string
 	birthday?: string
 	phone?: string
@@ -54,7 +55,7 @@ export type CustomerType = {
 }
 
 export type ProductType = {
-	_id?: string
+	id?: string
 	customer_id?: string
 	created?: string
 	updated?: string

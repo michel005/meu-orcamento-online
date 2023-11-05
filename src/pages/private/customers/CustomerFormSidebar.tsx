@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import style from './CustomerFormSidebar.module.scss'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
-import { CustomerType } from '../../../types/AllTypes'
+import { AddressType, CustomerType } from '../../../types/AllTypes'
 import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
 import { Error } from '../../../components/Error'
@@ -11,11 +11,26 @@ import { FileUtils } from '../../../utils/FileUtils'
 import { usePage } from '../../../hooks/usePage'
 import { usePageData } from '../../../hooks/usePageData'
 import { useNavigate } from 'react-router-dom'
+import { useFormLayout } from '../../../hooks/useFormLayout'
+import { AddressDefinition } from '../../../definitions/AddressDefinition'
 
 export const CustomerFormSidebar = () => {
 	const page = usePage<CustomerType>('customer', CustomerDefinition)
+	const { message, api, form } = page
+	const customerFormLayout = useFormLayout<CustomerType>({
+		definition: CustomerDefinition(form.form),
+		value: form.form,
+		onChange: form.edit,
+	})
+	const addressFormLayout = useFormLayout<AddressType>({
+		definition: AddressDefinition(),
+		value: form.form.address,
+		onChange: (value) => {
+			form.form.address = { ...value }
+			form.edit(form.form)
+		},
+	})
 	const productPageData = usePageData('product')
-	const { message, api, form, pageData, formLayout } = page
 	const [scrollPosition, setScrollPosition] = useState(0)
 	const navigate = useNavigate()
 
@@ -24,18 +39,20 @@ export const CustomerFormSidebar = () => {
 	}
 
 	const onError = (errors: any) => {
-		formLayout.setErrors(ErrorUtils.convertErrors(errors.response.data))
+		customerFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data.customer || {}))
+		addressFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data?.address || {}))
 	}
 
 	useEffect(() => {
-		formLayout.setDisableAll(!form.form.active)
+		customerFormLayout.setDisableAll(!form.form.active)
+		addressFormLayout.setDisableAll(!form.form.active)
 	}, [form.form])
 
 	return (
 		<div
 			className={style.customerFormSidebar}
 			data-show={!!form.originalValue}
-			data-scroll-position={scrollPosition > 214}
+			data-scroll-position={scrollPosition > 228}
 		>
 			<div
 				className={style.formContent}
@@ -48,17 +65,17 @@ export const CustomerFormSidebar = () => {
 						className={style.userImage}
 						style={{ backgroundImage: `url(${form.form.picture})` }}
 					>
-						{formLayout.getField('picture')}
+						{customerFormLayout.getField('picture')}
 					</div>
 				</div>
 				<div className={style.userCardReduced}>
-					{formLayout.getField('picture', {
+					{customerFormLayout.getField('picture', {
 						size: '48px',
-						pictureName: form.form._id
-							? StringUtils.initialLetters(form.form.name || 'NF').toUpperCase()
+						pictureName: form.form.id
+							? StringUtils.initialLetters(form.form.full_name || 'NF').toUpperCase()
 							: null,
 					})}
-					<h2>{form.form.name || 'Sem nome'}</h2>
+					<h2>{form.form.full_name || 'Sem nome'}</h2>
 				</div>
 				{!form.form.active && (
 					<div className={style.error}>
@@ -66,23 +83,29 @@ export const CustomerFormSidebar = () => {
 					</div>
 				)}
 				<div className={style.content}>
-					{formLayout.getField('name')}
-					{formLayout.getField('email')}
-					{formLayout.getField('phone')}
-					{formLayout.getField('birthday')}
-					{formLayout.getField('person_type')}
-					{formLayout.getField('document_type')}
-					{formLayout.getField('document_number')}
-					{formLayout.getField('error')}
+					{customerFormLayout.getField('full_name')}
+					{customerFormLayout.getField('email')}
+					{customerFormLayout.getField('phone')}
+					{customerFormLayout.getField('birthday')}
+					<div className={style.contentRow}>
+						{customerFormLayout.getField('person_type')}
+						{customerFormLayout.getField('document_type')}
+					</div>
+					{customerFormLayout.getField('document_number')}
+					{customerFormLayout.getField('error')}
 					<h3>Endereço</h3>
-					{formLayout.getField('address').getField('zip_code')}
-					{formLayout.getField('address').getField('street_name')}
-					{formLayout.getField('address').getField('street_number')}
-					{formLayout.getField('address').getField('complement')}
-					{formLayout.getField('address').getField('city')}
-					{formLayout.getField('address').getField('state')}
-					{formLayout.getField('address').getField('country')}
-					{formLayout.getField('address').getField('error')}
+					<div className={style.contentRow}>
+						{addressFormLayout.getField('zip_code')}
+						{addressFormLayout.getField('street_name')}
+					</div>
+					<div className={style.contentRow}>
+						{addressFormLayout.getField('street_number')}
+						{addressFormLayout.getField('complement')}
+					</div>
+					{addressFormLayout.getField('city')}
+					{addressFormLayout.getField('state')}
+					{addressFormLayout.getField('country')}
+					{addressFormLayout.getField('error')}
 				</div>
 			</div>
 			<div className={style.options}>
@@ -91,11 +114,21 @@ export const CustomerFormSidebar = () => {
 						leftIcon="person_check"
 						onClick={() => {
 							page.api.update({
-								id: form.form._id,
-								data: { ...form.form, active: true },
+								data: {
+									customer: JSON.parse(
+										JSON.stringify({
+											...form.form,
+											address: undefined,
+											active: true,
+										})
+									),
+									address: form.form.address,
+								},
 								onSuccess: (response) => {
-									console.log({ response })
-									form.edit(response)
+									form.edit({
+										...response.customer,
+										address: response.address,
+									})
 								},
 							})
 						}}
@@ -108,16 +141,31 @@ export const CustomerFormSidebar = () => {
 							leftIcon="save"
 							disabled={!form.form.active}
 							onClick={() => {
-								if (form.form?._id) {
+								if (form.form?.id) {
 									api.update({
-										id: form.form?._id,
-										data: form.form,
+										data: {
+											customer: JSON.parse(
+												JSON.stringify({
+													...form.form,
+													address: undefined,
+												})
+											),
+											address: form.form.address,
+										},
 										onSuccess,
 										onError,
 									})
 								} else {
 									api.create({
-										data: form.form,
+										data: {
+											customer: JSON.parse(
+												JSON.stringify({
+													...form.form,
+													address: undefined,
+												})
+											),
+											address: form.form.address,
+										},
 										onSuccess,
 										onError,
 									})
@@ -128,41 +176,39 @@ export const CustomerFormSidebar = () => {
 						</Button>
 					</>
 				)}
-				{form.form?._id && (
+				{form.form?.id && (
 					<>
-						{form.form.active && (
-							<ButtonWhite
-								leftIcon="delete"
-								onClick={() => {
-									message.question(
-										'Deseja realmente excluir este cliente?',
-										'Esta operação não pode ser desfeita. Esta operação não exclui as informações de faturamento deste cliente.',
-										() => {
-											api.remove({
-												id: form.form?._id,
-												onSuccess,
-												onError,
-											})
-										}
-									)
-								}}
-							>
-								Excluir
-							</ButtonWhite>
-						)}
+						<ButtonWhite
+							leftIcon="delete"
+							onClick={() => {
+								message.question(
+									'Deseja realmente excluir este cliente?',
+									'Esta operação não pode ser desfeita. Esta operação não exclui as informações de faturamento deste cliente.',
+									() => {
+										api.remove({
+											id: form.form?.id,
+											onSuccess,
+											onError,
+										})
+									}
+								)
+							}}
+						>
+							Excluir
+						</ButtonWhite>
 						<Bag
 							button={(show, setShow) => (
 								<Button
 									leftIcon="more_horiz"
 									variationOverride={show ? 'primary' : 'white'}
 									onClick={() => {
-										setShow((x) => !x)
+										setShow((x: boolean) => !x)
 									}}
 								/>
 							)}
 							arrowPosition="bottom"
 						>
-							{(show, setShow) => (
+							{(_: unknown, setShow: any) => (
 								<>
 									{form.form.active && (
 										<ButtonGhost
@@ -170,10 +216,21 @@ export const CustomerFormSidebar = () => {
 											onClick={() => {
 												setShow(false)
 												page.api.update({
-													id: form.form._id,
-													data: { ...form.form, active: false },
+													data: {
+														customer: JSON.parse(
+															JSON.stringify({
+																...form.form,
+																address: undefined,
+																active: false,
+															})
+														),
+														address: form.form.address,
+													},
 													onSuccess: (response) => {
-														form.edit(response)
+														form.edit({
+															...response.customer,
+															address: response.address,
+														})
 													},
 												})
 											}}
@@ -187,11 +244,21 @@ export const CustomerFormSidebar = () => {
 											onClick={() => {
 												setShow(false)
 												page.api.update({
-													id: form.form._id,
-													data: { ...form.form, favorite: true },
+													data: {
+														customer: JSON.parse(
+															JSON.stringify({
+																...form.form,
+																address: undefined,
+																favorite: true,
+															})
+														),
+														address: form.form.address,
+													},
 													onSuccess: (response) => {
-														console.log({ response })
-														form.edit(response)
+														form.edit({
+															...response.customer,
+															address: response.address,
+														})
 													},
 												})
 											}}
@@ -204,11 +271,21 @@ export const CustomerFormSidebar = () => {
 											onClick={() => {
 												setShow(false)
 												page.api.update({
-													id: form.form._id,
-													data: { ...form.form, favorite: false },
+													data: {
+														customer: JSON.parse(
+															JSON.stringify({
+																...form.form,
+																address: undefined,
+																favorite: false,
+															})
+														),
+														address: form.form.address,
+													},
 													onSuccess: (response) => {
-														console.log({ response })
-														form.edit(response)
+														form.edit({
+															...response.customer,
+															address: response.address,
+														})
 													},
 												})
 											}}
@@ -220,7 +297,7 @@ export const CustomerFormSidebar = () => {
 										leftIcon="shopping_bag"
 										onClick={() => {
 											setShow(false)
-											productPageData.setProp('customer', () => form.form._id)
+											productPageData.setProp('customer', () => form.form.id)
 											form.close()
 											navigate('/products')
 										}}
@@ -233,7 +310,7 @@ export const CustomerFormSidebar = () => {
 											setShow(false)
 											form.show({
 												...form.form,
-												_id: undefined,
+												id: undefined,
 												picture: undefined,
 												favorite: undefined,
 												active: true,
@@ -259,13 +336,18 @@ export const CustomerFormSidebar = () => {
 													created: undefined,
 													updated: undefined,
 													active: undefined,
+													address_id: undefined,
+													address: {
+														...form.form.address,
+														id: undefined,
+													},
 												},
 												null,
 												'  '
 											)
 											FileUtils.saveContent(
 												content,
-												`${form.form.name
+												`${form.form.full_name
 													.toUpperCase()
 													.replaceAll(' ', '_')}_EXPORTAR.json`
 											)

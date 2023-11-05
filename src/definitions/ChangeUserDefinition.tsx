@@ -7,6 +7,7 @@ export const ChangeUserDefinition = (): useFormLayoutDefinitionType => {
 		picture: {
 			label: 'Imagem de Usuário',
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
+			placeholder: 'Buscar Imagem',
 			type: 'file',
 			size: '200px',
 		},
@@ -26,6 +27,11 @@ export const ChangeUserDefinition = (): useFormLayoutDefinitionType => {
 			label: 'Data de Nascimento',
 			type: 'date',
 			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
+		},
+		password: {
+			label: 'Senha de Acesso',
+			type: 'password',
+			leftSide: <ButtonGhost leftIcon="password" disabled={true} />,
 		},
 		phone: {
 			label: 'Telefone',

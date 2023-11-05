@@ -48,12 +48,12 @@ export const ProductPage = () => {
 					<SelectInput
 						className={style.customerSelect}
 						options={customerApi.data}
-						idModifier={(x) => x._id}
+						idModifier={(x) => x.id}
 						placeholder="Nenhum cliente selecionado"
 						valueRender={(x) => (
 							<div className={style.selectValueRender}>
-								<UserPicture size="28px" picture={x.picture} name={x.name} />
-								{x.name}
+								<UserPicture size="28px" picture={x.picture} name={x.full_name} />
+								{x.full_name}
 							</div>
 						)}
 						value={pageData.data.customer}

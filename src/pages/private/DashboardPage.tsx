@@ -10,13 +10,13 @@ export const DashboardPage = () => {
 		<div className={style.dashboardPage}>
 			<header>
 				<UserPicture
-					picture={currentUser.picture}
-					name={currentUser.full_name}
+					picture={currentUser.user.picture}
+					name={currentUser.user.full_name}
 					size="56px"
 				/>
 				<div className={style.welcome}>
 					<h3>Bem vindo</h3>
-					<h1>{currentUser.full_name}</h1>
+					<h1>{currentUser.user.full_name}</h1>
 				</div>
 			</header>
 		</div>

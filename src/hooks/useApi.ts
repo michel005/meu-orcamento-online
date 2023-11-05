@@ -62,10 +62,10 @@ export const useApi = (entity: string) => {
 				setLoading(false)
 			})
 	}
-	const update = ({ id, data, onSuccess = (x) => {}, onError = (x) => {} }) => {
+	const update = ({ data, onSuccess = (x) => {}, onError = (x) => {} }) => {
 		setLoading(true)
 		axios
-			.put(`${entity}/${id}`, data, header)
+			.put(`${entity}`, data, header)
 			.then((response) => {
 				setData(response.data)
 				onSuccess(response.data)

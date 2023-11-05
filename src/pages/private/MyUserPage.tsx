@@ -16,18 +16,26 @@ import { AddressDefinition } from '../../definitions/AddressDefinition'
 export const MyUserPage = () => {
 	const { setLoading, setMessage } = useContext(ConfigContext)
 	const { currentUser, setCurrentUser } = useContext(SessionContext)
-	const [user, setUser] = useState<UserType>({ ...currentUser })
+	const [user, setUser] = useState<{
+		user: UserType
+		address: AddressType
+	}>({ ...currentUser })
 	const [changePassword, setChangePassword] = useState<ChangePasswordType>({
 		old_password: '',
 		new_password: '',
 		new_password_confirm: '',
 	})
-	const { getField: getUserField, setErrors } = useFormLayout<UserType>({
+	const userFormLayout = useFormLayout<UserType>({
 		definition: ChangeUserDefinition(),
-		value: user,
-		onChange: setUser,
+		value: user.user,
+		onChange: (x) => {
+			setUser((y) => {
+				y.user = { ...x }
+				return { ...y }
+			})
+		},
 	})
-	const { getField: getAddressField, setErrors: setAddressErrors } = useFormLayout<AddressType>({
+	const addressFormLayout = useFormLayout<AddressType>({
 		definition: AddressDefinition(),
 		value: user?.address || {},
 		onChange: (value) => {
@@ -37,33 +45,34 @@ export const MyUserPage = () => {
 			})
 		},
 	})
-	const { getField: getChangePasswordField, setErrors: setErrorsChangePassword } =
-		useFormLayout<ChangePasswordType>({
-			definition: ChangePasswordDefinition(),
-			value: changePassword,
-			onChange: setChangePassword,
-		})
+	const changePasswordFormLayout = useFormLayout<ChangePasswordType>({
+		definition: ChangePasswordDefinition(),
+		value: changePassword,
+		onChange: setChangePassword,
+	})
 
 	return (
 		<div className={style.myUserPage}>
 			<div className={style.userInfoSidebar}>
 				<UserPicture
 					className={style.userPicture}
-					picture={currentUser.picture}
-					name={currentUser.full_name}
+					picture={currentUser.user.picture}
+					name={currentUser.user.full_name}
 					type="square"
 					size="270px"
 				/>
 				<div className={style.sidebarInfo}>
-					<h3>{currentUser.full_name}</h3>
+					<h3>{currentUser.user.full_name}</h3>
 					<p>
 						<Icon icon="mail" />
-						{currentUser.email}
+						{currentUser.user.email}
 					</p>
-					<p>
-						<Icon icon="calendar_month" />
-						{currentUser?.birthday}
-					</p>
+					{currentUser.user?.birthday && (
+						<p>
+							<Icon icon="calendar_month" />
+							{currentUser.user?.birthday}
+						</p>
+					)}
 					<div className={style.separator} style={{ flexGrow: 1 }} />
 					<ButtonWhite
 						onClick={() => {
@@ -93,31 +102,31 @@ export const MyUserPage = () => {
 					<h1 id="myData">Meus dados</h1>
 				</header>
 				<div className={style.formContent}>
-					{getUserField('picture')}
-					{getUserField('full_name')}
-					{getUserField('email')}
-					{getUserField('birthday')}
-					{getUserField('phone')}
-					{getUserField('error')}
+					{userFormLayout.getField('picture')}
+					{userFormLayout.getField('full_name')}
+					{userFormLayout.getField('email')}
+					{userFormLayout.getField('birthday')}
+					{userFormLayout.getField('phone')}
+					{userFormLayout.getField('error')}
 				</div>
 				<header className={style.header}>
 					<h3 id="address">Endereço</h3>
 				</header>
 				<div className={style.formContent}>
-					{getAddressField('zip_code')}
-					{getAddressField('street_name')}
-					{getAddressField('street_number')}
-					{getAddressField('complement')}
-					{getAddressField('city')}
-					{getAddressField('state')}
-					{getAddressField('country')}
-					{getAddressField('error')}
+					{addressFormLayout.getField('zip_code')}
+					{addressFormLayout.getField('street_name')}
+					{addressFormLayout.getField('street_number')}
+					{addressFormLayout.getField('complement')}
+					{addressFormLayout.getField('city')}
+					{addressFormLayout.getField('state')}
+					{addressFormLayout.getField('country')}
+					{addressFormLayout.getField('error')}
 				</div>
 				<Button
 					leftIcon="save"
 					onClick={() => {
-						setErrors(null)
-						setAddressErrors(null)
+						userFormLayout.setErrors(null)
+						addressFormLayout.setErrors(null)
 						setLoading(true)
 						axios
 							.put('user', user, {
@@ -135,8 +144,10 @@ export const MyUserPage = () => {
 								})
 							})
 							.catch((error) => {
-								setErrors(ErrorUtils.convertErrors(error.response.data))
-								setAddressErrors(
+								userFormLayout.setErrors(
+									ErrorUtils.convertErrors(error.response.data.user)
+								)
+								addressFormLayout.setErrors(
 									ErrorUtils.convertErrors(error.response.data?.address)
 								)
 							})
@@ -151,15 +162,15 @@ export const MyUserPage = () => {
 					<h3 id="changePassword">Alteração de Senha</h3>
 				</header>
 				<div className={style.formContent}>
-					{getChangePasswordField('old_password')}
-					{getChangePasswordField('new_password')}
-					{getChangePasswordField('new_password_confirm')}
-					{getChangePasswordField('error')}
+					{changePasswordFormLayout.getField('old_password')}
+					{changePasswordFormLayout.getField('new_password')}
+					{changePasswordFormLayout.getField('new_password_confirm')}
+					{changePasswordFormLayout.getField('error')}
 				</div>
 				<Button
 					leftIcon="save"
 					onClick={() => {
-						setErrorsChangePassword(null)
+						changePasswordFormLayout.setErrors(null)
 						setLoading(true)
 						axios
 							.post('user/changePassword', changePassword, {
@@ -177,7 +188,7 @@ export const MyUserPage = () => {
 								})
 							})
 							.catch((error) => {
-								setErrorsChangePassword(
+								changePasswordFormLayout.setErrors(
 									ErrorUtils.convertErrors(error.response.data)
 								)
 							})

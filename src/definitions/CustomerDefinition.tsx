@@ -3,7 +3,6 @@ import { ButtonGhost } from '../components/Button'
 import React from 'react'
 import { CustomerType } from '../types/AllTypes'
 import { StringUtils } from '../utils/StringUtils'
-import { AddressDefinition } from './AddressDefinition'
 
 export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinitionType => {
 	return {
@@ -11,12 +10,12 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 			label: 'Imagem do Cliente',
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			type: 'file',
-			placeholder: value?.name
-				? StringUtils.initialLetters(value.name || '').toUpperCase()
+			placeholder: value?.full_name
+				? StringUtils.initialLetters(value.full_name || '').toUpperCase()
 				: '',
 			size: '200px',
 		},
-		name: {
+		full_name: {
 			label: 'Nome Completo',
 			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,
 		},
@@ -65,10 +64,6 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 		document_number: {
 			label: 'Número de Documento',
 			leftSide: <ButtonGhost leftIcon="cards" disabled={true} />,
-		},
-		address: {
-			type: 'subForm',
-			subForm: AddressDefinition(),
 		},
 	}
 }

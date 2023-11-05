@@ -37,7 +37,7 @@ export const ProductCard = ({ product, onClose, selected = false, onSelect = (x)
 						<UserPicture
 							size="36px"
 							picture={product?.customer?.picture}
-							name={product?.customer?.name}
+							name={product?.customer?.full_name}
 						/>
 					) : (
 						<div style={{ flexGrow: 1 }} />

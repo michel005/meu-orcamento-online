@@ -1,4 +1,12 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react'
 import { Field } from '../components/Field'
 import { Error } from '../components/Error'
 import { FileUtils } from '../utils/FileUtils'
@@ -10,8 +18,10 @@ import { UserPicture } from '../components/UserPicture'
 import { NumberUtils } from '../utils/NumberUtils'
 import { SelectInput } from '../components/inputs/SelectInput'
 import { useForm } from './useForm'
+import { useMessage } from './useMessage'
 
 const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
+	const { message } = useMessage()
 	const ref = useRef(null)
 	return (
 		<div
@@ -30,9 +40,10 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 				}
 				picture={value?.[field]}
 				placeholder={
-					!!fieldDefinition.pictureName
+					fieldDefinition.placeholder ||
+					(!!fieldDefinition.pictureName
 						? undefined
-						: !value[field] && 'Sem Imagem Selecionada'
+						: !value[field] && 'Sem Imagem Selecionada')
 				}
 				size={fieldDefinition.size || '150px'}
 				type={fieldDefinition.pictureType}
@@ -70,6 +81,13 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 				onChange={(event) => {
 					if (event.target.files?.[0]) {
 						FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
+							if (!base64.startsWith('data:image')) {
+								message(
+									'Arquivo inválido!',
+									'O arquivo informado não é uma imagem.'
+								)
+								return
+							}
 							value[field] = base64
 							onChange({ ...value })
 						})
@@ -172,32 +190,25 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 			input={(setFocus, id) => (
 				<input
 					id={id}
-					type={fieldDefinition.type}
-					value={
-						!value?.[field as keyof typeof value]
-							? ''
-							: fieldDefinition.type === 'date'
-							? (value?.[field as keyof typeof value] as string)
-								? DateUtils.stringToInputDate(
-										value?.[field as keyof typeof value] as string
-								  )
-								: ''
-							: (value?.[field as keyof typeof value] as string)
-					}
+					type={fieldDefinition.type === 'date' ? 'text' : fieldDefinition.type}
+					value={value?.[field as keyof typeof value] || ''}
 					onChange={(event) => {
-						if (fieldDefinition.type === 'date') {
-							value[field] =
-								event.target.value === ''
-									? null
-									: DateUtils.inputDateToString(event.target.value)
-						} else {
-							value[field] = event.target.value === '' ? null : event.target.value
-						}
+						value[field] = event.target.value === '' ? null : event.target.value
 						onChange({ ...value })
 					}}
 					disabled={disableAll || fieldDefinition.disabled}
 					placeholder={fieldDefinition.placeholder}
-					onFocus={() => setFocus(true)}
+					onFocus={(event) => {
+						setFocus(true)
+						if (fieldDefinition.type === 'date') {
+							value[field] =
+								event.target.value === ''
+									? null
+									: DateUtils.dateToString(
+											DateUtils.stringToDate(event.target.value)
+									  )
+						}
+					}}
 					onBlur={() => setFocus(false)}
 				/>
 			)}

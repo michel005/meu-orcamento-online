@@ -46,7 +46,7 @@
 	padding-block-start: 14px;
 }
 
-@include desktopSmall {
+@include tablet {
 	.modalContent {
 		max-width: calc(100% - 28px);
 		min-width: calc(100% - 28px);

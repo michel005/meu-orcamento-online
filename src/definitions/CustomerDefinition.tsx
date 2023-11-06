@@ -10,9 +10,7 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 			label: 'Imagem do Cliente',
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			type: 'file',
-			placeholder: value?.full_name
-				? StringUtils.initialLetters(value.full_name || '').toUpperCase()
-				: '',
+			pictureName: value?.full_name,
 			size: '200px',
 		},
 		full_name: {

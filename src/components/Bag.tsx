@@ -15,15 +15,15 @@ export const Bag = ({
 
 	return (
 		<>
-			{show && (
-				<div
-					className={style.background}
-					onClick={() => {
-						setShow(false)
-					}}
-				/>
-			)}
 			<div className={style.bag} data-arrow-position={arrowPosition}>
+				{show && (
+					<div
+						className={style.background}
+						onClick={() => {
+							setShow(false)
+						}}
+					/>
+				)}
 				{show && (
 					<div className={style.floatingBag} data-context="bag">
 						{typeof children === 'function' ? children(show, setShow) : children}

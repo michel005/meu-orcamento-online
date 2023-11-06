@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import style from './CustomerFormSidebar.module.scss'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
 import { AddressType, CustomerType } from '../../../types/AllTypes'
 import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
 import { Error } from '../../../components/Error'
-import { StringUtils } from '../../../utils/StringUtils'
 import { Bag } from '../../../components/Bag'
 import { FileUtils } from '../../../utils/FileUtils'
 import { usePage } from '../../../hooks/usePage'
@@ -31,7 +30,6 @@ export const CustomerFormSidebar = () => {
 		},
 	})
 	const productPageData = usePageData('product')
-	const [scrollPosition, setScrollPosition] = useState(0)
 	const navigate = useNavigate()
 
 	const onSuccess = () => {
@@ -49,135 +47,129 @@ export const CustomerFormSidebar = () => {
 	}, [form.form])
 
 	return (
-		<div
-			className={style.customerFormSidebar}
-			data-show={!!form.originalValue}
-			data-scroll-position={scrollPosition > 228}
-		>
-			<div
-				className={style.formContent}
-				onScroll={(e) => {
-					setScrollPosition((e.currentTarget as any).scrollTop)
-				}}
-			>
-				<div className={style.userCard}>
-					<div
-						className={style.userImage}
-						style={{ backgroundImage: `url(${form.form.picture})` }}
-					>
-						{customerFormLayout.getField('picture')}
-					</div>
+		<div className={style.customerFormSidebar} data-show={!!form.originalValue}>
+			<div className={style.sidebarContent}>
+				<div
+					className={style.userImage}
+					style={{ backgroundImage: `url(${form.form.picture})` }}
+				>
+					{customerFormLayout.getField('picture')}
 				</div>
-				<div className={style.userCardReduced}>
-					{customerFormLayout.getField('picture', {
-						size: '48px',
-						pictureName: form.form.id
-							? StringUtils.initialLetters(form.form.full_name || 'NF').toUpperCase()
-							: null,
-					})}
-					<h2>{form.form.full_name || 'Sem nome'}</h2>
-				</div>
+				<ButtonGhost
+					className={style.closeButton}
+					leftIcon="close"
+					onClick={() => {
+						form.close()
+					}}
+				/>
 				{!form.form.active && (
 					<div className={style.error}>
 						<Error message="Cliente inativo. Para realizar alterações, ative este cliente novamente." />
 					</div>
 				)}
-				<div className={style.content}>
-					{customerFormLayout.getField('full_name')}
-					{customerFormLayout.getField('email')}
-					{customerFormLayout.getField('phone')}
-					{customerFormLayout.getField('birthday')}
-					<div className={style.contentRow}>
-						{customerFormLayout.getField('person_type')}
-						{customerFormLayout.getField('document_type')}
+				<div className={style.formContent}>
+					<div className={style.content}>
+						<section>
+							<h3>Dados Gerais</h3>
+							{customerFormLayout.getField('full_name')}
+							{customerFormLayout.getField('email')}
+							<div className={style.contentRow}>
+								{customerFormLayout.getField('phone')}
+								{customerFormLayout.getField('birthday')}
+							</div>
+							<div className={style.contentRow}>
+								{customerFormLayout.getField('person_type')}
+								{customerFormLayout.getField('document_type')}
+							</div>
+							{customerFormLayout.getField('document_number')}
+							{customerFormLayout.getField('error')}
+						</section>
+						<section>
+							<h3>Endereço</h3>
+							<div className={style.contentRow}>
+								{addressFormLayout.getField('zip_code')}
+								{addressFormLayout.getField('street_name')}
+							</div>
+							<div className={style.contentRow}>
+								{addressFormLayout.getField('street_number')}
+								{addressFormLayout.getField('complement')}
+							</div>
+							{addressFormLayout.getField('city')}
+							{addressFormLayout.getField('state')}
+							{addressFormLayout.getField('country')}
+							{addressFormLayout.getField('error')}
+						</section>
 					</div>
-					{customerFormLayout.getField('document_number')}
-					{customerFormLayout.getField('error')}
-					<h3>Endereço</h3>
-					<div className={style.contentRow}>
-						{addressFormLayout.getField('zip_code')}
-						{addressFormLayout.getField('street_name')}
-					</div>
-					<div className={style.contentRow}>
-						{addressFormLayout.getField('street_number')}
-						{addressFormLayout.getField('complement')}
-					</div>
-					{addressFormLayout.getField('city')}
-					{addressFormLayout.getField('state')}
-					{addressFormLayout.getField('country')}
-					{addressFormLayout.getField('error')}
 				</div>
-			</div>
-			<div className={style.options}>
-				{!form.form.active ? (
-					<Button
-						leftIcon="person_check"
-						onClick={() => {
-							page.api.update({
-								data: {
-									customer: JSON.parse(
-										JSON.stringify({
-											...form.form,
-											address: undefined,
-											active: true,
-										})
-									),
-									address: form.form.address,
-								},
-								onSuccess: (response) => {
-									form.edit({
-										...response.customer,
-										address: response.address,
-									})
-								},
-							})
-						}}
-					>
-						Ativar
-					</Button>
-				) : (
-					<>
+				<div className={style.options}>
+					{!form.form.active ? (
 						<Button
-							leftIcon="save"
-							disabled={!form.form.active}
+							leftIcon="person_check"
 							onClick={() => {
-								if (form.form?.id) {
-									api.update({
-										data: {
-											customer: JSON.parse(
-												JSON.stringify({
-													...form.form,
-													address: undefined,
-												})
-											),
-											address: form.form.address,
-										},
-										onSuccess,
-										onError,
-									})
-								} else {
-									api.create({
-										data: {
-											customer: JSON.parse(
-												JSON.stringify({
-													...form.form,
-													address: undefined,
-												})
-											),
-											address: form.form.address,
-										},
-										onSuccess,
-										onError,
-									})
-								}
+								page.api.update({
+									data: {
+										customer: JSON.parse(
+											JSON.stringify({
+												...form.form,
+												address: undefined,
+												active: true,
+											})
+										),
+										address: form.form.address,
+									},
+									onSuccess: (response) => {
+										form.edit({
+											...response.customer,
+											address: response.address,
+										})
+									},
+								})
 							}}
 						>
-							Salvar
+							Ativar
 						</Button>
-					</>
-				)}
-				{form.form?.id && (
-					<>
+					) : (
+						<>
+							<Button
+								leftIcon="save"
+								disabled={!form.form.active}
+								onClick={() => {
+									if (form.form?.id) {
+										api.update({
+											data: {
+												customer: JSON.parse(
+													JSON.stringify({
+														...form.form,
+														address: undefined,
+													})
+												),
+												address: form.form.address,
+											},
+											onSuccess,
+											onError,
+										})
+									} else {
+										api.create({
+											data: {
+												customer: JSON.parse(
+													JSON.stringify({
+														...form.form,
+														address: undefined,
+													})
+												),
+												address: form.form.address,
+											},
+											onSuccess,
+											onError,
+										})
+									}
+								}}
+							>
+								Salvar
+							</Button>
+						</>
+					)}
+					{form.form.id && (
 						<ButtonWhite
 							leftIcon="delete"
 							onClick={() => {
@@ -196,6 +188,9 @@ export const CustomerFormSidebar = () => {
 						>
 							Excluir
 						</ButtonWhite>
+					)}
+					<div style={{ flexGrow: 1 }} />
+					{form.form?.id && (
 						<Bag
 							button={(show, setShow) => (
 								<Button
@@ -206,7 +201,7 @@ export const CustomerFormSidebar = () => {
 									}}
 								/>
 							)}
-							arrowPosition="bottom"
+							arrowPosition="bottom-right"
 						>
 							{(_: unknown, setShow: any) => (
 								<>
@@ -314,6 +309,10 @@ export const CustomerFormSidebar = () => {
 												picture: undefined,
 												favorite: undefined,
 												active: true,
+												address: {
+													...form.form.address,
+													id: undefined,
+												},
 											})
 											message.message(
 												'Duplicação de Cliente',
@@ -399,15 +398,8 @@ export const CustomerFormSidebar = () => {
 								</>
 							)}
 						</Bag>
-					</>
-				)}
-				<div style={{ flexGrow: 1 }} />
-				<ButtonWhite
-					leftIcon="close"
-					onClick={() => {
-						form.close()
-					}}
-				/>
+					)}
+				</div>
 			</div>
 		</div>
 	)

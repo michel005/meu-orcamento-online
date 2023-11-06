@@ -71,6 +71,26 @@
 			}
 		}
 	}
+
+	&[data-arrow-position='bottom-right'] {
+		.floatingBag {
+			inset-block-start: auto;
+			inset-block-end: calc(var(--input-height) + 14px);
+			inset-inline-start: auto;
+			inset-inline-end: -35px;
+			transform: translateX(-28px);
+
+			&::before {
+				border-left: var(--arrow-size) solid transparent;
+				border-right: var(--arrow-size) solid transparent;
+				border-top: var(--arrow-size) solid #555;
+				border-bottom: none;
+				inset-block-end: -9px;
+				inset-inline-start: auto;
+				inset-inline-end: 10px;
+			}
+		}
+	}
 }
 
 .background {

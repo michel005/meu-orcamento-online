@@ -2,67 +2,108 @@
 @import '../../../utils';
 
 .customerFormSidebar {
+	background-color: #1119;
+	backdrop-filter: blur(4px);
+	content: '';
+	height: calc(100% - var(--private-navbar-height));
+	inset-block-start: var(--private-navbar-height);
+	inset-inline-start: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 3;
+}
+
+.sidebarContent {
 	background-color: #fff;
+	border-radius: 14px;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	inset-block-start: 0;
-	inset-inline-start: 0;
-	min-width: var(--private-sidebar-width);
-	position: absolute;
-	width: var(--private-sidebar-width);
-	z-index: 3;
-
-	&::before {
-		background-color: #1119;
-		backdrop-filter: blur(4px);
-		content: '';
-		height: 100%;
-		position: fixed;
-		width: 100%;
-	}
-
-	&[data-scroll-position='false'] {
-		.userCardReduced {
-			display: none;
-		}
-
-		.userCard {
-			z-index: 5;
-		}
-	}
-
-	&[data-scroll-position='true'] {
-		.userCard {
-			inset-block-start: -100%;
-			z-index: 6;
-		}
-		.userCardReduced {
-			display: flex;
-		}
-	}
+	inset-block-start: 50%;
+	inset-inline-start: 50%;
+	max-height: 800px;
+	position: fixed;
+	translate: -50% -50%;
+	transition: all 0.25s;
 }
 
 .formContent {
-	background-color: #fff;
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
-	z-index: 1;
-}
-
-.content {
-	background-color: #fff;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
+	overflow: auto;
+	transition: all 0.25s;
+}
+
+.closeButton {
+	background-color: #1113 !important;
+	border-radius: 0 14px 0 0;
+	inset-block-start: 0;
+	inset-inline-end: 0;
+	padding: 0;
+	position: absolute;
+	width: var(--input-height);
+	z-index: 2;
+
+	&:hover {
+		background-color: #1116 !important;
+		color: #fff;
+	}
+}
+
+.error {
+	z-index: 1;
+}
+
+.userImage {
+	align-items: center;
+	background-color: #ddd;
+	background-position: center;
+	background-size: cover;
+	border-radius: 14px 14px 0 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 14px;
+	position: relative;
+	padding-block: 14px;
+	width: 100%;
+	z-index: 1;
+
+	&::before {
+		background-color: #fffa;
+		backdrop-filter: blur(10px);
+		border-radius: 14px 14px 0 0;
+		content: '';
+		height: 100%;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		position: absolute;
+		transition: all 0.25s;
+		width: 100%;
+	}
+}
+
+.content {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
 	gap: 14px;
 	padding: 14px;
+	transition: all 0.25s;
 	z-index: 1;
 
 	h3 {
 		border-bottom: 1px solid #ccc;
 		padding-bottom: 7px;
+	}
+
+	section {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		transition: all 0.25s;
+		width: 50%;
 	}
 }
 
@@ -77,66 +118,13 @@
 	}
 }
 
-.userCard {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	gap: 14px;
-	inset-block-start: 0;
-	inset-inline-start: 0;
-	position: sticky;
-	width: 100%;
-}
-
-.userCardReduced {
-	align-items: center;
-	background-color: #222;
-	color: #fff;
-	display: flex;
-	flex-direction: row;
-	gap: 14px;
-	inset-block-start: -1px;
-	inset-inline-start: 0;
-	padding: 14px;
-	position: sticky;
-	z-index: 2;
-
-	button {
-		display: none;
-	}
-}
-
-.userImage {
-	align-items: center;
-	background-color: #eee;
-	background-position: center;
-	background-size: cover;
-	border-bottom: 4px solid var(--border-color);
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	gap: 14px;
-	padding-block: 14px;
-	width: 100%;
-
-	&::before {
-		background-color: #fff7;
-		backdrop-filter: blur(10px);
-		content: '';
-		inset: 0;
-		overflow: hidden;
-		position: absolute;
-		transition: all 0.25s;
-		width: 100%;
-	}
-}
-
 .options {
 	background-color: #222;
+	border-radius: 0 0 14px 14px;
 	display: flex;
 	flex-direction: row;
 	gap: 14px;
-	inset-block-end: 0;
+	inset-block-start: 0;
 	inset-inline-end: 0;
 	padding: 14px 17px;
 	width: 100%;
@@ -148,9 +136,41 @@
 	}
 }
 
+@include desktopHD {
+	.sidebarContent {
+		width: 800px;
+		max-width: 100%;
+	}
+
+	.content {
+		flex-direction: column;
+
+		section {
+			width: 100%;
+		}
+	}
+}
+
 @include tablet {
-	.customerFormSidebar {
-		--private-sidebar-width: 100%;
+	.sidebarContent {
+		height: 100%;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		max-height: none;
+		translate: none;
+		width: 100%;
+	}
+
+	.userImage {
+		border-radius: 0;
+
+		&::before {
+			border-radius: 0;
+		}
+	}
+
+	.closeButton {
+		border-radius: 0;
 	}
 
 	.contentRow {
@@ -158,10 +178,6 @@
 	}
 
 	.options {
-		> button {
-			span {
-				display: none;
-			}
-		}
+		border-radius: 0;
 	}
 }

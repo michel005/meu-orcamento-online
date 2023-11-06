@@ -5,6 +5,7 @@
 
 	&[data-format='circle'] {
 		border-radius: 50%;
+
 		img {
 			border-radius: 50%;
 		}
@@ -29,7 +30,7 @@
 			cursor: pointer;
 
 			.initialLetters {
-				background-color: #ddd;
+				background-color: #ccc;
 			}
 		}
 	}
@@ -44,7 +45,7 @@ img {
 
 .initialLetters {
 	align-items: center;
-	background-color: #eee;
+	background-color: #ddd;
 	color: #666;
 	display: flex;
 	font-size: calc(var(--size) / 3);

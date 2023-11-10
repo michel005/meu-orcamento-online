@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SessionContext } from '../../contexts/SessionContext'
 import style from './MyUserPage.module.scss'
 import { useFormLayout } from '../../hooks/useFormLayout'
@@ -19,7 +19,10 @@ export const MyUserPage = () => {
 	const [user, setUser] = useState<{
 		user: UserType
 		address: AddressType
-	}>({ ...currentUser })
+	}>({
+		user: { ...currentUser.user },
+		address: { ...currentUser.address },
+	})
 	const [changePassword, setChangePassword] = useState<ChangePasswordType>({
 		old_password: '',
 		new_password: '',
@@ -60,6 +63,7 @@ export const MyUserPage = () => {
 					name={currentUser.user.full_name}
 					type="square"
 					size="270px"
+					randomId={Math.random()}
 				/>
 				<div className={style.sidebarInfo}>
 					<h3>{currentUser.user.full_name}</h3>
@@ -136,7 +140,10 @@ export const MyUserPage = () => {
 							})
 							.then((response) => {
 								setCurrentUser(response.data)
-								setUser(response.data)
+								setUser({
+									user: { ...response.data.user },
+									address: { ...response.data.address },
+								})
 								setMessage({
 									header: 'Dados salvos com sucesso',
 									content: 'Seus dados foram salvos com sucesso',
@@ -180,7 +187,10 @@ export const MyUserPage = () => {
 							})
 							.then((response) => {
 								setCurrentUser(response.data)
-								setUser(response.data)
+								setUser({
+									user: { ...response.data.user },
+									address: { ...response.data.address },
+								})
 								setChangePassword({
 									old_password: '',
 									new_password: '',

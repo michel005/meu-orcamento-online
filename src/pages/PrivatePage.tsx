@@ -76,6 +76,7 @@ export const PrivatePage = () => {
 							onClick={() => {
 								setShow((x) => !x)
 							}}
+							randomId={Math.random()}
 						/>
 					)}
 					arrowPosition="top-right"

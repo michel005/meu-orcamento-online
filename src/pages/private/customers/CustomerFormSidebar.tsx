@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import style from './CustomerFormSidebar.module.scss'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
 import { AddressType, CustomerType } from '../../../types/AllTypes'
@@ -29,6 +29,7 @@ export const CustomerFormSidebar = () => {
 			form.edit(form.form)
 		},
 	})
+	const randomId = useMemo(() => Math.random(), [])
 	const productPageData = usePageData('product')
 	const navigate = useNavigate()
 
@@ -51,7 +52,12 @@ export const CustomerFormSidebar = () => {
 			<div className={style.sidebarContent}>
 				<div
 					className={style.userImage}
-					style={{ backgroundImage: `url(${form.form.picture})` }}
+					style={{
+						backgroundImage:
+							form.form.picture && form.form.picture.startsWith('http')
+								? `url(${form.form.picture}?randomId=${randomId})`
+								: `url(${form.form.picture})`,
+					}}
 				>
 					{customerFormLayout.getField('picture')}
 				</div>

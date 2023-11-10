@@ -29,6 +29,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 					picture={customer.picture}
 					name={customer.full_name}
 					size="170px"
+					randomId={Math.random()}
 				/>
 				{!customer.active && <div className={style.inactive}>INATIVO</div>}
 				<div className={style.favorite}>

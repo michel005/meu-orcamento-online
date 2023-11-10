@@ -1,6 +1,7 @@
 import React, { CSSProperties, useState } from 'react'
 import style from './UserPicture.module.scss'
 import { StringUtils } from '../utils/StringUtils'
+import { DateUtils } from '../utils/DateUtils'
 
 export const UserPicture = ({
 	picture,
@@ -10,6 +11,7 @@ export const UserPicture = ({
 	name = '',
 	placeholder = undefined,
 	size = '50px',
+	randomId = null,
 }) => {
 	const [fallbackImage, setFallbackImage] = useState(null)
 
@@ -24,8 +26,12 @@ export const UserPicture = ({
 		>
 			{picture && !fallbackImage ? (
 				<img
-					src={fallbackImage || picture}
-					onError={() => {
+					src={
+						fallbackImage || picture.startsWith('http')
+							? `${picture}?randomId=${randomId}`
+							: picture
+					}
+					onError={(e) => {
 						setFallbackImage(true)
 					}}
 					loading="lazy"

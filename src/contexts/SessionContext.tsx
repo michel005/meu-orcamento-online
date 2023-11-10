@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { ConfigContext } from './ConfigContext'
+import { UserType } from '../types/AllTypes'
 
 export type SessionContextType = {
 	currentUser: any
 	setCurrentUser: any
+	saveUserSession: any
 	status: 'idle' | 'loading' | 'loaded'
 }
 
@@ -12,6 +14,7 @@ export const SessionContext = React.createContext<SessionContextType>({
 	currentUser: null,
 	setCurrentUser: () => null,
 	status: 'idle',
+	saveUserSession: () => {},
 })
 
 export const SessionProvider = ({ children }: { children: any }) => {
@@ -53,8 +56,21 @@ export const SessionProvider = ({ children }: { children: any }) => {
 		}
 	}, [status, currentUser])
 
+	const saveUserSession = (userInfo: UserType & { token: string }, rememberMe: boolean) => {
+		setCurrentUser({
+			...userInfo,
+			token: undefined,
+		})
+		localStorage.setItem('auth_token', userInfo.token)
+		if (rememberMe) {
+			localStorage.setItem('saved_user', userInfo.user_name)
+		} else {
+			localStorage.removeItem('saved_user')
+		}
+	}
+
 	return (
-		<SessionContext.Provider value={{ currentUser, setCurrentUser, status }}>
+		<SessionContext.Provider value={{ currentUser, setCurrentUser, status, saveUserSession }}>
 			{children}
 		</SessionContext.Provider>
 	)

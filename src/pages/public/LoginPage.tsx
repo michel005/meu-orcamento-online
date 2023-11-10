@@ -3,53 +3,43 @@ import { Button, ButtonGhost } from '../../components/Button'
 import React, { useContext, useState } from 'react'
 import { useFormLayout } from '../../hooks/useFormLayout'
 import { LoginFormDefinition } from '../../definitions/LoginFormDefinition'
-import axios from 'axios'
-import { SessionContext } from '../../contexts/SessionContext'
 import { useNavigate } from 'react-router-dom'
-import { ErrorUtils } from '../../utils/ErrorUtils'
-import { ConfigContext } from '../../contexts/ConfigContext'
+import { useUserLogin } from '../../business/user/useUserLogin'
+import { SessionContext } from '../../contexts/SessionContext'
+import { UserType } from '../../types/AllTypes'
 
 export const LoginPage = () => {
-	const { setLoading } = useContext(ConfigContext)
-	const { setCurrentUser } = useContext(SessionContext)
+	const { saveUserSession } = useContext(SessionContext)
+	const navigate = useNavigate()
 	const [value, setValue] = useState({
 		user_name: localStorage.getItem('saved_user'),
 		password: '',
 		remember_me: !!localStorage?.saved_user,
 	})
-	const { getField, setErrors } = useFormLayout<any>({
+	const { getField, setErrors } = useFormLayout({
 		definition: LoginFormDefinition(),
 		value: value,
 		onChange: setValue,
 	})
-	const navigate = useNavigate()
+	const userLogin = useUserLogin({
+		onSuccess: (userInfo: UserType & { token: string }) => {
+			saveUserSession(userInfo, value.remember_me)
+		},
+		onError: (errors: any) => {
+			setErrors(errors)
+		},
+	})
 
-	const login = () => {
+	const onClickLogin = () => {
 		setErrors(null)
-		setLoading(true)
-		axios
-			.post('user/login', {
-				user_name: value.user_name,
-				password: value.password,
-			})
-			.then((response) => {
-				setCurrentUser({
-					...response.data,
-					token: undefined,
-				})
-				localStorage.setItem('auth_token', response.data.token)
-				if (value.remember_me) {
-					localStorage.setItem('saved_user', value.user_name)
-				} else {
-					localStorage.removeItem('saved_user')
-				}
-			})
-			.catch((errors) => {
-				setErrors(ErrorUtils.convertErrors(errors.response.data))
-			})
-			.finally(() => {
-				setLoading(false)
-			})
+		userLogin.run({
+			userName: value.user_name,
+			password: value.password,
+		})
+	}
+
+	const onClickCreateUser = () => {
+		navigate('/createUser')
 	}
 
 	return (
@@ -61,15 +51,10 @@ export const LoginPage = () => {
 				{getField('remember_me')}
 				{getField('error')}
 				<div className={style.buttons}>
-					<Button leftIcon="login" onClick={login}>
+					<Button leftIcon="login" onClick={onClickLogin}>
 						Entrar
 					</Button>
-					<ButtonGhost
-						leftIcon="person_add"
-						onClick={() => {
-							navigate('/createUser')
-						}}
-					>
+					<ButtonGhost leftIcon="person_add" onClick={onClickCreateUser}>
 						Cadastrar-se
 					</ButtonGhost>
 				</div>

@@ -35,6 +35,7 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 			label: 'Data de Nascimento',
 			type: 'date',
 			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
+			placeholder: 'Ex: 01/01/1999',
 		},
 		phone: {
 			label: 'Telefone',

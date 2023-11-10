@@ -48,6 +48,7 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 				size={fieldDefinition.size || '150px'}
 				type={fieldDefinition.pictureType}
 				name={fieldDefinition.pictureName}
+				randomId={Math.random()}
 			/>
 			{!disableAll && !fieldDefinition.disabled && (
 				<div className={style.pictureOptions}>

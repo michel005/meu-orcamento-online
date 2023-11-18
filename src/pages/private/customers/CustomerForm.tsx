@@ -1,19 +1,19 @@
 import React, { useEffect, useMemo } from 'react'
-import style from './CustomerFormSidebar.module.scss'
-import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
-import { AddressType, CustomerType } from '../../../types/AllTypes'
-import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
-import { ErrorUtils } from '../../../utils/ErrorUtils'
-import { Error } from '../../../components/Error'
+import { useNavigate } from 'react-router-dom'
 import { Bag } from '../../../components/Bag'
-import { FileUtils } from '../../../utils/FileUtils'
+import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
+import { Error } from '../../../components/Error'
+import { AddressDefinition } from '../../../definitions/AddressDefinition'
+import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
+import { useFormLayout } from '../../../hooks/useFormLayout'
 import { usePage } from '../../../hooks/usePage'
 import { usePageData } from '../../../hooks/usePageData'
-import { useNavigate } from 'react-router-dom'
-import { useFormLayout } from '../../../hooks/useFormLayout'
-import { AddressDefinition } from '../../../definitions/AddressDefinition'
+import { AddressType, CustomerType } from '../../../types/AllTypes'
+import { ErrorUtils } from '../../../utils/ErrorUtils'
+import { FileUtils } from '../../../utils/FileUtils'
+import style from './CustomerForm.module.scss'
 
-export const CustomerFormSidebar = () => {
+export const CustomerForm = () => {
 	const page = usePage<CustomerType>('customer', CustomerDefinition)
 	const { message, api, form } = page
 	const customerFormLayout = useFormLayout<CustomerType>({
@@ -48,7 +48,7 @@ export const CustomerFormSidebar = () => {
 	}, [form.form])
 
 	return (
-		<div className={style.customerFormSidebar} data-show={!!form.originalValue}>
+		<div className={style.customerForm}>
 			<div className={style.sidebarContent}>
 				<div
 					className={style.userImage}
@@ -65,7 +65,7 @@ export const CustomerFormSidebar = () => {
 					className={style.closeButton}
 					leftIcon="close"
 					onClick={() => {
-						form.close()
+						form.close(false)
 					}}
 				/>
 				{!form.form.active && (
@@ -100,8 +100,10 @@ export const CustomerFormSidebar = () => {
 								{addressFormLayout.getField('street_number')}
 								{addressFormLayout.getField('complement')}
 							</div>
-							{addressFormLayout.getField('city')}
-							{addressFormLayout.getField('state')}
+							<div className={style.contentRow}>
+								{addressFormLayout.getField('city')}
+								{addressFormLayout.getField('state')}
+							</div>
 							{addressFormLayout.getField('country')}
 							{addressFormLayout.getField('error')}
 						</section>
@@ -195,7 +197,49 @@ export const CustomerFormSidebar = () => {
 							Excluir
 						</ButtonWhite>
 					)}
+					<div className={style.adminInfo}>
+						{form.form.created && (
+							<span className={style.created}>
+								Cadastrado dia {form.form.created.split(' ')[0]} as{' '}
+								{form.form.created.split(' ')[1]}
+							</span>
+						)}
+						{form.form.updated && (
+							<span className={style.updated}>
+								Ultima alteração no dia {form.form.updated.split(' ')[0]} as{' '}
+								{form.form.updated.split(' ')[1]}
+							</span>
+						)}
+					</div>
 					<div style={{ flexGrow: 1 }} />
+					{form.form?.id && (
+						<ButtonGhost
+							className={style.favoriteButton}
+							leftIcon="favorite"
+							data-favorite={form.form.favorite}
+							onClick={() => {
+								api.update({
+									silently: true,
+									data: {
+										customer: JSON.parse(
+											JSON.stringify({
+												...form.form,
+												address: undefined,
+												favorite: !form.form?.favorite,
+											})
+										),
+										address: form.form.address,
+									},
+									onSuccess: (response) => {
+										form.edit({
+											...response.customer,
+											address: response.address,
+										})
+									},
+								})
+							}}
+						/>
+					)}
 					{form.form?.id && (
 						<Bag
 							button={(show, setShow) => (
@@ -237,61 +281,6 @@ export const CustomerFormSidebar = () => {
 											}}
 										>
 											Inativar
-										</ButtonGhost>
-									)}
-									{!form.form.favorite ? (
-										<ButtonGhost
-											leftIcon="heart_plus"
-											onClick={() => {
-												setShow(false)
-												page.api.update({
-													data: {
-														customer: JSON.parse(
-															JSON.stringify({
-																...form.form,
-																address: undefined,
-																favorite: true,
-															})
-														),
-														address: form.form.address,
-													},
-													onSuccess: (response) => {
-														form.edit({
-															...response.customer,
-															address: response.address,
-														})
-													},
-												})
-											}}
-										>
-											Favoritar
-										</ButtonGhost>
-									) : (
-										<ButtonGhost
-											leftIcon="heart_minus"
-											onClick={() => {
-												setShow(false)
-												page.api.update({
-													data: {
-														customer: JSON.parse(
-															JSON.stringify({
-																...form.form,
-																address: undefined,
-																favorite: false,
-															})
-														),
-														address: form.form.address,
-													},
-													onSuccess: (response) => {
-														form.edit({
-															...response.customer,
-															address: response.address,
-														})
-													},
-												})
-											}}
-										>
-											Desfavoritar
 										</ButtonGhost>
 									)}
 									<ButtonGhost

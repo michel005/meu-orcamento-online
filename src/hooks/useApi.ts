@@ -8,12 +8,14 @@ export const useApi = (entity: string) => {
 
 	const header = {
 		headers: {
-			auth_token: localStorage.getItem('auth_token'),
+			authorization: `Baerer ${localStorage.getItem('auth_token')}`,
 		},
 	}
 
-	const getAll = ({ query = {}, onSuccess = (x) => {}, onError = (x) => {} } = {}) => {
-		setLoading(true)
+	const getAll = ({ silently = false, query = {}, onSuccess = (x) => { }, onError = (x) => { } } = {}) => {
+		if (!silently) {
+			setLoading(true)
+		}
 		axios
 			.get(
 				`${entity}?${Object.keys(query)
@@ -29,11 +31,15 @@ export const useApi = (entity: string) => {
 				onError?.(...x)
 			})
 			.finally(() => {
-				setLoading(false)
+				if (!silently) {
+					setLoading(false)
+				}
 			})
 	}
-	const getById = ({ id, onSuccess = (x) => {}, onError = (x) => {} }) => {
-		setLoading(true)
+	const getById = ({ id, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+		if (!silently) {
+			setLoading(true)
+		}
 		axios
 			.get(`${entity}/${id}`, header)
 			.then((...x) => {
@@ -44,11 +50,15 @@ export const useApi = (entity: string) => {
 				onError(...x)
 			})
 			.finally(() => {
-				setLoading(false)
+				if (!silently) {
+					setLoading(false)
+				}
 			})
 	}
-	const create = ({ data, onSuccess = (x) => {}, onError = (x) => {} }) => {
-		setLoading(true)
+	const create = ({ data, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+		if (!silently) {
+			setLoading(true)
+		}
 		axios
 			.post(`${entity}`, data, header)
 			.then((response) => {
@@ -59,11 +69,15 @@ export const useApi = (entity: string) => {
 				onError(...x)
 			})
 			.finally(() => {
-				setLoading(false)
+				if (!silently) {
+					setLoading(false)
+				}
 			})
 	}
-	const update = ({ data, onSuccess = (x) => {}, onError = (x) => {} }) => {
-		setLoading(true)
+	const update = ({ data, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+		if (!silently) {
+			setLoading(true)
+		}
 		axios
 			.put(`${entity}`, data, header)
 			.then((response) => {
@@ -74,11 +88,15 @@ export const useApi = (entity: string) => {
 				onError(...x)
 			})
 			.finally(() => {
-				setLoading(false)
+				if (!silently) {
+					setLoading(false)
+				}
 			})
 	}
-	const remove = ({ id, onSuccess = (x) => {}, onError = (x) => {} }) => {
-		setLoading(true)
+	const remove = ({ id, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+		if (!silently) {
+			setLoading(true)
+		}
 		axios
 			.delete(`${entity}/${id}`, header)
 			.then((...x) => {
@@ -88,7 +106,9 @@ export const useApi = (entity: string) => {
 				onError(...x)
 			})
 			.finally(() => {
-				setLoading(false)
+				if (!silently) {
+					setLoading(false)
+				}
 			})
 	}
 

@@ -15,7 +15,7 @@ export const ProductCard = ({ product, onClose, selected = false, onSelect = (x)
 				<UserPicture
 					className={style.userPicture}
 					picture={product.picture}
-					name={product.name}
+					name={product.title}
 					size="170px"
 					type="square"
 				/>
@@ -30,7 +30,7 @@ export const ProductCard = ({ product, onClose, selected = false, onSelect = (x)
 				</div>
 			</div>
 			<div className={style.productInfo}>
-				<h3 title={product.name}>{product.name}</h3>
+				<h3 title={product.title}>{product.title}</h3>
 				<small>{product.description}</small>
 				<div className={style.customerAndPrice}>
 					{product.customer ? (

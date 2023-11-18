@@ -39,6 +39,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 						data-favorite={customer.favorite}
 						onClick={() => {
 							update({
+								silently: true,
 								data: {
 									customer: JSON.parse(
 										JSON.stringify({
@@ -49,7 +50,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 									),
 									address: customer.address,
 								},
-								onSuccess: (response) => {
+								onSuccess: () => {
 									onClose?.()
 								},
 							})

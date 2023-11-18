@@ -24,7 +24,13 @@
 .showOptions {
 	z-index: 60;
 
+	> div {
+		border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+		border-color: var(--active-color);
+	}
+
 	.options {
+		border-color: var(--active-color);
 		z-index: 10;
 	}
 
@@ -37,6 +43,7 @@
 	&:hover {
 		background-color: transparent !important;
 	}
+
 	div {
 		transition: all 0.25s;
 	}
@@ -57,10 +64,13 @@
 	display: flex;
 	flex-direction: row;
 	gap: 10px;
-	height: var(--input-height);
 	padding: 10px 14px;
 	transition: all 0.25s;
 	white-space: nowrap;
+}
+
+.currentOption {
+	height: var(--input-height);
 }
 
 .currentOption {
@@ -73,11 +83,11 @@
 	white-space: nowrap;
 
 	&:hover {
-		background-color: #ddd;
+		background-color: #eee;
 	}
 
 	&[data-selected='true'] {
-		background-color: #eee;
+		background-color: var(--active-color-10);
 		font-weight: bold;
 	}
 }
@@ -100,12 +110,12 @@
 	border-radius: 0 0 var(--border-radius) var(--border-radius);
 	display: flex;
 	flex-direction: column;
-	inset-block-start: calc(100% - 1px);
-	inset-inline-start: 0;
+	inset-block-start: 100%;
+	inset-inline-start: -0.5px;
 	max-height: 220px;
 	overflow: auto;
 	position: absolute;
-	width: 100%;
+	width: calc(100% + 1px);
 	z-index: 10;
 }
 

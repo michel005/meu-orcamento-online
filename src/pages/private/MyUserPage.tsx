@@ -135,7 +135,7 @@ export const MyUserPage = () => {
 						axios
 							.put('user', user, {
 								headers: {
-									auth_token: localStorage.getItem('auth_token'),
+									authorization: `Baerer ${localStorage.getItem('auth_token')}`,
 								},
 							})
 							.then((response) => {
@@ -182,7 +182,7 @@ export const MyUserPage = () => {
 						axios
 							.post('user/changePassword', changePassword, {
 								headers: {
-									auth_token: localStorage.getItem('auth_token'),
+									authorization: `Baerer ${localStorage.getItem('auth_token')}`,
 								},
 							})
 							.then((response) => {

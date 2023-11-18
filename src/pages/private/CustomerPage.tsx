@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import style from './CustomerPage.module.scss'
-import { Button, ButtonWhite } from '../../components/Button'
-import { CustomerCard } from './customers/CustomerCard'
-import { CustomerFormSidebar } from './customers/CustomerFormSidebar'
 import { Bag } from '../../components/Bag'
+import { Button, ButtonWhite } from '../../components/Button'
 import { usePage } from '../../hooks/usePage'
 import { SortUtils } from '../../utils/SortUtils'
-import { useFormLayout } from '../../hooks/useFormLayout'
+import style from './CustomerPage.module.scss'
+import { CustomerCard } from './customers/CustomerCard'
+import { CustomerForm } from './customers/CustomerForm'
 
 export const CustomerPage = () => {
 	const { form, api, pageData } = usePage('customer')
@@ -21,63 +20,8 @@ export const CustomerPage = () => {
 				(x.person_type === 'PF' && pageData.data?.pf) ||
 				(x.person_type === 'PJ' && pageData.data?.pj)
 		)
-		.filter((x) => !pageData.data?.city || pageData.data?.city === x.address?.city)
-		.filter((x) => !pageData.data?.state || pageData.data?.state === x.address?.state)
-		.filter((x) => !pageData.data?.country || pageData.data?.country === x.address?.country)
 		.sort((x, y) => SortUtils.sort(x, y, 'name'))
 
-	const formLayout = useFormLayout({
-		definition: {
-			country: {
-				label: 'País',
-				type: 'select',
-				options: Array.from(
-					new Map(
-						(api.data || [])
-							.filter((x) => x?.address?.country)
-							.map((x: any) => [x?.address?.country, null])
-					).keys()
-				),
-				idModifier: (x) => x,
-				valueRender: (x) => x,
-				placeholder: 'Selecione um país',
-			},
-			state: {
-				label: 'Estado',
-				type: 'select',
-				options: Array.from(
-					new Map(
-						(api.data || [])
-							.filter((x) => x?.address?.state)
-							.map((x: any) => [x?.address?.state, null])
-					).keys()
-				),
-				idModifier: (x) => x,
-				valueRender: (x) => x,
-				placeholder: 'Selecione um estado',
-			},
-			city: {
-				label: 'Cidade',
-				type: 'select',
-				options: Array.from(
-					new Map(
-						(api.data || [])
-							.filter((x) => x?.address?.city)
-							.map((x: any) => [x?.address?.city, null])
-					).keys()
-				),
-				idModifier: (x) => x,
-				valueRender: (x) => x,
-				placeholder: 'Selecione uma cidade',
-			},
-		},
-		value: pageData.data,
-		onChange: (v: any) => {
-			pageData.setProp('country', () => v?.country)
-			pageData.setProp('state', () => v?.state)
-			pageData.setProp('city', () => v?.city)
-		},
-	})
 	const ref = useRef(null)
 	const importRef = useRef(null)
 
@@ -99,7 +43,7 @@ export const CustomerPage = () => {
 
 	return (
 		<div className={style.customerPage} data-page="customer">
-			{form.originalValue && <CustomerFormSidebar />}
+			{form.originalValue && <CustomerForm />}
 			<div className={style.customerPageContent} ref={ref}>
 				<div className={style.pageHeader}>
 					<Button
@@ -177,9 +121,6 @@ export const CustomerPage = () => {
 							/>
 						)}
 					>
-						{formLayout.getField('country')}
-						{formLayout.getField('state')}
-						{formLayout.getField('city')}
 						<hr />
 						<Button
 							leftIcon="person"

@@ -16,20 +16,12 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 		full_name: {
 			label: 'Nome Completo',
 			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,
-		},
-		created: {
-			label: 'Cadastrado',
-			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
-			disabled: true,
-		},
-		updated: {
-			label: 'Ultima Alteração',
-			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
-			disabled: true,
+			placeholder: 'Ex: João da Silva',
 		},
 		email: {
 			label: 'E-mail',
 			leftSide: <ButtonGhost leftIcon="mail" disabled={true} />,
+			placeholder: 'Ex: joaosilva@email.com',
 		},
 		birthday: {
 			label: 'Data de Nascimento',
@@ -40,6 +32,7 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 		phone: {
 			label: 'Telefone',
 			leftSide: <ButtonGhost leftIcon="phonelink_ring" disabled={true} />,
+			placeholder: 'Ex: (99) 99999-9999',
 		},
 		person_type: {
 			label: 'Tipo de Pessoa',
@@ -49,20 +42,31 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 			],
 			type: 'select',
 			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,
+			placeholder: 'PF / PJ',
 		},
 		document_type: {
 			label: 'Tipo de Documento',
-			options: [
-				['RG', 'RG'],
-				['CPF', 'CPF'],
-				['CNPJ', 'CNPJ'],
-			],
+			options:
+				value?.person_type === 'PF'
+					? [
+							['RG', 'RG'],
+							['CPF', 'CPF'],
+					  ]
+					: value?.person_type === 'PJ'
+					? [['CNPJ', 'CNPJ']]
+					: [
+							['RG', 'RG'],
+							['CPF', 'CPF'],
+							['CNPJ', 'CNPJ'],
+					  ],
 			type: 'select',
 			leftSide: <ButtonGhost leftIcon="cards" disabled={true} />,
+			placeholder: 'RG / CPF / CNPJ',
 		},
 		document_number: {
 			label: 'Número de Documento',
 			leftSide: <ButtonGhost leftIcon="cards" disabled={true} />,
+			placeholder: 'Seguir o formato do tipo de documento selecionado',
 		},
 	}
 }

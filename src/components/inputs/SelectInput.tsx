@@ -90,6 +90,7 @@ export const SelectInput = ({
 						<div
 							className={`${fieldStyle.fieldInput} ${style.selectInput}`}
 							data-disabled={disabled}
+							data-show-options={showOptions}
 						>
 							<div
 								className={style.currentOption}
@@ -106,7 +107,7 @@ export const SelectInput = ({
 									<>{valueRender(currentOption)}</>
 								) : (
 									<div className={style.placeholder}>
-										{placeholder || <>Sem valor selecionado</>}
+										{placeholder || 'Sem valor selecionado'}
 									</div>
 								)}
 							</div>

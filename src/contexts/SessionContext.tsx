@@ -30,7 +30,7 @@ export const SessionProvider = ({ children }: { children: any }) => {
 				axios
 					.post('user/me', null, {
 						headers: {
-							auth_token: localStorage.getItem('auth_token'),
+							authorization: `Baerer ${localStorage.getItem('auth_token')}`,
 						},
 					})
 					.then((response) => {
@@ -56,14 +56,20 @@ export const SessionProvider = ({ children }: { children: any }) => {
 		}
 	}, [status, currentUser])
 
-	const saveUserSession = (userInfo: UserType & { token: string }, rememberMe: boolean) => {
+	const saveUserSession = (
+		userInfo: {
+			user: UserType
+			token: string
+		},
+		rememberMe: boolean
+	) => {
 		setCurrentUser({
 			...userInfo,
 			token: undefined,
 		})
 		localStorage.setItem('auth_token', userInfo.token)
 		if (rememberMe) {
-			localStorage.setItem('saved_user', userInfo.user_name)
+			localStorage.setItem('saved_user', userInfo.user.user_name)
 		} else {
 			localStorage.removeItem('saved_user')
 		}

@@ -22,7 +22,7 @@ export const LoginPage = () => {
 		onChange: setValue,
 	})
 	const userLogin = useUserLogin({
-		onSuccess: (userInfo: UserType & { token: string }) => {
+		onSuccess: (userInfo: { user: UserType; token: string }) => {
 			saveUserSession(userInfo, value.remember_me)
 		},
 		onError: (errors: any) => {

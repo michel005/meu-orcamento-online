@@ -18,7 +18,7 @@ export const ProductPage = () => {
 
 	const apiData = pageData.data.customer ? api.data || [] : []
 
-	const allStatus = ['Disponível', 'Reservado', 'Vendido', 'Devolvido']
+	const allStatus = ['AVAILABLE', 'Reservado', 'Vendido', 'Devolvido']
 
 	const refreshPage = () => {
 		setSelectedCards([])
@@ -53,7 +53,16 @@ export const ProductPage = () => {
 						valueRender={(x) => (
 							<div className={style.selectValueRender}>
 								<UserPicture size="28px" picture={x.picture} name={x.full_name} />
-								{x.full_name}
+								<p>{x.full_name}</p>
+							</div>
+						)}
+						optionValueRender={(x) => (
+							<div className={style.selectValueRender}>
+								<UserPicture size="36px" picture={x.picture} name={x.full_name} />
+								<div className={style.nameAndEmail}>
+									<b>{x.full_name}</b>
+									<p>{x.email}</p>
+								</div>
 							</div>
 						)}
 						value={pageData.data.customer}

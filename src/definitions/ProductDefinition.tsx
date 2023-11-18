@@ -49,7 +49,7 @@ export const ProductDefinition = (
 			valueRender: (value) => (
 				<>
 					<UserPicture picture={value?.picture} name={value?.name} size="28px" />
-					{value?.name}0 {!!value?.person_type && <>({value?.person_type})</>}
+					{value?.name}0 {value?.person_type && <>({value?.person_type})</>}
 				</>
 			),
 			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,

@@ -1,7 +1,7 @@
 @import '../../../keyframe';
 @import '../../../utils';
 
-.customerFormSidebar {
+.customerForm {
 	background-color: #1119;
 	backdrop-filter: blur(4px);
 	content: '';
@@ -25,6 +25,36 @@
 	position: fixed;
 	translate: -50% -50%;
 	transition: all 0.25s;
+}
+
+.adminInfo {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.created,
+.updated {
+	color: #fff6;
+	font-size: 14px;
+}
+
+.favoriteButton {
+	color: #ccc !important;
+	font-size: 24px;
+	padding-inline: 7px;
+
+	&:hover {
+		scale: 1.2;
+	}
+
+	&:active {
+		scale: 1;
+	}
+
+	&[data-favorite='true'] {
+		color: red !important;
+	}
 }
 
 .formContent {
@@ -151,7 +181,11 @@
 	}
 }
 
-@include tablet {
+@include desktopSmall {
+	.adminInfo {
+		display: none;
+	}
+
 	.sidebarContent {
 		height: 100%;
 		inset-block-start: 0;

@@ -29,6 +29,16 @@
 	gap: 10px;
 }
 
+.nameAndEmail {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	p {
+		color: #aaa;
+	}
+}
+
 .pageHeader {
 	background-color: #222;
 	display: flex;

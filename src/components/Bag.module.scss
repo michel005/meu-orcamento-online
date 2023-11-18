@@ -157,17 +157,9 @@
 		}
 
 		span {
-			display: initial;
-		}
-
-		div:nth-child(3) {
 			display: flex;
-			inset-inline-end: 14px;
-			position: absolute;
-		}
-
-		&[data-have-bag='true'] {
-			padding-right: 50px;
+			flex-grow: 1;
+			text-align: left;
 		}
 	}
 }

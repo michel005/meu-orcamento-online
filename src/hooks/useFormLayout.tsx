@@ -19,83 +19,20 @@ import { NumberUtils } from '../utils/NumberUtils'
 import { SelectInput } from '../components/inputs/SelectInput'
 import { useForm } from './useForm'
 import { useMessage } from './useMessage'
+import { PictureField } from '../components/inputs/PictureField'
 
 const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
-	const { message } = useMessage()
-	const ref = useRef(null)
 	return (
-		<div
-			data-field={field}
-			className={style.pictureField}
-			style={{ width: fieldDefinition.size || '150px' }}
-		>
-			<UserPicture
-				className={style.picture}
-				onClick={
-					!disableAll && !fieldDefinition.disabled
-						? () => {
-								ref.current.click()
-						  }
-						: undefined
-				}
-				picture={value?.[field]}
-				placeholder={
-					fieldDefinition.placeholder ||
-					(!!fieldDefinition.pictureName
-						? undefined
-						: !value[field] && 'Sem Imagem Selecionada')
-				}
-				size={fieldDefinition.size || '150px'}
-				type={fieldDefinition.pictureType}
-				name={fieldDefinition.pictureName}
-				randomId={Math.random()}
-			/>
-			{!disableAll && !fieldDefinition.disabled && (
-				<div className={style.pictureOptions}>
-					{value[field] ? (
-						<Button
-							leftIcon="close"
-							onClick={() => {
-								if (!disableAll && !fieldDefinition.disabled) {
-									value[field] = null
-									onChange({ ...value })
-								}
-							}}
-						/>
-					) : (
-						<Button
-							leftIcon="search"
-							onClick={() => {
-								if (!disableAll && !fieldDefinition.disabled) {
-									ref.current.click()
-								}
-							}}
-						/>
-					)}
-				</div>
-			)}
-			<input
-				ref={ref}
-				style={{ display: 'none' }}
-				type="file"
-				accept="image/*"
-				onChange={(event) => {
-					if (event.target.files?.[0]) {
-						FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
-							if (!base64.startsWith('data:image')) {
-								message(
-									'Arquivo inválido!',
-									'O arquivo informado não é uma imagem.'
-								)
-								return
-							}
-							value[field] = base64
-							onChange({ ...value })
-						})
-					}
-				}}
-			/>
-		</div>
+		<PictureField
+			field={field}
+			value={value}
+			onChange={onChange}
+			disabled={disableAll || fieldDefinition.disabled}
+			placeholder={fieldDefinition.placeholder}
+			type={fieldDefinition.pictureType}
+			name={fieldDefinition.pictureName}
+			size={fieldDefinition.size}
+		/>
 	)
 }
 const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors, disableAll }) => {
@@ -140,10 +77,12 @@ const SelectField = ({ field, fieldDefinition, value, onChange, errors, disableA
 				onChange({ ...value })
 			}}
 			options={fieldDefinition.options}
+			optionsPosition={fieldDefinition.optionsPosition}
 			idModifier={fieldDefinition.idModifier || ((value) => value[0])}
 			valueRender={fieldDefinition.valueRender || ((value) => <>{value[1]}</>)}
 			optionValueRender={fieldDefinition.optionValueRender}
 			placeholder={fieldDefinition.placeholder}
+			multiple={fieldDefinition.multiple}
 		/>
 	)
 }
@@ -243,6 +182,7 @@ export type useFormDefinitionType = {
 	info?: any
 	disabled?: boolean
 	size?: string
+	multiple?: boolean
 	subForm?: useFormLayoutDefinitionType
 }
 
@@ -371,6 +311,7 @@ export const useFormLayout = <Entity,>({
 	}
 
 	return {
+		errors,
 		setErrors,
 		getField,
 		setDisableAll,

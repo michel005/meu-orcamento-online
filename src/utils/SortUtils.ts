@@ -24,4 +24,8 @@ export class SortUtils {
 		}
 		return 0
 	}
+
+	static group(values: any[]) {
+		return Array.from(new Map(values.map((x) => [x, null])).keys())
+	}
 }

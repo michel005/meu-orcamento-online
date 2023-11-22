@@ -77,7 +77,7 @@ export const CustomerCard = ({ customer, onClose }) => {
 										leftIcon="shopping_bag"
 										onClick={() => {
 											setShow(false)
-											setProp('customer', () => customer.id)
+											setProp('seller_id', () => customer.id)
 											navigate('/products')
 										}}
 									>

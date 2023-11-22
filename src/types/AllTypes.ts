@@ -56,16 +56,25 @@ export type CustomerType = {
 
 export type ProductType = {
 	id?: string
-	customer_id?: string
+	seller_id?: string
 	created?: string
 	updated?: string
 	picture?: string
 	code?: string
-	qrcode?: string
-	name?: string
+	title?: string
 	description?: string
 	categories?: string[]
-	hashtags?: string
+	customer?: CustomerType
 	price?: number
 	status?: string
+	product_waiting_list?: WaitingListType[] | null
+}
+
+export type WaitingListType = {
+	id?: string
+	product_id?: string | null
+	customer_id?: string | null
+	created?: string | null
+	product?: ProductType | null
+	customer?: CustomerType | null
 }

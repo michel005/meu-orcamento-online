@@ -1,0 +1,31 @@
+.pictureField {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 14px;
+	height: 100%;
+	padding-block: 14px;
+	position: relative;
+	width: 100% !important;
+}
+
+.pictureOptions {
+	display: flex;
+	flex-direction: row;
+	gap: 7px;
+	inset-block-end: 14px;
+	inset-inline-end: 14px;
+	justify-content: center;
+	position: absolute;
+
+	button {
+		background-color: #333;
+		border-radius: 50%;
+		z-index: 1;
+
+		&:hover {
+			background-color: #222;
+		}
+	}
+}

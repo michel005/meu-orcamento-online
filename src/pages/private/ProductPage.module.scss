@@ -1,5 +1,7 @@
 @import '../../utils';
 
+$templateWidth: 1fr;
+
 .productPage {
 	--product-card-width: 250px;
 
@@ -43,7 +45,6 @@
 	background-color: #222;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
 	gap: 14px;
 	inset-block-start: 0;
 	inset-inline-start: 0;
@@ -61,97 +62,37 @@
 		}
 	}
 
-	hr {
+	> hr {
 		background-color: #fff2;
-		display: flex;
-		height: var(--input-height);
+		height: 100%;
 		margin-block: 0;
 		width: 2px;
 	}
 }
 
-.statusHeader {
-	align-items: flex-end;
-	border-bottom: 1px solid #ccc;
-	display: flex;
-	flex-direction: row;
-	gap: 10px;
-	margin-block: 28px 7px;
-	margin-inline: 14px;
-	padding-bottom: 7px;
-
-	input {
-		align-self: center;
-		cursor: pointer;
-		height: 18px;
-		width: 18px;
-	}
-
-	h1 {
-		flex-grow: 1;
-	}
-
-	span {
-		color: #333;
-		font-size: 28px;
-
-		&::before {
-			content: 'R$';
-			font-size: 0.5em;
-		}
-	}
-}
-
 .pageContent {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 	gap: 21px;
+	grid-template-columns: repeat(6, $templateWidth);
 	justify-content: center;
 	padding: 14px;
 }
 
-.selectCustomer {
-	align-items: center;
-	display: flex;
-	flex-direction: column;
-	gap: 14px;
-	justify-content: center;
-	height: 100%;
-
-	h1 {
-		color: #999;
-		padding-inline: 21px;
-		text-align: center;
-	}
-}
-
 @include desktopFullHD {
-	.productPage {
-		.pageContent {
-			grid-template-columns: repeat(6, 1fr);
-		}
+	.pageContent {
+		grid-template-columns: repeat(5, $templateWidth);
 	}
 }
 
 @include desktopMediumHD {
-	.productPage {
-		.pageContent {
-			grid-template-columns: repeat(4, 1fr);
-		}
+	.pageContent {
+		grid-template-columns: repeat(4, $templateWidth);
 	}
 }
 
 @include desktopHD {
-	.productPage {
-		.pageContent {
-			grid-template-columns: repeat(3, 1fr);
-		}
-	}
-}
-
-@include desktopSmall {
 	.pageContent {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(3, $templateWidth);
 	}
 
 	.pageHeader {
@@ -161,20 +102,20 @@
 			}
 		}
 	}
+}
 
-	.customerSelect {
-		width: 100%;
-	}
-
-	.faded {
-		display: none;
+@include desktopSmall {
+	.pageContent {
+		grid-template-columns: repeat(2, $templateWidth);
 	}
 }
 
 @include tablet {
-	.productPage {
-		.pageContent {
-			grid-template-columns: repeat(1, 1fr);
-		}
+	.pageContent {
+		grid-template-columns: repeat(1, $templateWidth);
+	}
+
+	.faded {
+		display: none;
 	}
 }

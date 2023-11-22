@@ -3,57 +3,67 @@ import style from './ProductCard.module.scss'
 import { UserPicture } from '../../../components/UserPicture'
 import { useForm } from '../../../hooks/useForm'
 import { ProductType } from '../../../types/AllTypes'
-import { Button } from '../../../components/Button'
 import { NumberUtils } from '../../../utils/NumberUtils'
+import { ProductStatus } from '../../../constants/ProductStatus'
 
-export const ProductCard = ({ product, onClose, selected = false, onSelect = (x) => {} }) => {
+export const ProductCard = ({ product, onClose }: { product: ProductType; onClose: any }) => {
 	const { show } = useForm<ProductType>('product')
 
+	const priceValue = NumberUtils.numberToCurrency(product.price).replace('R$', '').trim()
+
 	return (
-		<div className={style.productCard} data-selected={!!selected}>
+		<div className={style.productCard} data-status={product.status}>
 			<div className={style.productPicture}>
 				<UserPicture
-					className={style.userPicture}
+					className={style.picture}
 					picture={product.picture}
 					name={product.title}
 					size="170px"
 					type="square"
+					randomId={Math.random()}
 				/>
-				<div className={style.selectCard}>
-					<input
-						type="checkbox"
-						checked={selected}
-						onChange={(event) => {
-							onSelect(event.target.checked)
-						}}
-					/>
-				</div>
+			</div>
+			<div className={style.status}>
+				{ProductStatus[product.status]} <div className={style.code}>{product.code}</div>
 			</div>
 			<div className={style.productInfo}>
-				<h3 title={product.title}>{product.title}</h3>
+				<a
+					onClick={() => {
+						show(product, onClose)
+					}}
+				>
+					<h3 title={product.title}>{product.title}</h3>
+				</a>
 				<small>{product.description}</small>
-				<div className={style.customerAndPrice}>
-					{product.customer ? (
+				<div className={style.persons}>
+					<div className={style.seller}>
 						<UserPicture
+							picture={product.customer.picture}
+							name={`Vendedor: ${product.customer.full_name}`}
 							size="36px"
-							picture={product?.customer?.picture}
-							name={product?.customer?.full_name}
+							randomId={Math.random()}
 						/>
-					) : (
-						<div style={{ flexGrow: 1 }} />
-					)}
-					<h2 className={style.price}>{NumberUtils.numberToCurrency(product.price)}</h2>
+					</div>
+					<div className={style.waitingList}>
+						{(product.product_waiting_list || []).map((x) => {
+							return (
+								<UserPicture
+									picture={x.customer.picture}
+									name={x.customer.full_name}
+									size="36px"
+									randomId={Math.random()}
+								/>
+							)
+						})}
+					</div>
 				</div>
+				<hr />
+				<h1 className={style.price}>
+					<small>R$</small>
+					{priceValue.split(',')[0]}
+					<span>{priceValue.split(',')[1]}</span>
+				</h1>
 			</div>
-			<hr />
-			<Button
-				className={style.showDetailsButton}
-				onClick={() => {
-					show(product, onClose)
-				}}
-			>
-				Mostrar Detalhes
-			</Button>
 		</div>
 	)
 }

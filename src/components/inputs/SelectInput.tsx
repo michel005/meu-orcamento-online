@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { Field } from '../Field'
 import { ButtonGhost } from '../Button'
 import style from './SelectInput.module.scss'
 import fieldStyle from '../Field.module.scss'
-import { DateUtils } from '../../utils/DateUtils'
+import { SortUtils } from '../../utils/SortUtils'
 
 export const SelectInput = ({
 	label = null,
@@ -16,15 +16,21 @@ export const SelectInput = ({
 	idModifier = (option: any) => option?.id,
 	valueRender = (option: any) => option,
 	optionValueRender = undefined,
+	optionsPosition = 'bottom',
+	numberOfOptions = 5,
 	placeholder = null,
 	error = null,
 	className = null,
 	field = null,
+	multiple = false,
 }) => {
 	const [showOptions, setShowOptions] = useState(false)
 	const [filter, setFilter] = useState(';')
+	const optionsRef = useRef<HTMLDivElement>(null)
 
-	const currentOption = options.find((x) => idModifier(x) === value)
+	const currentOption = multiple
+		? (value || []).length > 0
+		: options.find((x) => idModifier(x) === value)
 
 	const filteredOptions = useMemo(() => {
 		const filters = filter.split(';')
@@ -50,11 +56,12 @@ export const SelectInput = ({
 				className={`${style.selectInput} ${className} ${
 					showOptions ? style.showOptions : ''
 				}`}
+				data-options-position={optionsPosition}
 				label={label}
 				leftSide={leftSide}
 				rightSide={
-					<div className={style.specialOptions}>
-						{!disabled && (
+					!disabled && (
+						<div className={style.specialOptions}>
 							<>
 								{value && currentOption && (
 									<ButtonGhost
@@ -62,6 +69,7 @@ export const SelectInput = ({
 										leftIcon="close"
 										onClick={() => {
 											if (!disabled) {
+												setShowOptions(false)
 												setFilter('')
 												onChange(null)
 											}
@@ -81,8 +89,8 @@ export const SelectInput = ({
 									}}
 								/>
 							</>
-						)}
-					</div>
+						</div>
+					)
 				}
 				info={info}
 				input={() => {
@@ -103,17 +111,23 @@ export const SelectInput = ({
 									}
 								}}
 							>
-								{value && currentOption ? (
-									<>{valueRender(currentOption)}</>
+								{multiple ? (
+									<>{(value || []).length} selecionado(s)</>
 								) : (
-									<div className={style.placeholder}>
-										{placeholder || 'Sem valor selecionado'}
-									</div>
+									<>
+										{value && currentOption ? (
+											<>{valueRender(currentOption)}</>
+										) : (
+											<div className={style.placeholder}>
+												{placeholder || 'Sem valor selecionado'}
+											</div>
+										)}
+									</>
 								)}
 							</div>
 							{showOptions && (
-								<div className={style.options}>
-									{options.length > 3 && (
+								<div className={style.options} ref={optionsRef}>
+									{options.length > numberOfOptions && (
 										<div className={style.quickSearch}>
 											<Field
 												field="filter"
@@ -137,10 +151,40 @@ export const SelectInput = ({
 											<div
 												key={optionKey}
 												className={style.optionRender}
-												data-selected={idModifier(option) === value}
+												data-selected={
+													multiple
+														? (value || []).includes(idModifier(option))
+														: idModifier(option) === value
+												}
 												onClick={() => {
-													onChange(idModifier(option))
-													setShowOptions(false)
+													if (multiple) {
+														if (
+															value &&
+															value.includes(idModifier(option))
+														) {
+															const futureValue = [
+																...value.filter(
+																	(x: any) =>
+																		x !== idModifier(option)
+																),
+															]
+															onChange(
+																futureValue.length === 0
+																	? null
+																	: futureValue
+															)
+														} else {
+															onChange(
+																SortUtils.group([
+																	...(value || []),
+																	idModifier(option),
+																])
+															)
+														}
+													} else {
+														onChange(idModifier(option))
+														setShowOptions(false)
+													}
 												}}
 											>
 												{!!optionValueRender

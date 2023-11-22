@@ -12,7 +12,12 @@ export const useApi = (entity: string) => {
 		},
 	}
 
-	const getAll = ({ silently = false, query = {}, onSuccess = (x) => { }, onError = (x) => { } } = {}) => {
+	const getAll = ({
+		silently = false,
+		query = {},
+		onSuccess = (x) => {},
+		onError = (x) => {},
+	} = {}) => {
 		if (!silently) {
 			setLoading(true)
 		}
@@ -36,7 +41,7 @@ export const useApi = (entity: string) => {
 				}
 			})
 	}
-	const getById = ({ id, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+	const getById = ({ id, silently = false, onSuccess = (x) => {}, onError = (x) => {} }) => {
 		if (!silently) {
 			setLoading(true)
 		}
@@ -55,14 +60,13 @@ export const useApi = (entity: string) => {
 				}
 			})
 	}
-	const create = ({ data, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+	const create = ({ data, silently = false, onSuccess = (x) => {}, onError = (x) => {} }) => {
 		if (!silently) {
 			setLoading(true)
 		}
 		axios
 			.post(`${entity}`, data, header)
 			.then((response) => {
-				setData(response.data)
 				onSuccess(response.data)
 			})
 			.catch((...x) => {
@@ -74,14 +78,13 @@ export const useApi = (entity: string) => {
 				}
 			})
 	}
-	const update = ({ data, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+	const update = ({ data, silently = false, onSuccess = (x) => {}, onError = (x) => {} }) => {
 		if (!silently) {
 			setLoading(true)
 		}
 		axios
 			.put(`${entity}`, data, header)
 			.then((response) => {
-				setData(response.data)
 				onSuccess(response.data)
 			})
 			.catch((...x) => {
@@ -93,12 +96,40 @@ export const useApi = (entity: string) => {
 				}
 			})
 	}
-	const remove = ({ id, silently = false, onSuccess = (x) => { }, onError = (x) => { } }) => {
+	const remove = ({ id, silently = false, onSuccess = (x) => {}, onError = (x) => {} }) => {
 		if (!silently) {
 			setLoading(true)
 		}
 		axios
 			.delete(`${entity}/${id}`, header)
+			.then((...x) => {
+				onSuccess(...x)
+			})
+			.catch((...x) => {
+				onError(...x)
+			})
+			.finally(() => {
+				if (!silently) {
+					setLoading(false)
+				}
+			})
+	}
+	const removeByQuery = ({
+		query,
+		silently = false,
+		onSuccess = (x) => {},
+		onError = (x) => {},
+	}) => {
+		if (!silently) {
+			setLoading(true)
+		}
+		axios
+			.delete(
+				`${entity}/?${Object.keys(query)
+					.map((x) => `${x}=${query[x]}`)
+					.join('&')}`,
+				header
+			)
 			.then((...x) => {
 				onSuccess(...x)
 			})
@@ -119,5 +150,6 @@ export const useApi = (entity: string) => {
 		create,
 		update,
 		remove,
+		removeByQuery,
 	}
 }

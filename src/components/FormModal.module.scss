@@ -1,0 +1,69 @@
+@import '../keyframe';
+@import '../utils';
+
+.formModal {
+	align-items: center;
+	background-color: #1119;
+	backdrop-filter: blur(4px);
+	content: '';
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	height: calc(100% - var(--private-navbar-height));
+	inset-block-start: var(--private-navbar-height);
+	inset-inline-start: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 3;
+}
+
+.formModalContent {
+	background-color: #fff;
+	border-radius: 14px;
+	display: flex;
+	flex-direction: column;
+	max-height: 800px;
+	position: relative;
+	transition: all 0.25s;
+	z-index: 4;
+}
+
+.closeButton {
+	background-color: #1113 !important;
+	border-radius: 0 14px 0 0;
+	height: var(--input-height);
+	padding: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: var(--input-height);
+	z-index: 2;
+
+	&:hover {
+		background-color: #1116 !important;
+		color: #fff;
+	}
+}
+
+@include desktopHD {
+	.formModalContent {
+		width: 800px;
+		max-width: 100%;
+	}
+}
+
+@include tablet {
+	.formModalContent {
+		border-radius: 0;
+		height: 100%;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		max-height: none;
+		translate: none;
+		width: 100%;
+	}
+
+	.closeButton {
+		border-radius: 0;
+	}
+}

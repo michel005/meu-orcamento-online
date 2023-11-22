@@ -121,7 +121,6 @@ export const CustomerPage = () => {
 							/>
 						)}
 					>
-						<hr />
 						<Button
 							leftIcon="person"
 							rightBag={api.data.filter((x) => x.person_type === 'PF').length}

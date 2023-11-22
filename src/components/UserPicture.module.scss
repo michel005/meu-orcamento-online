@@ -34,6 +34,16 @@
 			}
 		}
 	}
+
+	&[data-full-width='true'] {
+		img {
+			width: 100%;
+		}
+
+		.initialLetters {
+			width: 100%;
+		}
+	}
 }
 
 img {

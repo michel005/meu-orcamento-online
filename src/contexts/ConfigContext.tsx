@@ -40,7 +40,7 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 			pj: true,
 		},
 		product: {
-			customer: null,
+			seller_id: null,
 		},
 	})
 	const [onCloseForm, setOnCloseForm] = useState({})

@@ -12,23 +12,27 @@ export const UserPicture = ({
 	placeholder = undefined,
 	size = '50px',
 	randomId = null,
+	fullWidth = false,
+	...props
 }) => {
 	const [fallbackImage, setFallbackImage] = useState(null)
 
 	return (
 		<div
+			{...props}
 			title={name}
 			onClick={onClick}
 			className={`${style.userPicture} ${className}`}
-			style={{ '--size': size } as CSSProperties}
+			style={{ '--size': size, ...props.style } as CSSProperties}
 			data-format={type}
 			data-have-onclick={!!onClick}
+			data-full-width={fullWidth}
 		>
 			{picture && !fallbackImage ? (
 				<img
 					src={
 						fallbackImage || picture.startsWith('http')
-							? `${picture}?randomId=${randomId}`
+							? picture //`${picture}?randomId=${randomId}`
 							: picture
 					}
 					onError={(e) => {

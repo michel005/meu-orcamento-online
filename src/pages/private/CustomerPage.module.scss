@@ -68,30 +68,24 @@ $templateWidth: 1fr;
 }
 
 @include desktopFullHD {
-	.customerPage {
-		.pageContent {
-			grid-template-columns: repeat(6, $templateWidth);
-		}
+	.pageContent {
+		grid-template-columns: repeat(6, $templateWidth);
 	}
 }
 
 @include desktopMediumHD {
-	.customerPage {
-		.pageContent {
-			grid-template-columns: repeat(4, $templateWidth);
-		}
+	.pageContent {
+		grid-template-columns: repeat(4, $templateWidth);
 	}
 }
 
 @include desktopHD {
-	.customerPage {
-		.pageContent {
-			grid-template-columns: repeat(3, $templateWidth);
-		}
+	.pageContent {
+		grid-template-columns: repeat(3, $templateWidth);
 	}
 
 	.pageHeader {
-		button {
+		> button {
 			span {
 				display: none;
 			}
@@ -100,18 +94,14 @@ $templateWidth: 1fr;
 }
 
 @include desktopSmall {
-	.customerPage {
-		.pageContent {
-			grid-template-columns: repeat(2, $templateWidth);
-		}
+	.pageContent {
+		grid-template-columns: repeat(2, $templateWidth);
 	}
 }
 
 @include tablet {
-	.customerPage {
-		.pageContent {
-			grid-template-columns: repeat(1, $templateWidth);
-		}
+	.pageContent {
+		grid-template-columns: repeat(1, $templateWidth);
 	}
 
 	.faded {

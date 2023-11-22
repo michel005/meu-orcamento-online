@@ -12,6 +12,7 @@ export const Field = ({
 	disabled,
 	className,
 	field,
+	...props
 }: {
 	label?: string
 	input?: (setFocus: any, id: string) => any
@@ -29,6 +30,7 @@ export const Field = ({
 
 	return (
 		<div
+			{...props}
 			data-field={field}
 			className={`${style.field} ${className}`}
 			data-checkbox={isCheckbox}

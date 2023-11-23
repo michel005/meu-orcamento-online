@@ -1,6 +1,7 @@
 import React, {
 	Dispatch,
 	SetStateAction,
+	useCallback,
 	useContext,
 	useEffect,
 	useMemo,
@@ -208,107 +209,110 @@ export const useFormLayout = <Entity,>({
 	const [disableAll, setDisableAll] = useState(disable || false)
 	const [errors, setErrors] = useState(injectErrors || {})
 
-	const getField = (field: string, overrideProps = {}): any => {
-		if (field === 'error') {
-			return (
-				<>
-					{errors?.['error'] && (
-						<Error
-							message={errors?.['error']?.message}
-							code={errors?.['error']?.code}
-						/>
-					)}
-				</>
-			)
-		}
-		const fieldDefinition = { ...(definition[field] || {}), ...overrideProps }
-		const id = Math.random().toString()
-		if (['text', 'date', 'password', 'number'].includes(fieldDefinition.type || 'text')) {
-			return (
-				<GeneralField
-					field={field}
-					fieldDefinition={fieldDefinition}
-					value={value}
-					onChange={onChange}
-					errors={errors}
-					disableAll={disableAll}
-				/>
-			)
-		} else if (fieldDefinition.type === 'currency') {
-			return (
-				<CurrencyField
-					field={field}
-					fieldDefinition={fieldDefinition}
-					value={value}
-					onChange={onChange}
-					errors={errors}
-					disableAll={disableAll}
-				/>
-			)
-		} else if (['select'].includes(fieldDefinition.type)) {
-			return (
-				<SelectField
-					field={field}
-					fieldDefinition={fieldDefinition}
-					value={value}
-					onChange={onChange}
-					errors={errors}
-					disableAll={disableAll}
-				/>
-			)
-		} else if (['checkbox'].includes(fieldDefinition.type)) {
-			return (
-				<CheckboxField
-					id={id}
-					field={field}
-					fieldDefinition={fieldDefinition}
-					value={value}
-					onChange={onChange}
-					errors={errors}
-					disableAll={disableAll}
-				/>
-			)
-		} else if (['file'].includes(fieldDefinition.type)) {
-			return (
-				<FileField
-					field={field}
-					fieldDefinition={fieldDefinition}
-					value={value}
-					onChange={onChange}
-					disableAll={disableAll}
-				/>
-			)
-		} else if (['subForm'].includes(fieldDefinition.type)) {
-			const { getField: getSubFormField, setDisableAll: setDisableAllSubForm } =
-				useFormLayout({
-					definition: fieldDefinition.subForm,
-					value: value?.[field],
-					onChange: (v) => {
-						value[field] = { ...v }
-						onChange({ ...value })
-					},
-					injectErrors: errors?.[field],
-					disable: disableAll,
-				})
-			useEffect(() => {
-				setDisableAllSubForm(disableAll)
-			}, [disableAll])
-			return {
-				getField: getSubFormField,
+	const getField = useCallback(
+		(field: string, overrideProps = {}): any => {
+			if (field === 'error') {
+				return (
+					<>
+						{errors?.['error'] && (
+							<Error
+								message={errors?.['error']?.message}
+								code={errors?.['error']?.code}
+							/>
+						)}
+					</>
+				)
 			}
-		} else {
-			return (
-				<GeneralField
-					field={field}
-					fieldDefinition={fieldDefinition}
-					value={value}
-					onChange={onChange}
-					errors={errors}
-					disableAll={disableAll}
-				/>
-			)
-		}
-	}
+			const fieldDefinition = { ...(definition[field] || {}), ...overrideProps }
+			const id = Math.random().toString()
+			if (['text', 'date', 'password', 'number'].includes(fieldDefinition.type || 'text')) {
+				return (
+					<GeneralField
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						errors={errors}
+						disableAll={disableAll}
+					/>
+				)
+			} else if (fieldDefinition.type === 'currency') {
+				return (
+					<CurrencyField
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						errors={errors}
+						disableAll={disableAll}
+					/>
+				)
+			} else if (['select'].includes(fieldDefinition.type)) {
+				return (
+					<SelectField
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						errors={errors}
+						disableAll={disableAll}
+					/>
+				)
+			} else if (['checkbox'].includes(fieldDefinition.type)) {
+				return (
+					<CheckboxField
+						id={id}
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						errors={errors}
+						disableAll={disableAll}
+					/>
+				)
+			} else if (['file'].includes(fieldDefinition.type)) {
+				return (
+					<FileField
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						disableAll={disableAll}
+					/>
+				)
+			} else if (['subForm'].includes(fieldDefinition.type)) {
+				const { getField: getSubFormField, setDisableAll: setDisableAllSubForm } =
+					useFormLayout({
+						definition: fieldDefinition.subForm,
+						value: value?.[field],
+						onChange: (v) => {
+							value[field] = { ...v }
+							onChange({ ...value })
+						},
+						injectErrors: errors?.[field],
+						disable: disableAll,
+					})
+				useEffect(() => {
+					setDisableAllSubForm(disableAll)
+				}, [disableAll])
+				return {
+					getField: getSubFormField,
+				}
+			} else {
+				return (
+					<GeneralField
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						errors={errors}
+						disableAll={disableAll}
+					/>
+				)
+			}
+		},
+		[value, definition]
+	)
 
 	return {
 		errors,

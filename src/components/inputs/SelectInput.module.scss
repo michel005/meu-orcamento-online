@@ -90,6 +90,7 @@
 	gap: 10px;
 	padding: 10px 14px;
 	transition: all 0.25s;
+	user-select: none;
 	white-space: nowrap;
 }
 
@@ -133,11 +134,11 @@
 	border: 1px solid var(--input-border-color);
 	display: flex;
 	flex-direction: column;
-	inset-inline-start: -0.5px;
-	max-height: 220px;
+	inset-inline-end: 0;
+	max-height: 250px;
+	min-width: calc(100% + 1.5px);
 	overflow: auto;
 	position: absolute;
-	width: calc(100% + 1.6px);
 }
 
 [data-context='bag'] {

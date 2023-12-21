@@ -1,176 +1,267 @@
 import React, { useEffect, useState } from 'react'
 import style from './ProductPage.module.scss'
-import { Button, ButtonGhost, ButtonWhite } from '../../components/Button'
 import { usePage } from '../../hooks/usePage'
-import { ProductType } from '../../types/AllTypes'
+import { ProductType, WaitingListType } from '../../types/AllTypes'
 import { useApi } from '../../hooks/useApi'
 import { ProductCard } from './products/ProductCard'
-import { SelectInput } from '../../components/inputs/SelectInput'
-import { UserPicture } from '../../components/UserPicture'
-import { CustomerForm } from './customers/CustomerForm'
 import { ProductForm } from './products/ProductForm'
-import { ProductStatus } from '../../constants/ProductStatus'
+import { SortUtils } from '../../utils/SortUtils'
+import { AddProductsInBulkForm } from './products/AddProductsInBulkForm'
+import { useForm } from '../../hooks/useForm'
+import { Button, ButtonSecondary } from '../../components/Button'
 import { useFormLayout } from '../../hooks/useFormLayout'
-import { Bag } from '../../components/Bag'
+import { ProductDefinition } from '../../definitions/ProductDefinition'
+import { useApiData } from '../../hooks/useApiData'
+import { ButtonGroup } from '../../components/ButtonGroup'
+import { Table } from '../../components/Table'
+import { FlexRow } from '../../components/FlexRow'
+import { UserPicture } from '../../components/UserPicture'
+import { ProductStatus } from '../../constants/ProductStatus'
+import { Label } from '../../components/Label'
 
 export const ProductPage = () => {
-	const { api, pageData, form } = usePage<ProductType>('product')
+	const { api, form, apiData, pageData } = usePage<ProductType>('product')
+	const [showFilters, setShowFilters] = useState(false)
+	const bulkForm = useForm('product_bulk')
 	const customerApi = useApi('customer')
-	const [filters, setFilters] = useState({})
-	const filterFields = useFormLayout({
+	const customerApiData = useApiData('customer')
+	const filterFormLayout = useFormLayout({
 		definition: {
-			seller_id: {
-				label: 'Vendedor',
-				type: 'select',
-				options: customerApi.data,
-				idModifier: (x) => x.id,
-				placeholder: 'Nenhum vendedor selecionado',
-				valueRender: (x) => (
-					<div className={style.selectValueRender}>
-						<UserPicture size="28px" picture={x.picture} name={x.full_name} />
-						<p>{x.full_name}</p>
-					</div>
+			general_search: {
+				type: 'text',
+				placeholder: 'Busuqe por nome, descrição, categorias etc.',
+				leftSide: (
+					<ButtonSecondary
+						rightBag={
+							Object.keys(pageData.data).filter(
+								(x) => pageData.data[x] !== null && pageData.data[x] !== undefined
+							).length
+						}
+						style={{ marginRight: '14px' }}
+						leftIcon={showFilters ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+						onClick={() => {
+							setShowFilters((x) => !x)
+						}}
+					>
+						Filtros
+					</ButtonSecondary>
 				),
-				optionValueRender: (x) => (
-					<div className={style.selectValueRender}>
-						<UserPicture size="36px" picture={x.picture} name={x.full_name} />
-						<div className={style.nameAndEmail}>
-							<b>{x.full_name}</b>
-							<p>{x.email}</p>
-						</div>
-					</div>
+				rightSide: (
+					<Button
+						leftIcon="search"
+						onClick={() => {
+							api.getAll({
+								query: pageData.data,
+							})
+						}}
+					>
+						Buscar
+					</Button>
 				),
 			},
+			seller_id: ProductDefinition(null, customerApiData.data).seller_id,
 			status: {
-				label: 'Situação',
-				type: 'select',
-				options: Object.keys(ProductStatus).map((status) => [
-					status,
-					ProductStatus[status],
-				]),
-				idModifier: (value: any) => value[0],
-				valueRender: (value: any) => value[1],
+				...ProductDefinition(null, customerApiData.data).status,
 				multiple: true,
 			},
-			search: {
-				label: 'Busca Geral',
-				type: 'text',
-				placeholder: 'Nome do produto, código ou descrição',
-			},
 		},
-		value: filters,
-		onChange: setFilters,
+		value: pageData.data,
+		onChange: pageData.set,
 	})
 
-	const apiData: ProductType[] = api.data || []
-
-	const refreshPage = (filters = pageData.data) => {
-		const query: any = {}
-		if (filters.seller_id) {
-			query.seller_id = filters.seller_id
-		}
-		if (filters.search) {
-			query.search = filters.search
-		}
-		if (filters.status) {
-			query.status = filters.status
-		}
-		api.getAll({
-			query,
-		})
-	}
-
 	useEffect(() => {
-		refreshPage()
-	}, [pageData.data.seller_id])
-
-	useEffect(() => {
-		if (pageData.data) {
-			setFilters({ ...pageData.data })
-		}
 		customerApi.getAll()
-		form.close()
-		refreshPage()
+		api.getAll({
+			query: pageData.data,
+		})
 	}, [])
 
 	return (
 		<div className={style.productPage}>
 			{form.originalValue && <ProductForm />}
+			{bulkForm.originalValue && <AddProductsInBulkForm />}
 			<div className={style.productPageContent}>
-				<div className={style.pageHeader}>
-					<Button
-						leftIcon="add"
-						onClick={() => {
-							form.show(
-								{
-									status: 'AVAILABLE',
-								},
-								refreshPage
-							)
-						}}
-					>
-						Novo Produto
-					</Button>
-					<hr />
-					<label className={style.faded}>{apiData.length} registro(s)</label>
-					<div style={{ flexGrow: 1 }} />
-					<Bag
-						button={(show, setShow) => (
+				<div className={style.filters}>
+					<section>
+						<Button
+							leftIcon="add"
+							onClick={() => {
+								form.show(
+									{
+										status: 'AVAILABLE',
+									},
+									() => api.getAll()
+								)
+							}}
+						>
+							Novo Produto
+						</Button>
+						<Button
+							leftIcon="add_shopping_cart"
+							onClick={() => {
+								bulkForm.show({}, () => api.getAll())
+							}}
+						>
+							Multiplos Produtos
+						</Button>
+						<ButtonGroup>
 							<Button
-								className={style.showFiltersButton}
-								variationOverride={show ? 'primary' : 'white'}
-								leftIcon="filter_alt"
-								rightBag={
-									pageData.data
-										? Object.keys(pageData.data).filter(
-												(x) => pageData.data?.[x]
-										  ).length
-										: 0
+								leftIcon="table"
+								variationOverride={
+									pageData.data?.view === 'table' ? 'primary' : 'secondary'
 								}
 								onClick={() => {
-									setShow((x) => !x)
+									pageData.setProp('view', () => 'table')
 								}}
 							/>
-						)}
-						arrowPosition="top-right"
-					>
-						{(_: unknown, setShow: any) => (
-							<>
-								{filterFields.getField('seller_id')}
-								{filterFields.getField('search')}
-								{filterFields.getField('status')}
-								<hr />
-								<Button
-									disabled={
-										JSON.stringify(pageData.data) === JSON.stringify(filters)
-									}
-									leftIcon="search"
-									onClick={() => {
-										pageData.set({ ...filters })
-										refreshPage(filters)
-										setShow(false)
-									}}
-								>
-									Buscar
-								</Button>
-							</>
-						)}
-					</Bag>
-					<hr />
-					<Button
-						leftIcon="refresh"
-						onClick={() => {
-							refreshPage()
-						}}
-					/>
+							<Button
+								leftIcon="cards"
+								variationOverride={
+									pageData.data?.view === 'cards' ? 'primary' : 'secondary'
+								}
+								onClick={() => {
+									pageData.setProp('view', () => 'cards')
+								}}
+							/>
+						</ButtonGroup>
+						{filterFormLayout.getField('general_search')}
+					</section>
+					{showFilters && (
+						<div className={style.allFilters}>
+							{filterFormLayout.getField('seller_id')}
+							{filterFormLayout.getField('status')}
+						</div>
+					)}
 				</div>
-				<div className={style.pageContent}>
-					{apiData.map((product) => {
-						return (
-							<ProductCard key={product.id} product={product} onClose={refreshPage} />
-						)
-					})}
-				</div>
+				{pageData.data.view === 'table' && (
+					<div className={style.pageContent}>
+						<Table
+							definition={{
+								created: {
+									header: 'Data',
+									type: 'date',
+									valueOverride: (row: ProductType) => {
+										return row.created.split(' ')[0]
+									},
+									width: '150px',
+								},
+								title: {
+									header: 'Produto',
+									type: 'string',
+									valueOverride: (row: ProductType) => {
+										return (
+											<>
+												<UserPicture
+													picture={row.picture}
+													name={row.title}
+													type="square"
+													size="32px"
+												/>
+												<a
+													onClick={() => {
+														form.show(row, () => api.getAll())
+													}}
+												>
+													{row.title}
+												</a>
+											</>
+										)
+									},
+								},
+								seller_id: {
+									header: 'Vendedor',
+									type: 'string',
+									valueOverride: (row: ProductType) => {
+										return (
+											<>
+												{row.customer.picture && (
+													<UserPicture
+														picture={row.customer.picture}
+														name={row.customer.full_name}
+														size="32px"
+													/>
+												)}
+												{row.customer.full_name}
+											</>
+										)
+									},
+								},
+								categories: {
+									header: 'Categorias',
+									type: 'string',
+									valueOverride: (row: ProductType) => {
+										return (
+											<>
+												{(row.categories || '')
+													.split(';')
+													.filter((x) => x && x !== '')
+													.sort()
+													.map((category) => {
+														return <Label>{category}</Label>
+													})}
+											</>
+										)
+									},
+								},
+								waiting_list: {
+									header: 'Lista de Espera',
+									type: 'string',
+									valueOverride: (row: ProductType) => {
+										return (
+											<>
+												{row.product_waiting_list.map(
+													(waitingList: WaitingListType) => {
+														return (
+															<UserPicture
+																picture={
+																	waitingList.customer.picture
+																}
+																name={
+																	waitingList.customer.full_name
+																}
+																size="32px"
+															/>
+														)
+													}
+												)}
+											</>
+										)
+									},
+								},
+								price: {
+									alignment: 'right',
+									header: 'Valor',
+									type: 'currency',
+									width: '10%',
+								},
+								status: {
+									alignment: 'right',
+									header: 'Situação',
+									type: 'domain',
+									keyValue: Object.keys(ProductStatus).map((x) => [
+										x,
+										ProductStatus[x],
+									]),
+									width: '10%',
+								},
+							}}
+							value={apiData.data}
+						/>
+					</div>
+				)}
+				{pageData.data.view === 'cards' && (
+					<div className={style.pageContent}>
+						{apiData.data.map((product: ProductType) => {
+							return (
+								<ProductCard
+									key={product.id}
+									product={product}
+									onClose={() => api.getAll()}
+								/>
+							)
+						})}
+					</div>
+				)}
 			</div>
 		</div>
 	)

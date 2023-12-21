@@ -6,70 +6,57 @@ $templateWidth: 1fr;
 	--customer-card-width: 250px;
 
 	display: flex;
-	flex-direction: row;
-	height: 100%;
-	width: 100%;
-	position: relative;
-
-	&[data-show-filters='true'] {
-		.allFilters {
-			display: flex;
-		}
-	}
-}
-
-.customerPageContent {
-	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
-	height: 100%;
-	overflow-y: auto;
-}
-
-.pageHeader {
-	background-color: #222;
-	display: flex;
-	flex-direction: row;
 	gap: 14px;
-	inset-block-start: 0;
-	inset-inline-start: 0;
-	padding: 14px 17px;
-	position: sticky;
-	transition: all 0.25s;
-	z-index: 2;
-
-	label {
-		align-self: center;
-		color: #fff;
-
-		&.faded {
-			color: #fff6;
-		}
-	}
-
-	hr {
-		background-color: #fff2;
-		height: 100%;
-		margin-block: 0;
-		width: 2px;
-	}
-}
-
-.importJSONInput {
-	display: none;
+	height: 100%;
+	padding: 14px;
+	position: relative;
+	width: 100%;
 }
 
 .pageContent {
-	display: grid;
-	gap: 21px;
-	grid-template-columns: repeat(7, $templateWidth);
-	justify-content: center;
-	padding: 14px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 14px;
+	justify-content: flex-start;
+	max-height: 100%;
+
+	table {
+		flex-grow: 1;
+	}
+}
+
+.tableFullNameAndEmail {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+
+	a {
+		font-weight: normal !important;
+	}
+
+	p {
+		color: #aaa;
+	}
+}
+
+.favoriteButton {
+	background-color: transparent;
+	color: #aaa !important;
+
+	&:hover {
+		scale: 1.3;
+	}
+
+	&[data-favorite='true'] {
+		color: red !important;
+	}
 }
 
 @include desktopFullHD {
 	.pageContent {
-		grid-template-columns: repeat(6, $templateWidth);
+		grid-template-columns: repeat(5, $templateWidth);
 	}
 }
 
@@ -82,14 +69,6 @@ $templateWidth: 1fr;
 @include desktopHD {
 	.pageContent {
 		grid-template-columns: repeat(3, $templateWidth);
-	}
-
-	.pageHeader {
-		> button {
-			span {
-				display: none;
-			}
-		}
 	}
 }
 
@@ -104,7 +83,13 @@ $templateWidth: 1fr;
 		grid-template-columns: repeat(1, $templateWidth);
 	}
 
-	.faded {
-		display: none;
+	.filters {
+		section {
+			flex-direction: column;
+		}
+	}
+
+	.allFilters {
+		flex-direction: column;
 	}
 }

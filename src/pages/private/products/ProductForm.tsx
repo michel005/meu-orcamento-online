@@ -6,27 +6,33 @@ import { CustomerType, ProductType, WaitingListType } from '../../../types/AllTy
 import { ProductDefinition } from '../../../definitions/ProductDefinition'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { useApi } from '../../../hooks/useApi'
-import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
+import { Button, ButtonGhost, ButtonSecondary, ButtonWhite } from '../../../components/Button'
 import { Bag } from '../../../components/Bag'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
 import { UserPicture } from '../../../components/UserPicture'
 import { SelectInput } from '../../../components/inputs/SelectInput'
+import { Tabs } from '../../../components/Tabs'
+import { useApiData } from '../../../hooks/useApiData'
+import { SortUtils } from '../../../utils/SortUtils'
+import { FlexRow } from '../../../components/FlexRow'
 
 export const ProductForm = () => {
-	const page = usePage<ProductType>('product', ProductDefinition)
-	const customerApi = useApi('customer')
+	const { api, form } = usePage<ProductType>('product', ProductDefinition)
+	const customerApiData = useApiData('customer')
+	const waitingListApiData = useApiData('waitingList')
 	const waitingListApi = useApi('waitingList')
-	const { message, api, form } = page
 	const productFormLayout = useFormLayout<ProductType>({
-		definition: ProductDefinition(form.form, customerApi.data || []),
+		definition: ProductDefinition(form.form, customerApiData.data),
 		value: form.form,
 		onChange: form.edit,
 	})
 	const [waitingListForm, setWaitingListForm] = useState<WaitingListType>({})
 
-	const waitingListIds = (waitingListApi.data || []).map((x: WaitingListType) => x.customer.id)
-	const selectCustomers = (customerApi.data || []).filter(
-		(x: CustomerType) => !waitingListIds.includes(x.id)
+	const waitingListIds = (waitingListApiData?.data || []).map(
+		(x: WaitingListType) => x?.customer?.id
+	)
+	const selectCustomers = (customerApiData.data || []).filter(
+		(x: CustomerType) => !waitingListIds.includes(x.id) && x.id !== form.form.seller_id
 	)
 	const [tab, setTab] = useState('general')
 	const randomId = useMemo(() => Math.random(), [])
@@ -40,18 +46,18 @@ export const ProductForm = () => {
 	}
 
 	useEffect(() => {
-		customerApi.getAll()
-		if (form.form.id) {
+		if (form?.form?.id) {
 			waitingListApi.getAll({
 				query: {
 					product: form.form.id,
 				},
 			})
 		}
-	}, [])
+	}, [form?.form?.id])
 
 	return (
 		<FormModal
+			title="Formulário de Produto"
 			onClose={() => {
 				form.close(false)
 			}}
@@ -67,169 +73,176 @@ export const ProductForm = () => {
 									: `url(${form.form.picture})`,
 						}}
 					>
-						{productFormLayout.getField('picture', {
-							fullWidth: true,
-						})}
+						{productFormLayout.getField('picture')}
 					</div>
 				</section>
 				<section>
-					<h1>Formulário de Produto</h1>
-					<div className={style.tabs}>
-						<Button
-							data-error={true}
-							leftIcon="description"
-							variationOverride={tab === 'general' ? 'primary' : 'ghost'}
-							onClick={() => {
-								setTab('general')
-							}}
-							rightBag={
-								Object.keys(productFormLayout.errors).length > 0
-									? Object.keys(productFormLayout.errors).length
-									: undefined
-							}
-						>
-							Dados Gerais
-						</Button>
-						<Button
-							leftIcon="group"
-							variationOverride={tab === 'waiting' ? 'primary' : 'ghost'}
-							onClick={() => {
-								setTab('waiting')
-							}}
-							rightBag={
-								waitingListApi.data.length > 9 ? '+9' : waitingListApi.data.length
-							}
-						>
-							Lista de Espera
-						</Button>
-					</div>
-					{tab === 'general' && (
-						<section>
-							{productFormLayout.getField('seller_id')}
-							{productFormLayout.getField('title')}
-							{productFormLayout.getField('description')}
-							{productFormLayout.getField('categories')}
-							<div className={style.formRow}>
-								{productFormLayout.getField('code')}
-								{productFormLayout.getField('price')}
-							</div>
-							{productFormLayout.getField('status', {
-								optionsPosition: 'top',
-							})}
-						</section>
-					)}
-					{tab === 'waiting' && (
-						<section>
-							{selectCustomers.length > 0 && (
-								<div className={style.formRow}>
-									<SelectInput
-										field="customer_id"
-										label="Cliente"
-										options={selectCustomers}
-										idModifier={(value: CustomerType) => value.id}
-										valueRender={(x: CustomerType) => (
-											<div className={style.selectValueRender}>
-												<UserPicture
-													size="28px"
-													picture={x.picture}
-													name={x.full_name}
-												/>
-												<p>{x.full_name}</p>
+					<Tabs
+						value={tab}
+						onChange={setTab}
+						options={[
+							[
+								'general',
+								{
+									icon: 'description',
+									buttonText: 'Dados Gerais',
+									bag:
+										Object.keys(productFormLayout.errors).length > 0
+											? Object.keys(productFormLayout.errors).length
+											: undefined,
+									content: (
+										<section>
+											{productFormLayout.getField('seller_id')}
+											{productFormLayout.getField('title')}
+											{productFormLayout.getField('description')}
+											{productFormLayout.getField('categories')}
+											<div className={style.formRow}>
+												{productFormLayout.getField('code')}
+												{productFormLayout.getField('price')}
 											</div>
-										)}
-										optionValueRender={(x: CustomerType) => (
-											<div className={style.selectValueRender}>
-												<UserPicture
-													size="36px"
-													picture={x.picture}
-													name={x.full_name}
-												/>
-												<div className={style.nameAndEmail}>
-													<b>{x.full_name}</b>
-													<p>{x.email}</p>
-												</div>
-											</div>
-										)}
-										value={waitingListForm.customer_id}
-										onChange={(value: string) => {
-											setWaitingListForm((x) => {
-												x.customer_id = value
-												return { ...x }
-											})
-										}}
-									/>
-									<Button
-										leftIcon="refresh"
-										disabled={!form.form.id}
-										onClick={() => {
-											waitingListApi.getAll({
-												query: {
-													product: form.form.id,
-												},
-											})
-										}}
-									/>
-									<Button
-										leftIcon="add"
-										disabled={!form.form.id || !waitingListForm.customer_id}
-										onClick={() => {
-											waitingListApi.create({
-												data: {
-													customer_id: waitingListForm.customer_id,
-													product_id: form.form.id,
-												},
-												onSuccess: () => {
-													setWaitingListForm({})
-													waitingListApi.getAll({
-														query: {
-															product: form.form.id,
-														},
-													})
-												},
-											})
-										}}
-									>
-										Adicionar
-									</Button>
-								</div>
-							)}
-							{waitingListApi.data.map((x, xIndex) => {
-								return (
-									<div className={style.waitingListItem}>
-										<UserPicture
-											picture={x.customer.picture}
-											name={x.customer.full_name}
-											size="36px"
-										/>
-										<div className={style.waitingListInfo}>
-											<b>{x.customer.full_name}</b>
-											<small>{x.customer.email}</small>
-										</div>
-										<div className={style.waitingListButtons}>
-											<ButtonGhost
-												leftIcon="delete"
-												onClick={() => {
-													waitingListApi.removeByQuery({
-														query: {
-															product: form.form.id,
-															customer: x.customer.id,
-														},
-														onSuccess: () => {
-															waitingListApi.getAll({
-																query: {
-																	product: form.form.id,
-																},
+											{productFormLayout.getField('status', {
+												optionsPosition: 'top',
+											})}
+										</section>
+									),
+								},
+							],
+							form.form.id && [
+								'waiting',
+								{
+									icon: 'group',
+									buttonText: 'Lista de Espera',
+									bag:
+										waitingListApiData.data.length > 9
+											? '+9'
+											: waitingListApiData.data.length,
+									content: (
+										<section>
+											{selectCustomers.length > 0 && (
+												<div className={style.formRow}>
+													<SelectInput
+														field="customer_id"
+														label="Cliente"
+														options={selectCustomers.sort((x, y) =>
+															SortUtils.sort(x, y, 'full_name')
+														)}
+														placeholder="Selecione um cliente"
+														numberOfOptions={3}
+														idModifier={(value: CustomerType) =>
+															value.id
+														}
+														valueRender={(x: CustomerType) => (
+															<div
+																className={style.selectValueRender}
+															>
+																<UserPicture
+																	size="28px"
+																	picture={x.picture}
+																	name={x.full_name}
+																/>
+																<p>{x.full_name}</p>
+															</div>
+														)}
+														optionValueRender={(x: CustomerType) => (
+															<div
+																className={style.selectValueRender}
+															>
+																<UserPicture
+																	size="36px"
+																	picture={x.picture}
+																	name={x.full_name}
+																/>
+																<div className={style.nameAndEmail}>
+																	<b>{x.full_name}</b>
+																	<p>{x.email}</p>
+																</div>
+															</div>
+														)}
+														value={waitingListForm.customer_id}
+														onChange={(value: string) => {
+															setWaitingListForm((x) => {
+																x.customer_id = value
+																return { ...x }
 															})
-														},
-													})
-												}}
-											/>
-										</div>
-									</div>
-								)
-							})}
-						</section>
-					)}
+														}}
+														rightSide={
+															<ButtonWhite
+																leftIcon="add"
+																disabled={
+																	!form.form.id ||
+																	!waitingListForm.customer_id
+																}
+																onClick={() => {
+																	waitingListApi.create({
+																		data: {
+																			customer_id:
+																				waitingListForm.customer_id,
+																			product_id:
+																				form.form.id,
+																		},
+																		onSuccess: () => {
+																			setWaitingListForm({})
+																			waitingListApi.getAll({
+																				query: {
+																					product:
+																						form.form
+																							.id,
+																				},
+																			})
+																		},
+																	})
+																}}
+															/>
+														}
+													/>
+												</div>
+											)}
+											<div className={style.waitingList}>
+												{waitingListApiData.data.map((x) => {
+													return (
+														<div
+															className={style.waitingListItem}
+															key={x.customer.id}
+														>
+															<UserPicture
+																picture={x?.customer?.picture}
+																name={x?.customer?.full_name}
+																size="38px"
+															/>
+															<div className={style.waitingListInfo}>
+																<b>{x?.customer?.full_name}</b>
+																<small>{x?.customer?.email}</small>
+															</div>
+															<ButtonGhost
+																leftIcon="delete"
+																onClick={() => {
+																	waitingListApi.removeByQuery({
+																		query: {
+																			product: form.form.id,
+																			customer: x.customer.id,
+																		},
+																		onSuccess: () => {
+																			waitingListApi.getAll({
+																				query: {
+																					product:
+																						form.form
+																							.id,
+																				},
+																			})
+																		},
+																	})
+																}}
+															/>
+														</div>
+													)
+												})}
+											</div>
+										</section>
+									),
+								},
+							],
+						]}
+					/>
 				</section>
 			</div>
 			<div className={style.options}>
@@ -266,24 +279,46 @@ export const ProductForm = () => {
 					Salvar
 				</Button>
 				{form.form.id && (
-					<ButtonWhite
-						leftIcon="delete"
-						onClick={() => {
-							message.question(
-								'Deseja realmente excluir este produto?',
-								'Esta operação não pode ser desfeita.',
-								() => {
-									api.remove({
-										id: form.form?.id,
-										onSuccess,
-										onError,
-									})
-								}
-							)
-						}}
+					<Bag
+						button={(show, setShow) => (
+							<ButtonSecondary
+								leftIcon="delete"
+								onClick={() => {
+									setShow(true)
+								}}
+							>
+								Excluir
+							</ButtonSecondary>
+						)}
+						arrowPosition="bottom-left"
 					>
-						Excluir
-					</ButtonWhite>
+						{(show, setShow) => (
+							<>
+								<p style={{ whiteSpace: 'nowrap' }}>Deseja realmente excluir?</p>
+								<FlexRow style={{ justifyContent: 'flex-end' }}>
+									<Button
+										onClick={() => {
+											setShow(false)
+											api.remove({
+												id: form.form?.id,
+												onSuccess,
+												onError,
+											})
+										}}
+									>
+										Sim
+									</Button>
+									<ButtonWhite
+										onClick={() => {
+											setShow(false)
+										}}
+									>
+										Não
+									</ButtonWhite>
+								</FlexRow>
+							</>
+						)}
+					</Bag>
 				)}
 				<div style={{ flexGrow: 1 }} />
 				{form.form?.id && (
@@ -291,7 +326,7 @@ export const ProductForm = () => {
 						button={(show, setShow) => (
 							<Button
 								leftIcon="more_horiz"
-								variationOverride={show ? 'primary' : 'white'}
+								variationOverride={show ? 'secondary' : 'ghost'}
 								onClick={() => {
 									setShow((x: boolean) => !x)
 								}}
@@ -313,7 +348,6 @@ export const ProductForm = () => {
 								>
 									Procurar no Google
 								</ButtonGhost>
-								<ButtonGhost leftIcon="save">Salvar</ButtonGhost>
 							</>
 						)}
 					</Bag>

@@ -65,7 +65,7 @@ export const MainPage = () => {
 						</>
 					}
 				>
-					<h1>{message.header}</h1>
+					<h2>{message.header}</h2>
 					<p>{message.content}</p>
 				</Modal>
 			)}

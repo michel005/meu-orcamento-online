@@ -1,7 +1,10 @@
 .userPicture {
 	align-self: center;
 	display: flex;
+	height: var(--size);
 	transition: all 0.25s;
+	min-width: var(--size);
+	width: var(--size);
 
 	&[data-format='circle'] {
 		border-radius: 50%;
@@ -44,13 +47,35 @@
 			width: 100%;
 		}
 	}
+
+	img {
+		height: 100%;
+		object-fit: cover;
+		transition: all 0.25s;
+		width: 100%;
+	}
 }
 
-img {
-	height: var(--size);
-	object-fit: cover;
-	pointer-events: none;
-	width: var(--size);
+.preview {
+	align-items: center;
+	background-color: #1113;
+	backdrop-filter: blur(4px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 100;
+
+	img {
+		border-radius: var(--border-radius);
+		height: 80%;
+		object-fit: cover;
+		transition: all 0.25s;
+	}
 }
 
 .initialLetters {

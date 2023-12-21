@@ -63,8 +63,9 @@ export type ProductType = {
 	code?: string
 	title?: string
 	description?: string
-	categories?: string[]
+	categories?: string
 	customer?: CustomerType
+	customer_id?: string
 	price?: number
 	status?: string
 	product_waiting_list?: WaitingListType[] | null

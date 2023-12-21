@@ -9,8 +9,8 @@
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	height: calc(100% - var(--private-navbar-height));
-	inset-block-start: var(--private-navbar-height);
+	height: 100%;
+	inset-block-start: 0;
 	inset-inline-start: 0;
 	position: fixed;
 	width: 100%;
@@ -26,22 +26,35 @@
 	position: relative;
 	transition: all 0.25s;
 	z-index: 4;
-}
 
-.closeButton {
-	background-color: #1113 !important;
-	border-radius: 0 14px 0 0;
-	height: var(--input-height);
-	padding: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	width: var(--input-height);
-	z-index: 2;
+	> header {
+		border-radius: 12px 12px 0 0;
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+		padding-block: 10px 4px;
+		width: 100%;
 
-	&:hover {
-		background-color: #1116 !important;
-		color: #fff;
+		> span {
+			align-self: center;
+			color: #222;
+			flex-grow: 1;
+			font-size: 18px;
+			font-weight: bold;
+			padding-inline: 21px;
+		}
+
+		> button {
+			align-self: center;
+			background-color: transparent !important;
+			border: none !important;
+			color: #222 !important;
+			margin-right: 7px;
+
+			&:hover {
+				color: #222a !important;
+			}
+		}
 	}
 }
 
@@ -53,14 +66,17 @@
 }
 
 @include tablet {
+	.formModal {
+		width: calc(100% - var(--private-sidebar-options-width));
+	}
+
 	.formModalContent {
 		border-radius: 0;
 		height: 100%;
 		inset-block-start: 0;
-		inset-inline-start: 0;
+		inset-inline-start: var(--private-sidebar-options-width);
 		max-height: none;
 		translate: none;
-		width: 100%;
 	}
 
 	.closeButton {

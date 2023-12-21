@@ -20,8 +20,41 @@ $templateWidth: 1fr;
 	overflow-y: auto;
 }
 
-.customerSelect {
-	width: 500px;
+.filters {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 14px 14px 0;
+
+	section {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+
+		button {
+			white-space: nowrap;
+		}
+	}
+
+	[data-field='general_search'] {
+		width: 100%;
+	}
+}
+
+.allFilters {
+	background-color: #fff;
+	border-radius: var(--border-radius);
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+
+	[data-field='seller_id'] {
+		width: 350px;
+	}
+
+	[data-field='status'] {
+		width: 300px;
+	}
 }
 
 .selectValueRender {
@@ -29,93 +62,42 @@ $templateWidth: 1fr;
 	display: flex;
 	flex-direction: row;
 	gap: 10px;
+	max-width: 100%;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	p {
+		padding: 0;
+		text-overflow: ellipsis;
+		width: 100%;
+		overflow: hidden;
+		white-space: nowrap;
+	}
 }
 
 .nameAndEmail {
 	display: flex;
 	flex-direction: column;
+	gap: 4px;
 	justify-content: space-between;
+	width: 100%;
 
 	p {
 		color: #aaa;
 	}
 }
 
-.pageHeader {
-	background-color: #222;
+.pageContent {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
 	gap: 14px;
-	inset-block-start: 0;
-	inset-inline-start: 0;
-	padding: 14px 17px;
-	position: sticky;
-	transition: all 0.25s;
-	z-index: 2;
-
-	label {
-		align-self: center;
-		color: #fff;
-
-		&.faded {
-			color: #fff6;
-		}
-	}
-
-	> hr {
-		background-color: #fff2;
-		height: 100%;
-		margin-block: 0;
-		width: 2px;
-	}
-}
-
-.pageContent {
-	display: grid;
-	gap: 21px;
-	grid-template-columns: repeat(6, $templateWidth);
-	justify-content: center;
 	padding: 14px;
-}
 
-@include desktopFullHD {
-	.pageContent {
-		grid-template-columns: repeat(5, $templateWidth);
-	}
-}
-
-@include desktopMediumHD {
-	.pageContent {
-		grid-template-columns: repeat(4, $templateWidth);
-	}
-}
-
-@include desktopHD {
-	.pageContent {
-		grid-template-columns: repeat(3, $templateWidth);
-	}
-
-	.pageHeader {
-		> button {
-			span {
-				display: none;
-			}
-		}
-	}
-}
-
-@include desktopSmall {
-	.pageContent {
-		grid-template-columns: repeat(2, $templateWidth);
-	}
-}
-
-@include tablet {
-	.pageContent {
-		grid-template-columns: repeat(1, $templateWidth);
-	}
-
-	.faded {
-		display: none;
+	table {
+		flex-grow: 1;
 	}
 }

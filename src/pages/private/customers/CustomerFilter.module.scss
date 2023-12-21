@@ -1,0 +1,27 @@
+.filters {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+
+	section {
+		display: flex;
+		flex-direction: row;
+		gap: 14px;
+
+		button {
+			white-space: nowrap;
+		}
+	}
+
+	[data-field='general_search'] {
+		width: 100%;
+	}
+}
+
+.allFilters {
+	background-color: #fff;
+	border-radius: var(--border-radius);
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+}

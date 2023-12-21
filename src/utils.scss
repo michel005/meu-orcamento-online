@@ -17,6 +17,13 @@
 	font-weight: inherit;
 }
 
+@mixin useGoogleFontsSolid {
+	font-size: inherit;
+	font-family: 'Material Symbols Outlined', sans-serif;
+	font-weight: inherit;
+	font-variation-settings: 'FILL' 1;
+}
+
 @mixin desktopFullHD {
 	@media screen and (max-width: 1920px) {
 		@content;

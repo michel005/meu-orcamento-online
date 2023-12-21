@@ -8,6 +8,7 @@ import { SortUtils } from '../../utils/SortUtils'
 export const SelectInput = ({
 	label = null,
 	leftSide = null,
+	rightSide = null,
 	info = null,
 	disabled = null,
 	value,
@@ -20,9 +21,9 @@ export const SelectInput = ({
 	numberOfOptions = 5,
 	placeholder = null,
 	error = null,
-	className = null,
 	field = null,
 	multiple = false,
+	nullable = true,
 }) => {
 	const [showOptions, setShowOptions] = useState(false)
 	const [filter, setFilter] = useState(';')
@@ -39,7 +40,7 @@ export const SelectInput = ({
 			filtered = filtered.filter((x) => (x ? JSON.stringify(x).includes(f) : true))
 		}
 		return filtered
-	}, [filter])
+	}, [filter, options])
 
 	return (
 		<>
@@ -53,17 +54,17 @@ export const SelectInput = ({
 			)}
 			<Field
 				field={field}
-				className={`${style.selectInput} ${className} ${
-					showOptions ? style.showOptions : ''
-				}`}
+				className={style.selectInput}
+				data-show-options={showOptions}
 				data-options-position={optionsPosition}
+				data-option-selected={!!currentOption}
 				label={label}
 				leftSide={leftSide}
 				rightSide={
 					!disabled && (
 						<div className={style.specialOptions}>
 							<>
-								{value && currentOption && (
+								{nullable && value && currentOption && (
 									<ButtonGhost
 										className={style.clearButton}
 										leftIcon="close"
@@ -88,6 +89,7 @@ export const SelectInput = ({
 										}
 									}}
 								/>
+								{rightSide}
 							</>
 						</div>
 					)

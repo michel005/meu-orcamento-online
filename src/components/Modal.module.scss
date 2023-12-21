@@ -19,17 +19,21 @@
 	border-radius: var(--border-radius);
 	display: flex;
 	flex-direction: column;
-	gap: 14px;
-	padding: 28px;
+	gap: 21px;
+	padding: 21px;
 	position: relative;
 	max-width: 600px;
 	min-width: 600px;
+
+	p {
+		color: #aaa;
+	}
 }
 
 .closeButton {
 	background-color: red;
-	inset-block-start: 0;
-	inset-inline-end: 0;
+	inset-block-start: 7px;
+	inset-inline-end: 7px;
 	position: absolute;
 
 	&:hover {
@@ -43,7 +47,7 @@
 	flex-direction: row;
 	gap: 14px;
 	justify-content: flex-end;
-	padding-block-start: 14px;
+	padding-top: 14px;
 }
 
 @include tablet {

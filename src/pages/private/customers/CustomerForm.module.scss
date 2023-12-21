@@ -13,12 +13,6 @@
 	font-size: 14px;
 }
 
-.error {
-	> div {
-		border-radius: 14px 14px 0 0;
-	}
-}
-
 .favoriteButton {
 	color: #ccc !important;
 	font-size: 24px;
@@ -71,7 +65,7 @@
 	flex-direction: row;
 	flex-grow: 1;
 	gap: 14px;
-	overflow-y: auto;
+	overflow-y: scroll;
 	padding: 14px;
 	transition: all 0.25s;
 
@@ -92,49 +86,6 @@
 	}
 }
 
-.tabs {
-	border-bottom: 2px solid #eee;
-	display: flex;
-	flex-direction: row;
-	gap: 7px;
-
-	button {
-		background-color: transparent;
-		border-bottom: 2px solid transparent;
-		border-radius: 0;
-		color: #ccc !important;
-
-		div:nth-child(3) {
-			background-color: #f00a;
-			color: #fff !important;
-		}
-
-		&:hover {
-			background-color: transparent !important;
-			border-color: #ccc;
-		}
-
-		&:focus {
-			background-color: transparent !important;
-		}
-
-		&[data-variation='primary'] {
-			border-color: var(--active-color);
-			color: var(--active-color) !important;
-
-			&:focus {
-				color: var(--active-color) !important;
-			}
-		}
-
-		&[data-variation='ghost'] {
-			div:nth-child(3) {
-				background-color: #f003;
-			}
-		}
-	}
-}
-
 .contentRow {
 	display: flex;
 	flex-direction: row;
@@ -147,7 +98,6 @@
 }
 
 .options {
-	background-color: #222;
 	border-radius: 0 0 14px 14px;
 	display: flex;
 	flex-direction: row;
@@ -157,11 +107,6 @@
 	padding: 14px 17px;
 	width: 100%;
 	z-index: 1;
-
-	> button {
-		align-items: center;
-		border-radius: 7px;
-	}
 }
 
 @include desktopHD {
@@ -174,10 +119,17 @@
 	}
 
 	.userImage {
+		height: 200px;
 		width: 100%;
 
 		> div {
 			padding-block: 14px;
+
+			[data-picture] {
+				height: 180px;
+				font-size: calc(180px / 3);
+				width: 180px;
+			}
 		}
 	}
 }
@@ -191,6 +143,10 @@
 @include tablet {
 	.contentRow {
 		flex-direction: column;
+	}
+
+	.content {
+		overflow-y: auto;
 	}
 
 	.options {

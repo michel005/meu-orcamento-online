@@ -9,6 +9,7 @@ type RouteType = {
 	[key: string]: {
 		icon?: GoogleIconType
 		name: string
+		description: string
 		route: string
 		component?: any
 		hide?: boolean
@@ -26,31 +27,66 @@ export const RoutesMap: RoutesType = {
 		dashboard: {
 			icon: 'dashboard',
 			name: 'Dashboard',
+			description: 'Dados rápidos para iniciar a gestão de seu bazar',
 			route: '/',
 			component: <DashboardPage />,
 		},
 		customers: {
 			icon: 'group',
 			name: 'Clientes',
+			description: 'Gerencie todos os cadastros de seus clientes',
 			route: '/customers',
 			component: <CustomerPage />,
 		},
-		budgets: {
+		products: {
 			icon: 'shopping_bag',
 			name: 'Produtos',
+			description: 'Gerencie os produtos do seu bazar',
 			route: '/products',
 			component: <ProductPage />,
 		},
 		sells: {
 			icon: 'sell',
 			name: 'Vendas',
+			description: 'Realize e gerencie as vendas e porcentagem de lucro',
 			route: '/sells',
+		},
+		payments: {
+			icon: 'payments',
+			name: 'Pagamentos',
+			description: 'Veja o quanto você deve ou recebe resultante das vendas',
+			route: '/payments',
 		},
 		myUser: {
 			icon: 'person',
 			name: 'Meu Usuário',
+			description: 'Altere os dados do seu bazar',
 			route: '/my-user',
 			component: <MyUserPage />,
+		},
+		facebook: {
+			icon: 'public',
+			name: 'Facebook',
+			description: 'Crie postagens para o facebook',
+			route: '/facebook',
+		},
+		instagram: {
+			icon: 'public',
+			name: 'Instagram',
+			description: 'Crie postagens para o instagram',
+			route: '/instagram',
+		},
+		mercadoLivre: {
+			icon: 'public',
+			name: 'Mercado Livre',
+			description: 'Crie postagens para o mercado livre',
+			route: '/mercado-livre',
+		},
+		getStarted: {
+			icon: 'shield',
+			name: 'Começar Agora',
+			description: 'Saiba como dar os primeiros passos para organizar o seu bazar',
+			route: '/get-started',
 			hide: true,
 		},
 	},

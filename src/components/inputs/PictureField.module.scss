@@ -18,14 +18,4 @@
 	inset-inline-end: 14px;
 	justify-content: center;
 	position: absolute;
-
-	button {
-		background-color: #333;
-		border-radius: 50%;
-		z-index: 1;
-
-		&:hover {
-			background-color: #222;
-		}
-	}
 }

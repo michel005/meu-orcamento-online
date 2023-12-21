@@ -1,0 +1,42 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 14px;
+	padding: 14px;
+	transition: all 0.25s;
+
+	> p {
+		align-self: center;
+		color: #aaa;
+		max-width: 400px;
+		text-align: center;
+	}
+
+	> section {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		transition: all 0.25s;
+		width: 100%;
+
+		[data-field='seller_id'] {
+			min-width: 500px;
+			flex-grow: 1;
+		}
+	}
+}
+
+.options {
+	border-radius: 0 0 14px 14px;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	padding: 14px 17px;
+	width: 100%;
+
+	> button {
+		align-items: center;
+		border-radius: 7px;
+	}
+}

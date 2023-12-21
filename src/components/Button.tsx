@@ -44,11 +44,27 @@ const GenericButton = ({
 			data-variation={variationOverride || variation}
 			data-have-bag={!!leftBag || !!rightBag}
 		>
-			{leftBag !== undefined && <div className={style.bag}>{leftBag}</div>}
-			{leftIcon && <div className={style.icon}>{leftIcon}</div>}
+			{leftIcon && (
+				<div className={style.icon} data-icon>
+					{leftIcon}
+				</div>
+			)}
+			{leftBag !== undefined && (
+				<div className={style.bag} data-bag>
+					{leftBag}
+				</div>
+			)}
 			{props.children && <span>{props.children}</span>}
-			{rightIcon && <div className={style.icon}>{rightIcon}</div>}
-			{rightBag !== undefined && <div className={style.bag}>{rightBag}</div>}
+			{rightBag !== undefined && (
+				<div className={style.bag} data-bag>
+					{rightBag}
+				</div>
+			)}
+			{rightIcon && (
+				<div className={style.icon} data-icon>
+					{rightIcon}
+				</div>
+			)}
 		</button>
 	)
 }

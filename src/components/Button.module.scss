@@ -3,7 +3,7 @@
 .button {
 	align-items: center;
 	background-color: var(--active-color);
-	border: none;
+	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	color: #fff;
 	cursor: pointer;
@@ -14,7 +14,7 @@
 	height: var(--input-height);
 	justify-content: center;
 	min-height: var(--input-height);
-	padding-inline: 14px;
+	padding-inline: 17px;
 	transition: all 0.25s;
 	user-select: none;
 
@@ -32,13 +32,13 @@
 	}
 
 	.icon {
-		@include useGoogleFonts();
+		@include useGoogleFontsSolid();
 	}
 
 	.bag {
 		align-items: center;
 		background-color: #1116;
-		border-radius: 11px;
+		border-radius: var(--border-radius);
 		display: flex;
 		flex-direction: row;
 		font-size: 10px;
@@ -48,22 +48,41 @@
 		padding-inline: 10px;
 	}
 
-	&[data-variation='secondary'] {
-		background-color: #1112;
+	&[data-variation='primary'] {
+		background-color: #fff3;
 		color: #333;
+		border: 1px solid #ccc;
 
 		&:hover {
-			background-color: #1114;
+			background-color: #1111;
 		}
 
 		&:active {
-			background-color: #1113;
+			background-color: #1111;
+		}
+
+		.bag {
+			background-color: #3331;
+			color: #fff;
+		}
+	}
+
+	&[data-variation='secondary'] {
+		background-color: #eee;
+		color: #333;
+
+		&:hover {
+			background-color: #eee9;
+		}
+
+		&:active {
+			background-color: #eee6;
 		}
 	}
 
 	&[data-variation='white'] {
 		background-color: #fff2;
-		color: #fff;
+		color: #333;
 
 		&:hover {
 			background-color: #fff4;
@@ -83,7 +102,7 @@
 		color: #333;
 
 		&:hover {
-			background-color: #1112;
+			background-color: transparent;
 		}
 
 		&:active {
@@ -92,6 +111,41 @@
 
 		.bag {
 			background-color: #3331;
+			color: #fff;
+		}
+	}
+}
+
+[data-context='bag'] {
+	button {
+		color: #fff !important;
+		&[data-variation='ghost'] {
+			border: none;
+
+			&:hover {
+				background-color: #fff1;
+			}
+		}
+	}
+}
+
+[data-context='table'] {
+	button {
+		&[data-variation='ghost'] {
+			background-color: transparent;
+
+			&:hover {
+				background-color: transparent;
+			}
+		}
+	}
+}
+
+[data-context='input'] {
+	button {
+		border: none !important;
+
+		[data-bag] {
 			color: #fff;
 		}
 	}

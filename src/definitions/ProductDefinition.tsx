@@ -6,6 +6,7 @@ import { StringUtils } from '../utils/StringUtils'
 import { UserPicture } from '../components/UserPicture'
 import style from '../pages/private/ProductPage.module.scss'
 import { ProductStatus } from '../constants/ProductStatus'
+import { SortUtils } from '../utils/SortUtils'
 
 export const ProductDefinition = (
 	value?: ProductType,
@@ -20,7 +21,7 @@ export const ProductDefinition = (
 				? StringUtils.initialLetters(value.title || '').toUpperCase()
 				: '',
 			pictureType: 'square',
-			size: '220px',
+			size: '320px',
 		},
 		created: {
 			label: 'Cadastrado',
@@ -41,9 +42,9 @@ export const ProductDefinition = (
 			leftSide: <ButtonGhost leftIcon="description" disabled={true} />,
 		},
 		seller_id: {
-			label: 'Cliente',
+			label: 'Vendedor',
 			type: 'select',
-			options: customerData,
+			options: (customerData || []).sort((x, y) => SortUtils.sort(x, y, 'full_name')),
 			idModifier: (value: CustomerType) => value.id,
 			valueRender: (x: CustomerType) => (
 				<div className={style.selectValueRender}>
@@ -51,6 +52,7 @@ export const ProductDefinition = (
 					<p>{x.full_name}</p>
 				</div>
 			),
+			numberOfOptions: 3,
 			optionValueRender: (x: CustomerType) => (
 				<div className={style.selectValueRender}>
 					<UserPicture size="36px" picture={x.picture} name={x.full_name} />

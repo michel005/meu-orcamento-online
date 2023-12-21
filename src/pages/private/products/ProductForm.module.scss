@@ -2,14 +2,12 @@
 @import '../../../utils';
 
 .userImage {
-	align-items: center;
 	background-color: #ddd;
 	background-position: center;
 	background-size: cover;
 	border-radius: 14px;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-direction: row;
 	gap: 14px;
 	height: 100%;
 	overflow: auto;
@@ -31,8 +29,8 @@
 	}
 
 	img,
-	> div {
-		border-radius: 14px !important;
+	div {
+		border-radius: var(--border-radius) !important;
 	}
 }
 
@@ -49,7 +47,7 @@
 	justify-content: space-between;
 
 	p {
-		color: #aaa;
+		color: #ccc;
 	}
 }
 
@@ -58,7 +56,7 @@
 	flex-direction: row;
 	flex-grow: 1;
 	gap: 14px;
-	overflow-y: auto;
+	overflow-y: scroll;
 	padding: 14px;
 	transition: all 0.25s;
 
@@ -81,8 +79,21 @@
 			gap: 14px;
 			transition: all 0.25s;
 			width: 100%;
+
+			[data-field='customer_id'] {
+				min-width: 300px;
+			}
 		}
 	}
+}
+
+.waitingList {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-height: 100%;
+	min-height: 300px;
+	overflow-y: scroll;
 }
 
 .waitingListItem {
@@ -105,67 +116,16 @@
 	flex-direction: column;
 	flex-grow: 1;
 	gap: 4px;
+
+	small {
+		color: #ccc;
+	}
 }
 
 .waitingListButtons {
 	display: flex;
 	flex-direction: row;
 	gap: 4px;
-}
-
-.tabs {
-	border-bottom: 2px solid #eee;
-	display: flex;
-	flex-direction: row;
-	gap: 7px;
-
-	button {
-		background-color: transparent;
-		border-bottom: 2px solid transparent;
-		border-radius: 0;
-		color: #ccc !important;
-
-		&:hover {
-			background-color: transparent !important;
-			border-color: #ccc;
-		}
-
-		&:focus {
-			background-color: transparent !important;
-		}
-
-		div:nth-child(3) {
-			background-color: #eee !important;
-			color: #fff !important;
-		}
-
-		&[data-variation='primary'] {
-			border-color: var(--active-color);
-			color: var(--active-color) !important;
-
-			&:focus {
-				color: var(--active-color) !important;
-			}
-
-			div:nth-child(3) {
-				background-color: var(--active-color) !important;
-				color: #fff !important;
-			}
-		}
-
-		&[data-error='true'] {
-			div:nth-child(3) {
-				background-color: #f00a !important;
-				color: #fff !important;
-			}
-
-			&[data-variation='ghost'] {
-				div:nth-child(3) {
-					background-color: #f003 !important;
-				}
-			}
-		}
-	}
 }
 
 .formRow {
@@ -189,18 +149,12 @@
 }
 
 .options {
-	background-color: #222;
 	border-radius: 0 0 14px 14px;
 	display: flex;
 	flex-direction: row;
 	gap: 14px;
 	padding: 14px 17px;
 	width: 100%;
-
-	> button {
-		align-items: center;
-		border-radius: 7px;
-	}
 }
 
 @include desktopHD {

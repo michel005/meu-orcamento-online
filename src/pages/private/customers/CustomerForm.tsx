@@ -1,22 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Bag } from '../../../components/Bag'
-import { Button, ButtonGhost, ButtonWhite } from '../../../components/Button'
+import { Button, ButtonGhost, ButtonSecondary, ButtonWhite } from '../../../components/Button'
 import { Error } from '../../../components/Error'
 import { AddressDefinition } from '../../../definitions/AddressDefinition'
 import { CustomerDefinition } from '../../../definitions/CustomerDefinition'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { usePage } from '../../../hooks/usePage'
-import { usePageData } from '../../../hooks/usePageData'
 import { AddressType, CustomerType } from '../../../types/AllTypes'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
-import { FileUtils } from '../../../utils/FileUtils'
 import style from './CustomerForm.module.scss'
 import { FormModal } from '../../../components/FormModal'
+import { Tabs } from '../../../components/Tabs'
+import { CustomerBag } from './CustomerBag'
+import { Bag } from '../../../components/Bag'
+import { FlexRow } from '../../../components/FlexRow'
 
 export const CustomerForm = () => {
-	const page = usePage<CustomerType>('customer', CustomerDefinition)
-	const { message, api, form } = page
+	const { api, form } = usePage<CustomerType>('customer', CustomerDefinition)
 	const customerFormLayout = useFormLayout<CustomerType>({
 		definition: CustomerDefinition(form.form),
 		value: form.form,
@@ -32,8 +31,6 @@ export const CustomerForm = () => {
 	})
 	const [tab, setTab] = useState('general')
 	const randomId = useMemo(() => Math.random(), [])
-	const productPageData = usePageData('product')
-	const navigate = useNavigate()
 
 	const onSuccess = () => {
 		form.close()
@@ -51,6 +48,7 @@ export const CustomerForm = () => {
 
 	return (
 		<FormModal
+			title="Formulário de Cliente"
 			onClose={() => {
 				form.close(false)
 			}}
@@ -77,71 +75,68 @@ export const CustomerForm = () => {
 					</div>
 				</section>
 				<section>
-					<h1>Formulário de Cliente</h1>
-					<div className={style.tabs}>
-						<Button
-							leftIcon="person"
-							variationOverride={tab === 'general' ? 'primary' : 'ghost'}
-							onClick={() => {
-								setTab('general')
-							}}
-							rightBag={
-								Object.keys(customerFormLayout.errors).length > 0
-									? Object.keys(customerFormLayout.errors).length
-									: undefined
-							}
-						>
-							Dados Gerais
-						</Button>
-						<Button
-							leftIcon="map"
-							variationOverride={tab === 'address' ? 'primary' : 'ghost'}
-							onClick={() => {
-								setTab('address')
-							}}
-							rightBag={
-								Object.keys(addressFormLayout.errors).length > 0
-									? Object.keys(addressFormLayout.errors).length
-									: undefined
-							}
-						>
-							Endereço
-						</Button>
-					</div>
-					{tab === 'general' && (
-						<section>
-							{customerFormLayout.getField('full_name')}
-							{customerFormLayout.getField('email')}
-							<div className={style.contentRow}>
-								{customerFormLayout.getField('phone')}
-								{customerFormLayout.getField('birthday')}
-							</div>
-							<div className={style.contentRow}>
-								{customerFormLayout.getField('person_type')}
-								{customerFormLayout.getField('document_type')}
-							</div>
-							{customerFormLayout.getField('document_number')}
-							{customerFormLayout.getField('error')}
-						</section>
-					)}
-					{tab === 'address' && (
-						<section>
-							<div className={style.contentRow}>
-								{addressFormLayout.getField('zip_code')}
-								{addressFormLayout.getField('street_name')}
-							</div>
-							<div className={style.contentRow}>
-								{addressFormLayout.getField('street_number')}
-								{addressFormLayout.getField('complement')}
-							</div>
-							<div className={style.contentRow}>
-								{addressFormLayout.getField('city')}
-								{addressFormLayout.getField('state')}
-							</div>
-							{addressFormLayout.getField('country')}
-							{addressFormLayout.getField('error')}
-						</section>
-					)}
+					<Tabs
+						value={tab}
+						onChange={setTab}
+						options={[
+							[
+								'general',
+								{
+									buttonText: 'Dados Gerais',
+									icon: 'person',
+									bag:
+										Object.keys(customerFormLayout.errors).length > 0
+											? Object.keys(customerFormLayout.errors).length
+											: undefined,
+									content: (
+										<section>
+											{customerFormLayout.getField('full_name')}
+											{customerFormLayout.getField('email')}
+											<div className={style.contentRow}>
+												{customerFormLayout.getField('phone')}
+												{customerFormLayout.getField('birthday')}
+											</div>
+											<div className={style.contentRow}>
+												{customerFormLayout.getField('person_type')}
+												{customerFormLayout.getField('document_type')}
+											</div>
+											{customerFormLayout.getField('document_number')}
+											{customerFormLayout.getField('error')}
+										</section>
+									),
+								},
+							],
+							[
+								'address',
+								{
+									buttonText: 'Endereço',
+									icon: 'map',
+									bag:
+										Object.keys(addressFormLayout.errors).length > 0
+											? Object.keys(addressFormLayout.errors).length
+											: undefined,
+									content: (
+										<section>
+											<div className={style.contentRow}>
+												{addressFormLayout.getField('zip_code')}
+												{addressFormLayout.getField('street_name')}
+											</div>
+											<div className={style.contentRow}>
+												{addressFormLayout.getField('street_number')}
+												{addressFormLayout.getField('complement')}
+											</div>
+											<div className={style.contentRow}>
+												{addressFormLayout.getField('city')}
+												{addressFormLayout.getField('state')}
+											</div>
+											{addressFormLayout.getField('country')}
+											{addressFormLayout.getField('error')}
+										</section>
+									),
+								},
+							],
+						]}
+					/>
 				</section>
 			</div>
 			<div className={style.options}>
@@ -149,7 +144,7 @@ export const CustomerForm = () => {
 					<Button
 						leftIcon="person_check"
 						onClick={() => {
-							page.api.update({
+							api.update({
 								data: {
 									customer: JSON.parse(
 										JSON.stringify({
@@ -213,39 +208,47 @@ export const CustomerForm = () => {
 					</>
 				)}
 				{form.form.id && (
-					<ButtonWhite
-						leftIcon="delete"
-						onClick={() => {
-							message.question(
-								'Deseja realmente excluir este cliente?',
-								'Esta operação não pode ser desfeita. Esta operação não exclui as informações de faturamento deste cliente.',
-								() => {
-									api.remove({
-										id: form.form?.id,
-										onSuccess,
-										onError,
-									})
-								}
-							)
-						}}
+					<Bag
+						button={(show, setShow) => (
+							<ButtonSecondary
+								leftIcon="delete"
+								onClick={() => {
+									setShow(true)
+								}}
+							>
+								Excluir
+							</ButtonSecondary>
+						)}
+						arrowPosition="bottom-left"
 					>
-						Excluir
-					</ButtonWhite>
+						{(show, setShow) => (
+							<>
+								<p style={{ whiteSpace: 'nowrap' }}>Deseja realmente excluir?</p>
+								<FlexRow style={{ justifyContent: 'flex-end' }}>
+									<Button
+										onClick={() => {
+											setShow(false)
+											api.remove({
+												id: form.form?.id,
+												onSuccess,
+												onError,
+											})
+										}}
+									>
+										Sim
+									</Button>
+									<ButtonWhite
+										onClick={() => {
+											setShow(false)
+										}}
+									>
+										Não
+									</ButtonWhite>
+								</FlexRow>
+							</>
+						)}
+					</Bag>
 				)}
-				<div className={style.adminInfo}>
-					{form.form.created && (
-						<span className={style.created}>
-							Cadastrado dia {form.form.created.split(' ')[0]} as{' '}
-							{form.form.created.split(' ')[1]}
-						</span>
-					)}
-					{form.form.updated && (
-						<span className={style.updated}>
-							Ultima alteração no dia {form.form.updated.split(' ')[0]} as{' '}
-							{form.form.updated.split(' ')[1]}
-						</span>
-					)}
-				</div>
 				<div style={{ flexGrow: 1 }} />
 				{form.form?.id && (
 					<ButtonGhost
@@ -276,158 +279,16 @@ export const CustomerForm = () => {
 					/>
 				)}
 				{form.form?.id && (
-					<Bag
-						button={(show, setShow) => (
-							<Button
-								leftIcon="more_horiz"
-								variationOverride={show ? 'primary' : 'white'}
-								onClick={() => {
-									setShow((x: boolean) => !x)
-								}}
-							/>
-						)}
+					<CustomerBag
+						customer={form.form}
 						arrowPosition="bottom-right"
-					>
-						{(_: unknown, setShow: any) => (
-							<>
-								{form.form.active && (
-									<ButtonGhost
-										leftIcon="person_cancel"
-										onClick={() => {
-											setShow(false)
-											page.api.update({
-												data: {
-													customer: JSON.parse(
-														JSON.stringify({
-															...form.form,
-															address: undefined,
-															active: false,
-														})
-													),
-													address: form.form.address,
-												},
-												onSuccess: (response) => {
-													form.edit({
-														...response.customer,
-														address: response.address,
-													})
-												},
-											})
-										}}
-									>
-										Inativar
-									</ButtonGhost>
-								)}
-								<ButtonGhost
-									leftIcon="shopping_bag"
-									onClick={() => {
-										setShow(false)
-										productPageData.setProp('seller_id', () => form.form.id)
-										form.close()
-										navigate('/products')
-									}}
-								>
-									Produtos
-								</ButtonGhost>
-								<ButtonGhost
-									leftIcon="copy_all"
-									onClick={() => {
-										setShow(false)
-										form.show({
-											...form.form,
-											id: undefined,
-											picture: undefined,
-											favorite: undefined,
-											active: true,
-											address: {
-												...form.form.address,
-												id: undefined,
-											},
-										})
-										message.message(
-											'Duplicação de Cliente',
-											'Lembre de modificar as informações principais do seu cliente. Caso o número do documento ou e-mail já esteja sendo utilizado por outro cliente, não será permitido salvar.'
-										)
-									}}
-								>
-									Duplicar
-								</ButtonGhost>
-								<ButtonGhost
-									leftIcon="upload"
-									onClick={() => {
-										setShow(false)
-										const content = JSON.stringify(
-											{
-												...form.form,
-												_id: undefined,
-												picture: undefined,
-												favorite: undefined,
-												created: undefined,
-												updated: undefined,
-												active: undefined,
-												address_id: undefined,
-												address: {
-													...form.form.address,
-													id: undefined,
-												},
-											},
-											null,
-											'  '
-										)
-										FileUtils.saveContent(
-											content,
-											`${form.form.full_name
-												.toUpperCase()
-												.replaceAll(' ', '_')}_EXPORTAR.json`
-										)
-									}}
-								>
-									Exportar
-								</ButtonGhost>
-								<hr />
-								{form.form.address && (
-									<ButtonGhost
-										leftIcon="map"
-										onClick={() => {
-											setShow(false)
-											window.open(
-												`https://www.google.com/maps?q=${form.form.address.zip_code}+${form.form.address.street_name}+${form.form.address.street_number}+${form.form.address.city}+${form.form.address.state}`,
-												'_blank'
-											)
-										}}
-									>
-										Google Maps
-									</ButtonGhost>
-								)}
-								{form.form.email && (
-									<ButtonGhost
-										leftIcon="mail"
-										onClick={() => {
-											setShow(false)
-											window.location.href = `mailto:${form.form.email}`
-										}}
-									>
-										E-mail
-									</ButtonGhost>
-								)}
-								{form.form.phone && (
-									<ButtonGhost
-										leftIcon="phone_enabled"
-										onClick={() => {
-											window.location.href = `https://wa.me/${form.form.phone
-												.replaceAll('(', '')
-												.replaceAll(')', '')
-												.replaceAll('-', '')
-												.replaceAll(' ', '')}`
-											setShow(false)
-										}}
-									>
-										Whatsapp
-									</ButtonGhost>
-								)}
-							</>
-						)}
-					</Bag>
+						onSuccess={(response) => {
+							form.edit({
+								...response.customer,
+								address: response.address,
+							})
+						}}
+					/>
 				)}
 			</div>
 		</FormModal>

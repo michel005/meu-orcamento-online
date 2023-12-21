@@ -29,7 +29,7 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 			value={value}
 			onChange={onChange}
 			disabled={disableAll || fieldDefinition.disabled}
-			placeholder={fieldDefinition.placeholder}
+			placeholder={disableAll || fieldDefinition.disabled ? '' : fieldDefinition.placeholder}
 			type={fieldDefinition.pictureType}
 			name={fieldDefinition.pictureName}
 			size={fieldDefinition.size}
@@ -52,7 +52,9 @@ const CheckboxField = ({ id, field, fieldDefinition, value, onChange, errors, di
 						onChange({ ...value })
 					}}
 					disabled={disableAll || fieldDefinition.disabled}
-					placeholder={fieldDefinition.placeholder}
+					placeholder={
+						disableAll || fieldDefinition.disabled ? '' : fieldDefinition.placeholder
+					}
 					onFocus={() => setFocus(true)}
 					onBlur={() => setFocus(false)}
 				/>
@@ -69,6 +71,7 @@ const SelectField = ({ field, fieldDefinition, value, onChange, errors, disableA
 			field={field}
 			label={fieldDefinition.label}
 			leftSide={fieldDefinition.leftSide}
+			rightSide={fieldDefinition.rightSide}
 			info={fieldDefinition.info}
 			disabled={disableAll || fieldDefinition.disabled}
 			error={errors?.[field]?.message}
@@ -77,12 +80,13 @@ const SelectField = ({ field, fieldDefinition, value, onChange, errors, disableA
 				value[field] = newValue
 				onChange({ ...value })
 			}}
+			numberOfOptions={fieldDefinition.numberOfOptions}
 			options={fieldDefinition.options}
 			optionsPosition={fieldDefinition.optionsPosition}
 			idModifier={fieldDefinition.idModifier || ((value) => value[0])}
 			valueRender={fieldDefinition.valueRender || ((value) => <>{value[1]}</>)}
 			optionValueRender={fieldDefinition.optionValueRender}
-			placeholder={fieldDefinition.placeholder}
+			placeholder={disableAll || fieldDefinition.disabled ? '' : fieldDefinition.placeholder}
 			multiple={fieldDefinition.multiple}
 		/>
 	)
@@ -110,7 +114,9 @@ const CurrencyField = ({ field, fieldDefinition, value, onChange, errors, disabl
 						onChange({ ...value })
 					}}
 					disabled={disableAll || fieldDefinition.disabled}
-					placeholder={fieldDefinition.placeholder}
+					placeholder={
+						disableAll || fieldDefinition.disabled ? '' : fieldDefinition.placeholder
+					}
 					onFocus={() => setFocus(true)}
 					onBlur={() => setFocus(false)}
 				/>
@@ -138,7 +144,9 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 						onChange({ ...value })
 					}}
 					disabled={disableAll || fieldDefinition.disabled}
-					placeholder={fieldDefinition.placeholder}
+					placeholder={
+						disableAll || fieldDefinition.disabled ? '' : fieldDefinition.placeholder
+					}
 					onFocus={(event) => {
 						setFocus(true)
 						if (fieldDefinition.type === 'date') {
@@ -178,12 +186,14 @@ export type useFormDefinitionType = {
 	optionValueRender?: any
 	pictureName?: string
 	options?: any
+	numberOfOptions?: number
 	leftSide?: any
 	rightSide?: any
 	info?: any
 	disabled?: boolean
 	size?: string
 	multiple?: boolean
+	optionsPosition?: 'top' | 'bottom'
 	subForm?: useFormLayoutDefinitionType
 }
 

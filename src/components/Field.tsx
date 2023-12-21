@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { HTMLProps, useState } from 'react'
 import style from './Field.module.scss'
 
 export const Field = ({
@@ -13,7 +13,7 @@ export const Field = ({
 	className,
 	field,
 	...props
-}: {
+}: HTMLProps<HTMLDivElement> & {
 	label?: string
 	input?: (setFocus: any, id: string) => any
 	leftSide?: any
@@ -37,6 +37,7 @@ export const Field = ({
 			data-focus={focus}
 			data-disabled={disabled ? 'true' : 'false'}
 			data-error={!!error}
+			data-context="input"
 		>
 			{label && <label htmlFor={randomId}>{label}</label>}
 			{input && (

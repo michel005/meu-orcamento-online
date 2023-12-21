@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { ConfigContext } from '../contexts/ConfigContext'
+import { useApiData } from './useApiData'
 
 export const useApi = (entity: string) => {
 	const { setLoading } = useContext(ConfigContext)
-	const [data, setData] = useState([])
+	const apiData = useApiData(entity)
 
 	const header = {
 		headers: {
@@ -28,13 +29,11 @@ export const useApi = (entity: string) => {
 					.join('&')}`,
 				header
 			)
-			.then((...x) => {
-				setData(x[0].data)
-				onSuccess?.(...x)
+			.then((response) => {
+				apiData.set(response.data)
+				onSuccess?.(response)
 			})
-			.catch((...x) => {
-				onError?.(...x)
-			})
+			.catch(onError)
 			.finally(() => {
 				if (!silently) {
 					setLoading(false)
@@ -47,13 +46,8 @@ export const useApi = (entity: string) => {
 		}
 		axios
 			.get(`${entity}/${id}`, header)
-			.then((...x) => {
-				setData(x[0].data)
-				onSuccess(...x)
-			})
-			.catch((...x) => {
-				onError(...x)
-			})
+			.then(onSuccess)
+			.catch(onError)
 			.finally(() => {
 				if (!silently) {
 					setLoading(false)
@@ -144,7 +138,6 @@ export const useApi = (entity: string) => {
 	}
 
 	return {
-		data,
 		getAll,
 		getById,
 		create,

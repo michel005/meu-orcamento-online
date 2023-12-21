@@ -46,19 +46,12 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 		},
 		document_type: {
 			label: 'Tipo de Documento',
-			options:
-				value?.person_type === 'PF'
-					? [
-							['RG', 'RG'],
-							['CPF', 'CPF'],
-					  ]
-					: value?.person_type === 'PJ'
-					? [['CNPJ', 'CNPJ']]
-					: [
-							['RG', 'RG'],
-							['CPF', 'CPF'],
-							['CNPJ', 'CNPJ'],
-					  ],
+			optionsPosition: 'top',
+			options: [
+				['RG', 'RG'],
+				['CPF', 'CPF'],
+				['CNPJ', 'CNPJ'],
+			],
 			type: 'select',
 			leftSide: <ButtonGhost leftIcon="cards" disabled={true} />,
 			placeholder: 'RG / CPF / CNPJ',

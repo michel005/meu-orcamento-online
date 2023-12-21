@@ -1,0 +1,57 @@
+.tabs {
+	border-bottom: 2px solid #eee;
+	display: flex;
+	flex-direction: row;
+	gap: 7px;
+
+	button {
+		background-color: transparent;
+		border-top: none !important;
+		border-left: none !important;
+		border-right: none !important;
+		border-bottom: 2px solid transparent;
+		border-radius: 0;
+		color: #ccc !important;
+
+		&:hover {
+			background-color: transparent !important;
+			border-color: #ccc;
+		}
+
+		&:focus {
+			background-color: transparent !important;
+		}
+
+		div:nth-child(3) {
+			background-color: #eee !important;
+			color: #fff !important;
+		}
+
+		&[data-variation='primary'] {
+			border-color: var(--active-color);
+			color: var(--active-color) !important;
+
+			&:focus {
+				color: var(--active-color) !important;
+			}
+
+			div:nth-child(3) {
+				background-color: var(--active-color) !important;
+				color: #fff !important;
+			}
+		}
+
+		&[data-error='true'] {
+			div:nth-child(3) {
+				background-color: #f00a !important;
+				color: #fff !important;
+			}
+
+			&[data-variation='ghost'] {
+				div:nth-child(3) {
+					background-color: #f003 !important;
+				}
+			}
+		}
+	}
+}

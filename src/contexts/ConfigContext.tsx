@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { MessageType } from '../types/AllTypes'
+import { CustomerType, MessageType, ProductType, WaitingListType } from '../types/AllTypes'
 
 export type ConfigContextType = {
+	showSidebar: boolean
+	setShowSidebar: any
 	message: MessageType | null
 	setMessage: (message: MessageType | null) => void
 	loading: boolean
@@ -12,9 +14,17 @@ export type ConfigContextType = {
 	setOnCloseForm: any
 	pageData: any
 	setPageData: any
+	apiData: {
+		customer: CustomerType[]
+		product: ProductType[]
+		waitingList: WaitingListType[]
+	}
+	setApiData: any
 }
 
 export const ConfigContext = React.createContext<ConfigContextType>({
+	showSidebar: null,
+	setShowSidebar: () => {},
 	message: null,
 	setMessage: () => {},
 	loading: false,
@@ -25,21 +35,28 @@ export const ConfigContext = React.createContext<ConfigContextType>({
 	setOnCloseForm: () => {},
 	pageData: null,
 	setPageData: () => {},
+	apiData: null,
+	setApiData: () => {},
 })
 
 export const ConfigProvider = ({ children }: { children: any }) => {
+	const [showSidebar, setShowSidebar] = useState(true)
 	const [message, setMessage] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const [form, setForm] = useState({})
+	const [apiData, setApiData] = useState({
+		customer: [],
+		product: [],
+		waitingList: [],
+	})
 	const [pageData, setPageData] = useState({
 		customer: {
+			view: 'table',
 			favorite: false,
-			active: true,
-			inactive: false,
-			pf: true,
-			pj: true,
+			personType: null,
 		},
 		product: {
+			view: 'table',
 			seller_id: null,
 		},
 	})
@@ -48,6 +65,8 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 	return (
 		<ConfigContext.Provider
 			value={{
+				showSidebar,
+				setShowSidebar,
 				message,
 				setMessage,
 				loading,
@@ -58,6 +77,8 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 				setOnCloseForm,
 				pageData,
 				setPageData,
+				apiData,
+				setApiData,
 			}}
 		>
 			{children}

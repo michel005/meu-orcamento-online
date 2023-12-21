@@ -3,6 +3,9 @@ import { useMessage } from './useMessage'
 import { useApi } from './useApi'
 import { useFormLayout, useFormLayoutDefinitionType } from './useFormLayout'
 import { usePageData } from './usePageData'
+import { useContext } from 'react'
+import { ConfigContext } from '../contexts/ConfigContext'
+import { useApiData } from './useApiData'
 
 export const usePage = <T>(
 	pageName: string,
@@ -11,6 +14,7 @@ export const usePage = <T>(
 ) => {
 	const message = useMessage()
 	const form = useForm<T>(pageName)
+	const apiData = useApiData(pageName)
 	const pageData = usePageData(pageName)
 	const api = useApi(pageName)
 	const formLayout = useFormLayout<T>({
@@ -21,6 +25,7 @@ export const usePage = <T>(
 	})
 
 	return {
+		apiData,
 		message,
 		pageData,
 		form,

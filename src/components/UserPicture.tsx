@@ -16,43 +16,66 @@ export const UserPicture = ({
 	...props
 }) => {
 	const [fallbackImage, setFallbackImage] = useState(null)
+	const [expand, setExpand] = useState(false)
 
 	return (
-		<div
-			{...props}
-			title={name}
-			onClick={onClick}
-			className={`${style.userPicture} ${className}`}
-			style={{ '--size': size, ...props.style } as CSSProperties}
-			data-format={type}
-			data-have-onclick={!!onClick}
-			data-full-width={fullWidth}
-		>
-			{picture && !fallbackImage ? (
-				<img
-					src={
-						fallbackImage || picture.startsWith('http')
-							? picture //`${picture}?randomId=${randomId}`
-							: picture
-					}
-					onError={(e) => {
-						setFallbackImage(true)
+		<>
+			<div
+				{...props}
+				title={name}
+				onClick={onClick}
+				className={`${style.userPicture} ${className}`}
+				style={{ '--size': size, ...props.style } as CSSProperties}
+				data-format={type}
+				data-have-onclick={!!onClick}
+				data-full-width={fullWidth}
+				data-picture-component
+			>
+				{picture && !fallbackImage ? (
+					<img
+						src={picture}
+						onError={(e) => {
+							setFallbackImage(true)
+						}}
+						onDoubleClick={() => {
+							setExpand(true)
+						}}
+						loading="lazy"
+						data-picture
+					/>
+				) : (
+					<>
+						{placeholder ? (
+							<div
+								data-picture
+								className={`${style.initialLetters} ${style.placeholder}`}
+							>
+								{placeholder}
+							</div>
+						) : (
+							<div data-picture className={style.initialLetters}>
+								{StringUtils.initialLetters(name).toUpperCase()}
+							</div>
+						)}
+					</>
+				)}
+			</div>
+			{!fallbackImage && expand && (
+				<div
+					className={style.preview}
+					onClick={() => {
+						setExpand(false)
 					}}
-					loading="lazy"
-				/>
-			) : (
-				<>
-					{placeholder ? (
-						<div className={`${style.initialLetters} ${style.placeholder}`}>
-							{placeholder}
-						</div>
-					) : (
-						<div className={style.initialLetters}>
-							{placeholder || StringUtils.initialLetters(name).toUpperCase()}
-						</div>
-					)}
-				</>
+				>
+					<img
+						src={picture}
+						onDoubleClick={() => {
+							setExpand(false)
+						}}
+						loading="lazy"
+					/>
+				</div>
 			)}
-		</div>
+		</>
 	)
 }

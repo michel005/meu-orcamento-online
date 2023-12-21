@@ -31,18 +31,17 @@
 	font-size: 16px;
 	gap: 4px;
 
-	label {
+	> label {
 		align-self: flex-start;
 		color: #333;
 		cursor: pointer;
-		font-size: 14px;
+		font-size: 0.8em;
 		transition: all 0.25s;
 	}
 
 	&[data-focus='true'] {
 		.inputContent {
-			background-color: #fff;
-			border-color: var(--active-color);
+			outline-color: var(--active-color);
 		}
 	}
 
@@ -54,7 +53,7 @@
 		.inputContent {
 			backdrop-filter: none;
 			background-color: transparent;
-			border: none;
+			outline: none;
 			gap: 7px;
 			height: auto;
 
@@ -76,13 +75,13 @@
 
 	&[data-error='true'] {
 		.inputContent {
-			border-color: #ffc3c3;
+			outline-color: #ffc3c3;
 			color: red;
 		}
 
 		&[data-focus='true'] {
 			.inputContent {
-				border-color: red;
+				outline-color: red;
 			}
 		}
 	}
@@ -101,18 +100,19 @@
 	backdrop-filter: blur(4px);
 	background-color: #fff;
 	border-radius: var(--border-radius);
-	border: 1px solid var(--input-border-color);
+	outline: 1px solid var(--input-border-color);
 	display: flex;
 	flex-direction: row;
 	height: var(--input-height);
 	transition: all 0.25s;
-	width: auto;
+	width: 100%;
 	min-width: 50px;
+	max-width: 100%;
 }
 
 .emptySpace {
-	min-width: 10px;
-	width: 10px;
+	min-width: 14px;
+	width: 14px;
 }
 
 .leftSide,
@@ -135,31 +135,27 @@
 	}
 }
 
-.leftSide {
-	color: inherit;
-
+.leftSide,
+.rightSide {
 	button {
 		border-radius: 0;
 	}
 
 	button:first-child {
-		border-radius: var(--border-radius) 0 0 var(--border-radius);
 		color: inherit;
 		font-size: inherit;
 	}
 }
 
-.rightSide {
-	color: inherit;
-
-	button {
-		border-radius: 0;
+.leftSide {
+	button:last-child {
+		border-radius: var(--border-radius) 0 0 var(--border-radius);
 	}
+}
 
+.rightSide {
 	button:last-child {
 		border-radius: 0 var(--border-radius) var(--border-radius) 0;
-		color: inherit;
-		font-size: inherit;
 	}
 }
 

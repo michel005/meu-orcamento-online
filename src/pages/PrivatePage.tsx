@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import style from './PrivatePage.module.scss'
 import { Icon } from '../components/Icon'
-import { NavLink, Route, Routes, useNavigate } from 'react-router-dom'
-import { ButtonGhost, ButtonWhite } from '../components/Button'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Button, ButtonGhost } from '../components/Button'
 import { SessionContext } from '../contexts/SessionContext'
 import { RoutesMap } from '../constants/RoutesMap'
 import { UserPicture } from '../components/UserPicture'
 import { LoadingPage } from './LoadingPage'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { Bag } from '../components/Bag'
+import { StringUtils } from '../utils/StringUtils'
+import { usePage } from '../hooks/usePage'
 
 const RedirectToDashboard = () => {
 	const navigate = useNavigate()
@@ -20,102 +22,145 @@ const RedirectToDashboard = () => {
 	return <></>
 }
 
-export const PrivatePage = () => {
-	const { loading, setMessage } = useContext(ConfigContext)
-	const { currentUser, setCurrentUser } = useContext(SessionContext)
-	const [showMenu, setShowMenu] = useState(false)
+const RouteButton = ({ routeDetails, rightBag = undefined }) => {
 	const navigate = useNavigate()
 
+	const allRoutes = Object.keys(RoutesMap.private).map((route) => RoutesMap.private[route])
+	const currentRoute = useMemo(
+		() => allRoutes.find((route) => location.pathname === route.route),
+		[location.pathname]
+	)
+
 	return (
-		<div className={style.privatePage} data-show-menu={showMenu}>
-			<nav className={style.navbar}>
-				<div className={style.appInfo}>
-					<ButtonWhite
-						className={style.showMenuButton}
-						leftIcon="menu"
-						onClick={() => {
-							setShowMenu((x) => !x)
-						}}
-					/>
-					<ButtonWhite
-						leftIcon="description"
-						onClick={() => {
-							navigate('/')
-						}}
-					>
-						Meu Bazar Online
-					</ButtonWhite>
+		<ButtonGhost
+			leftIcon={routeDetails?.icon}
+			data-active={currentRoute.route === routeDetails.route}
+			onClick={() => {
+				navigate(routeDetails.route)
+			}}
+			rightIcon={
+				currentRoute.route === routeDetails.route ? 'keyboard_arrow_right' : undefined
+			}
+			rightBag={rightBag}
+		>
+			{routeDetails.name}
+		</ButtonGhost>
+	)
+}
+
+export const PrivatePage = () => {
+	const { formLayout } = usePage('main', () => ({
+		sidebar_search: {
+			leftSide: <ButtonGhost disabled={true} leftIcon="search" />,
+			placeholder: 'Buscar',
+			type: 'text',
+		},
+	}))
+	const { loading, setMessage, showSidebar, setShowSidebar } = useContext(ConfigContext)
+	const { currentUser, setCurrentUser } = useContext(SessionContext)
+	const navigate = useNavigate()
+	const location = useLocation()
+
+	const allRoutes = Object.keys(RoutesMap.private).map((route) => RoutesMap.private[route])
+
+	const currentRoute = useMemo(
+		() => allRoutes.find((route) => location.pathname === route.route),
+		[location.pathname]
+	)
+
+	return (
+		<div className={style.privatePage}>
+			<section className={style.header}>
+				<Icon className={style.logo} icon="shopping_bag" />
+				<div className={style.headerAppInfo}>
+					<h1>Meu Bazar Online</h1>
 				</div>
-				<div className={style.navbarOptions}>
-					{Object.keys(RoutesMap.private)
-						.filter((routeKey) => !RoutesMap.private[routeKey].hide)
-						.map((routeKey) => {
-							const routeDetails = RoutesMap.private[routeKey]
-							return (
-								<NavLink
-									key={routeKey}
-									to={routeDetails.route}
-									className={({ isActive }) => (isActive ? style.active : '')}
+			</section>
+			<section className={style.pageInfo}>
+				<div className={style.pageInfoHeader}>
+					<h1>{currentRoute.name}</h1>
+					<p>{currentRoute.description}</p>
+				</div>
+				<div className={style.pageInfoUser}>
+					<div className={style.pageInfoUserOptions}>
+						<Button leftIcon="notifications" rightBag={''} />
+						<Button leftIcon="settings" />
+					</div>
+					<hr />
+					<Bag
+						button={(show, setShow) => (
+							<div
+								className={style.pageInfoUserButton}
+								onClick={() => {
+									setShow((x) => !x)
+								}}
+							>
+								<UserPicture
+									picture={currentUser.user?.picture}
+									name={currentUser.user?.full_name}
+									size="48px"
+									randomId={Math.random()}
+								/>
+								<div className={style.pageInfoUserButtonInfo}>
+									<h3>{currentUser.user.full_name}</h3>
+									<p>{currentUser.user.email}</p>
+								</div>
+								<Icon icon={show ? 'keyboard_arrow_up' : 'keyboard_arrow_down'} />
+							</div>
+						)}
+						arrowPosition="top-right"
+					>
+						{(show, setShow) => (
+							<>
+								<ButtonGhost
+									leftIcon="edit"
 									onClick={() => {
-										setShowMenu(false)
+										setShow(false)
+										navigate('/my-user')
 									}}
 								>
-									<Icon icon={routeDetails?.icon} className={style.icon} />
-									<span>{routeDetails.name}</span>
-								</NavLink>
-							)
-						})}
+									Alterar Perfil
+								</ButtonGhost>
+								<ButtonGhost
+									leftIcon="logout"
+									onClick={() => {
+										setShow(false)
+										setMessage({
+											header: 'Deseja realmente sair?',
+											content: 'O dados não salvos poderão ser perdidos.',
+											type: 'question',
+											confirm: () => {
+												navigate('/')
+												setCurrentUser(null)
+											},
+										})
+									}}
+								>
+									Sair
+								</ButtonGhost>
+							</>
+						)}
+					</Bag>
 				</div>
-				<Bag
-					button={(show, setShow) => (
-						<UserPicture
-							className={style.userInfoPicture}
-							picture={currentUser.user?.picture}
-							name={currentUser.user?.full_name}
-							size="var(--input-height)"
-							onClick={() => {
-								setShow((x) => !x)
-							}}
-							randomId={Math.random()}
-						/>
-					)}
-					arrowPosition="top-right"
-				>
-					{(show, setShow) => (
-						<>
-							<ButtonGhost
-								leftIcon="edit"
-								onClick={() => {
-									navigate('/my-user')
-									setShowMenu(false)
-									setShow(false)
-								}}
-							>
-								Alterar meus dados
-							</ButtonGhost>
-							<ButtonGhost
-								leftIcon="logout"
-								onClick={() => {
-									setShowMenu(false)
-									setShow(false)
-									setMessage({
-										header: 'Deseja realmente sair?',
-										content: 'O dados não salvos poderão ser perdidos.',
-										type: 'question',
-										confirm: () => {
-											navigate('/')
-											setCurrentUser(null)
-										},
-									})
-								}}
-							>
-								Sair
-							</ButtonGhost>
-						</>
-					)}
-				</Bag>
-			</nav>
-			<main className={style.mainContent}>
+			</section>
+			<section className={style.sidebar}>
+				{formLayout.getField('sidebar_search')}
+				<label>Funcionalidades</label>
+				<RouteButton routeDetails={RoutesMap.private.dashboard} />
+				<RouteButton routeDetails={RoutesMap.private.customers} />
+				<RouteButton routeDetails={RoutesMap.private.products} />
+				<RouteButton routeDetails={RoutesMap.private.myUser} />
+				<label>Produtos</label>
+				<RouteButton routeDetails={RoutesMap.private.sells} />
+				<RouteButton routeDetails={RoutesMap.private.payments} />
+				<label>Redes Sociais</label>
+				<RouteButton routeDetails={RoutesMap.private.facebook} />
+				<RouteButton routeDetails={RoutesMap.private.instagram} />
+				<RouteButton routeDetails={RoutesMap.private.mercadoLivre} />
+				<div style={{ flexGrow: 1 }} />
+				<RouteButton routeDetails={RoutesMap.private.getStarted} />
+			</section>
+			<section className={style.content}>
 				<Routes>
 					{Object.keys(RoutesMap.private).map((routeKey) => {
 						const routeDetails = RoutesMap.private[routeKey]
@@ -130,6 +175,115 @@ export const PrivatePage = () => {
 					<Route path="*" element={<RedirectToDashboard />} />
 				</Routes>
 				{loading && <LoadingPage />}
+			</section>
+		</div>
+	)
+
+	return (
+		<div className={style.privatePage} data-show-sidebar={showSidebar}>
+			<aside>
+				<div className={style.title}>
+					<Icon className={style.logo} icon="description" />
+					<section>
+						<h1>Meu Bazar Online</h1>
+						<p>Gestão de Vendas e Clientes</p>
+					</section>
+				</div>
+				<div className={style.allOptions}>
+					{Object.keys(RoutesMap.private)
+						.filter((routeKey) => !RoutesMap.private[routeKey].hide)
+						.map((routeKey) => {
+							const routeDetails = RoutesMap.private[routeKey]
+							return (
+								<Button
+									key={routeKey}
+									leftIcon={routeDetails?.icon}
+									variationOverride={
+										currentRoute.route === routeDetails.route
+											? 'primary'
+											: 'white'
+									}
+									onClick={() => {
+										navigate(routeDetails.route)
+									}}
+								>
+									{routeDetails.name}
+								</Button>
+							)
+						})}
+				</div>
+				<div className={style.userInfo}>
+					<Bag
+						button={(show, setShow) => (
+							<UserPicture
+								className={style.userInfoPicture}
+								picture={currentUser.user?.picture}
+								name={currentUser.user?.full_name}
+								size="var(--input-height)"
+								onClick={() => {
+									setShow((x) => !x)
+								}}
+								randomId={Math.random()}
+							/>
+						)}
+						arrowPosition="bottom-left"
+					>
+						{(show, setShow) => (
+							<>
+								<ButtonGhost
+									leftIcon="edit"
+									onClick={() => {
+										setShow(false)
+										navigate('/my-user')
+									}}
+								>
+									Alterar Perfil
+								</ButtonGhost>
+								<ButtonGhost
+									leftIcon="logout"
+									onClick={() => {
+										setShow(false)
+										setMessage({
+											header: 'Deseja realmente sair?',
+											content: 'O dados não salvos poderão ser perdidos.',
+											type: 'question',
+											confirm: () => {
+												navigate('/')
+												setCurrentUser(null)
+											},
+										})
+									}}
+								>
+									Sair
+								</ButtonGhost>
+							</>
+						)}
+					</Bag>
+					<div className={style.userDetails}>
+						<h4>{StringUtils.firstAndLastName(currentUser.user.full_name)}</h4>
+						<small>{currentUser.user.email}</small>
+					</div>
+				</div>
+				<Button
+					className={style.reduceButton}
+					leftIcon="menu"
+					onClick={() => setShowSidebar((x) => !x)}
+				/>
+			</aside>
+			<main className={style.mainContent}>
+				<Routes>
+					{Object.keys(RoutesMap.private).map((routeKey) => {
+						const routeDetails = RoutesMap.private[routeKey]
+						return (
+							<Route
+								key={routeKey}
+								path={routeDetails.route}
+								element={routeDetails.component}
+							/>
+						)
+					})}
+					<Route path="*" element={<RedirectToDashboard />} />
+				</Routes>
 			</main>
 		</div>
 	)

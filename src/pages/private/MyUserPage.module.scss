@@ -6,36 +6,6 @@
 	height: 100%;
 }
 
-.userInfoSidebar {
-	background-color: #222;
-	display: flex;
-	flex-direction: column;
-	min-width: 270px;
-	overflow-y: auto;
-	width: 270px;
-
-	.sidebarInfo {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		padding: 21px;
-		height: 100%;
-	}
-
-	h3 {
-		color: #fff;
-		font-size: 1.2em;
-	}
-
-	p {
-		align-items: center;
-		color: #fffa;
-		display: flex;
-		font-size: 0.9em;
-		gap: 7px;
-	}
-}
-
 .separator {
 	height: 14px;
 }

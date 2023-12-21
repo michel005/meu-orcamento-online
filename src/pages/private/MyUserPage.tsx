@@ -56,51 +56,6 @@ export const MyUserPage = () => {
 
 	return (
 		<div className={style.myUserPage}>
-			<div className={style.userInfoSidebar}>
-				<UserPicture
-					className={style.userPicture}
-					picture={currentUser.user.picture}
-					name={currentUser.user.full_name}
-					type="square"
-					size="270px"
-					randomId={Math.random()}
-				/>
-				<div className={style.sidebarInfo}>
-					<h3>{currentUser.user.full_name}</h3>
-					<p>
-						<Icon icon="mail" />
-						{currentUser.user.email}
-					</p>
-					{currentUser.user?.birthday && (
-						<p>
-							<Icon icon="calendar_month" />
-							{currentUser.user?.birthday}
-						</p>
-					)}
-					<div className={style.separator} style={{ flexGrow: 1 }} />
-					<ButtonWhite
-						onClick={() => {
-							document.location.hash = '#myData'
-						}}
-					>
-						Meus Dados
-					</ButtonWhite>
-					<ButtonWhite
-						onClick={() => {
-							document.location.hash = '#address'
-						}}
-					>
-						Endereço
-					</ButtonWhite>
-					<ButtonWhite
-						onClick={() => {
-							document.location.hash = '#changePassword'
-						}}
-					>
-						Alterar Senha
-					</ButtonWhite>
-				</div>
-			</div>
 			<div className={style.userForm}>
 				<header className={style.header}>
 					<h1 id="myData">Meus dados</h1>

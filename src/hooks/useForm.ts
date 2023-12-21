@@ -13,6 +13,12 @@ export const useForm = <T>(name: string) => {
 				return { ...x }
 			})
 		},
+		editProp: (prop: string, value: (prev: any) => void) => {
+			setForm((x: any) => {
+				x[name][prop] = value?.(x?.[name]?.[prop])
+				return { ...x }
+			})
+		},
 		show: (value: T, onClose: () => void | null = null) => {
 			setForm((x: any) => {
 				x[name] = { ...value }

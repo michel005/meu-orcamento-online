@@ -1,6 +1,9 @@
 @import '../keyframe';
 
 .table {
+	--table-cell-size: calc(var(--input-height) + 8px);
+	--table-cell-size-body: calc(var(--input-height) + 14px);
+
 	animation: fadeOut 0.25s linear;
 	background-color: #fff;
 	border-collapse: collapse;
@@ -34,7 +37,7 @@
 	&::before {
 		background-color: #1111;
 		content: '';
-		height: calc((100% * var(--numberOfRows) + 100%) + 3px);
+		height: calc((var(--table-cell-size-body) * var(--numberOfRows) + var(--table-cell-size)));
 		left: 0;
 		opacity: 0;
 		pointer-events: none;
@@ -66,12 +69,8 @@
 .tableBodyRow {
 	transition: all 0.25s;
 
-	&:nth-child(even) {
-		background-color: #f4f4f4;
-	}
-
 	&:hover {
-		background-color: #1111;
+		background-color: #f4f4f4;
 	}
 }
 
@@ -79,12 +78,21 @@
 	width: 1%;
 }
 
+.tableHeadColumn {
+	height: var(--table-cell-size);
+	max-height: var(--table-cell-size);
+	min-height: var(--table-cell-size);
+}
+
+.tableBodyColumn {
+	height: var(--table-cell-size-body);
+	max-height: var(--table-cell-size-body);
+	min-height: var(--table-cell-size-body);
+}
+
 .tableHeadColumn,
 .tableBodyColumn {
 	color: #666;
-	height: calc(var(--input-height) + 8px);
-	max-height: calc(var(--input-height) + 8px);
-	min-height: calc(var(--input-height) + 8px);
 	font-size: 16px;
 	padding-inline: 17px;
 	text-align: left;
@@ -177,12 +185,13 @@
 
 	button {
 		align-self: center;
+		color: #666 !important;
 		flex-grow: 0 !important;
 		padding: 0;
 		width: var(--input-height);
 
-		&[data-active='true'] {
-			background-color: #1113;
+		&:disabled {
+			font-weight: bold !important;
 		}
 	}
 }

@@ -12,28 +12,20 @@ import { AddressDefinition } from '../../definitions/AddressDefinition'
 
 export const CreateUserPage = () => {
 	const { setLoading } = useContext(ConfigContext)
-	const [value, setValue] = useState<{
-		user: UserType
-		address: AddressType
-	}>({
-		user: {
-			picture: null,
-			full_name: null,
-			user_name: null,
-			email: null,
-			phone: null,
-			password: null,
-		},
+	const [value, setValue] = useState<UserType>({
+		picture: null,
+		full_name: null,
+		user_name: null,
+		email: null,
+		phone: null,
+		password: null,
 		address: {},
 	})
 	const userFormLayout = useFormLayout<UserType>({
 		definition: ChangeUserDefinition(),
-		value: value.user,
+		value: value,
 		onChange: (x) => {
-			setValue((y) => {
-				y.user = { ...x }
-				return { ...y }
-			})
+			setValue(x)
 		},
 	})
 	const addressFormLayout = useFormLayout<AddressType>({
@@ -60,12 +52,12 @@ export const CreateUserPage = () => {
 				navigate('/login')
 			})
 			.catch((errors) => {
-				userFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data.user))
+				userFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data))
 				addressFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data.address))
-				if (Object.keys(errors.response.data.user).length > 0) {
-					setStep(0)
-				} else if (Object.keys(errors.response.data.address).length > 0) {
+				if (Object.keys(errors.response.data.address).length > 0) {
 					setStep(1)
+				} else if (Object.keys(errors.response.data).length > 0) {
+					setStep(0)
 				}
 			})
 			.finally(() => {
@@ -110,6 +102,7 @@ export const CreateUserPage = () => {
 						{addressFormLayout.getField('street_name')}
 						{addressFormLayout.getField('street_number')}
 						{addressFormLayout.getField('complement')}
+						{addressFormLayout.getField('neighborhood')}
 						{addressFormLayout.getField('city')}
 						{addressFormLayout.getField('state')}
 						{addressFormLayout.getField('country')}

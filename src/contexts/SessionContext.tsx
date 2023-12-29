@@ -22,28 +22,32 @@ export const SessionProvider = ({ children }: { children: any }) => {
 	const [currentUser, setCurrentUser] = useState(null)
 	const [status, setStatus] = useState<'idle' | 'loading' | 'loaded'>('idle')
 
+	const getUserWithAuthToken = () => {
+		setStatus('loading')
+		setLoading(true)
+		axios
+			.get('user/me', {
+				headers: {
+					authorization: `Baerer ${localStorage.getItem('auth_token')}`,
+				},
+			})
+			.then((response) => {
+				setStatus('loaded')
+				setCurrentUser(response.data)
+				setLoading(false)
+			})
+			.catch((response) => {
+				setStatus('loaded')
+				setCurrentUser(null)
+				localStorage.removeItem('auth_token')
+				setLoading(false)
+			})
+	}
+
 	useEffect(() => {
 		if (status === 'idle') {
 			if (localStorage.getItem('auth_token')) {
-				setStatus('loading')
-				setLoading(true)
-				axios
-					.post('user/me', null, {
-						headers: {
-							authorization: `Baerer ${localStorage.getItem('auth_token')}`,
-						},
-					})
-					.then((response) => {
-						setStatus('loaded')
-						setCurrentUser(response.data)
-						setLoading(false)
-					})
-					.catch((response) => {
-						setStatus('loaded')
-						setCurrentUser(null)
-						localStorage.removeItem('auth_token')
-						setLoading(false)
-					})
+				getUserWithAuthToken()
 			} else {
 				setStatus('loaded')
 			}
@@ -63,11 +67,8 @@ export const SessionProvider = ({ children }: { children: any }) => {
 		},
 		rememberMe: boolean
 	) => {
-		setCurrentUser({
-			...userInfo,
-			token: undefined,
-		})
 		localStorage.setItem('auth_token', userInfo.token)
+		getUserWithAuthToken()
 		if (rememberMe) {
 			localStorage.setItem('saved_user', userInfo.user.user_name)
 		} else {

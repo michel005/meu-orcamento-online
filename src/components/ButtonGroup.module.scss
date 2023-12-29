@@ -1,10 +1,8 @@
 .buttonGroup {
-	background-color: #ccc;
 	backdrop-filter: blur(4px);
 	border-radius: var(--border-radius);
 	display: flex;
 	flex-direction: row;
-	gap: 1px;
 	outline: 1px solid #ccc;
 
 	> button {

@@ -23,6 +23,9 @@ export const CustomerPage = () => {
 				!pageData.data.general_search ||
 				x.full_name.toLowerCase().includes(pageData.data.general_search.toLowerCase()) ||
 				x.email.toLowerCase().includes(pageData.data.general_search.toLowerCase()) ||
+				x.document_number
+					.toLowerCase()
+					.includes(pageData.data.general_search.toLowerCase()) ||
 				JSON.stringify(x.address || {})
 					.toLowerCase()
 					.includes(pageData.data.general_search.toLowerCase())
@@ -122,17 +125,14 @@ export const CustomerPage = () => {
 												data-favorite={customer.favorite}
 												onClick={() => {
 													api.update({
+														id: customer._id,
 														silently: true,
-														data: {
-															customer: JSON.parse(
-																JSON.stringify({
-																	...customer,
-																	address: undefined,
-																	favorite: !customer?.favorite,
-																})
-															),
-															address: customer.address,
-														},
+														data: JSON.parse(
+															JSON.stringify({
+																...customer,
+																favorite: !customer.favorite,
+															})
+														),
 														onSuccess: () => {
 															api.getAll({ silently: true })
 														},
@@ -159,7 +159,7 @@ export const CustomerPage = () => {
 					{filteredData.map((customer: CustomerType) => {
 						return (
 							<CustomerCard
-								key={customer.id}
+								key={customer._id}
 								customer={customer}
 								onClose={() => api.getAll()}
 							/>

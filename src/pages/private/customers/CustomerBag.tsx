@@ -1,13 +1,12 @@
-import { CustomerType } from '../../../types/AllTypes'
-import { ButtonGhost } from '../../../components/Button'
-import { Bag } from '../../../components/Bag'
 import React from 'react'
-import { usePageData } from '../../../hooks/usePageData'
 import { useNavigate } from 'react-router-dom'
-import { FileUtils } from '../../../utils/FileUtils'
+import { Bag } from '../../../components/Bag'
+import { ButtonGhost } from '../../../components/Button'
 import { useApi } from '../../../hooks/useApi'
 import { useForm } from '../../../hooks/useForm'
-import { useMessage } from '../../../hooks/useMessage'
+import { usePageData } from '../../../hooks/usePageData'
+import { CustomerType } from '../../../types/AllTypes'
+import { FileUtils } from '../../../utils/FileUtils'
 
 export const CustomerBag = ({
 	customer,
@@ -20,13 +19,12 @@ export const CustomerBag = ({
 }) => {
 	const api = useApi('customer')
 	const form = useForm<CustomerType>('customer')
-	const message = useMessage()
 	const { setProp } = usePageData('product')
 	const navigate = useNavigate()
 
 	return (
 		<Bag
-			button={(show, setShow) => (
+			button={(_, setShow) => (
 				<ButtonGhost
 					leftIcon="more_horiz"
 					onClick={() => {
@@ -36,7 +34,7 @@ export const CustomerBag = ({
 			)}
 			arrowPosition={arrowPosition}
 		>
-			{(show, setShow) => {
+			{(_, setShow) => {
 				return (
 					<>
 						{customer.active && (
@@ -45,15 +43,10 @@ export const CustomerBag = ({
 								onClick={() => {
 									setShow(false)
 									api.update({
+										id: customer._id,
 										data: {
-											customer: JSON.parse(
-												JSON.stringify({
-													...customer,
-													address: undefined,
-													active: false,
-												})
-											),
-											address: customer.address,
+											...customer,
+											active: false,
 										},
 										onSuccess: onSuccess,
 									})
@@ -66,7 +59,7 @@ export const CustomerBag = ({
 							leftIcon="shopping_bag"
 							onClick={() => {
 								setShow(false)
-								setProp('seller_id', () => customer.id)
+								setProp('seller_id', () => customer._id)
 								navigate('/products')
 							}}
 						>
@@ -76,20 +69,15 @@ export const CustomerBag = ({
 							leftIcon="copy_all"
 							onClick={() => {
 								setShow(false)
-								form.show({
-									...customer,
-									id: undefined,
-									picture: undefined,
-									favorite: undefined,
-									active: true,
-									address: {
-										...customer.address,
-										id: undefined,
+								form.show(
+									{
+										...customer,
+										_id: undefined,
+										picture: undefined,
+										favorite: undefined,
+										active: true,
 									},
-								})
-								message.message(
-									'Duplicação de Cliente',
-									'Lembre de modificar as informações principais do seu cliente. Caso o número do documento ou e-mail já esteja sendo utilizado por outro cliente, não será permitido salvar.'
+									() => onSuccess?.(null)
 								)
 							}}
 						>

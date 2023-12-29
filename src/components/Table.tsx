@@ -1,14 +1,13 @@
 import React, { CSSProperties, useState } from 'react'
+import { usePagination } from '../hooks/usePagination'
+import { NumberUtils } from '../utils/NumberUtils'
+import { SortUtils } from '../utils/SortUtils'
+import { ButtonSecondary } from './Button'
+import { ButtonGroup } from './ButtonGroup'
+import { FlexRow } from './FlexRow'
+import { Icon } from './Icon'
 import style from './Table.module.scss'
 import { TableType, TableTypeDefinition } from './Table.type'
-import { usePagination } from '../hooks/usePagination'
-import { Button, ButtonSecondary } from './Button'
-import { FlexRow } from './FlexRow'
-import { ButtonGroup } from './ButtonGroup'
-import { SelectInput } from './inputs/SelectInput'
-import { NumberUtils } from '../utils/NumberUtils'
-import { Icon } from './Icon'
-import { SortUtils } from '../utils/SortUtils'
 
 export const Table = ({ definition, value }: TableType) => {
 	const [pageSize, setPageSize] = useState(10)
@@ -141,21 +140,21 @@ export const Table = ({ definition, value }: TableType) => {
 												pagination.goToPrevious()
 											}}
 										/>
-									</ButtonGroup>
-									{new Array(pagination.numberOfPages).fill(0).map((_, index) => {
-										return (
-											<ButtonSecondary
-												key={index}
-												data-active={pagination.currentPage === index}
-												onClick={() => {
-													pagination.goTo(index)
-												}}
-											>
-												{index + 1}
-											</ButtonSecondary>
-										)
-									})}
-									<ButtonGroup>
+										{new Array(pagination.numberOfPages)
+											.fill(0)
+											.map((_, index) => {
+												return (
+													<ButtonSecondary
+														key={index}
+														disabled={pagination.currentPage === index}
+														onClick={() => {
+															pagination.goTo(index)
+														}}
+													>
+														{index + 1}
+													</ButtonSecondary>
+												)
+											})}
 										<ButtonSecondary
 											disabled={
 												pagination.currentPage ===
@@ -179,24 +178,30 @@ export const Table = ({ definition, value }: TableType) => {
 									</ButtonGroup>
 								</>
 							)}
-							<p>
-								Mostrando {pagination.slice.length} de {value.length} registro(s)
-							</p>
+							{value.length === 0 ? (
+								<p>Nenhum registro encontrado</p>
+							) : (
+								<p>
+									Mostrando {pagination.slice.length} de {value.length}{' '}
+									registro(s)
+								</p>
+							)}
 							<div style={{ flexGrow: 1 }} />
-							<SelectInput
-								field="pageSize"
-								value={pageSize}
-								onChange={(value: number) => {
-									pagination.goToFirst()
-									setPageSize(value)
-								}}
-								options={[5, 10, 20, 50]}
-								idModifier={(x) => x}
-								valueRender={(x) => x}
-								optionValueRender={(x) => x}
-								nullable={false}
-								optionsPosition="top"
-							/>
+							<p>Tamanho da página</p>
+							<ButtonGroup>
+								{[5, 10, 20, 50].map((size) => {
+									return (
+										<ButtonSecondary
+											disabled={pageSize === size}
+											onClick={() => {
+												setPageSize(size)
+											}}
+										>
+											{size}
+										</ButtonSecondary>
+									)
+								})}
+							</ButtonGroup>
 						</FlexRow>
 					</td>
 				</tr>

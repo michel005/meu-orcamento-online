@@ -37,7 +37,7 @@ export const CustomerForm = () => {
 	}
 
 	const onError = (errors: any) => {
-		customerFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data.customer || {}))
+		customerFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data || {}))
 		addressFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data.address || {}))
 	}
 
@@ -125,6 +125,7 @@ export const CustomerForm = () => {
 												{addressFormLayout.getField('street_number')}
 												{addressFormLayout.getField('complement')}
 											</div>
+											{addressFormLayout.getField('neighborhood')}
 											<div className={style.contentRow}>
 												{addressFormLayout.getField('city')}
 												{addressFormLayout.getField('state')}
@@ -145,21 +146,15 @@ export const CustomerForm = () => {
 						leftIcon="person_check"
 						onClick={() => {
 							api.update({
-								data: {
-									customer: JSON.parse(
-										JSON.stringify({
-											...form.form,
-											address: undefined,
-											active: true,
-										})
-									),
-									address: form.form.address,
-								},
-								onSuccess: (response) => {
-									form.edit({
-										...response.customer,
-										address: response.address,
+								id: form.form._id,
+								data: JSON.parse(
+									JSON.stringify({
+										...form.form,
+										active: true,
 									})
+								),
+								onSuccess: (response) => {
+									form.edit(response)
 								},
 							})
 						}}
@@ -172,31 +167,16 @@ export const CustomerForm = () => {
 							leftIcon="save"
 							disabled={!form.form.active}
 							onClick={() => {
-								if (form.form?.id) {
+								if (form.form?._id) {
 									api.update({
-										data: {
-											customer: JSON.parse(
-												JSON.stringify({
-													...form.form,
-													address: undefined,
-												})
-											),
-											address: form.form.address,
-										},
+										id: form.form?._id,
+										data: form.form,
 										onSuccess,
 										onError,
 									})
 								} else {
 									api.create({
-										data: {
-											customer: JSON.parse(
-												JSON.stringify({
-													...form.form,
-													address: undefined,
-												})
-											),
-											address: form.form.address,
-										},
+										data: form.form,
 										onSuccess,
 										onError,
 									})
@@ -207,7 +187,7 @@ export const CustomerForm = () => {
 						</Button>
 					</>
 				)}
-				{form.form.id && (
+				{form.form._id && (
 					<Bag
 						button={(show, setShow) => (
 							<ButtonSecondary
@@ -229,7 +209,7 @@ export const CustomerForm = () => {
 										onClick={() => {
 											setShow(false)
 											api.remove({
-												id: form.form?.id,
+												id: form.form?._id,
 												onSuccess,
 												onError,
 											})
@@ -250,43 +230,34 @@ export const CustomerForm = () => {
 					</Bag>
 				)}
 				<div style={{ flexGrow: 1 }} />
-				{form.form?.id && (
+				{form.form?._id && (
 					<ButtonGhost
 						className={style.favoriteButton}
 						leftIcon="favorite"
 						data-favorite={form.form.favorite}
 						onClick={() => {
 							api.update({
+								id: form.form._id,
 								silently: true,
-								data: {
-									customer: JSON.parse(
-										JSON.stringify({
-											...form.form,
-											address: undefined,
-											favorite: !form.form?.favorite,
-										})
-									),
-									address: form.form.address,
-								},
-								onSuccess: (response) => {
-									form.edit({
-										...response.customer,
-										address: response.address,
+								data: JSON.parse(
+									JSON.stringify({
+										...form.form,
+										favorite: !form.form?.favorite,
 									})
+								),
+								onSuccess: (response) => {
+									form.edit(response)
 								},
 							})
 						}}
 					/>
 				)}
-				{form.form?.id && (
+				{form.form?._id && (
 					<CustomerBag
 						customer={form.form}
 						arrowPosition="bottom-right"
 						onSuccess={(response) => {
-							form.edit({
-								...response.customer,
-								address: response.address,
-							})
+							form.edit(response)
 						}}
 					/>
 				)}

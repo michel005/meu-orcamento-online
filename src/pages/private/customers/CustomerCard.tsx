@@ -33,17 +33,15 @@ export const CustomerCard = ({ customer, onClose }) => {
 						data-favorite={customer.favorite}
 						onClick={() => {
 							update({
+								id: customer._id,
 								silently: true,
-								data: {
-									customer: JSON.parse(
-										JSON.stringify({
-											...customer,
-											address: undefined,
-											favorite: !customer?.favorite,
-										})
-									),
-									address: customer.address,
-								},
+								data: JSON.parse(
+									JSON.stringify({
+										...customer,
+										address: undefined,
+										favorite: !customer?.favorite,
+									})
+								),
 								onSuccess: () => {
 									onClose?.()
 								},

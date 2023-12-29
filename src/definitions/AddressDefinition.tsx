@@ -24,6 +24,11 @@ export const AddressDefinition = (): useFormLayoutDefinitionType => {
 			leftSide: <ButtonGhost leftIcon="document_scanner" disabled={true} />,
 			placeholder: 'Ex: Perto da padaria',
 		},
+		neighborhood: {
+			label: 'Bairro',
+			leftSide: <ButtonGhost leftIcon="maps_ugc" disabled={true} />,
+			placeholder: 'Ex: Bairro 1',
+		},
 		city: {
 			label: 'Cidade',
 			leftSide: <ButtonGhost leftIcon="map" disabled={true} />,

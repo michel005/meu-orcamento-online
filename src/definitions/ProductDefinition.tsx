@@ -45,7 +45,7 @@ export const ProductDefinition = (
 			label: 'Vendedor',
 			type: 'select',
 			options: (customerData || []).sort((x, y) => SortUtils.sort(x, y, 'full_name')),
-			idModifier: (value: CustomerType) => value.id,
+			idModifier: (value: CustomerType) => value._id,
 			valueRender: (x: CustomerType) => (
 				<div className={style.selectValueRender}>
 					<UserPicture size="28px" picture={x.picture} name={x.full_name} />

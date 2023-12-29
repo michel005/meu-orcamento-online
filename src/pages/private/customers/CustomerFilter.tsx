@@ -1,14 +1,13 @@
 import style from './CustomerFilter.module.scss'
 import { ButtonGroup } from '../../../components/ButtonGroup'
-import { Button, ButtonGhost, ButtonSecondary } from '../../../components/Button'
+import { Button, ButtonSecondary } from '../../../components/Button'
 import { ImportCustomerButton } from './ImportCustomerButton'
-import { CustomerType } from '../../../types/AllTypes'
 import React, { useState } from 'react'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { usePage } from '../../../hooks/usePage'
 
 export const CustomerFilter = () => {
-	const { form, api, pageData, apiData } = usePage('customer')
+	const { form, api, pageData } = usePage('customer')
 	const [showFilters, setShowFilters] = useState(false)
 	const filterFormLayout = useFormLayout({
 		definition: {
@@ -17,11 +16,6 @@ export const CustomerFilter = () => {
 				placeholder: 'Busque por nome, e-mail ou endereço',
 				leftSide: (
 					<ButtonSecondary
-						rightBag={
-							Object.keys(pageData.data).filter(
-								(x) => pageData.data[x] !== null && pageData.data[x] !== undefined
-							).length
-						}
 						style={{ marginRight: '14px' }}
 						leftIcon={showFilters ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
 						onClick={() => {

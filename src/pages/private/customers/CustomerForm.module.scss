@@ -1,18 +1,6 @@
 @import '../../../keyframe';
 @import '../../../utils';
 
-.adminInfo {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.created,
-.updated {
-	color: #fff6;
-	font-size: 14px;
-}
-
 .favoriteButton {
 	color: #ccc !important;
 	font-size: 24px;

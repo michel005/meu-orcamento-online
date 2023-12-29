@@ -82,12 +82,17 @@ export const RoutesMap: RoutesType = {
 			description: 'Crie postagens para o mercado livre',
 			route: '/mercado-livre',
 		},
+		support: {
+			icon: 'support',
+			name: 'Ajuda e Suporte',
+			description: 'Busque ajuda atravez de centenas de tópicos',
+			route: '/support',
+		},
 		getStarted: {
 			icon: 'shield',
 			name: 'Começar Agora',
 			description: 'Saiba como dar os primeiros passos para organizar o seu bazar',
 			route: '/get-started',
-			hide: true,
 		},
 	},
 }

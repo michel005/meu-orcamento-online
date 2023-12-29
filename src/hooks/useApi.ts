@@ -59,7 +59,7 @@ export const useApi = (entity: string) => {
 			setLoading(true)
 		}
 		axios
-			.post(`${entity}`, data, header)
+			.post(`${entity}`, JSON.parse(JSON.stringify(data)), header)
 			.then((response) => {
 				onSuccess(response.data)
 			})
@@ -72,12 +72,12 @@ export const useApi = (entity: string) => {
 				}
 			})
 	}
-	const update = ({ data, silently = false, onSuccess = (x) => {}, onError = (x) => {} }) => {
+	const update = ({ id, data, silently = false, onSuccess = (x) => {}, onError = (x) => {} }) => {
 		if (!silently) {
 			setLoading(true)
 		}
 		axios
-			.put(`${entity}`, data, header)
+			.put(`${entity}?id=${id}`, JSON.parse(JSON.stringify(data)), header)
 			.then((response) => {
 				onSuccess(response.data)
 			})
@@ -95,7 +95,7 @@ export const useApi = (entity: string) => {
 			setLoading(true)
 		}
 		axios
-			.delete(`${entity}/${id}`, header)
+			.delete(`${entity}?id=${id}`, header)
 			.then((...x) => {
 				onSuccess(...x)
 			})

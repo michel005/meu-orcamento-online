@@ -176,7 +176,7 @@ export const ProductPage = () => {
 											<>
 												{row.customer.picture && (
 													<UserPicture
-														picture={row.customer.picture}
+														picture={row.customer?.picture}
 														name={row.customer.full_name}
 														size="32px"
 													/>
@@ -203,31 +203,31 @@ export const ProductPage = () => {
 										)
 									},
 								},
-								waiting_list: {
-									header: 'Lista de Espera',
-									type: 'string',
-									valueOverride: (row: ProductType) => {
-										return (
-											<>
-												{row.product_waiting_list.map(
-													(waitingList: WaitingListType) => {
-														return (
-															<UserPicture
-																picture={
-																	waitingList.customer.picture
-																}
-																name={
-																	waitingList.customer.full_name
-																}
-																size="32px"
-															/>
-														)
-													}
-												)}
-											</>
-										)
-									},
-								},
+								// waiting_list: {
+								// 	header: 'Lista de Espera',
+								// 	type: 'string',
+								// 	valueOverride: (row: ProductType) => {
+								// 		return (
+								// 			<>
+								// 				{row.product_waiting_list.map(
+								// 					(waitingList: WaitingListType) => {
+								// 						return (
+								// 							<UserPicture
+								// 								picture={
+								// 									waitingList.customer.picture
+								// 								}
+								// 								name={
+								// 									waitingList.customer.full_name
+								// 								}
+								// 								size="32px"
+								// 							/>
+								// 						)
+								// 					}
+								// 				)}
+								// 			</>
+								// 		)
+								// 	},
+								// },
 								price: {
 									alignment: 'right',
 									header: 'Valor',
@@ -235,7 +235,6 @@ export const ProductPage = () => {
 									width: '10%',
 								},
 								status: {
-									alignment: 'right',
 									header: 'Situação',
 									type: 'domain',
 									keyValue: Object.keys(ProductStatus).map((x) => [
@@ -254,7 +253,7 @@ export const ProductPage = () => {
 						{apiData.data.map((product: ProductType) => {
 							return (
 								<ProductCard
-									key={product.id}
+									key={product._id}
 									product={product}
 									onClose={() => api.getAll()}
 								/>

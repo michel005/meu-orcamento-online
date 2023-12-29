@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useMemo } from 'react'
-import style from './PrivatePage.module.scss'
-import { Icon } from '../components/Icon'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { Button, ButtonGhost } from '../components/Button'
-import { SessionContext } from '../contexts/SessionContext'
-import { RoutesMap } from '../constants/RoutesMap'
-import { UserPicture } from '../components/UserPicture'
-import { LoadingPage } from './LoadingPage'
-import { ConfigContext } from '../contexts/ConfigContext'
 import { Bag } from '../components/Bag'
-import { StringUtils } from '../utils/StringUtils'
+import { Button, ButtonGhost } from '../components/Button'
+import { Icon } from '../components/Icon'
+import { UserPicture } from '../components/UserPicture'
+import { RoutesMap } from '../constants/RoutesMap'
+import { ConfigContext } from '../contexts/ConfigContext'
+import { SessionContext } from '../contexts/SessionContext'
 import { usePage } from '../hooks/usePage'
+import { LoadingPage } from './LoadingPage'
+import style from './PrivatePage.module.scss'
 
 const RedirectToDashboard = () => {
 	const navigate = useNavigate()
@@ -34,16 +33,16 @@ const RouteButton = ({ routeDetails, rightBag = undefined }) => {
 	return (
 		<ButtonGhost
 			leftIcon={routeDetails?.icon}
-			data-active={currentRoute.route === routeDetails.route}
+			data-active={currentRoute?.route === routeDetails?.route}
 			onClick={() => {
-				navigate(routeDetails.route)
+				navigate(routeDetails?.route)
 			}}
 			rightIcon={
-				currentRoute.route === routeDetails.route ? 'keyboard_arrow_right' : undefined
+				currentRoute?.route === routeDetails?.route ? 'keyboard_arrow_right' : undefined
 			}
 			rightBag={rightBag}
 		>
-			{routeDetails.name}
+			{routeDetails?.name}
 		</ButtonGhost>
 	)
 }
@@ -78,8 +77,8 @@ export const PrivatePage = () => {
 			</section>
 			<section className={style.pageInfo}>
 				<div className={style.pageInfoHeader}>
-					<h1>{currentRoute.name}</h1>
-					<p>{currentRoute.description}</p>
+					<h1>{currentRoute?.name}</h1>
+					<p>{currentRoute?.description}</p>
 				</div>
 				<div className={style.pageInfoUser}>
 					<div className={style.pageInfoUserOptions}>
@@ -96,14 +95,14 @@ export const PrivatePage = () => {
 								}}
 							>
 								<UserPicture
-									picture={currentUser.user?.picture}
-									name={currentUser.user?.full_name}
+									picture={currentUser?.picture}
+									name={currentUser?.full_name}
 									size="48px"
 									randomId={Math.random()}
 								/>
 								<div className={style.pageInfoUserButtonInfo}>
-									<h3>{currentUser.user.full_name}</h3>
-									<p>{currentUser.user.email}</p>
+									<h3>{currentUser.full_name}</h3>
+									<p>{currentUser.email}</p>
 								</div>
 								<Icon icon={show ? 'keyboard_arrow_up' : 'keyboard_arrow_down'} />
 							</div>
@@ -158,6 +157,8 @@ export const PrivatePage = () => {
 				<RouteButton routeDetails={RoutesMap.private.instagram} />
 				<RouteButton routeDetails={RoutesMap.private.mercadoLivre} />
 				<div style={{ flexGrow: 1 }} />
+				<label>Tópicos</label>
+				<RouteButton routeDetails={RoutesMap.private.support} />
 				<RouteButton routeDetails={RoutesMap.private.getStarted} />
 			</section>
 			<section className={style.content}>
@@ -176,115 +177,6 @@ export const PrivatePage = () => {
 				</Routes>
 				{loading && <LoadingPage />}
 			</section>
-		</div>
-	)
-
-	return (
-		<div className={style.privatePage} data-show-sidebar={showSidebar}>
-			<aside>
-				<div className={style.title}>
-					<Icon className={style.logo} icon="description" />
-					<section>
-						<h1>Meu Bazar Online</h1>
-						<p>Gestão de Vendas e Clientes</p>
-					</section>
-				</div>
-				<div className={style.allOptions}>
-					{Object.keys(RoutesMap.private)
-						.filter((routeKey) => !RoutesMap.private[routeKey].hide)
-						.map((routeKey) => {
-							const routeDetails = RoutesMap.private[routeKey]
-							return (
-								<Button
-									key={routeKey}
-									leftIcon={routeDetails?.icon}
-									variationOverride={
-										currentRoute.route === routeDetails.route
-											? 'primary'
-											: 'white'
-									}
-									onClick={() => {
-										navigate(routeDetails.route)
-									}}
-								>
-									{routeDetails.name}
-								</Button>
-							)
-						})}
-				</div>
-				<div className={style.userInfo}>
-					<Bag
-						button={(show, setShow) => (
-							<UserPicture
-								className={style.userInfoPicture}
-								picture={currentUser.user?.picture}
-								name={currentUser.user?.full_name}
-								size="var(--input-height)"
-								onClick={() => {
-									setShow((x) => !x)
-								}}
-								randomId={Math.random()}
-							/>
-						)}
-						arrowPosition="bottom-left"
-					>
-						{(show, setShow) => (
-							<>
-								<ButtonGhost
-									leftIcon="edit"
-									onClick={() => {
-										setShow(false)
-										navigate('/my-user')
-									}}
-								>
-									Alterar Perfil
-								</ButtonGhost>
-								<ButtonGhost
-									leftIcon="logout"
-									onClick={() => {
-										setShow(false)
-										setMessage({
-											header: 'Deseja realmente sair?',
-											content: 'O dados não salvos poderão ser perdidos.',
-											type: 'question',
-											confirm: () => {
-												navigate('/')
-												setCurrentUser(null)
-											},
-										})
-									}}
-								>
-									Sair
-								</ButtonGhost>
-							</>
-						)}
-					</Bag>
-					<div className={style.userDetails}>
-						<h4>{StringUtils.firstAndLastName(currentUser.user.full_name)}</h4>
-						<small>{currentUser.user.email}</small>
-					</div>
-				</div>
-				<Button
-					className={style.reduceButton}
-					leftIcon="menu"
-					onClick={() => setShowSidebar((x) => !x)}
-				/>
-			</aside>
-			<main className={style.mainContent}>
-				<Routes>
-					{Object.keys(RoutesMap.private).map((routeKey) => {
-						const routeDetails = RoutesMap.private[routeKey]
-						return (
-							<Route
-								key={routeKey}
-								path={routeDetails.route}
-								element={routeDetails.component}
-							/>
-						)
-					})}
-					<Route path="*" element={<RedirectToDashboard />} />
-				</Routes>
-			</main>
 		</div>
 	)
 }

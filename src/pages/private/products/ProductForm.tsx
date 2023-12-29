@@ -29,10 +29,10 @@ export const ProductForm = () => {
 	const [waitingListForm, setWaitingListForm] = useState<WaitingListType>({})
 
 	const waitingListIds = (waitingListApiData?.data || []).map(
-		(x: WaitingListType) => x?.customer?.id
+		(x: WaitingListType) => x?.customer?._id
 	)
 	const selectCustomers = (customerApiData.data || []).filter(
-		(x: CustomerType) => !waitingListIds.includes(x.id) && x.id !== form.form.seller_id
+		(x: CustomerType) => !waitingListIds.includes(x._id) && x._id !== form.form.seller_id
 	)
 	const [tab, setTab] = useState('general')
 	const randomId = useMemo(() => Math.random(), [])
@@ -46,14 +46,14 @@ export const ProductForm = () => {
 	}
 
 	useEffect(() => {
-		if (form?.form?.id) {
+		if (form?.form?._id) {
 			waitingListApi.getAll({
 				query: {
-					product: form.form.id,
+					product: form.form._id,
 				},
 			})
 		}
-	}, [form?.form?.id])
+	}, [form?.form?._id])
 
 	return (
 		<FormModal
@@ -107,7 +107,7 @@ export const ProductForm = () => {
 									),
 								},
 							],
-							form.form.id && [
+							form.form._id && [
 								'waiting',
 								{
 									icon: 'group',
@@ -129,7 +129,7 @@ export const ProductForm = () => {
 														placeholder="Selecione um cliente"
 														numberOfOptions={3}
 														idModifier={(value: CustomerType) =>
-															value.id
+															value._id
 														}
 														valueRender={(x: CustomerType) => (
 															<div
@@ -169,7 +169,7 @@ export const ProductForm = () => {
 															<ButtonWhite
 																leftIcon="add"
 																disabled={
-																	!form.form.id ||
+																	!form.form._id ||
 																	!waitingListForm.customer_id
 																}
 																onClick={() => {
@@ -178,7 +178,7 @@ export const ProductForm = () => {
 																			customer_id:
 																				waitingListForm.customer_id,
 																			product_id:
-																				form.form.id,
+																				form.form._id,
 																		},
 																		onSuccess: () => {
 																			setWaitingListForm({})
@@ -186,7 +186,7 @@ export const ProductForm = () => {
 																				query: {
 																					product:
 																						form.form
-																							.id,
+																							._id,
 																				},
 																			})
 																		},
@@ -218,7 +218,7 @@ export const ProductForm = () => {
 																onClick={() => {
 																	waitingListApi.removeByQuery({
 																		query: {
-																			product: form.form.id,
+																			product: form.form._id,
 																			customer: x.customer.id,
 																		},
 																		onSuccess: () => {
@@ -226,7 +226,7 @@ export const ProductForm = () => {
 																				query: {
 																					product:
 																						form.form
-																							.id,
+																							._id,
 																				},
 																			})
 																		},
@@ -249,27 +249,16 @@ export const ProductForm = () => {
 				<Button
 					leftIcon="save"
 					onClick={() => {
-						if (form.form?.id) {
+						if (form.form?._id) {
 							api.update({
-								data: {
-									product: JSON.parse(
-										JSON.stringify({
-											...form.form,
-										})
-									),
-								},
+								id: form.form._id,
+								data: form.form,
 								onSuccess,
 								onError,
 							})
 						} else {
 							api.create({
-								data: {
-									product: JSON.parse(
-										JSON.stringify({
-											...form.form,
-										})
-									),
-								},
+								data: form.form,
 								onSuccess,
 								onError,
 							})
@@ -278,7 +267,7 @@ export const ProductForm = () => {
 				>
 					Salvar
 				</Button>
-				{form.form.id && (
+				{form.form._id && (
 					<Bag
 						button={(show, setShow) => (
 							<ButtonSecondary
@@ -300,7 +289,7 @@ export const ProductForm = () => {
 										onClick={() => {
 											setShow(false)
 											api.remove({
-												id: form.form?.id,
+												id: form.form?._id,
 												onSuccess,
 												onError,
 											})
@@ -321,7 +310,7 @@ export const ProductForm = () => {
 					</Bag>
 				)}
 				<div style={{ flexGrow: 1 }} />
-				{form.form?.id && (
+				{form.form?._id && (
 					<Bag
 						button={(show, setShow) => (
 							<Button

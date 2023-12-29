@@ -1,28 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import { Button } from '../../components/Button'
+import { ConfigContext } from '../../contexts/ConfigContext'
 import { SessionContext } from '../../contexts/SessionContext'
-import style from './MyUserPage.module.scss'
+import { AddressDefinition } from '../../definitions/AddressDefinition'
+import { ChangePasswordDefinition } from '../../definitions/ChangePasswordDefinition'
+import { ChangeUserDefinition } from '../../definitions/ChangeUserDefinition'
 import { useFormLayout } from '../../hooks/useFormLayout'
 import { AddressType, ChangePasswordType, UserType } from '../../types/AllTypes'
-import { ChangeUserDefinition } from '../../definitions/ChangeUserDefinition'
-import { Button, ButtonWhite } from '../../components/Button'
-import axios from 'axios'
 import { ErrorUtils } from '../../utils/ErrorUtils'
-import { ChangePasswordDefinition } from '../../definitions/ChangePasswordDefinition'
-import { Icon } from '../../components/Icon'
-import { ConfigContext } from '../../contexts/ConfigContext'
-import { UserPicture } from '../../components/UserPicture'
-import { AddressDefinition } from '../../definitions/AddressDefinition'
+import style from './MyUserPage.module.scss'
 
 export const MyUserPage = () => {
 	const { setLoading, setMessage } = useContext(ConfigContext)
 	const { currentUser, setCurrentUser } = useContext(SessionContext)
-	const [user, setUser] = useState<{
-		user: UserType
-		address: AddressType
-	}>({
-		user: { ...currentUser.user },
-		address: { ...currentUser.address },
-	})
+	const [user, setUser] = useState<UserType>(currentUser)
 	const [changePassword, setChangePassword] = useState<ChangePasswordType>({
 		old_password: '',
 		new_password: '',
@@ -30,12 +22,9 @@ export const MyUserPage = () => {
 	})
 	const userFormLayout = useFormLayout<UserType>({
 		definition: ChangeUserDefinition(),
-		value: user.user,
+		value: user,
 		onChange: (x) => {
-			setUser((y) => {
-				y.user = { ...x }
-				return { ...y }
-			})
+			setUser(x)
 		},
 	})
 	const addressFormLayout = useFormLayout<AddressType>({
@@ -95,10 +84,7 @@ export const MyUserPage = () => {
 							})
 							.then((response) => {
 								setCurrentUser(response.data)
-								setUser({
-									user: { ...response.data.user },
-									address: { ...response.data.address },
-								})
+								setUser(response.data)
 								setMessage({
 									header: 'Dados salvos com sucesso',
 									content: 'Seus dados foram salvos com sucesso',
@@ -142,10 +128,7 @@ export const MyUserPage = () => {
 							})
 							.then((response) => {
 								setCurrentUser(response.data)
-								setUser({
-									user: { ...response.data.user },
-									address: { ...response.data.address },
-								})
+								setUser(response.data)
 								setChangePassword({
 									old_password: '',
 									new_password: '',

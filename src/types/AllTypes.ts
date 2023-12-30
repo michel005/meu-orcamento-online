@@ -57,8 +57,6 @@ export type ProductType = {
 	_id?: string
 	seller_id?: string
 	seller?: CustomerType
-	customer_id?: string
-	customer?: CustomerType
 	created?: string
 	updated?: string
 	picture?: string

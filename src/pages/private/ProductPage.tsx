@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import style from './ProductPage.module.scss'
 import { usePage } from '../../hooks/usePage'
-import { ProductType, WaitingListType } from '../../types/AllTypes'
+import { ProductType } from '../../types/AllTypes'
 import { useApi } from '../../hooks/useApi'
 import { ProductCard } from './products/ProductCard'
 import { ProductForm } from './products/ProductForm'
-import { SortUtils } from '../../utils/SortUtils'
 import { AddProductsInBulkForm } from './products/AddProductsInBulkForm'
 import { useForm } from '../../hooks/useForm'
 import { Button, ButtonSecondary } from '../../components/Button'
@@ -14,7 +13,6 @@ import { ProductDefinition } from '../../definitions/ProductDefinition'
 import { useApiData } from '../../hooks/useApiData'
 import { ButtonGroup } from '../../components/ButtonGroup'
 import { Table } from '../../components/Table'
-import { FlexRow } from '../../components/FlexRow'
 import { UserPicture } from '../../components/UserPicture'
 import { ProductStatus } from '../../constants/ProductStatus'
 import { Label } from '../../components/Label'
@@ -174,14 +172,12 @@ export const ProductPage = () => {
 									valueOverride: (row: ProductType) => {
 										return (
 											<>
-												{row.customer.picture && (
-													<UserPicture
-														picture={row.customer?.picture}
-														name={row.customer.full_name}
-														size="32px"
-													/>
-												)}
-												{row.customer.full_name}
+												<UserPicture
+													picture={row.seller?.picture}
+													name={row.seller?.full_name}
+													size="32px"
+												/>
+												{row.seller?.full_name}
 											</>
 										)
 									},

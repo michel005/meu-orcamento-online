@@ -46,7 +46,7 @@ export const CustomerBag = ({
 										id: customer._id,
 										data: {
 											...customer,
-											active: false,
+											active: !customer.active,
 										},
 										onSuccess: onSuccess,
 									})

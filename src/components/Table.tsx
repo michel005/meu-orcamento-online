@@ -79,9 +79,7 @@ export const Table = ({ definition, value }: TableType) => {
 									})
 								}}
 							>
-								<FlexRow
-									style={{ textAlign: column.alignment || 'left', gap: '7px' }}
-								>
+								<FlexRow className={style.tableHeadColumnContent}>
 									{column.header}
 									{sort.field === column.column && (
 										<Icon

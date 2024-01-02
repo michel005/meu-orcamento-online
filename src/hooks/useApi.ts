@@ -90,6 +90,31 @@ export const useApi = (entity: string) => {
 				}
 			})
 	}
+	const updateProperty = ({
+		id,
+		propName,
+		propValue,
+		silently = false,
+		onSuccess = (x) => {},
+		onError = (x) => {},
+	}) => {
+		if (!silently) {
+			setLoading(true)
+		}
+		axios
+			.put(`${entity}/prop/${propName}/${propValue}?id=${id}`, null, header)
+			.then((response) => {
+				onSuccess(response.data)
+			})
+			.catch((...x) => {
+				onError(...x)
+			})
+			.finally(() => {
+				if (!silently) {
+					setLoading(false)
+				}
+			})
+	}
 	const remove = ({ id, silently = false, onSuccess = (x) => {}, onError = (x) => {} }) => {
 		if (!silently) {
 			setLoading(true)
@@ -142,6 +167,7 @@ export const useApi = (entity: string) => {
 		getById,
 		create,
 		update,
+		updateProperty,
 		remove,
 		removeByQuery,
 	}

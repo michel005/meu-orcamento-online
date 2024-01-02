@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, ButtonGhost, ButtonSecondary, ButtonWhite } from '../../../components/Button'
 import { Error } from '../../../components/Error'
 import { AddressDefinition } from '../../../definitions/AddressDefinition'
@@ -30,7 +30,6 @@ export const CustomerForm = () => {
 		},
 	})
 	const [tab, setTab] = useState('general')
-	const randomId = useMemo(() => Math.random(), [])
 
 	const onSuccess = () => {
 		form.close()
@@ -59,21 +58,6 @@ export const CustomerForm = () => {
 				</div>
 			)}
 			<div className={style.content}>
-				<section>
-					<div
-						className={style.userImage}
-						style={{
-							backgroundImage:
-								form.form.picture && form.form.picture.startsWith('http')
-									? `url(${form.form.picture}?randomId=${randomId})`
-									: `url(${form.form.picture})`,
-						}}
-					>
-						{customerFormLayout.getField('picture', {
-							size: '300px',
-						})}
-					</div>
-				</section>
 				<section>
 					<Tabs
 						value={tab}
@@ -145,16 +129,13 @@ export const CustomerForm = () => {
 					<Button
 						leftIcon="person_check"
 						onClick={() => {
-							api.update({
+							api.updateProperty({
 								id: form.form._id,
-								data: JSON.parse(
-									JSON.stringify({
-										...form.form,
-										active: true,
-									})
-								),
-								onSuccess: (response) => {
-									form.edit(response)
+								silently: true,
+								propName: 'active',
+								propValue: true,
+								onSuccess: () => {
+									form.editProp('active', (prev) => !prev)
 								},
 							})
 						}}
@@ -236,30 +217,20 @@ export const CustomerForm = () => {
 						leftIcon="favorite"
 						data-favorite={form.form.favorite}
 						onClick={() => {
-							api.update({
+							api.updateProperty({
 								id: form.form._id,
 								silently: true,
-								data: JSON.parse(
-									JSON.stringify({
-										...form.form,
-										favorite: !form.form?.favorite,
-									})
-								),
-								onSuccess: (response) => {
-									form.edit(response)
+								propName: 'favorite',
+								propValue: !form.form?.favorite,
+								onSuccess: () => {
+									form.editProp('favorite', (prev) => !prev)
 								},
 							})
 						}}
 					/>
 				)}
 				{form.form?._id && (
-					<CustomerBag
-						customer={form.form}
-						arrowPosition="bottom-right"
-						onSuccess={(response) => {
-							form.edit(response)
-						}}
-					/>
+					<CustomerBag customer={form.form} arrowPosition="bottom-right" />
 				)}
 			</div>
 		</FormModal>

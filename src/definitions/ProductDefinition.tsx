@@ -75,8 +75,9 @@ export const ProductDefinition = (
 			leftSide: <ButtonGhost leftIcon="code" disabled={true} />,
 		},
 		categories: {
-			label: 'Categorias (separadas por ponto e virgula)',
-			leftSide: <ButtonGhost leftIcon="list" disabled={true} />,
+			label: 'Categorias',
+			type: 'labels',
+			labelsValueType: 'string',
 		},
 		price: {
 			label: 'Preço',

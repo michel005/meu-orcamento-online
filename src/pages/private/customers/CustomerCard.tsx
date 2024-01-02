@@ -11,7 +11,7 @@ import { CustomerBag } from './CustomerBag'
 
 export const CustomerCard = ({ customer, onClose }) => {
 	const { show } = useForm<CustomerType>('customer')
-	const { update } = useApi('customer')
+	const { update, updateProperty } = useApi('customer')
 
 	return (
 		<div className={style.customerCard} data-inactive={!customer.active}>
@@ -32,16 +32,11 @@ export const CustomerCard = ({ customer, onClose }) => {
 						leftIcon="favorite"
 						data-favorite={customer.favorite}
 						onClick={() => {
-							update({
+							updateProperty({
 								id: customer._id,
 								silently: true,
-								data: JSON.parse(
-									JSON.stringify({
-										...customer,
-										address: undefined,
-										favorite: !customer?.favorite,
-									})
-								),
+								propName: 'favorite',
+								propValue: !customer?.favorite,
 								onSuccess: () => {
 									onClose?.()
 								},

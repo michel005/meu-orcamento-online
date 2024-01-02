@@ -124,15 +124,11 @@ export const CustomerPage = () => {
 												leftIcon="favorite"
 												data-favorite={customer.favorite}
 												onClick={() => {
-													api.update({
+													api.updateProperty({
 														id: customer._id,
 														silently: true,
-														data: JSON.parse(
-															JSON.stringify({
-																...customer,
-																favorite: !customer.favorite,
-															})
-														),
+														propName: 'favorite',
+														propValue: !customer?.favorite,
 														onSuccess: () => {
 															api.getAll({ silently: true })
 														},

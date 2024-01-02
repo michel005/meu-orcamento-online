@@ -1,26 +1,10 @@
-import React, {
-	Dispatch,
-	SetStateAction,
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Field } from '../components/Field'
 import { Error } from '../components/Error'
-import { FileUtils } from '../utils/FileUtils'
-import { Button, ButtonGhost } from '../components/Button'
-import { Modal } from '../components/Modal'
-import style from './useFormLayout.module.scss'
 import { DateUtils } from '../utils/DateUtils'
-import { UserPicture } from '../components/UserPicture'
-import { NumberUtils } from '../utils/NumberUtils'
 import { SelectInput } from '../components/inputs/SelectInput'
-import { useForm } from './useForm'
-import { useMessage } from './useMessage'
 import { PictureField } from '../components/inputs/PictureField'
+import { LabelInput } from '../components/inputs/LabelInput'
 
 const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 	return (
@@ -126,6 +110,26 @@ const CurrencyField = ({ field, fieldDefinition, value, onChange, errors, disabl
 		/>
 	)
 }
+
+const LabelField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
+	return (
+		<LabelInput
+			label={fieldDefinition.label}
+			leftSide={fieldDefinition.leftSide}
+			rightSide={fieldDefinition.rightSide}
+			valueType={fieldDefinition.labelsValueType}
+			value={value?.[field as keyof typeof value]}
+			onChange={(newValue: any) => {
+				value[field] = newValue
+				onChange({ ...value })
+			}}
+			field={field}
+			disabled={disableAll || fieldDefinition.disabled}
+			error={errors?.[field]?.message}
+		/>
+	)
+}
+
 const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	return (
 		<Field
@@ -179,6 +183,7 @@ export type useFormDefinitionType = {
 		| 'checkbox'
 		| 'file'
 		| 'select'
+		| 'labels'
 		| 'subForm'
 	pictureType?: 'circle' | 'square'
 	idModifier?: any
@@ -194,6 +199,7 @@ export type useFormDefinitionType = {
 	size?: string
 	multiple?: boolean
 	optionsPosition?: 'top' | 'bottom'
+	labelsValueType?: 'string' | 'list'
 	subForm?: useFormLayoutDefinitionType
 }
 
@@ -260,6 +266,17 @@ export const useFormLayout = <Entity,>({
 			} else if (['select'].includes(fieldDefinition.type)) {
 				return (
 					<SelectField
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						errors={errors}
+						disableAll={disableAll}
+					/>
+				)
+			} else if (['labels'].includes(fieldDefinition.type)) {
+				return (
+					<LabelField
 						field={field}
 						fieldDefinition={fieldDefinition}
 						value={value}

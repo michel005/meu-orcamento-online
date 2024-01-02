@@ -23,6 +23,7 @@
 	display: flex;
 	flex-direction: column;
 	max-height: 800px;
+	max-width: 600px;
 	position: relative;
 	transition: all 0.25s;
 	z-index: 4;
@@ -67,14 +68,14 @@
 
 @include tablet {
 	.formModal {
-		width: calc(100% - var(--private-sidebar-options-width));
+		width: 100%;
 	}
 
 	.formModalContent {
 		border-radius: 0;
 		height: 100%;
 		inset-block-start: 0;
-		inset-inline-start: var(--private-sidebar-options-width);
+		inset-inline-start: 0;
 		max-height: none;
 		translate: none;
 	}

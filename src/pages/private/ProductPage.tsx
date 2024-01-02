@@ -23,6 +23,10 @@ export const ProductPage = () => {
 	const bulkForm = useForm('product_bulk')
 	const customerApi = useApi('customer')
 	const customerApiData = useApiData('customer')
+	const allCategories = (apiData.data as ProductType[])
+		.map((x) => (x.categories || '').split(';'))
+		.reduce((prev, curr) => [...prev, ...curr], [])
+		.filter((x) => x !== '')
 	const filterFormLayout = useFormLayout({
 		definition: {
 			general_search: {
@@ -31,9 +35,12 @@ export const ProductPage = () => {
 				leftSide: (
 					<ButtonSecondary
 						rightBag={
-							Object.keys(pageData.data).filter(
-								(x) => pageData.data[x] !== null && pageData.data[x] !== undefined
-							).length
+							Object.keys(pageData.data)
+								.filter((x) => x !== 'view')
+								.filter(
+									(x) =>
+										pageData.data[x] !== null && pageData.data[x] !== undefined
+								).length
 						}
 						style={{ marginRight: '14px' }}
 						leftIcon={showFilters ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
@@ -56,6 +63,14 @@ export const ProductPage = () => {
 						Buscar
 					</Button>
 				),
+			},
+			categories: {
+				label: 'Categorias',
+				type: 'select',
+				options: Array.from(new Map(allCategories.map((x) => [x, x])).keys()).sort(),
+				idModifier: (value: any) => value,
+				valueRender: (value: any) => value,
+				multiple: true,
 			},
 			seller_id: ProductDefinition(null, customerApiData.data).seller_id,
 			status: {
@@ -128,6 +143,7 @@ export const ProductPage = () => {
 						<div className={style.allFilters}>
 							{filterFormLayout.getField('seller_id')}
 							{filterFormLayout.getField('status')}
+							{filterFormLayout.getField('categories')}
 						</div>
 					)}
 				</div>
@@ -152,16 +168,18 @@ export const ProductPage = () => {
 												<UserPicture
 													picture={row.picture}
 													name={row.title}
-													type="square"
 													size="32px"
 												/>
-												<a
-													onClick={() => {
-														form.show(row, () => api.getAll())
-													}}
-												>
-													{row.title}
-												</a>
+												<div className={style.tableTitleAndDescription}>
+													<a
+														onClick={() => {
+															form.show(row, () => api.getAll())
+														}}
+													>
+														{row.title}
+													</a>
+													<p>{row.description}</p>
+												</div>
 											</>
 										)
 									},
@@ -199,31 +217,6 @@ export const ProductPage = () => {
 										)
 									},
 								},
-								// waiting_list: {
-								// 	header: 'Lista de Espera',
-								// 	type: 'string',
-								// 	valueOverride: (row: ProductType) => {
-								// 		return (
-								// 			<>
-								// 				{row.product_waiting_list.map(
-								// 					(waitingList: WaitingListType) => {
-								// 						return (
-								// 							<UserPicture
-								// 								picture={
-								// 									waitingList.customer.picture
-								// 								}
-								// 								name={
-								// 									waitingList.customer.full_name
-								// 								}
-								// 								size="32px"
-								// 							/>
-								// 						)
-								// 					}
-								// 				)}
-								// 			</>
-								// 		)
-								// 	},
-								// },
 								price: {
 									alignment: 'right',
 									header: 'Valor',

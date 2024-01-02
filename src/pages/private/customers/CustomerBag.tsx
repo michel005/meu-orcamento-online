@@ -42,12 +42,11 @@ export const CustomerBag = ({
 								leftIcon="person_cancel"
 								onClick={() => {
 									setShow(false)
-									api.update({
+									api.updateProperty({
 										id: customer._id,
-										data: {
-											...customer,
-											active: !customer.active,
-										},
+										silently: true,
+										propName: 'active',
+										propValue: false,
 										onSuccess: onSuccess,
 									})
 								}}

@@ -1,0 +1,47 @@
+.labelInput {
+	> div {
+		gap: 0;
+		height: auto;
+		min-height: var(--input-height);
+	}
+
+	[data-input] {
+		> div {
+			row-gap: 7px;
+		}
+	}
+}
+
+.input {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 14px;
+	padding-block: 11px;
+
+	> span {
+		align-self: center;
+		background-color: #fff;
+		border-radius: var(--border-radius);
+		border: 1px solid var(--input-border-color);
+		color: #999;
+		display: flex;
+		flex-direction: row;
+		gap: 7px;
+		padding: 4px 10px;
+
+		i {
+			align-self: center;
+			cursor: pointer;
+			user-select: none;
+		}
+	}
+
+	> input {
+		flex-grow: 1;
+		margin-block: -11px;
+		min-height: var(--input-height);
+		min-width: 100px;
+		width: 100%;
+	}
+}

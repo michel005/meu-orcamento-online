@@ -8,16 +8,19 @@ export const Icon = ({
 	className,
 	style,
 	size,
+	onClick,
 }: {
 	icon: GoogleIconType
 	className?: string
 	style?: any
+	onClick?: any
 	size?: SizeType
 }) => {
 	return (
 		<i
 			className={`${styleClass.icon} ${className}`}
 			style={{ ...style, fontSize: size || 'inherit' }}
+			onClick={onClick}
 		>
 			{icon}
 		</i>

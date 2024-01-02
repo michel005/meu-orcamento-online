@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { CustomerType, MessageType, ProductType, WaitingListType } from '../types/AllTypes'
+import { CustomerType, MessageType, ProductType } from '../types/AllTypes'
 
 export type ConfigContextType = {
 	showSidebar: boolean
@@ -17,7 +17,6 @@ export type ConfigContextType = {
 	apiData: {
 		customer: CustomerType[]
 		product: ProductType[]
-		waitingList: WaitingListType[]
 	}
 	setApiData: any
 }
@@ -47,7 +46,6 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 	const [apiData, setApiData] = useState({
 		customer: [],
 		product: [],
-		waitingList: [],
 	})
 	const [pageData, setPageData] = useState({
 		customer: {

@@ -90,34 +90,48 @@
 	min-height: var(--table-cell-size-body);
 }
 
+.tableHeadColumnContent {
+	gap: 7px;
+}
+
 .tableHeadColumn,
 .tableBodyColumn {
+	align-items: center;
 	color: #666;
 	font-size: 16px;
 	padding-inline: 17px;
 	text-align: left;
 
 	&[data-alignment='left'] {
+		justify-content: flex-start;
 		text-align: left;
 
-		.tableBodyColumnContent {
+		.tableBodyColumnContent,
+		.tableHeadColumnContent {
 			justify-content: flex-start;
+			text-align: left;
 		}
 	}
 
 	&[data-alignment='center'] {
+		justify-content: center;
 		text-align: center;
 
-		.tableBodyColumnContent {
+		.tableBodyColumnContent,
+		.tableHeadColumnContent {
 			justify-content: center;
+			text-align: center;
 		}
 	}
 
 	&[data-alignment='right'] {
+		justify-content: flex-end;
 		text-align: right;
 
-		.tableBodyColumnContent {
+		.tableBodyColumnContent,
+		.tableHeadColumnContent {
 			justify-content: flex-end;
+			text-align: right;
 		}
 	}
 
@@ -147,9 +161,9 @@
 	a {
 		color: #666;
 		cursor: pointer;
-		font-weight: bold;
 		overflow: hidden;
 		transition: all 0.25s;
+		text-decoration: underline;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 
@@ -191,6 +205,8 @@
 		width: var(--input-height);
 
 		&:disabled {
+			background-color: #1114;
+			color: #333 !important;
 			font-weight: bold !important;
 		}
 	}

@@ -1,7 +1,5 @@
 @import '../../utils';
 
-$templateWidth: 1fr;
-
 .productPage {
 	--product-card-width: 250px;
 
@@ -18,6 +16,18 @@ $templateWidth: 1fr;
 	flex-grow: 1;
 	height: 100%;
 	overflow-y: auto;
+}
+
+.tableTitleAndDescription {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+
+	p {
+		color: #aaa;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 }
 
 .filters {
@@ -48,11 +58,7 @@ $templateWidth: 1fr;
 	flex-direction: row;
 	gap: 14px;
 
-	[data-field='seller_id'] {
-		width: 350px;
-	}
-
-	[data-field='status'] {
+	> [data-field] {
 		width: 300px;
 	}
 }

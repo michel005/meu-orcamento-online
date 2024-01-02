@@ -47,7 +47,9 @@ export const Field = ({
 					) : (
 						<div className={style.emptySpace} />
 					)}
-					<div className={style.input}>{input?.(setFocus, randomId)}</div>
+					<div className={style.input} data-input>
+						{input?.(setFocus, randomId)}
+					</div>
 					{rightSide ? (
 						<div className={style.rightSide}>{rightSide}</div>
 					) : (

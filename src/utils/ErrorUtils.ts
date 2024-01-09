@@ -1,6 +1,5 @@
 export class ErrorUtils {
 	static convertErrors = (error: any, fallbackField = 'error') => {
-		console.log(error)
 		let convertedErrors = {}
 		if (error?.code && error?.message) {
 			convertedErrors[fallbackField] = {
@@ -11,13 +10,5 @@ export class ErrorUtils {
 			convertedErrors = error
 		}
 		return convertedErrors
-	}
-
-	static singleError = (field, message: string) => {
-		return {
-			[field]: {
-				message,
-			},
-		}
 	}
 }

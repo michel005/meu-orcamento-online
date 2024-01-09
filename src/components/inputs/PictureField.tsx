@@ -1,5 +1,4 @@
-import { useMessage } from '../../hooks/useMessage'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import style from './PictureField.module.scss'
 import { UserPicture } from '../UserPicture'
 import { Button } from '../Button'
@@ -15,12 +14,14 @@ export const PictureField = ({
 	name,
 	type,
 }) => {
-	const { message } = useMessage()
-	const ref = useRef(null)
+	const [oldPicture, setOldPicture] = useState((value?.[field] || {})?.value)
+	const ref = useRef<HTMLInputElement>(null)
+	const { value: picture, type: valueType } = value?.[field] || {}
+
 	return (
 		<div data-field={field} className={style.pictureField} style={{ width: size || '150px' }}>
 			<UserPicture
-				picture={value?.[field]}
+				picture={picture}
 				placeholder={
 					placeholder || (!!name ? undefined : !value[field] && 'Sem Imagem Selecionada')
 				}
@@ -31,6 +32,20 @@ export const PictureField = ({
 			/>
 			{!disabled && (
 				<div className={style.pictureOptions}>
+					{valueType === 'file' && (
+						<Button
+							leftIcon="undo"
+							onClick={() => {
+								if (!disabled) {
+									value[field] = {
+										value: oldPicture,
+										type: 'url',
+									}
+									onChange({ ...value })
+								}
+							}}
+						/>
+					)}
 					<Button
 						leftIcon="folder_open"
 						onClick={() => {
@@ -44,7 +59,7 @@ export const PictureField = ({
 							leftIcon="close"
 							onClick={() => {
 								if (!disabled) {
-									value[field] = null
+									value[field] = undefined
 									onChange({ ...value })
 								}
 							}}
@@ -59,16 +74,13 @@ export const PictureField = ({
 				accept="image/*"
 				onChange={(event) => {
 					if (event.target.files?.[0]) {
-						FileUtils.fileToBase64(event.target.files?.[0], (base64) => {
-							if (!base64.startsWith('data:image')) {
-								message(
-									'Arquivo inválido!',
-									'O arquivo informado não é uma imagem.'
-								)
-								return
+						FileUtils.fileToBase64(event.target.files[0], (response) => {
+							value[field] = {
+								value: response,
+								type: 'file',
 							}
-							value[field] = base64
 							onChange({ ...value })
+							ref.current.value = ''
 						})
 					}
 				}}

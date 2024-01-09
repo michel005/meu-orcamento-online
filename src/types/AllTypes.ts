@@ -5,12 +5,17 @@ export type MessageType = {
 	confirm?: () => void
 }
 
+export type Picture = {
+	value?: string | File
+	type?: 'url' | 'file'
+}
+
 export interface CreateUser extends UserType {
 	agree_terms?: boolean
 }
 
 export type UserType = {
-	picture: string
+	picture: Picture
 	full_name: string
 	user_name: string
 	email: string
@@ -40,7 +45,7 @@ export type CustomerType = {
 	_id?: string
 	created?: string
 	updated?: string
-	picture?: string
+	picture?: Picture
 	full_name?: string
 	email?: string
 	birthday?: string
@@ -59,7 +64,7 @@ export type ProductType = {
 	seller?: CustomerType
 	created?: string
 	updated?: string
-	picture?: string
+	picture?: Picture
 	code?: string
 	title?: string
 	description?: string

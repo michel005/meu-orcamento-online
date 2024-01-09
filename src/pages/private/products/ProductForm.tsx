@@ -36,6 +36,18 @@ export const ProductForm = () => {
 			}}
 		>
 			<div className={style.content}>
+				{form.form._id && (
+					<section
+						className={style.userImage}
+						style={
+							form.form.picture?.value
+								? { backgroundImage: `url(${form.form.picture?.value})` }
+								: {}
+						}
+					>
+						{productFormLayout.getField('picture')}
+					</section>
+				)}
 				<section>
 					{productFormLayout.getField('seller_id')}
 					{productFormLayout.getField('title')}

@@ -2,12 +2,15 @@ import style from './CustomerFilter.module.scss'
 import { ButtonGroup } from '../../../components/ButtonGroup'
 import { Button, ButtonSecondary } from '../../../components/Button'
 import { ImportCustomerButton } from './ImportCustomerButton'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useFormLayout } from '../../../hooks/useFormLayout'
 import { usePage } from '../../../hooks/usePage'
+import { SessionContext } from '../../../contexts/SessionContext'
+import { CustomerType } from '../../../types/AllTypes'
 
 export const CustomerFilter = () => {
-	const { form, api, pageData } = usePage('customer')
+	const { currentUser } = useContext(SessionContext)
+	const { form, api, pageData } = usePage<CustomerType>('customer')
 	const [showFilters, setShowFilters] = useState(false)
 	const filterFormLayout = useFormLayout({
 		definition: {
@@ -39,6 +42,7 @@ export const CustomerFilter = () => {
 					onClick={() => {
 						form.show(
 							{
+								picture: null,
 								active: true,
 								address: {},
 							},

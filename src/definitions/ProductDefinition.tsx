@@ -48,14 +48,14 @@ export const ProductDefinition = (
 			idModifier: (value: CustomerType) => value._id,
 			valueRender: (x: CustomerType) => (
 				<div className={style.selectValueRender}>
-					<UserPicture size="28px" picture={x.picture} name={x.full_name} />
+					<UserPicture size="28px" picture={x.picture?.value} name={x.full_name} />
 					<p>{x.full_name}</p>
 				</div>
 			),
 			numberOfOptions: 3,
 			optionValueRender: (x: CustomerType) => (
 				<div className={style.selectValueRender}>
-					<UserPicture size="36px" picture={x.picture} name={x.full_name} />
+					<UserPicture size="36px" picture={x.picture?.value} name={x.full_name} />
 					<div className={style.nameAndEmail}>
 						<b>{x.full_name}</b>
 						<p>{x.email}</p>

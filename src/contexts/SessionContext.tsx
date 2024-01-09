@@ -4,7 +4,7 @@ import { ConfigContext } from './ConfigContext'
 import { UserType } from '../types/AllTypes'
 
 export type SessionContextType = {
-	currentUser: any
+	currentUser: UserType | null
 	setCurrentUser: any
 	saveUserSession: any
 	status: 'idle' | 'loading' | 'loaded'

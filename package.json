@@ -15,6 +15,7 @@
 		"aws-sdk": "^2.1483.0",
 		"axios": "^1.4.0",
 		"css-loader": "^6.7.3",
+		"fs": "^0.0.1-security",
 		"html-loader": "^4.2.0",
 		"prettier": "^2.8.8",
 		"qrcode": "^1.5.3",
@@ -43,5 +44,10 @@
 		"webpack": "^5.82.0",
 		"webpack-cli": "^5.0.2",
 		"webpack-dev-server": "^4.13.3"
+	},
+	"browser": {
+		"fs": true,
+		"path": true,
+		"os": true
 	}
 }

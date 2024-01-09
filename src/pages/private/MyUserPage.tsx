@@ -21,7 +21,7 @@ export const MyUserPage = () => {
 		new_password_confirm: '',
 	})
 	const userFormLayout = useFormLayout<UserType>({
-		definition: ChangeUserDefinition(),
+		definition: ChangeUserDefinition(currentUser),
 		value: user,
 		onChange: (x) => {
 			setUser(x)

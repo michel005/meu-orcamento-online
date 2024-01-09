@@ -166,7 +166,7 @@ export const ProductPage = () => {
 										return (
 											<>
 												<UserPicture
-													picture={row.picture}
+													picture={row.picture?.value}
 													name={row.title}
 													size="32px"
 												/>
@@ -191,7 +191,7 @@ export const ProductPage = () => {
 										return (
 											<>
 												<UserPicture
-													picture={row.seller?.picture}
+													picture={row.seller?.picture?.value}
 													name={row.seller?.full_name}
 													size="32px"
 												/>

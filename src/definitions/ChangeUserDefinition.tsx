@@ -1,8 +1,9 @@
 import { useFormLayoutDefinitionType } from '../hooks/useFormLayout'
 import { ButtonGhost } from '../components/Button'
 import React from 'react'
+import { UserType } from '../types/AllTypes'
 
-export const ChangeUserDefinition = (): useFormLayoutDefinitionType => {
+export const ChangeUserDefinition = (user: UserType): useFormLayoutDefinitionType => {
 	return {
 		picture: {
 			label: 'Imagem de Usuário',

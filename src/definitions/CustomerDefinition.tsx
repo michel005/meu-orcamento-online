@@ -1,8 +1,7 @@
 import { useFormLayoutDefinitionType } from '../hooks/useFormLayout'
 import { ButtonGhost } from '../components/Button'
 import React from 'react'
-import { CustomerType } from '../types/AllTypes'
-import { StringUtils } from '../utils/StringUtils'
+import { CustomerType, UserType } from '../types/AllTypes'
 
 export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinitionType => {
 	return {

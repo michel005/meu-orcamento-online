@@ -22,7 +22,7 @@ export const CreateUserPage = () => {
 		address: {},
 	})
 	const userFormLayout = useFormLayout<UserType>({
-		definition: ChangeUserDefinition(),
+		definition: ChangeUserDefinition(null),
 		value: value,
 		onChange: (x) => {
 			setValue(x)

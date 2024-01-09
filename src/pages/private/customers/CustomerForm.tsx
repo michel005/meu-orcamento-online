@@ -31,13 +31,13 @@ export const CustomerForm = () => {
 	})
 	const [tab, setTab] = useState('general')
 
-	const onSuccess = () => {
+	const onSuccess = (response: any) => {
 		form.close()
 	}
 
 	const onError = (errors: any) => {
-		customerFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data || {}))
-		addressFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data.address || {}))
+		customerFormLayout.setErrors(ErrorUtils.convertErrors(errors.response?.data || {}))
+		addressFormLayout.setErrors(ErrorUtils.convertErrors(errors.response?.data?.address || {}))
 	}
 
 	useEffect(() => {
@@ -58,6 +58,18 @@ export const CustomerForm = () => {
 				</div>
 			)}
 			<div className={style.content}>
+				{form.form._id && (
+					<section
+						className={style.userImage}
+						style={
+							form.form.picture?.value
+								? { backgroundImage: `url(${form.form.picture?.value})` }
+								: {}
+						}
+					>
+						{customerFormLayout.getField('picture')}
+					</section>
+				)}
 				<section>
 					<Tabs
 						value={tab}

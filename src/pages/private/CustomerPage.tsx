@@ -7,12 +7,13 @@ import { CustomerForm } from './customers/CustomerForm'
 import { CustomerType } from '../../types/AllTypes'
 import { CustomerFilter } from './customers/CustomerFilter'
 import { Table } from '../../components/Table'
-import { UserPicture } from '../../components/UserPicture'
-import { Button, ButtonGhost } from '../../components/Button'
+import { ButtonGhost } from '../../components/Button'
 import { FlexRow } from '../../components/FlexRow'
 import { CustomerBag } from './customers/CustomerBag'
 import { PersonType } from '../../constants/PersonType'
 import { Label } from '../../components/Label'
+import { DatabasePicture } from '../../components/DatabasePicture'
+import { UserPicture } from '../../components/UserPicture'
 
 export const CustomerPage = () => {
 	const { form, api, pageData, apiData } = usePage('customer')
@@ -58,7 +59,8 @@ export const CustomerPage = () => {
 									return (
 										<>
 											<UserPicture
-												picture={row.picture}
+												picture={row.picture?.value}
+												id={row._id}
 												name={row.full_name}
 												size="32px"
 											/>

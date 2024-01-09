@@ -17,11 +17,15 @@ export const CustomerCard = ({ customer, onClose }) => {
 		<div className={style.customerCard} data-inactive={!customer.active}>
 			<div
 				className={style.userBackground}
-				style={{ backgroundImage: `url(${customer.picture})` }}
+				style={
+					customer.picture?.value
+						? { backgroundImage: `url(${customer.picture?.value})` }
+						: {}
+				}
 			>
 				<UserPicture
 					className={style.userPicture}
-					picture={customer.picture}
+					picture={customer.picture?.value}
 					name={customer.full_name}
 					size="170px"
 					randomId={Math.random()}

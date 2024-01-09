@@ -95,7 +95,7 @@ export const PrivatePage = () => {
 								}}
 							>
 								<UserPicture
-									picture={currentUser?.picture}
+									picture={currentUser?.picture?.value}
 									name={currentUser?.full_name}
 									size="48px"
 									randomId={Math.random()}

@@ -1,41 +1,6 @@
 @import '../../../keyframe';
 @import '../../../utils';
 
-.userImage {
-	background-color: #ddd;
-	background-position: center;
-	background-size: cover;
-	border-radius: 14px;
-	display: flex;
-	flex-direction: row;
-	gap: 14px;
-	height: 492px;
-	max-width: 400px;
-	min-width: 400px;
-	overflow: auto;
-	position: relative;
-	width: 400px;
-	z-index: 1;
-
-	&::before {
-		background-color: #fffa;
-		backdrop-filter: blur(10px);
-		border-radius: 14px;
-		content: '';
-		height: 100%;
-		inset-block-start: 0;
-		inset-inline-start: 0;
-		position: absolute;
-		transition: all 0.25s;
-		width: 100%;
-	}
-
-	img,
-	div {
-		border-radius: var(--border-radius) !important;
-	}
-}
-
 .selectValueRender {
 	align-items: center;
 	display: flex;

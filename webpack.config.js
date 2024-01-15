@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
 	entry: './src/index.tsx',
@@ -10,6 +11,7 @@ module.exports = {
 		port: 80,
 		open: false,
 		historyApiFallback: true,
+		hot: true,
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js', '.jsx', '.scss'],

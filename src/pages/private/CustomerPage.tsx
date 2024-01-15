@@ -12,7 +12,6 @@ import { FlexRow } from '../../components/FlexRow'
 import { CustomerBag } from './customers/CustomerBag'
 import { PersonType } from '../../constants/PersonType'
 import { Label } from '../../components/Label'
-import { DatabasePicture } from '../../components/DatabasePicture'
 import { UserPicture } from '../../components/UserPicture'
 
 export const CustomerPage = () => {
@@ -77,6 +76,7 @@ export const CustomerPage = () => {
 										</>
 									)
 								},
+								priority: 'primary',
 							},
 							email: {
 								header: 'E-mail',
@@ -92,6 +92,7 @@ export const CustomerPage = () => {
 										</Label>
 									)
 								},
+								priority: 'secondary',
 							},
 							locale: {
 								header: 'Local',
@@ -113,6 +114,7 @@ export const CustomerPage = () => {
 									['false', 'Inativo'],
 								],
 								width: '100px',
+								priority: 'secondary',
 							},
 							commands: {
 								alignment: 'center',
@@ -140,12 +142,14 @@ export const CustomerPage = () => {
 											<CustomerBag
 												customer={customer}
 												arrowPosition="top-right"
+												cardMode={true}
 												onSuccess={() => api.getAll({ silently: true })}
 											/>
 										</FlexRow>
 									)
 								},
 								width: '10px',
+								priority: 'primary',
 							},
 						}}
 						value={filteredData}

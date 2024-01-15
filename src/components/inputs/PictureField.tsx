@@ -1,70 +1,93 @@
-import React, { useRef, useState } from 'react'
+import React, { CSSProperties, useRef, useState } from 'react'
 import style from './PictureField.module.scss'
 import { UserPicture } from '../UserPicture'
-import { Button } from '../Button'
+import { Button, ButtonGhost, ButtonSecondary, ButtonWhite } from '../Button'
 import { FileUtils } from '../../utils/FileUtils'
+import { ButtonGroup } from '../ButtonGroup'
 
 export const PictureField = ({
 	field,
 	size,
-	disabled,
+	disabled = false,
 	value,
-	onChange,
-	placeholder,
+	onChange = (value: any) => {},
+	placeholder = undefined,
 	name,
-	type,
+	type = 'round',
 }) => {
 	const [oldPicture, setOldPicture] = useState((value?.[field] || {})?.value)
+	const [background, setBackground] = useState(null)
+	const [changed, setChanged] = useState(false)
 	const ref = useRef<HTMLInputElement>(null)
 	const { value: picture, type: valueType } = value?.[field] || {}
 
+	const currentSize = size || '150px'
+
 	return (
-		<div data-field={field} className={style.pictureField} style={{ width: size || '150px' }}>
+		<div
+			data-field={field}
+			className={style.pictureField}
+			style={
+				{
+					'--size': currentSize,
+					width: currentSize,
+					backgroundImage: background ? `url(${background})` : null,
+				} as CSSProperties
+			}
+		>
 			<UserPicture
+				className={style.picture}
 				picture={picture}
 				placeholder={
 					placeholder || (!!name ? undefined : !value[field] && 'Sem Imagem Selecionada')
 				}
-				size={size || '150px'}
+				size={currentSize}
 				type={type}
 				name={name}
-				randomId={Math.random()}
+				dataCallback={(x) => {
+					setBackground(x)
+				}}
 			/>
 			{!disabled && (
 				<div className={style.pictureOptions}>
-					{valueType === 'file' && (
-						<Button
-							leftIcon="undo"
-							onClick={() => {
-								if (!disabled) {
+					<ButtonGroup>
+						{changed && (
+							<Button
+								leftIcon="undo"
+								onClick={() => {
 									value[field] = {
 										value: oldPicture,
 										type: 'url',
 									}
 									onChange({ ...value })
-								}
-							}}
-						/>
-					)}
-					<Button
-						leftIcon="folder_open"
-						onClick={() => {
-							if (!disabled) {
-								ref.current.click()
-							}
-						}}
-					/>
-					{value[field] && (
+									setChanged(false)
+								}}
+							>
+								Desfazer
+							</Button>
+						)}
 						<Button
-							leftIcon="close"
+							leftIcon="folder_open"
 							onClick={() => {
-								if (!disabled) {
+								ref.current.click()
+							}}
+						>
+							Procurar
+						</Button>
+						{value[field] && (
+							<Button
+								leftIcon="delete"
+								onClick={() => {
 									value[field] = undefined
 									onChange({ ...value })
-								}
-							}}
-						/>
-					)}
+									setBackground(null)
+									setChanged(true)
+								}}
+							>
+								Remover
+							</Button>
+						)}
+					</ButtonGroup>
 				</div>
 			)}
 			<input
@@ -81,6 +104,7 @@ export const PictureField = ({
 							}
 							onChange({ ...value })
 							ref.current.value = ''
+							setChanged(true)
 						})
 					}
 				}}

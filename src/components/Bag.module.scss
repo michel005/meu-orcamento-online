@@ -101,13 +101,13 @@
 	left: 0;
 	position: fixed;
 	width: 100%;
-	z-index: 49;
+	z-index: 9;
 }
 
 .floatingBag {
 	align-items: flex-start;
-	background-color: #555;
-	backdrop-filter: blur(4px);
+	background-color: #555a;
+	backdrop-filter: blur(10px);
 	border-radius: 14px;
 	display: flex;
 	flex-direction: column;
@@ -117,12 +117,12 @@
 	padding: 14px;
 	position: absolute;
 	transform: translateX(-50%);
-	z-index: 50;
+	z-index: 9;
 
 	&::before {
 		border-left: var(--arrow-size) solid transparent;
 		border-right: var(--arrow-size) solid transparent;
-		border-bottom: var(--arrow-size) solid #555;
+		border-bottom: var(--arrow-size) solid #555a;
 		border-top: none;
 		content: '';
 		height: 0;
@@ -147,8 +147,6 @@
 	}
 
 	> button {
-		color: #fff !important;
-		justify-content: flex-start;
 		position: relative;
 		white-space: nowrap;
 		width: 100%;

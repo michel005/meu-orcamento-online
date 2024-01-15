@@ -6,16 +6,19 @@ import './index.scss'
 import axios from 'axios'
 import { SessionProvider } from './contexts/SessionContext'
 import { ConfigProvider } from './contexts/ConfigContext'
+import { DataCacheProvider } from './contexts/DataCacheContext'
 
 axios.defaults.baseURL = 'http://localhost:8080/api'
 
 const container = document.getElementById('root')
 createRoot(container!).render(
 	<BrowserRouter>
-		<ConfigProvider>
-			<SessionProvider>
-				<MainPage />
-			</SessionProvider>
-		</ConfigProvider>
+		<DataCacheProvider>
+			<ConfigProvider>
+				<SessionProvider>
+					<MainPage />
+				</SessionProvider>
+			</ConfigProvider>
+		</DataCacheProvider>
 	</BrowserRouter>
 )

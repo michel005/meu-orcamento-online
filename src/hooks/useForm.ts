@@ -29,6 +29,7 @@ export const useForm = <T>(name: string) => {
 				return { ...x }
 			})
 		},
+		callClose: () => onCloseForm?.[name]?.(),
 		close: (runOn: boolean = true) => {
 			if (runOn) {
 				onCloseForm?.[name]?.()

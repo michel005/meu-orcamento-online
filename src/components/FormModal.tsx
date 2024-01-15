@@ -10,7 +10,7 @@ export const FormModal = ({ title = undefined, children, onClose }) => {
 					<span>{title}</span>
 					<ButtonGhost className={style.closeButton} leftIcon="close" onClick={onClose} />
 				</header>
-				{children}
+				<div className={style.content}>{children}</div>
 			</div>
 		</div>
 	)

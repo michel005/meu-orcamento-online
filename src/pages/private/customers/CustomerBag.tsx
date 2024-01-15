@@ -12,10 +12,12 @@ export const CustomerBag = ({
 	customer,
 	onSuccess,
 	arrowPosition,
+	cardMode = false,
 }: {
 	customer: CustomerType
 	onSuccess?: (response: any) => void
 	arrowPosition?: 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right'
+	cardMode?: boolean
 }) => {
 	const api = useApi('customer')
 	const form = useForm<CustomerType>('customer')
@@ -37,84 +39,88 @@ export const CustomerBag = ({
 			{(_, setShow) => {
 				return (
 					<>
-						{customer.active && (
-							<ButtonGhost
-								leftIcon="person_cancel"
-								onClick={() => {
-									setShow(false)
-									api.updateProperty({
-										id: customer._id,
-										silently: true,
-										propName: 'active',
-										propValue: false,
-										onSuccess: onSuccess,
-									})
-								}}
-							>
-								Inativar
-							</ButtonGhost>
+						{!cardMode && (
+							<>
+								{customer.active && (
+									<ButtonGhost
+										leftIcon="person_cancel"
+										onClick={() => {
+											setShow(false)
+											api.updateProperty({
+												id: customer._id,
+												silently: true,
+												propName: 'active',
+												propValue: false,
+												onSuccess: onSuccess,
+											})
+										}}
+									>
+										Inativar
+									</ButtonGhost>
+								)}
+								<ButtonGhost
+									leftIcon="shopping_bag"
+									onClick={() => {
+										setShow(false)
+										setProp('seller_id', () => customer._id)
+										navigate('/products')
+									}}
+								>
+									Produtos
+								</ButtonGhost>
+								<ButtonGhost
+									leftIcon="copy_all"
+									onClick={() => {
+										setShow(false)
+										form.show(
+											{
+												...customer,
+												_id: undefined,
+												picture: undefined,
+												favorite: undefined,
+												active: true,
+											},
+											() => onSuccess?.(null)
+										)
+									}}
+								>
+									Duplicar
+								</ButtonGhost>
+								<ButtonGhost
+									leftIcon="upload"
+									onClick={() => {
+										setShow(false)
+										const content = JSON.stringify(
+											{
+												...customer,
+												_id: undefined,
+												picture: undefined,
+												favorite: undefined,
+												created: undefined,
+												updated: undefined,
+												active: undefined,
+												address_id: undefined,
+												address: {
+													...customer.address,
+													id: undefined,
+												},
+											},
+											null,
+											'  '
+										)
+										FileUtils.saveContent(
+											content,
+											`${customer.full_name
+												.toUpperCase()
+												.replaceAll(' ', '_')}_EXPORTAR.json`
+										)
+									}}
+								>
+									Exportar
+								</ButtonGhost>
+								<hr />
+							</>
 						)}
-						<ButtonGhost
-							leftIcon="shopping_bag"
-							onClick={() => {
-								setShow(false)
-								setProp('seller_id', () => customer._id)
-								navigate('/products')
-							}}
-						>
-							Produtos
-						</ButtonGhost>
-						<ButtonGhost
-							leftIcon="copy_all"
-							onClick={() => {
-								setShow(false)
-								form.show(
-									{
-										...customer,
-										_id: undefined,
-										picture: undefined,
-										favorite: undefined,
-										active: true,
-									},
-									() => onSuccess?.(null)
-								)
-							}}
-						>
-							Duplicar
-						</ButtonGhost>
-						<ButtonGhost
-							leftIcon="upload"
-							onClick={() => {
-								setShow(false)
-								const content = JSON.stringify(
-									{
-										...customer,
-										_id: undefined,
-										picture: undefined,
-										favorite: undefined,
-										created: undefined,
-										updated: undefined,
-										active: undefined,
-										address_id: undefined,
-										address: {
-											...customer.address,
-											id: undefined,
-										},
-									},
-									null,
-									'  '
-								)
-								FileUtils.saveContent(
-									content,
-									`${customer.full_name
-										.toUpperCase()
-										.replaceAll(' ', '_')}_EXPORTAR.json`
-								)
-							}}
-						>
-							Exportar
-						</ButtonGhost>
-						<hr />
 						{customer.address &&
 							customer.address?.city &&
 							customer.address?.state &&
@@ -123,8 +129,19 @@ export const CustomerBag = ({
 									leftIcon="map"
 									onClick={() => {
 										setShow(false)
+										const addressArray = [
+											customer.address.zip_code,
+											customer.address.street_name,
+											customer.address.street_number,
+											customer.address.neighborhood,
+											customer.address.city,
+											customer.address.state,
+											customer.address.country,
+										]
 										window.open(
-											`https://www.google.com/maps?q=${customer.address.zip_code}+${customer.address.street_name}+${customer.address.street_number}+${customer.address.city}+${customer.address.state}`,
+											`https://www.google.com/maps?q=${addressArray
+												.filter((x) => x)
+												.join('+')}`,
 											'_blank'
 										)
 									}}

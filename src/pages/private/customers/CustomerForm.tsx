@@ -58,18 +58,7 @@ export const CustomerForm = () => {
 				</div>
 			)}
 			<div className={style.content}>
-				{form.form._id && (
-					<section
-						className={style.userImage}
-						style={
-							form.form.picture?.value
-								? { backgroundImage: `url(${form.form.picture?.value})` }
-								: {}
-						}
-					>
-						{customerFormLayout.getField('picture')}
-					</section>
-				)}
+				{customerFormLayout.getField('picture')}
 				<section>
 					<Tabs
 						value={tab}
@@ -146,8 +135,9 @@ export const CustomerForm = () => {
 								silently: true,
 								propName: 'active',
 								propValue: true,
-								onSuccess: () => {
-									form.editProp('active', (prev) => !prev)
+								onSuccess: (response) => {
+									form.edit(response)
+									form.callClose()
 								},
 							})
 						}}
@@ -234,15 +224,23 @@ export const CustomerForm = () => {
 								silently: true,
 								propName: 'favorite',
 								propValue: !form.form?.favorite,
-								onSuccess: () => {
-									form.editProp('favorite', (prev) => !prev)
+								onSuccess: (response) => {
+									form.edit(response)
+									form.callClose()
 								},
 							})
 						}}
 					/>
 				)}
 				{form.form?._id && (
-					<CustomerBag customer={form.form} arrowPosition="bottom-right" />
+					<CustomerBag
+						customer={form.form}
+						arrowPosition="bottom-right"
+						onSuccess={(response) => {
+							form.edit(response)
+							form.callClose()
+						}}
+					/>
 				)}
 			</div>
 		</FormModal>

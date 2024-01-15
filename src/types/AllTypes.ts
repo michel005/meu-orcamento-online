@@ -6,7 +6,7 @@ export type MessageType = {
 }
 
 export type Picture = {
-	value?: string | File
+	value?: string
 	type?: 'url' | 'file'
 }
 
@@ -35,6 +35,7 @@ export type AddressType = {
 	zip_code?: string
 	street_number?: string
 	street_name?: string
+	neighborhood?: string
 	complement?: string
 	city?: string
 	state?: string

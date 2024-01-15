@@ -1,21 +1,63 @@
 .pictureField {
-	align-items: center;
+	align-self: flex-start;
+	background-color: #ddd;
+	background-position: center;
+	background-size: cover;
+	border: 1px solid var(--input-border-color);
+	border-radius: var(--border-radius);
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	gap: 14px;
-	height: 100%;
-	padding-block: 14px;
+	gap: 21px;
+	padding: 21px;
 	position: relative;
-	width: 100% !important;
+	width: 100%;
+
+	&::before {
+		background-color: #fff6;
+		backdrop-filter: blur(20px);
+		border-radius: var(--border-radius);
+		content: '';
+		height: 100%;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		position: absolute;
+		transition: all 0.25s;
+		width: 100%;
+	}
+}
+
+.picture {
+	justify-content: center;
+	height: calc(var(--size) - 42px) !important;
+
+	[data-picture] {
+		background-color: #fff;
+		border-radius: var(--border-radius) !important;
+		height: calc(var(--size) - 42px) !important;
+		width: calc(var(--size) - 42px) !important;
+		z-index: 1;
+	}
 }
 
 .pictureOptions {
+	align-self: flex-end;
 	display: flex;
 	flex-direction: row;
 	gap: 7px;
-	inset-block-end: 14px;
-	inset-inline-end: 14px;
-	justify-content: center;
-	position: absolute;
+	width: 100%;
+
+	> div {
+		flex-wrap: wrap;
+		overflow: hidden;
+		width: 100%;
+
+		> button[data-variation='primary'] {
+			background-color: #fff4 !important;
+			border-radius: 0;
+
+			&:hover {
+				background-color: #fffa !important;
+			}
+		}
+	}
 }

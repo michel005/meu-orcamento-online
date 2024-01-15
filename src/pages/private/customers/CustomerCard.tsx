@@ -1,6 +1,5 @@
 import React from 'react'
 import style from './CustomerCard.module.scss'
-import { UserPicture } from '../../../components/UserPicture'
 import { useForm } from '../../../hooks/useForm'
 import { CustomerType } from '../../../types/AllTypes'
 import { Button, ButtonGhost } from '../../../components/Button'
@@ -8,27 +7,32 @@ import { useApi } from '../../../hooks/useApi'
 import { StringUtils } from '../../../utils/StringUtils'
 import { DateUtils } from '../../../utils/DateUtils'
 import { CustomerBag } from './CustomerBag'
+import { PictureField } from '../../../components/inputs/PictureField'
 
 export const CustomerCard = ({ customer, onClose }) => {
 	const { show } = useForm<CustomerType>('customer')
-	const { update, updateProperty } = useApi('customer')
+	const { updateProperty } = useApi('customer')
 
 	return (
 		<div className={style.customerCard} data-inactive={!customer.active}>
-			<div
-				className={style.userBackground}
-				style={
-					customer.picture?.value
-						? { backgroundImage: `url(${customer.picture?.value})` }
-						: {}
-				}
-			>
-				<UserPicture
-					className={style.userPicture}
-					picture={customer.picture?.value}
+			<div className={style.userBackground}>
+				<div className={style.buttons}>
+					<CustomerBag
+						customer={customer}
+						arrowPosition="top-left"
+						cardMode={true}
+						onSuccess={() => {
+							onClose()
+						}}
+					/>
+				</div>
+				<PictureField
+					key={customer._id}
+					field="picture"
+					value={customer}
+					disabled={true}
 					name={customer.full_name}
 					size="170px"
-					randomId={Math.random()}
 				/>
 				<div className={style.favorite}>
 					<ButtonGhost
@@ -48,17 +52,8 @@ export const CustomerCard = ({ customer, onClose }) => {
 						}}
 					/>
 				</div>
-				<div className={style.buttons}>
-					<CustomerBag
-						customer={customer}
-						arrowPosition="top-left"
-						onSuccess={() => {
-							onClose()
-						}}
-					/>
-				</div>
+				{!customer.active && <div className={style.inactive}>INATIVO</div>}
 			</div>
-			{!customer.active && <div className={style.inactive}>INATIVO</div>}
 			<div className={style.customerInfo}>
 				<h3 title={customer.full_name}>
 					{StringUtils.firstAndLastName(customer.full_name)}

@@ -10,7 +10,9 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			type: 'file',
 			pictureName: value?.full_name,
-			size: '200px',
+			placeholder: 'Seleione uma imagem',
+			pictureType: 'square',
+			size: '320px',
 		},
 		full_name: {
 			label: 'Nome Completo',
@@ -35,6 +37,7 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 		},
 		person_type: {
 			label: 'Tipo de Pessoa',
+			optionsPosition: 'top',
 			options: [
 				['PF', 'Pessoa Física'],
 				['PJ', 'Pessoa Jurídica'],

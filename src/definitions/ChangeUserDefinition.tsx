@@ -7,10 +7,9 @@ export const ChangeUserDefinition = (user: UserType): useFormLayoutDefinitionTyp
 	return {
 		picture: {
 			label: 'Imagem de Usuário',
-			leftSide: <ButtonGhost leftIcon="photo" disabled={true} />,
 			placeholder: 'Buscar Imagem',
 			type: 'file',
-			size: '200px',
+			size: '350px',
 		},
 		full_name: {
 			label: 'Nome Completo',
@@ -28,6 +27,34 @@ export const ChangeUserDefinition = (user: UserType): useFormLayoutDefinitionTyp
 			label: 'Data de Nascimento',
 			type: 'date',
 			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
+		},
+		person_type: {
+			label: 'Tipo de Pessoa',
+			optionsPosition: 'top',
+			options: [
+				['PF', 'Pessoa Física'],
+				['PJ', 'Pessoa Jurídica'],
+			],
+			type: 'select',
+			leftSide: <ButtonGhost leftIcon="person" disabled={true} />,
+			placeholder: 'PF / PJ',
+		},
+		document_type: {
+			label: 'Tipo de Documento',
+			optionsPosition: 'top',
+			options: [
+				['RG', 'RG'],
+				['CPF', 'CPF'],
+				['CNPJ', 'CNPJ'],
+			],
+			type: 'select',
+			leftSide: <ButtonGhost leftIcon="cards" disabled={true} />,
+			placeholder: 'RG / CPF / CNPJ',
+		},
+		document_number: {
+			label: 'Número de Documento',
+			leftSide: <ButtonGhost leftIcon="cards" disabled={true} />,
+			placeholder: 'Seguir o formato do tipo de documento selecionado',
 		},
 		password: {
 			label: 'Senha de Acesso',

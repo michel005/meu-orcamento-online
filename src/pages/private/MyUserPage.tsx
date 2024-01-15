@@ -46,15 +46,15 @@ export const MyUserPage = () => {
 	return (
 		<div className={style.myUserPage}>
 			<div className={style.userForm}>
-				<header className={style.header}>
-					<h1 id="myData">Meus dados</h1>
-				</header>
 				<div className={style.formContent}>
 					{userFormLayout.getField('picture')}
 					{userFormLayout.getField('full_name')}
 					{userFormLayout.getField('email')}
 					{userFormLayout.getField('birthday')}
 					{userFormLayout.getField('phone')}
+					{userFormLayout.getField('person_type')}
+					{userFormLayout.getField('document_type')}
+					{userFormLayout.getField('document_number')}
 					{userFormLayout.getField('error')}
 				</div>
 				<header className={style.header}>

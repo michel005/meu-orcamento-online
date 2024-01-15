@@ -25,6 +25,10 @@ $templateWidth: 1fr;
 	table {
 		flex-grow: 1;
 	}
+
+	[data-column='person_type'] {
+		width: 200px !important;
+	}
 }
 
 .tableFullNameAndEmail {

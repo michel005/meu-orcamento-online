@@ -27,6 +27,7 @@ export const ProductPage = () => {
 		.map((x) => (x.categories || '').split(';'))
 		.reduce((prev, curr) => [...prev, ...curr], [])
 		.filter((x) => x !== '')
+
 	const filterFormLayout = useFormLayout({
 		definition: {
 			general_search: {

@@ -55,8 +55,10 @@ export const Table = ({ definition, value }: TableType) => {
 					{allColumns.map((column) => {
 						return (
 							<th
+								data-priority={column.priority || 'regular'}
+								data-column={column.column}
 								className={style.tableHeadColumn}
-								key={column.column}
+								key={`header_${column.column}`}
 								style={{
 									width:
 										column.width || Math.round(100 / allColumns.length) + '%',
@@ -103,8 +105,9 @@ export const Table = ({ definition, value }: TableType) => {
 							{allColumns.map((column) => {
 								return (
 									<td
+										data-priority={column.priority || 'regular'}
 										className={style.tableBodyColumn}
-										key={column.column}
+										key={`body_${rowIndex}_${column.column}`}
 										data-alignment={column.alignment || 'left'}
 									>
 										<div className={style.tableBodyColumnContent}>
@@ -190,6 +193,7 @@ export const Table = ({ definition, value }: TableType) => {
 								{[5, 10, 20, 50].map((size) => {
 									return (
 										<ButtonSecondary
+											key={size}
 											disabled={pageSize === size}
 											onClick={() => {
 												setPageSize(size)

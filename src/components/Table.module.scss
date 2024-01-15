@@ -1,4 +1,5 @@
 @import '../keyframe';
+@import '../utils';
 
 .table {
 	--table-cell-size: calc(var(--input-height) + 8px);
@@ -209,5 +210,25 @@
 			color: #333 !important;
 			font-weight: bold !important;
 		}
+	}
+}
+
+@include desktopHD {
+	.tableHeadColumn[data-priority='regular'],
+	.tableBodyColumn[data-priority='regular'] {
+		display: none;
+	}
+
+	.tableFootRowPaginationContent {
+		p {
+			display: none;
+		}
+	}
+}
+
+@include desktopSmall {
+	.tableHeadColumn[data-priority='secondary'],
+	.tableBodyColumn[data-priority='secondary'] {
+		display: none;
 	}
 }

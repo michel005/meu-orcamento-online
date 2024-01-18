@@ -22,6 +22,7 @@ export const ChangeUserDefinition = (user: UserType): useFormLayoutDefinitionTyp
 		email: {
 			label: 'E-mail',
 			leftSide: <ButtonGhost leftIcon="mail" disabled={true} />,
+			disabled: true,
 		},
 		birthday: {
 			label: 'Data de Nascimento',

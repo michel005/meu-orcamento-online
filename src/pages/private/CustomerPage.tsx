@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { usePage } from '../../hooks/usePage'
 import { SortUtils } from '../../utils/SortUtils'
 import style from './CustomerPage.module.scss'
-import { CustomerCard } from './customers/CustomerCard'
 import { CustomerForm } from './customers/CustomerForm'
 import { CustomerType } from '../../types/AllTypes'
 import { CustomerFilter } from './customers/CustomerFilter'
@@ -47,128 +46,115 @@ export const CustomerPage = () => {
 		<div className={style.customerPage} data-page="customer">
 			{form.originalValue && <CustomerForm />}
 			<CustomerFilter />
-			{pageData.data.view === 'table' && (
-				<div className={style.pageContent}>
-					<Table
-						definition={{
-							full_name: {
-								header: 'Nome Completo',
-								type: 'string',
-								valueOverride: (row: CustomerType) => {
-									return (
-										<>
-											<UserPicture
-												picture={row.picture?.value}
-												id={row._id}
-												name={row.full_name}
-												size="32px"
-											/>
-											<div className={style.tableFullNameAndEmail}>
-												<a
-													onClick={() => {
-														form.show(row, () => api.getAll())
-													}}
-												>
-													{row.full_name}
-												</a>
-												<p>{row.email}</p>
-											</div>
-										</>
-									)
-								},
-								priority: 'primary',
-							},
-							email: {
-								header: 'E-mail',
-								type: 'string',
-							},
-							person_type: {
-								header: 'Tipo',
-								type: 'string',
-								valueOverride: (row: CustomerType) => {
-									return (
-										<Label color={row.person_type === 'PF' ? 'green' : 'red'}>
-											{PersonType[row.person_type]}
-										</Label>
-									)
-								},
-								priority: 'secondary',
-							},
-							locale: {
-								header: 'Local',
-								type: 'string',
-								valueOverride: (row: CustomerType) => {
-									return (
-										<>
-											{row.address?.city} - {row.address?.state} -{' '}
-											{row.address?.country}
-										</>
-									)
-								},
-							},
-							active: {
-								header: 'Situação',
-								type: 'domain',
-								keyValue: [
-									['true', 'Ativo'],
-									['false', 'Inativo'],
-								],
-								width: '100px',
-								priority: 'secondary',
-							},
-							commands: {
-								alignment: 'center',
-								header: '',
-								type: 'string',
-								valueOverride: (customer) => {
-									return (
-										<FlexRow>
-											<ButtonGhost
-												className={style.favoriteButton}
-												leftIcon="favorite"
-												data-favorite={customer.favorite}
+
+			<div className={style.pageContent}>
+				<Table
+					definition={{
+						full_name: {
+							header: 'Nome Completo',
+							type: 'string',
+							valueOverride: (row: CustomerType) => {
+								return (
+									<>
+										<UserPicture
+											picture={row.picture?.value}
+											id={row._id}
+											name={row.full_name}
+											size="32px"
+										/>
+										<div className={style.tableFullNameAndEmail}>
+											<a
 												onClick={() => {
-													api.updateProperty({
-														id: customer._id,
-														silently: true,
-														propName: 'favorite',
-														propValue: !customer?.favorite,
-														onSuccess: () => {
-															api.getAll({ silently: true })
-														},
-													})
+													form.show(row, () => api.getAll())
 												}}
-											/>
-											<CustomerBag
-												customer={customer}
-												arrowPosition="top-right"
-												cardMode={true}
-												onSuccess={() => api.getAll({ silently: true })}
-											/>
-										</FlexRow>
-									)
-								},
-								width: '10px',
-								priority: 'primary',
+											>
+												{row.full_name}
+											</a>
+											<p>{row.email}</p>
+										</div>
+									</>
+								)
 							},
-						}}
-						value={filteredData}
-					/>
-				</div>
-			)}
-			{pageData.data.view === 'cards' && (
-				<div className={style.pageContent}>
-					{filteredData.map((customer: CustomerType) => {
-						return (
-							<CustomerCard
-								key={customer._id}
-								customer={customer}
-								onClose={() => api.getAll()}
-							/>
-						)
-					})}
-				</div>
-			)}
+							priority: 'primary',
+						},
+						email: {
+							header: 'E-mail',
+							type: 'string',
+						},
+						person_type: {
+							header: 'Tipo',
+							type: 'string',
+							valueOverride: (row: CustomerType) => {
+								return (
+									<Label color={row.person_type === 'PF' ? 'green' : 'red'}>
+										{PersonType[row.person_type]}
+									</Label>
+								)
+							},
+							priority: 'secondary',
+						},
+						locale: {
+							header: 'Local',
+							type: 'string',
+							valueOverride: (row: CustomerType) => {
+								return (
+									<>
+										<Label>{row.address?.city}</Label>
+										<Label>{row.address?.state}</Label>
+										<Label>{row.address?.country}</Label>
+									</>
+								)
+							},
+						},
+						active: {
+							header: 'Situação',
+							type: 'domain',
+							keyValue: [
+								['true', 'Ativo'],
+								['false', 'Inativo'],
+							],
+							width: '100px',
+							priority: 'secondary',
+						},
+						commands: {
+							alignment: 'center',
+							header: '',
+							type: 'string',
+							valueOverride: (customer) => {
+								return (
+									<FlexRow>
+										<ButtonGhost
+											className={style.favoriteButton}
+											leftIcon="favorite"
+											data-favorite={customer.favorite}
+											onClick={() => {
+												api.updateProperty({
+													id: customer._id,
+													silently: true,
+													propName: 'favorite',
+													propValue: !customer?.favorite,
+													onSuccess: () => {
+														api.getAll({ silently: true })
+													},
+												})
+											}}
+										/>
+										<CustomerBag
+											customer={customer}
+											arrowPosition="top-right"
+											cardMode={true}
+											onSuccess={() => api.getAll({ silently: true })}
+										/>
+									</FlexRow>
+								)
+							},
+							width: '10px',
+							priority: 'primary',
+						},
+					}}
+					value={filteredData}
+				/>
+			</div>
 		</div>
 	)
 }

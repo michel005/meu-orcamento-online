@@ -2,6 +2,7 @@ import React from 'react'
 import style from './DashboardPage.module.scss'
 import styled from 'styled-components'
 import { Icon } from '../../components/Icon'
+import { BarChart } from '../../components/BarChart'
 
 const Card = styled.div`
 	@keyframes fadeOut {
@@ -44,6 +45,10 @@ const Card = styled.div`
 	}
 `
 
+const daysInMonth = (month, year) => {
+	return new Date(parseInt(year), parseInt(month) + 1, 0).getDate()
+}
+
 export const DashboardPage = () => {
 	return (
 		<div className={style.dashboardPage}>
@@ -81,6 +86,36 @@ export const DashboardPage = () => {
 					</p>
 					<a>Leia mais...</a>
 				</Card>
+			</section>
+			<section>
+				<BarChart
+					title="Tipos de itens mais vendidos"
+					values={[
+						['x', Math.random()],
+						['a', Math.random()],
+						['z', Math.random()],
+						['y', Math.random()],
+					]}
+				/>
+				<BarChart
+					title="Clientes mais recorrentes"
+					values={[
+						['x', Math.random()],
+						['a', Math.random()],
+						['z', Math.random()],
+						['y', Math.random()],
+						['y', Math.random()],
+						['y', Math.random()],
+						['y', Math.random()],
+						['y', Math.random()],
+					]}
+				/>
+				<BarChart
+					title="Vendas por Mês"
+					values={new Array(daysInMonth(new Date().getFullYear(), new Date().getMonth()))
+						.fill(null)
+						.map((_, index) => [`${index + 1}`, Math.random()])}
+				/>
 			</section>
 		</div>
 	)

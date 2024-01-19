@@ -49,7 +49,6 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 	})
 	const [pageData, setPageData] = useState({
 		customer: {
-			view: 'table',
 			favorite: false,
 			personType: null,
 		},

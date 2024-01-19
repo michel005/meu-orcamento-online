@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Field } from '../components/Field'
 import { Error } from '../components/Error'
 import { DateUtils } from '../utils/DateUtils'
 import { SelectInput } from '../components/inputs/SelectInput'
 import { PictureField } from '../components/inputs/PictureField'
 import { LabelInput } from '../components/inputs/LabelInput'
+import { Button } from '../components/Button'
 
 const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 	return (
@@ -130,7 +131,136 @@ const LabelField = ({ field, fieldDefinition, value, onChange, errors, disableAl
 	)
 }
 
+const DateField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
+	const ref = useRef<HTMLInputElement>()
+	const useMask = (v: string) => {
+		const valueToUse = v.replaceAll('/', '')
+		let temp = `${valueToUse.substring(0, 2)}/${valueToUse.substring(
+			2,
+			4
+		)}/${valueToUse.substring(4, 8)}`
+		if (temp.endsWith('/')) {
+			temp = temp.replaceAll('/', '')
+		}
+		return temp
+	}
+
+	return (
+		<>
+			<Field
+				field={field}
+				label={fieldDefinition.label}
+				rightSide={
+					<div>
+						<input
+							type="date"
+							ref={ref}
+							style={{
+								opacity: 0,
+								position: 'absolute',
+							}}
+							value={
+								value?.[field as keyof typeof value]
+									? DateUtils.stringToInputDate(
+											value?.[field as keyof typeof value]
+									  )
+									: ''
+							}
+							onChange={(event) => {
+								if (event.target.value && event.target.value !== '') {
+									value[field] = DateUtils.inputDateToString(event.target.value)
+									onChange({ ...value })
+								}
+							}}
+						/>
+						<Button
+							leftIcon="calendar_month"
+							onClick={() => {
+								ref.current.showPicker()
+							}}
+						/>
+					</div>
+				}
+				leftSide={fieldDefinition.leftSide}
+				info={fieldDefinition.info}
+				input={(setFocus, id) => (
+					<input
+						id={id}
+						type={fieldDefinition.type === 'date' ? 'text' : fieldDefinition.type}
+						value={useMask(value?.[field as keyof typeof value] || '')}
+						onChange={(event) => {
+							value[field] = event.target.value === '' ? null : event.target.value
+							onChange({ ...value })
+						}}
+						disabled={disableAll || fieldDefinition.disabled}
+						placeholder={
+							disableAll || fieldDefinition.disabled
+								? ''
+								: fieldDefinition.placeholder
+						}
+						onFocus={() => setFocus(true)}
+						onBlur={() => setFocus(false)}
+					/>
+				)}
+				disabled={disableAll || fieldDefinition.disabled}
+				error={errors?.[field]?.message}
+			/>
+		</>
+	)
+}
+
 const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
+	const useMask = (v: string) => {
+		if (fieldDefinition.mask) {
+			if (fieldDefinition.mask === 'RG') {
+				let temp = `${v.substring(0, 2)}.${v.substring(2, 5)}.${v.substring(
+					5,
+					8
+				)}-${v.substring(8, 9)}`
+				temp = temp.replaceAll('..', '').replaceAll('.-', '')
+				if (temp.endsWith('-')) {
+					temp = temp.replaceAll('-', '')
+				}
+				if (temp.endsWith('.')) {
+					temp = temp.replaceAll('.', '')
+				}
+				return temp
+			}
+			if (fieldDefinition.mask === 'CPF') {
+				let temp = `${v.substring(0, 3)}.${v.substring(3, 6)}.${v.substring(
+					6,
+					9
+				)}-${v.substring(9, 11)}`
+				temp = temp.replaceAll('..', '').replaceAll('.-', '')
+				if (temp.endsWith('-')) {
+					temp = temp.replaceAll('-', '')
+				}
+				if (temp.endsWith('.')) {
+					temp = temp.replaceAll('.', '')
+				}
+				return temp
+			}
+			if (fieldDefinition.mask === 'CNPJ') {
+				let temp = `${v.substring(0, 2)}.${v.substring(2, 5)}.${v.substring(
+					5,
+					8
+				)}/${v.substring(8, 12)}-${v.substring(12, 14)}`
+				temp = temp.replaceAll('..', '').replaceAll('.-', '')
+				if (temp.endsWith('-')) {
+					temp = temp.replaceAll('-', '')
+				}
+				if (temp.endsWith('/')) {
+					temp = temp.replaceAll('/', '')
+				}
+				if (temp.endsWith('.')) {
+					temp = temp.replaceAll('.', '')
+				}
+				return temp
+			}
+		}
+		return v
+	}
+
 	return (
 		<Field
 			field={field}
@@ -141,27 +271,23 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 			input={(setFocus, id) => (
 				<input
 					id={id}
-					type={fieldDefinition.type === 'date' ? 'text' : fieldDefinition.type}
-					value={value?.[field as keyof typeof value] || ''}
+					type="text"
+					value={useMask(value?.[field as keyof typeof value] || '')}
 					onChange={(event) => {
 						value[field] = event.target.value === '' ? null : event.target.value
+						if (value[field]) {
+							value[field] = value[field]
+								.replaceAll('-', '')
+								.replaceAll('.', '')
+								.replaceAll('/', '')
+						}
 						onChange({ ...value })
 					}}
 					disabled={disableAll || fieldDefinition.disabled}
 					placeholder={
 						disableAll || fieldDefinition.disabled ? '' : fieldDefinition.placeholder
 					}
-					onFocus={(event) => {
-						setFocus(true)
-						if (fieldDefinition.type === 'date') {
-							value[field] =
-								event.target.value === ''
-									? null
-									: DateUtils.dateToString(
-											DateUtils.stringToDate(event.target.value)
-									  )
-						}
-					}}
+					onFocus={() => setFocus(true)}
 					onBlur={() => setFocus(false)}
 				/>
 			)}
@@ -185,6 +311,7 @@ export type useFormDefinitionType = {
 		| 'select'
 		| 'labels'
 		| 'subForm'
+	mask?: 'CPF' | 'CNPJ' | 'RG'
 	pictureType?: 'circle' | 'square'
 	idModifier?: any
 	valueRender?: any
@@ -241,9 +368,20 @@ export const useFormLayout = <Entity,>({
 			}
 			const fieldDefinition = { ...(definition[field] || {}), ...overrideProps }
 			const id = Math.random().toString()
-			if (['text', 'date', 'password', 'number'].includes(fieldDefinition.type || 'text')) {
+			if (['text', 'password', 'number'].includes(fieldDefinition.type || 'text')) {
 				return (
 					<GeneralField
+						field={field}
+						fieldDefinition={fieldDefinition}
+						value={value}
+						onChange={onChange}
+						errors={errors}
+						disableAll={disableAll}
+					/>
+				)
+			} else if (fieldDefinition.type === 'date') {
+				return (
+					<DateField
 						field={field}
 						fieldDefinition={fieldDefinition}
 						value={value}

@@ -21,6 +21,9 @@ export type UserType = {
 	email: string
 	birthday?: string
 	phone?: string
+	person_type?: 'PF' | 'PJ'
+	document_type?: 'CPF' | 'CNPJ' | 'RG'
+	document_number?: string
 	address?: AddressType | null
 	password: string
 }

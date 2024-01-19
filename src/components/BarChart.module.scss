@@ -1,0 +1,56 @@
+.barChart {
+	align-self: flex-start;
+	border: 1px solid var(--input-border-color);
+	border-radius: var(--border-radius);
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 21px;
+	max-width: 100%;
+}
+
+.bars {
+	column-gap: 7px;
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-columns: repeat(auto-fill, 80px);
+	grid-template-rows: 1fr auto;
+	flex-direction: row;
+	overflow-x: auto;
+}
+
+.label {
+	background-color: #eee;
+	border-radius: 0 0 var(--border-radius) var(--border-radius);
+	padding: 10px 14px;
+	transition: all 0.25s;
+	text-align: center;
+	width: 80px;
+}
+
+.value {
+	background-color: #f4f4f4;
+	border-radius: var(--border-radius) var(--border-radius) 0 0;
+	flex-grow: 1;
+	height: 300px;
+	overflow: hidden;
+	position: relative;
+
+	&::before {
+		background-color: var(--active-color-50);
+		bottom: 0;
+		content: '';
+		height: var(--value);
+		left: 0;
+		position: absolute;
+		transition: all 0.25s;
+		width: 100%;
+	}
+
+	&:hover {
+		&::before {
+			background-color: var(--active-color-70);
+		}
+	}
+}

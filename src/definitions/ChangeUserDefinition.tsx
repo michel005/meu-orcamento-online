@@ -27,7 +27,6 @@ export const ChangeUserDefinition = (user: UserType): useFormLayoutDefinitionTyp
 		birthday: {
 			label: 'Data de Nascimento',
 			type: 'date',
-			leftSide: <ButtonGhost leftIcon="calendar_month" disabled={true} />,
 		},
 		person_type: {
 			label: 'Tipo de Pessoa',
@@ -56,6 +55,7 @@ export const ChangeUserDefinition = (user: UserType): useFormLayoutDefinitionTyp
 			label: 'Número de Documento',
 			leftSide: <ButtonGhost leftIcon="cards" disabled={true} />,
 			placeholder: 'Seguir o formato do tipo de documento selecionado',
+			mask: user.document_type as any,
 		},
 		password: {
 			label: 'Senha de Acesso',

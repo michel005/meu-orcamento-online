@@ -97,6 +97,16 @@ export const ProductPage = () => {
 			<div className={style.productPageContent}>
 				<div className={style.filters}>
 					<section>
+						{filterFormLayout.getField('general_search')}
+						{showFilters && (
+							<div className={style.allFilters}>
+								{filterFormLayout.getField('seller_id')}
+								{filterFormLayout.getField('status')}
+								{filterFormLayout.getField('categories')}
+							</div>
+						)}
+					</section>
+					<section>
 						<Button
 							leftIcon="add"
 							onClick={() => {
@@ -138,15 +148,7 @@ export const ProductPage = () => {
 								}}
 							/>
 						</ButtonGroup>
-						{filterFormLayout.getField('general_search')}
 					</section>
-					{showFilters && (
-						<div className={style.allFilters}>
-							{filterFormLayout.getField('seller_id')}
-							{filterFormLayout.getField('status')}
-							{filterFormLayout.getField('categories')}
-						</div>
-					)}
 				</div>
 				{pageData.data.view === 'table' && (
 					<div className={style.pageContent}>
@@ -212,7 +214,44 @@ export const ProductPage = () => {
 													.filter((x) => x && x !== '')
 													.sort()
 													.map((category) => {
-														return <Label>{category}</Label>
+														return (
+															<Label
+																color={
+																	(
+																		pageData.data.categories ||
+																		[]
+																	).includes(category)
+																		? 'var(--active-color)'
+																		: ''
+																}
+																onClick={() => {
+																	pageData.setProp(
+																		'categories',
+																		(value) => {
+																			if (!value) {
+																				value = []
+																			}
+																			if (
+																				value.includes(
+																					category
+																				)
+																			) {
+																				value.splice(
+																					value.indexOf(
+																						category
+																					)
+																				)
+																			} else {
+																				value.push(category)
+																			}
+																			return [...value]
+																		}
+																	)
+																}}
+															>
+																{category}
+															</Label>
+														)
 													})}
 											</>
 										)

@@ -2,7 +2,7 @@ import React, { CSSProperties, useState } from 'react'
 import { usePagination } from '../hooks/usePagination'
 import { NumberUtils } from '../utils/NumberUtils'
 import { SortUtils } from '../utils/SortUtils'
-import { ButtonSecondary } from './Button'
+import { Button, ButtonGhost, ButtonSecondary } from './Button'
 import { ButtonGroup } from './ButtonGroup'
 import { FlexRow } from './FlexRow'
 import { Icon } from './Icon'
@@ -126,84 +126,62 @@ export const Table = ({ definition, value }: TableType) => {
 						<FlexRow className={style.tableFootRowPaginationContent}>
 							{pagination.slice.length !== value.length && (
 								<>
-									<ButtonGroup>
-										<ButtonSecondary
-											disabled={pagination.currentPage === 0}
-											leftIcon="keyboard_double_arrow_left"
-											onClick={() => {
-												pagination.goToFirst()
-											}}
-										/>
-										<ButtonSecondary
-											disabled={pagination.currentPage === 0}
-											leftIcon="keyboard_arrow_left"
-											onClick={() => {
+									<ButtonGhost
+										leftIcon="keyboard_arrow_left"
+										onClick={() => {
+											if (pagination.currentPage > 0) {
 												pagination.goToPrevious()
-											}}
-										/>
-										{new Array(pagination.numberOfPages)
-											.fill(0)
-											.map((_, index) => {
-												return (
-													<ButtonSecondary
-														key={index}
-														disabled={pagination.currentPage === index}
-														onClick={() => {
-															pagination.goTo(index)
-														}}
-													>
-														{index + 1}
-													</ButtonSecondary>
-												)
-											})}
-										<ButtonSecondary
-											disabled={
-												pagination.currentPage ===
-												pagination.numberOfPages - 1
 											}
-											leftIcon="keyboard_arrow_right"
-											onClick={() => {
+										}}
+									/>
+									{new Array(pagination.numberOfPages).fill(0).map((_, index) => {
+										return (
+											<Button
+												key={index}
+												variationOverride={
+													pagination.currentPage === index
+														? 'secondary'
+														: 'ghost'
+												}
+												onClick={() => {
+													pagination.goTo(index)
+												}}
+											>
+												{index + 1}
+											</Button>
+										)
+									})}
+									<ButtonGhost
+										leftIcon="keyboard_arrow_right"
+										onClick={() => {
+											if (
+												pagination.currentPage <
+												pagination.numberOfPages - 1
+											) {
 												pagination.goToNext()
-											}}
-										/>
-										<ButtonSecondary
-											disabled={
-												pagination.currentPage ===
-												pagination.numberOfPages - 1
 											}
-											leftIcon="keyboard_double_arrow_right"
-											onClick={() => {
-												pagination.goToLast()
-											}}
-										/>
-									</ButtonGroup>
+										}}
+									/>
 								</>
 							)}
-							{value.length === 0 ? (
-								<p>Nenhum registro encontrado</p>
-							) : (
-								<p>
-									Mostrando {pagination.slice.length} de {value.length}{' '}
-									registro(s)
-								</p>
-							)}
+							{value.length === 0 && <p>Nenhum registro encontrado</p>}
 							<div style={{ flexGrow: 1 }} />
 							<p>Tamanho da página</p>
-							<ButtonGroup>
-								{[5, 10, 20, 50].map((size) => {
-									return (
-										<ButtonSecondary
-											key={size}
-											disabled={pageSize === size}
-											onClick={() => {
-												setPageSize(size)
-											}}
-										>
-											{size}
-										</ButtonSecondary>
-									)
-								})}
-							</ButtonGroup>
+							{[5, 10, 20, 50].map((size) => {
+								return (
+									<Button
+										key={size}
+										variationOverride={
+											pageSize === size ? 'secondary' : 'ghost'
+										}
+										onClick={() => {
+											setPageSize(size)
+										}}
+									>
+										{size}
+									</Button>
+								)
+							})}
 						</FlexRow>
 					</td>
 				</tr>

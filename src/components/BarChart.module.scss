@@ -23,6 +23,7 @@
 .label {
 	background-color: #eee;
 	border-radius: 0 0 var(--border-radius) var(--border-radius);
+	color: #666;
 	padding: 10px 14px;
 	transition: all 0.25s;
 	text-align: center;
@@ -30,8 +31,6 @@
 }
 
 .value {
-	background-color: #f4f4f4;
-	border-radius: var(--border-radius) var(--border-radius) 0 0;
 	flex-grow: 1;
 	height: 300px;
 	overflow: hidden;

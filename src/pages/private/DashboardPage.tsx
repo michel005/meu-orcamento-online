@@ -1,53 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './DashboardPage.module.scss'
-import styled from 'styled-components'
 import { Icon } from '../../components/Icon'
 import { BarChart } from '../../components/BarChart'
-
-const Card = styled.div`
-	@keyframes fadeOut {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
-	animation: fadeOut 0.25s linear;
-	background-color: #fff;
-	border: 1px solid #ccc;
-	border-radius: var(--border-radius);
-	display: flex;
-	flex-direction: column;
-	gap: 21px;
-	min-width: 350px;
-	padding: 21px;
-	width: 350px;
-
-	i {
-		align-self: flex-start;
-		border: 1px solid ${(props) => props.color || '#ccc'};
-		color: ${(props) => props.color || '#666	'};
-		font-size: 22px !important;
-		padding: 10px;
-	}
-
-	h3 {
-		font-size: 1.3em;
-	}
-
-	p {
-		color: #aaa;
-		flex-grow: 1;
-		font-size: 16px;
-		line-height: 1.3em;
-	}
-`
-
-const daysInMonth = (month, year) => {
-	return new Date(parseInt(year), parseInt(month) + 1, 0).getDate()
-}
+import { Card } from '../../components/Card'
+import axios from 'axios'
+import { SessionUtils } from '../../utils/SessionUtils'
+import { ChartSellByMonth } from './dashboard/ChartSellByMonth'
 
 export const DashboardPage = () => {
 	return (
@@ -88,34 +46,7 @@ export const DashboardPage = () => {
 				</Card>
 			</section>
 			<section>
-				<BarChart
-					title="Tipos de itens mais vendidos"
-					values={[
-						['x', Math.random()],
-						['a', Math.random()],
-						['z', Math.random()],
-						['y', Math.random()],
-					]}
-				/>
-				<BarChart
-					title="Clientes mais recorrentes"
-					values={[
-						['x', Math.random()],
-						['a', Math.random()],
-						['z', Math.random()],
-						['y', Math.random()],
-						['y', Math.random()],
-						['y', Math.random()],
-						['y', Math.random()],
-						['y', Math.random()],
-					]}
-				/>
-				<BarChart
-					title="Vendas por Mês"
-					values={new Array(daysInMonth(new Date().getFullYear(), new Date().getMonth()))
-						.fill(null)
-						.map((_, index) => [`${index + 1}`, Math.random()])}
-				/>
+				<ChartSellByMonth />
 			</section>
 		</div>
 	)

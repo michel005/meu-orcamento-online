@@ -257,6 +257,13 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 				}
 				return temp
 			}
+			if (fieldDefinition.mask === 'CEP') {
+				let temp = `${v.substring(0, 5)}-${v.substring(5, 8)}`
+				if (temp.endsWith('-')) {
+					temp = temp.replaceAll('-', '')
+				}
+				return temp
+			}
 		}
 		return v
 	}
@@ -311,7 +318,7 @@ export type useFormDefinitionType = {
 		| 'select'
 		| 'labels'
 		| 'subForm'
-	mask?: 'CPF' | 'CNPJ' | 'RG'
+	mask?: 'CPF' | 'CNPJ' | 'RG' | 'CEP'
 	pictureType?: 'circle' | 'square'
 	idModifier?: any
 	valueRender?: any

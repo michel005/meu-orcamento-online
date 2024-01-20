@@ -8,6 +8,7 @@ export const AddressDefinition = (): useFormLayoutDefinitionType => {
 			label: 'CEP',
 			leftSide: <ButtonGhost leftIcon="streetview" disabled={true} />,
 			placeholder: 'Ex: 99999-999',
+			mask: 'CEP',
 		},
 		street_number: {
 			label: 'Número',

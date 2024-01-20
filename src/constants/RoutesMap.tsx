@@ -4,6 +4,7 @@ import { DashboardPage } from '../pages/private/DashboardPage'
 import { MyUserPage } from '../pages/private/MyUserPage'
 import { CustomerPage } from '../pages/private/CustomerPage'
 import { ProductPage } from '../pages/private/ProductPage'
+import { SellingPage } from '../pages/private/SellingPage'
 
 type RouteType = {
 	[key: string]: {
@@ -50,6 +51,7 @@ export const RoutesMap: RoutesType = {
 			name: 'Vendas',
 			description: 'Realize e gerencie as vendas e porcentagem de lucro',
 			route: '/sells',
+			component: <SellingPage />,
 		},
 		payments: {
 			icon: 'payments',

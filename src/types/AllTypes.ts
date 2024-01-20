@@ -75,14 +75,18 @@ export type ProductType = {
 	categories?: string
 	price?: number
 	status?: string
-	product_waiting_list?: WaitingListType[] | null
 }
 
-export type WaitingListType = {
-	id?: string
-	product_id?: string | null
-	customer_id?: string | null
-	created?: string | null
-	product?: ProductType | null
-	customer?: CustomerType | null
+export type SellType = {
+	_id?: string
+	created?: string
+	updated?: string
+	customer_id?: string
+	customer?: CustomerType
+	items: {
+		product: ProductType
+		price: number
+	}[]
+	finalPrice: number
+	status: 'PENDING' | 'CANCELED' | 'PAYED'
 }

@@ -1,0 +1,20 @@
+.sellingPage {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+
+.pageContent {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	gap: 14px;
+	padding: 14px;
+
+	table {
+		flex-grow: 1;
+	}
+}

@@ -10,15 +10,15 @@
 		gap: 28px;
 		padding: 28px;
 	}
-}
 
-.quickInfo {
-	background-color: #eee;
-	border-bottom: 1px solid #ccc;
-	display: flex;
-	flex-direction: row !important;
-	flex-wrap: nowrap;
-	gap: 28px;
-	overflow-x: auto;
-	padding: 28px;
+	.quickInfo {
+		background-color: #eee;
+		border-bottom: 1px solid #ccc;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		gap: 28px;
+		overflow-x: auto;
+		padding: 28px;
+	}
 }

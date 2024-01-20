@@ -147,16 +147,11 @@ export const PrivatePage = () => {
 				<RouteButton routeDetails={RoutesMap.private.dashboard} />
 				<RouteButton routeDetails={RoutesMap.private.customers} />
 				<RouteButton routeDetails={RoutesMap.private.products} />
-				<RouteButton routeDetails={RoutesMap.private.myUser} />
-				<label>Produtos</label>
 				<RouteButton routeDetails={RoutesMap.private.sells} />
 				<RouteButton routeDetails={RoutesMap.private.payments} />
-				<label>Redes Sociais</label>
-				<RouteButton routeDetails={RoutesMap.private.facebook} />
-				<RouteButton routeDetails={RoutesMap.private.instagram} />
-				<RouteButton routeDetails={RoutesMap.private.mercadoLivre} />
 				<div style={{ flexGrow: 1 }} />
 				<label>Tópicos</label>
+				<RouteButton routeDetails={RoutesMap.private.myUser} />
 				<RouteButton routeDetails={RoutesMap.private.support} />
 				<RouteButton routeDetails={RoutesMap.private.getStarted} />
 			</section>

@@ -2,16 +2,13 @@ import axios from 'axios'
 import { useContext } from 'react'
 import { ConfigContext } from '../contexts/ConfigContext'
 import { useApiData } from './useApiData'
+import { SessionUtils } from '../utils/SessionUtils'
 
 export const useApi = (entity: string) => {
 	const { setLoading } = useContext(ConfigContext)
 	const apiData = useApiData(entity)
 
-	const header = {
-		headers: {
-			authorization: `Baerer ${localStorage.getItem('auth_token')}`,
-		},
-	}
+	const header = SessionUtils.getHeader()
 
 	const getAll = ({
 		silently = false,

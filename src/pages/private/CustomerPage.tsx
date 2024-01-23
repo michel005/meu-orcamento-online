@@ -39,12 +39,10 @@ export const CustomerPage = () => {
 
 	useEffect(() => {
 		api.getAll()
-		form.close()
 	}, [])
 
 	return (
 		<div className={style.customerPage} data-page="customer">
-			{form.originalValue && <CustomerForm />}
 			<CustomerFilter />
 
 			<div className={style.pageContent}>

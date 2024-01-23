@@ -13,7 +13,6 @@ export const PictureField = ({
 	onChange = (value: any) => {},
 	placeholder = undefined,
 	name,
-	type = 'round',
 }) => {
 	const [oldPicture, setOldPicture] = useState((value?.[field] || {})?.value)
 	const [background, setBackground] = useState(null)
@@ -42,7 +41,6 @@ export const PictureField = ({
 					placeholder || (!!name ? undefined : !value[field] && 'Sem Imagem Selecionada')
 				}
 				size={currentSize}
-				type={type}
 				name={name}
 				dataCallback={(x) => {
 					setBackground(x)
@@ -55,11 +53,16 @@ export const PictureField = ({
 							<Button
 								leftIcon="undo"
 								onClick={() => {
-									value[field] = {
-										value: oldPicture,
-										type: 'url',
+									if (oldPicture) {
+										value[field] = {
+											value: oldPicture,
+											type: 'url',
+										}
+									} else {
+										value[field] = null
 									}
 									onChange({ ...value })
+									setOldPicture(null)
 									setChanged(false)
 								}}
 							>

@@ -11,7 +11,6 @@ export const CustomerDefinition = (value: CustomerType): useFormLayoutDefinition
 			type: 'file',
 			pictureName: value?.full_name,
 			placeholder: 'Seleione uma imagem',
-			pictureType: 'square',
 			size: '320px',
 		},
 		full_name: {

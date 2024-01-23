@@ -6,6 +6,7 @@ import { SelectInput } from '../components/inputs/SelectInput'
 import { PictureField } from '../components/inputs/PictureField'
 import { LabelInput } from '../components/inputs/LabelInput'
 import { Button } from '../components/Button'
+import { MaskUtils } from '../utils/MaskUtils'
 
 const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 	return (
@@ -15,7 +16,6 @@ const FileField = ({ field, fieldDefinition, value, onChange, disableAll }) => {
 			onChange={onChange}
 			disabled={disableAll || fieldDefinition.disabled}
 			placeholder={disableAll || fieldDefinition.disabled ? '' : fieldDefinition.placeholder}
-			type={fieldDefinition.pictureType}
 			name={fieldDefinition.pictureName}
 			size={fieldDefinition.size}
 		/>
@@ -134,15 +134,7 @@ const LabelField = ({ field, fieldDefinition, value, onChange, errors, disableAl
 const DateField = ({ field, fieldDefinition, value, onChange, errors, disableAll }) => {
 	const ref = useRef<HTMLInputElement>()
 	const useMask = (v: string) => {
-		const valueToUse = v.replaceAll('/', '')
-		let temp = `${valueToUse.substring(0, 2)}/${valueToUse.substring(
-			2,
-			4
-		)}/${valueToUse.substring(4, 8)}`
-		if (temp.endsWith('/')) {
-			temp = temp.replaceAll('/', '')
-		}
-		return temp
+		return MaskUtils.date(v)
 	}
 
 	return (
@@ -213,56 +205,16 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 	const useMask = (v: string) => {
 		if (fieldDefinition.mask) {
 			if (fieldDefinition.mask === 'RG') {
-				let temp = `${v.substring(0, 2)}.${v.substring(2, 5)}.${v.substring(
-					5,
-					8
-				)}-${v.substring(8, 9)}`
-				temp = temp.replaceAll('..', '').replaceAll('.-', '')
-				if (temp.endsWith('-')) {
-					temp = temp.replaceAll('-', '')
-				}
-				if (temp.endsWith('.')) {
-					temp = temp.replaceAll('.', '')
-				}
-				return temp
+				return MaskUtils.rg(v)
 			}
 			if (fieldDefinition.mask === 'CPF') {
-				let temp = `${v.substring(0, 3)}.${v.substring(3, 6)}.${v.substring(
-					6,
-					9
-				)}-${v.substring(9, 11)}`
-				temp = temp.replaceAll('..', '').replaceAll('.-', '')
-				if (temp.endsWith('-')) {
-					temp = temp.replaceAll('-', '')
-				}
-				if (temp.endsWith('.')) {
-					temp = temp.replaceAll('.', '')
-				}
-				return temp
+				return MaskUtils.cpf(v)
 			}
 			if (fieldDefinition.mask === 'CNPJ') {
-				let temp = `${v.substring(0, 2)}.${v.substring(2, 5)}.${v.substring(
-					5,
-					8
-				)}/${v.substring(8, 12)}-${v.substring(12, 14)}`
-				temp = temp.replaceAll('..', '').replaceAll('.-', '')
-				if (temp.endsWith('-')) {
-					temp = temp.replaceAll('-', '')
-				}
-				if (temp.endsWith('/')) {
-					temp = temp.replaceAll('/', '')
-				}
-				if (temp.endsWith('.')) {
-					temp = temp.replaceAll('.', '')
-				}
-				return temp
+				return MaskUtils.cnpj(v)
 			}
 			if (fieldDefinition.mask === 'CEP') {
-				let temp = `${v.substring(0, 5)}-${v.substring(5, 8)}`
-				if (temp.endsWith('-')) {
-					temp = temp.replaceAll('-', '')
-				}
-				return temp
+				return MaskUtils.cep(v)
 			}
 		}
 		return v
@@ -278,12 +230,12 @@ const GeneralField = ({ field, fieldDefinition, value, onChange, errors, disable
 			input={(setFocus, id) => (
 				<input
 					id={id}
-					type="text"
+					type={fieldDefinition.type || 'text'}
 					value={useMask(value?.[field as keyof typeof value] || '')}
 					onChange={(event) => {
 						value[field] = event.target.value === '' ? null : event.target.value
-						if (value[field]) {
-							value[field] = value[field]
+						if (value[field] && fieldDefinition.mask) {
+							value[field] = MaskUtils.onlyNumbers(value[field])
 								.replaceAll('-', '')
 								.replaceAll('.', '')
 								.replaceAll('/', '')
@@ -319,7 +271,6 @@ export type useFormDefinitionType = {
 		| 'labels'
 		| 'subForm'
 	mask?: 'CPF' | 'CNPJ' | 'RG' | 'CEP'
-	pictureType?: 'circle' | 'square'
 	idModifier?: any
 	valueRender?: any
 	optionValueRender?: any

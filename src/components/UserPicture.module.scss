@@ -6,48 +6,6 @@
 	min-width: var(--size);
 	width: var(--size);
 
-	&[data-format='circle'] {
-		border-radius: 50%;
-
-		img {
-			border-radius: 50%;
-		}
-
-		.initialLetters {
-			border-radius: 50%;
-		}
-	}
-
-	&[data-format='square'] {
-		img {
-			border-radius: 0;
-		}
-
-		.initialLetters {
-			border-radius: 0;
-		}
-	}
-
-	&[data-have-onclick='true'] {
-		&:hover {
-			cursor: pointer;
-
-			.initialLetters {
-				background-color: #ccc;
-			}
-		}
-	}
-
-	&[data-full-width='true'] {
-		img {
-			width: 100%;
-		}
-
-		.initialLetters {
-			width: 100%;
-		}
-	}
-
 	img {
 		height: 100%;
 		object-fit: cover;
@@ -72,6 +30,7 @@
 	z-index: 100;
 
 	img {
+		background-color: #fff;
 		border-radius: var(--border-radius);
 		height: 80%;
 		object-fit: cover;
@@ -82,7 +41,7 @@
 .initialLetters {
 	align-items: center;
 	background-color: #ddd;
-	color: #666;
+	color: #ccc;
 	display: flex;
 	font-size: calc(var(--size) / 3);
 	flex-direction: row;

@@ -52,6 +52,57 @@
 	}
 }
 
+.bagButton {
+	> div {
+		color: #666 !important;
+	}
+}
+
+.bagItem {
+	align-items: flex-start;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	min-width: 300px;
+	width: 100%;
+}
+
+.bagImage {
+	align-self: flex-start;
+	border-radius: 7px !important;
+	overflow: hidden;
+}
+
+.totalValue {
+	color: #fff;
+	display: flex;
+	flex-direction: row;
+	margin-top: 10px;
+	width: 100%;
+
+	label {
+		flex-grow: 1;
+	}
+}
+
+.bagItemTitleAndPrice {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 4px;
+	width: 100%;
+
+	p {
+		padding: 0 !important;
+	}
+}
+
+.removeFromBagButton {
+	height: auto !important;
+	min-height: auto !important;
+	padding: 0 !important;
+}
+
 .allFilters {
 	background-color: #fff;
 	border-radius: var(--border-radius);

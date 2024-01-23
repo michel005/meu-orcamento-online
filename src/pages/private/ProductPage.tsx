@@ -1,32 +1,36 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import style from './ProductPage.module.scss'
 import { usePage } from '../../hooks/usePage'
 import { ProductType } from '../../types/AllTypes'
 import { useApi } from '../../hooks/useApi'
-import { ProductCard } from './products/ProductCard'
-import { ProductForm } from './products/ProductForm'
-import { AddProductsInBulkForm } from './products/AddProductsInBulkForm'
-import { useForm } from '../../hooks/useForm'
-import { Button, ButtonSecondary } from '../../components/Button'
+import { Button, ButtonGhost, ButtonSecondary, ButtonWhite } from '../../components/Button'
 import { useFormLayout } from '../../hooks/useFormLayout'
 import { ProductDefinition } from '../../definitions/ProductDefinition'
 import { useApiData } from '../../hooks/useApiData'
-import { ButtonGroup } from '../../components/ButtonGroup'
 import { Table } from '../../components/Table'
 import { UserPicture } from '../../components/UserPicture'
 import { ProductStatus } from '../../constants/ProductStatus'
 import { Label } from '../../components/Label'
+import { Bag } from '../../components/Bag'
+import { NumberUtils } from '../../utils/NumberUtils'
+import { ButtonGroup } from '../../components/ButtonGroup'
+import { useForm } from '../../hooks/useForm'
 
 export const ProductPage = () => {
 	const { api, form, apiData, pageData } = usePage<ProductType>('product')
 	const [showFilters, setShowFilters] = useState(false)
-	const bulkForm = useForm('product_bulk')
 	const customerApi = useApi('customer')
 	const customerApiData = useApiData('customer')
-	const allCategories = (apiData.data as ProductType[])
-		.map((x) => (x.categories || '').split(';'))
-		.reduce((prev, curr) => [...prev, ...curr], [])
-		.filter((x) => x !== '')
+	const customerForm = useForm('customer')
+	const sellForm = useForm('sell')
+	const allCategories = useMemo(
+		() =>
+			(apiData.data as ProductType[])
+				.map((x) => (x.categories || '').split(';'))
+				.reduce((prev, curr) => [...prev, ...curr], [])
+				.filter((x) => x !== ''),
+		[apiData.data]
+	)
 
 	const filterFormLayout = useFormLayout({
 		definition: {
@@ -37,10 +41,12 @@ export const ProductPage = () => {
 					<ButtonSecondary
 						rightBag={
 							Object.keys(pageData.data)
-								.filter((x) => x !== 'view')
+								.filter((x) => x !== 'bag')
 								.filter(
 									(x) =>
-										pageData.data[x] !== null && pageData.data[x] !== undefined
+										pageData.data[x] !== null &&
+										pageData.data[x] !== undefined &&
+										JSON.stringify(pageData.data[x]) !== '[]'
 								).length
 						}
 						style={{ marginRight: '14px' }}
@@ -92,8 +98,6 @@ export const ProductPage = () => {
 
 	return (
 		<div className={style.productPage}>
-			{form.originalValue && <ProductForm />}
-			{bulkForm.originalValue && <AddProductsInBulkForm />}
 			<div className={style.productPageContent}>
 				<div className={style.filters}>
 					<section>
@@ -120,176 +124,260 @@ export const ProductPage = () => {
 						>
 							Novo Produto
 						</Button>
-						<Button
-							leftIcon="add_shopping_cart"
-							onClick={() => {
-								bulkForm.show({}, () => api.getAll())
-							}}
+						<div style={{ flexGrow: 1 }} />
+						<Bag
+							button={(show, setShow) => (
+								<Button
+									className={style.bagButton}
+									rightBag={(pageData.data?.bag || []).length}
+									leftIcon="shopping_bag"
+									onClick={() => {
+										if ((pageData.data?.bag || []).length > 0) {
+											setShow((x) => !x)
+										}
+									}}
+								>
+									Sacola
+								</Button>
+							)}
+							arrowPosition="top-right"
 						>
-							Multiplos Produtos
-						</Button>
-						<ButtonGroup>
-							<Button
-								leftIcon="table"
-								variationOverride={
-									pageData.data?.view === 'table' ? 'primary' : 'secondary'
-								}
-								onClick={() => {
-									pageData.setProp('view', () => 'table')
-								}}
-							/>
-							<Button
-								leftIcon="cards"
-								variationOverride={
-									pageData.data?.view === 'cards' ? 'primary' : 'secondary'
-								}
-								onClick={() => {
-									pageData.setProp('view', () => 'cards')
-								}}
-							/>
-						</ButtonGroup>
-					</section>
-				</div>
-				{pageData.data.view === 'table' && (
-					<div className={style.pageContent}>
-						<Table
-							definition={{
-								created: {
-									header: 'Data',
-									type: 'date',
-									valueOverride: (row: ProductType) => {
-										return row.created.split(' ')[0]
-									},
-									width: '150px',
-								},
-								title: {
-									header: 'Produto',
-									type: 'string',
-									valueOverride: (row: ProductType) => {
-										return (
-											<>
+							{(show, setShow) => {
+								return (
+									<>
+										<h3>Sacola de Compras</h3>
+										{(pageData.data?.bag || []).map((item: ProductType) => (
+											<div className={style.bagItem} key={item._id}>
 												<UserPicture
-													picture={row.picture?.value}
-													name={row.title}
-													size="32px"
+													className={style.bagImage}
+													picture={item.picture?.value}
+													name={item.title}
+													size="36px"
 												/>
-												<div className={style.tableTitleAndDescription}>
+												<div className={style.bagItemTitleAndPrice}>
 													<a
 														onClick={() => {
-															form.show(row, () => api.getAll())
+															form.show(item, () => api.getAll())
 														}}
 													>
-														{row.title}
+														{item.title}
 													</a>
-													<p>{row.description}</p>
+													<p>
+														{NumberUtils.numberToCurrency(item.price)}
+													</p>
 												</div>
-											</>
-										)
-									},
-								},
-								seller_id: {
-									header: 'Vendedor',
-									type: 'string',
-									valueOverride: (row: ProductType) => {
-										return (
-											<>
-												<UserPicture
-													picture={row.seller?.picture?.value}
-													name={row.seller?.full_name}
-													size="32px"
+												<ButtonGhost
+													className={style.removeFromBagButton}
+													leftIcon="close"
+													onClick={() => {
+														const wasAdded = (
+															pageData.data?.bag || []
+														).findIndex((x) => x._id === item._id)
+														pageData.setProp('bag', (oldValue) => {
+															if (!oldValue) {
+																oldValue = []
+															}
+															oldValue.splice(wasAdded, 1)
+															return [...oldValue]
+														})
+													}}
 												/>
-												{row.seller?.full_name}
-											</>
-										)
-									},
-								},
-								categories: {
-									header: 'Categorias',
-									type: 'string',
-									valueOverride: (row: ProductType) => {
-										return (
-											<>
-												{(row.categories || '')
-													.split(';')
-													.filter((x) => x && x !== '')
-													.sort()
-													.map((category) => {
-														return (
-															<Label
-																color={
-																	(
-																		pageData.data.categories ||
-																		[]
-																	).includes(category)
-																		? 'var(--active-color)'
-																		: ''
-																}
-																onClick={() => {
-																	pageData.setProp(
-																		'categories',
-																		(value) => {
-																			if (!value) {
-																				value = []
-																			}
-																			if (
-																				value.includes(
-																					category
-																				)
-																			) {
-																				value.splice(
-																					value.indexOf(
-																						category
-																					)
-																				)
-																			} else {
-																				value.push(category)
-																			}
-																			return [...value]
-																		}
-																	)
-																}}
-															>
-																{category}
-															</Label>
-														)
-													})}
-											</>
-										)
-									},
-								},
-								price: {
-									alignment: 'right',
-									header: 'Valor',
-									type: 'currency',
-									width: '10%',
-								},
-								status: {
-									header: 'Situação',
-									type: 'domain',
-									keyValue: Object.keys(ProductStatus).map((x) => [
-										x,
-										ProductStatus[x],
-									]),
-									width: '10%',
-								},
+											</div>
+										))}
+										<hr />
+										<div className={style.totalValue}>
+											<label>Total</label>
+											<b>
+												{NumberUtils.numberToCurrency(
+													(pageData.data?.bag || [])
+														.map((x) => x.price)
+														.reduce((x, y) => x + y, 0)
+												)}
+											</b>
+										</div>
+										{(pageData.data?.bag || []).length > 0 && (
+											<ButtonGroup style={{ flexGrow: 1, width: '100%' }}>
+												<ButtonWhite
+													style={{ flexGrow: 1 }}
+													leftIcon="check"
+													onClick={() => {
+														sellForm.show({
+															status: 'PENDING',
+														})
+													}}
+												>
+													Finalizar Venda
+												</ButtonWhite>
+												<ButtonWhite
+													style={{ flexGrow: 0 }}
+													leftIcon="delete"
+													onClick={() => {
+														pageData.setProp('bag', () => null)
+														setShow(false)
+													}}
+												/>
+											</ButtonGroup>
+										)}
+									</>
+								)
 							}}
-							value={apiData.data}
-						/>
-					</div>
-				)}
-				{pageData.data.view === 'cards' && (
-					<div className={style.pageContent}>
-						{apiData.data.map((product: ProductType) => {
-							return (
-								<ProductCard
-									key={product._id}
-									product={product}
-									onClose={() => api.getAll()}
-								/>
-							)
-						})}
-					</div>
-				)}
+						</Bag>
+					</section>
+					<Table
+						definition={{
+							created: {
+								header: 'Data',
+								type: 'date',
+								valueOverride: (row: ProductType) => {
+									return row.created.split(' ')[0]
+								},
+								width: '150px',
+							},
+							title: {
+								header: 'Produto',
+								type: 'string',
+								priority: 'primary',
+								valueOverride: (row: ProductType) => {
+									return (
+										<>
+											<UserPicture
+												picture={row.picture?.value}
+												name={row.title}
+												size="32px"
+											/>
+											<div className={style.tableTitleAndDescription}>
+												<a
+													onClick={() => {
+														form.show(row, () => api.getAll())
+													}}
+												>
+													{row.title}
+												</a>
+												<p>{row.description}</p>
+											</div>
+										</>
+									)
+								},
+							},
+							seller_id: {
+								header: 'Vendedor',
+								type: 'string',
+								valueOverride: (row: ProductType) => (
+									<a
+										onClick={() => {
+											customerForm.show(row.seller)
+										}}
+									>
+										{row.seller?.full_name}
+									</a>
+								),
+							},
+							categories: {
+								header: 'Categorias',
+								type: 'string',
+								valueOverride: (row: ProductType) => {
+									return (
+										<>
+											{(row.categories || '')
+												.split(';')
+												.filter((x) => x && x !== '')
+												.sort()
+												.map((category) => {
+													return (
+														<Label
+															color={
+																(
+																	pageData.data.categories || []
+																).includes(category)
+																	? 'var(--active-color)'
+																	: ''
+															}
+															onClick={() => {
+																pageData.setProp(
+																	'categories',
+																	(value: string[]) => {
+																		if (!value) {
+																			value = []
+																		}
+																		if (
+																			value.includes(category)
+																		) {
+																			value.splice(
+																				value.indexOf(
+																					category
+																				),
+																				1
+																			)
+																		} else {
+																			value.push(category)
+																		}
+																		return [...value]
+																	}
+																)
+															}}
+														>
+															{category}
+														</Label>
+													)
+												})}
+										</>
+									)
+								},
+							},
+							price: {
+								alignment: 'right',
+								header: 'Valor',
+								type: 'currency',
+								width: '10%',
+								priority: 'primary',
+							},
+							status: {
+								header: 'Situação',
+								type: 'domain',
+								keyValue: Object.keys(ProductStatus).map((x) => [
+									x,
+									ProductStatus[x],
+								]),
+								width: '10%',
+								priority: 'secondary',
+							},
+							bag: {
+								header: 'Sacola',
+								type: 'string',
+								valueOverride: (row: ProductType) => {
+									const wasAdded = (pageData.data?.bag || []).findIndex(
+										(x) => x._id === row._id
+									)
+									if (row.status !== 'AVAILABLE') {
+										return <></>
+									}
+
+									return (
+										<>
+											{wasAdded === -1 && (
+												<Button
+													onClick={() => {
+														pageData.setProp('bag', (oldValue) => {
+															if (!oldValue) {
+																oldValue = []
+															}
+															oldValue.push(row)
+															return [...oldValue]
+														})
+													}}
+												>
+													Adicionar
+												</Button>
+											)}
+										</>
+									)
+								},
+								width: 'auto',
+							},
+						}}
+						value={apiData.data}
+					/>
+				</div>
 			</div>
 		</div>
 	)

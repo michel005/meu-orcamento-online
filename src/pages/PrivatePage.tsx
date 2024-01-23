@@ -10,6 +10,9 @@ import { SessionContext } from '../contexts/SessionContext'
 import { usePage } from '../hooks/usePage'
 import { LoadingPage } from './LoadingPage'
 import style from './PrivatePage.module.scss'
+import { CustomerForm } from './private/customers/CustomerForm'
+import { ProductForm } from './private/products/ProductForm'
+import { SellForm } from './private/sell/SellForm'
 
 const RedirectToDashboard = () => {
 	const navigate = useNavigate()
@@ -55,7 +58,7 @@ export const PrivatePage = () => {
 			type: 'text',
 		},
 	}))
-	const { loading, setMessage, showSidebar, setShowSidebar } = useContext(ConfigContext)
+	const { loading, setMessage, form } = useContext(ConfigContext)
 	const { currentUser, setCurrentUser } = useContext(SessionContext)
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -69,6 +72,9 @@ export const PrivatePage = () => {
 
 	return (
 		<div className={style.privatePage}>
+			{form?.customer && <CustomerForm />}
+			{form?.product && <ProductForm />}
+			{form?.sell && <SellForm />}
 			<section className={style.header}>
 				<Icon className={style.logo} icon="shopping_bag" />
 				<div className={style.headerAppInfo}>

@@ -53,7 +53,6 @@ export const ConfigProvider = ({ children }: { children: any }) => {
 			personType: null,
 		},
 		product: {
-			view: 'table',
 			seller_id: null,
 		},
 	})

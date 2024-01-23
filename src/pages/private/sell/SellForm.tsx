@@ -1,5 +1,5 @@
 import React from 'react'
-import style from './ProductForm.module.scss'
+import style from './SellForm.module.scss'
 import { FormModal } from '../../../components/FormModal'
 import { usePage } from '../../../hooks/usePage'
 import { ProductType } from '../../../types/AllTypes'
@@ -10,12 +10,13 @@ import { Bag } from '../../../components/Bag'
 import { ErrorUtils } from '../../../utils/ErrorUtils'
 import { useApiData } from '../../../hooks/useApiData'
 import { FlexRow } from '../../../components/FlexRow'
+import { SellDefinition } from '../../../definitions/SellDefinition'
 
-export const ProductForm = () => {
-	const { api, form } = usePage<ProductType>('product', ProductDefinition)
+export const SellForm = () => {
+	const { api, form } = usePage<ProductType>('sell', ProductDefinition)
 	const customerApiData = useApiData('customer')
-	const productFormLayout = useFormLayout<ProductType>({
-		definition: ProductDefinition(form.form, customerApiData.data),
+	const sellFormLayout = useFormLayout<ProductType>({
+		definition: SellDefinition(customerApiData.data),
 		value: form.form,
 		onChange: form.edit,
 	})
@@ -25,28 +26,21 @@ export const ProductForm = () => {
 	}
 
 	const onError = (errors: any) => {
-		productFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data || {}))
+		sellFormLayout.setErrors(ErrorUtils.convertErrors(errors.response.data || {}))
 	}
 
 	return (
 		<FormModal
-			title="Formulário de Produto"
+			title="Formulário de Venda"
 			onClose={() => {
 				form.close(false)
 			}}
 		>
 			<div className={style.content}>
-				{productFormLayout.getField('picture')}
 				<section>
-					{productFormLayout.getField('seller_id')}
-					{productFormLayout.getField('title')}
-					{productFormLayout.getField('description')}
-					{productFormLayout.getField('categories')}
-					<div className={style.formRow}>
-						{productFormLayout.getField('code')}
-						{productFormLayout.getField('price')}
-					</div>
-					{productFormLayout.getField('status', {
+					{sellFormLayout.getField('customer_id')}
+					{sellFormLayout.getField('finalPrice')}
+					{sellFormLayout.getField('status', {
 						optionsPosition: 'top',
 					})}
 				</section>

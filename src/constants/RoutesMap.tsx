@@ -40,14 +40,14 @@ export const RoutesMap: RoutesType = {
 			component: <CustomerPage />,
 		},
 		products: {
-			icon: 'shopping_bag',
+			icon: 'sell',
 			name: 'Produtos',
 			description: 'Gerencie os produtos do seu bazar',
 			route: '/products',
 			component: <ProductPage />,
 		},
 		sells: {
-			icon: 'sell',
+			icon: 'shopping_bag',
 			name: 'Vendas',
 			description: 'Realize e gerencie as vendas e porcentagem de lucro',
 			route: '/sells',

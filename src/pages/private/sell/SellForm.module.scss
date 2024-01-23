@@ -1,0 +1,127 @@
+@import '../../../keyframe';
+@import '../../../utils';
+
+.selectValueRender {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+.nameAndEmail {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	p {
+		color: #ccc;
+	}
+}
+
+.content {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+	gap: 14px;
+	overflow-y: scroll;
+	padding: 14px;
+	transition: all 0.25s;
+
+	ol {
+		li {
+			margin-inline-start: 21px;
+		}
+	}
+
+	> section {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		transition: all 0.25s;
+		width: 600px;
+
+		> section {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+			transition: all 0.25s;
+			width: 100%;
+
+			[data-field='customer_id'] {
+				min-width: 300px;
+			}
+		}
+	}
+}
+
+.formRow {
+	align-items: flex-end;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+
+	> div {
+		flex-grow: 1;
+		width: calc(50% - 7px);
+	}
+
+	button {
+		flex-grow: 1;
+
+		span {
+			white-space: nowrap;
+		}
+	}
+}
+
+.options {
+	border-radius: 0 0 14px 14px;
+	display: flex;
+	flex-direction: row;
+	gap: 14px;
+	padding: 14px 17px;
+	width: 100%;
+}
+
+@include desktopHD {
+	.content {
+		flex-direction: column;
+		min-width: auto;
+
+		section {
+			width: 100%;
+		}
+	}
+
+	.userImage {
+		width: 100%;
+
+		> div {
+			padding-block: 14px;
+		}
+	}
+}
+
+@include desktopSmall {
+	.adminInfo {
+		display: none;
+	}
+
+	.userImage {
+		border-radius: 0;
+
+		&::before {
+			border-radius: 0;
+		}
+	}
+
+	.options {
+		border-radius: 0;
+	}
+}
+
+@include tablet {
+	.formRow {
+		flex-direction: column;
+	}
+}

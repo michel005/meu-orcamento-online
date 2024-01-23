@@ -20,7 +20,7 @@ export const SellingPage = () => {
 							valueOverride: (row: ProductType) => {
 								return row.created.split(' ')[0]
 							},
-							width: '100px',
+							width: '10%',
 						},
 						customer: {
 							header: 'Cliente',
@@ -49,9 +49,8 @@ export const SellingPage = () => {
 						},
 						finalPrice: {
 							alignment: 'right',
-							header: 'Valor',
+							header: 'Valor Total',
 							type: 'currency',
-							width: '10%',
 						},
 						status: {
 							header: 'Situação',
